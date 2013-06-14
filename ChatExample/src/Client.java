@@ -5,7 +5,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import javax.swing.JFrame;
 
-
 public class Client extends JFrame {
 	/**
 	 * 

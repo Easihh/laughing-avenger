@@ -1,25 +1,22 @@
-package game;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class ServerOLD {
+public class Server {
 	private static ServerGUI sg;
 	private int port=4444;
 	private ArrayList<ServerClient> al;
-	public ServerOLD(int portnumber){
+	public Server(int portnumber){
 		sg=new ServerGUI();
 		this.port=portnumber;
 		 al=new ArrayList<ServerClient>();
 	}
 	public static void main(String[] args) throws IOException{
-		new ServerOLD(4444).start();
+		new Server(4444).start();
 	}
 	public void start(){
 		try{

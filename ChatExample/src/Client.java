@@ -3,18 +3,23 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
+
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Client extends JFrame {
 	/**
 	 * 
 	 */
 	Socket socket;
-	private ObjectInputStream in;
-	private ObjectOutputStream out;
+	static Client client;
+	static ObjectInputStream in;
+	static ObjectOutputStream out;
 	private static final long serialVersionUID = 1L;
 	private static int PORT = 4444;
-	private final static String HOST = "localhost";
+	private final static String HOST = "96.21.2.128";
 	private ClientGUI cg;
 	/**
 	 * Launch the application.
@@ -23,32 +28,38 @@ public class Client extends JFrame {
 		try 
 		{		
 			socket= new Socket(HOST, PORT);	
-			System.out.println("You connected to " + HOST);		
+			cg.setTextArea("You connected to " + HOST);
+			//new ChatMessage(cg.username,1," has connected from "+socket.getInetAddress().getHostAddress());
+			//cg.setTextArea("You connected from " + socket.getInetAddress().getHostAddress());		
 		} 
 		catch (Exception noServer)
 		{
-			System.out.println("The server might not be up at this time.");
-			System.out.println("Please try again later.");
+			cg.setTextArea("The server might not be up at this time.");
+			cg.setTextArea("Please try again later.");
+			//System.out.println("The server might not be up at this time.");
+			//System.out.println("Please try again later.");
 			return false;
 		}
-		cg.setTextArea("Connection Accepted");
+		//cg.setTextArea("Connection Accepted");
 		try{
 			in  = new ObjectInputStream(socket.getInputStream());
 			out = new ObjectOutputStream(socket.getOutputStream());
-			cg.setTextArea("Stream Sucess");
+			out.writeObject(new ChatMessage(cg.username,2,cg.password));
+			//cg.setTextArea("Stream Sucess");
 		}
 		catch (IOException eIO) {
-			System.out.println("Exception creating new Input/output Streams: " + eIO);
+			cg.setTextArea("Exception creating new Input/output Streams: " + eIO);
+			//System.out.println("Exception creating new Input/output Streams: " + eIO);
 			return false;
 		}
 		new ListenServer().start();
-		cg.setupWrite(out);
+		//cg.setupWrite(out);
 		return true;
 	}
 	public static void main(String[] args) {
-		Client client=new Client(4444,new ClientGUI());
-		if(!client.start())
-			return;
+		client=new Client(4444,new ClientGUI());
+		//if(!client.start())
+			//return;
 	}
 	/**
 	 * Create the frame.
@@ -66,8 +77,18 @@ public class Client extends JFrame {
 							//if(in.available()>0){
 							cm=(ChatMessage)in.readObject();
 							//if(cm.getMessage()!=null){//cg.setTextArea(cm.getMessage());
-							cg.setTextArea(cm.getMessage());
+							if(cm.getMessage().equalsIgnoreCase("Start"))
+								cg.setupGame();
+							if(cm.getType()==1)cg.setTextArea(cm.getFrom()+":"+cm.getMessage());
+							if(cm.getType()==4)cg.updateHp(cm.getFrom(),999);
+							if(cm.getType()==5)cg.setTextArea(cm.getFrom()+":"+cm.getMessage());
 							}
+						catch(SocketException Se){
+							JFrame MessageError=new JFrame();
+							JOptionPane errMessage=new JOptionPane();
+							errMessage.showMessageDialog(MessageError, "Connection to Server has been lost.","Error 999",errMessage.ERROR_MESSAGE);
+							break;
+						}
 						catch (IOException e) {
 								e.printStackTrace();
 							} 

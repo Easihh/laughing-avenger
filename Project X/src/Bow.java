@@ -6,7 +6,7 @@ import java.awt.Image;
 import javax.imageio.ImageIO;
 public class Bow extends Item{
 	private int x;
-	private int y;
+	private int y;//
 	private boolean ownership=true;
 	Rectangle2D mask=new Rectangle2D.Double();
 	Bow(){

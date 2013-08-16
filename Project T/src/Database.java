@@ -18,7 +18,6 @@ public class Database {
 		    return DriverManager.getConnection(Url,"root","root");
 	}catch (Exception ex){
 		ex.printStackTrace();
-		//System.out.println("failure");
 		return null;
 	}
 

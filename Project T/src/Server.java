@@ -1,12 +1,10 @@
 
-import java.awt.TextArea;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -21,6 +19,7 @@ public class Server {
 	private int port=4444;
 	public static ArrayList<ServerClient> al;
 	static int id;
+	static boolean isRunning;
 	public Server(int portnumber){
 		sg=new ServerGUI();
 		this.port=portnumber;
@@ -33,12 +32,10 @@ public class Server {
 	public void start(){
 		try{
 			ServerSocket server= new ServerSocket(port);
-			//Serverconnection serconnect= new Serverconnection(s);
 			new ConnectionCheck().start();
 			System.out.println("waiting for clients...");
 			while(true){
 				Socket s=server.accept();
-				//System.out.println("Client connected from "+ s.getLocalAddress().getHostName());
 				ServerClient sc=new ServerClient(s);
 				al.add(sc);
 				sc.start();
@@ -54,15 +51,11 @@ public class Server {
 	}
 	
 	static class ServerClient extends Thread{
-		//private int client_id;
 		Socket socket;
 		String player_Name;
 		ObjectInputStream in;
 		ObjectOutputStream out;
-		//private boolean keepGoing=true;
 		public ServerClient(Socket s){
-		//id++;
-		//client_id=id;
 		socket=s;
 		try {
 			out=new ObjectOutputStream(socket.getOutputStream());
@@ -70,26 +63,23 @@ public class Server {
 			} catch (IOException e) {
 				e.printStackTrace();
 				}
-		sg.writeMsg(out);
 		}
 		public void run() {
-			ChatMessage cm;
-			String msg;
-				while(true){
+			ChatMessage cm=null;
+			isRunning=true;
+				while(isRunning){
 						try {
-							//sg.out.writeObject(new ChatMessage("Server",5,"checkConnection"));
 							cm=(ChatMessage) in.readObject();
 							if(cm.getFrom().equalsIgnoreCase(player_Name))sg.append(cm.getFrom(),cm.getMessage());
 							if(cm.getType()==1)
-							sg.broadcast(cm.getFrom(),cm.getType(),cm.getMessage());
+							ServerGUI.broadcast(cm.getFrom(),cm.getType(),cm.getMessage());
 							if(cm.getType()==2){
 								try {
 									player_Name=myDatabase.getPlayerName(cm.getFrom(), cm.getMessage());
 									if(player_Name!=null){
 										myDatabase.updateOnlineStatus(player_Name,1);
 										sg.append(player_Name, " has connected");
-										//for(ServerClient client:al)
-											out.writeObject(new ChatMessage(player_Name,2,"OK"));
+										out.writeObject(new ChatMessage(player_Name,2,"OK"));
 									}
 									else {
 										out.writeObject(new ChatMessage(player_Name,2,"NOT OK"));
@@ -99,12 +89,6 @@ public class Server {
 								} catch (SQLException e) {
 									e.printStackTrace();
 								}
-							}
-							if(cm.getType()==3){
-								//int playerHp=myDatabase.getPlayer_Hp(cm.getFrom(), 13);
-								//myDatabase.setPlayer_Hp(cm.getFrom(), 13, 2);
-								if(myDatabase==null)System.out.println("null");
-								sg.broadcast(cm.getFrom(), 4, "Update Life");
 							}
 							if(cm.getType()==7){
 								ArrayList<Integer> result=myDatabase.diceRoll(cm.getFrom());
@@ -127,8 +111,7 @@ public class Server {
 								}//invalid bid
 								else{
 									JFrame MessageError=new JFrame();
-									JOptionPane errMessage=new JOptionPane();
-									errMessage.showMessageDialog(MessageError, "Invalid bid","Error 2",errMessage.ERROR_MESSAGE);
+									JOptionPane.showMessageDialog(MessageError, "Invalid bid","Error 2",JOptionPane.ERROR_MESSAGE);
 								}
 							}
 							if(cm.getType()==12){
@@ -151,7 +134,6 @@ public class Server {
 									myDatabase.updateDice(bet_loser);
 									int Player_remain=myDatabase.getPlayerRemaining();
 									newDiceAmount=myDatabase.getDiceLeft(bet_loser);
-									//thebid=myDatabase.getBid(bet_loser);
 									while(!sg.player.isEmpty()){
 										Player x=sg.player.remove();
 										if(x.name.equalsIgnoreCase(bet_loser)){
@@ -223,7 +205,6 @@ public class Server {
 							if(sg.textArea.getText().length()!=0)sg.textArea.setCaretPosition(sg.textArea.getText().length()-1);
 							}
 						catch (IOException e) {
-							//e.printStackTrace();
 							close();
 							break;
 						}

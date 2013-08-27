@@ -1,13 +1,9 @@
-//package game;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
-import java.util.Scanner;
-import java.util.Vector;
 
-import javax.xml.bind.annotation.XmlElementRef.DEFAULT;
 public class Database {
 	Statement stmt=null;
 	ResultSet rs=null;
@@ -27,47 +23,6 @@ public class Database {
 			  return null;
 		  }
 	}
-    public static void main(String[] args) {
-    	Statement stmt=null;
-    	ResultSet rs=null;
-    	int test=34;
-    	String playername="Sakura";
-    	int sessionID=13;
-    	 try
-    	   {
-    	    Class.forName("com.mysql.jdbc.Driver").newInstance();
-    	    String Url = "jdbc:mysql://localhost:3306/info";
-    	    Connection connection=DriverManager.getConnection(Url,"root","root");
-        	int amount=0;
-        	String name="Sakura";
-        	String query="Select Dice_remains From testing WHERE Name='"+name+"'";
-        	stmt=connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
-        	rs=stmt.executeQuery(query);
-        	rs.first();
-        	amount=rs.getInt(1);
-        	System.out.println(amount);
-
-    	    }catch(Exception ex){
-    	   ex.printStackTrace();
-    	  }
-    	
-    }
-    public int getPlayer_Hp(String playername,int sessionID) throws SQLException{
-    	int hp=-1;
-    	String query="Select Hitpoint From testing WHERE Name='"+playername+"' AND Session_id='"+sessionID+"'";
-    	//System.out.println(query);
-    	stmt=connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
-    	rs=stmt.executeQuery(query);
-    	rs.first();
-    	hp=rs.getInt(1);
-    	rs.close();
-    	return hp;
-    }
-    public void setPlayer_Hp(String playername,int sessionID,int value) throws SQLException{
-    	 String update="UPDATE testing SET Hitpoint='"+value+"' WHERE Name='"+playername+"' AND Session_id='"+sessionID+"'";
-    	stmt=connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
-    	 stmt.executeUpdate(update);
-    }
     public String getPlayerName(String playername,String password) throws SQLException{
     	String name=null;
     	String query="Select Name From testing WHERE Name='"+playername+"' AND Password='"+password+"'";
@@ -100,14 +55,13 @@ public class Database {
     	ArrayList<Integer> roll=new ArrayList<Integer>();
     	int dice_amount=getDiceLeft(name);
     	String update="";
-    	//int[] roll=new int[dice_amount];
     	for(int i=0;i<dice_amount;i++){
     		roll.add(myrandom.nextInt(6)+1);
     	}
     	update=getRoll(dice_amount,update,roll,name);
     	return roll;
     }
-    public String getRoll(int dice_amount,String update,ArrayList roll,String name) throws SQLException{
+    public String getRoll(int dice_amount,String update,ArrayList<Integer> roll,String name) throws SQLException{
     	switch(dice_amount){
 		case 1: update="UPDATE testing SET Dice_1='"+roll.get(0)+"'WHERE Name='"+name+"'";
 				break;

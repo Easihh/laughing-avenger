@@ -56,7 +56,10 @@ public class ClientGUI extends JFrame {
 		contentPane.add(theChat,BorderLayout.SOUTH);
 		pack();
 		}
-		else JOptionPane.showMessageDialog(this, "Login failed.","ERROR 3",JOptionPane.ERROR_MESSAGE);
+		else {
+			Client.isRunning=false;
+			JOptionPane.showMessageDialog(this, "Login failed.","ERROR 3",JOptionPane.ERROR_MESSAGE);
+			}
 	}
 	public void setTextArea(String message){
 		Chat.textArea.setText(Chat.textArea.getText()+message+"\n");	

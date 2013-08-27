@@ -1,17 +1,15 @@
 import java.io.IOException;
-import java.net.SocketException;
 import java.sql.SQLException;
 
 public class ConnectionCheck extends Thread{
 	Database mydatabase=new Database();
 	public void run(){
 	long nano=1000000000L;
-	int second_till_update=3;
+	int second_till_update=30;
 	long prev=System.nanoTime();
 	boolean running=true;
 	while(running){
 		if((System.nanoTime()-prev)/nano>=second_till_update){
-			//System.out.println(System.nanoTime()-prev);
 			prev=System.nanoTime();
 			for(int i=Server.al.size()-1;i>=0;i--){
 				if(Server.al.get(i).socket.isClosed()){

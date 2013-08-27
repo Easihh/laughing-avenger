@@ -12,25 +12,20 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Random;
-
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class ServerGUI extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2001610855181071715L;
 	private JPanel contentPane;
 	public JTextField textField;
 	public JTextArea textArea;
-	private String message;
-	private Socket socket;
 	public ObjectOutputStream out;
 	private JPanel control_panel;
 	private JButton btnStartGame;
@@ -43,12 +38,6 @@ public class ServerGUI extends JFrame {
 	public void append(String From,String message){
 		textArea.setText(textArea.getText()+"\n"+From+":"+message);
 	}
-	public String getMessage(){
-		return message;
-	}
-	public void setMessage(String msg){
-		message=msg;
-	}
 	/**
 	 * Create the frame.
 	 */
@@ -57,7 +46,6 @@ public class ServerGUI extends JFrame {
 		setVisible(true);
 		theDatabase=new Database();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setBounds(150, 150, 450, 450);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -82,10 +70,9 @@ public class ServerGUI extends JFrame {
 			public  void keyPressed(KeyEvent ev) {
 				int key= ev.getKeyCode();
 				if(key==KeyEvent.VK_ENTER){
-					message=textField.getText();
 					textArea.setText(textArea.getText()+"Server:"+textField.getText()+"\n");
+					broadcast("Server",1,textField.getText());
 					textField.setText("");
-					broadcast("Server",1,message);
 				}
 			}
 		});
@@ -119,9 +106,6 @@ public class ServerGUI extends JFrame {
 		control_panel.add(btnStartGame);
 		pack();
 	}
-	public void writeMsg(ObjectOutputStream out) {
-		this.out=out;
-	}
 	static void broadcast(String from,int type,String theMessage){
 		for(int i=Server.al.size()-1;i>=0;i--){
 			if(!Server.al.get(i).socket.isClosed())
@@ -131,9 +115,7 @@ public class ServerGUI extends JFrame {
 		}
 	}
 }
-	public void disconnect(int id){
-		Server.al.remove(id);
-	}
+
 	public String getNextTurn(String lastPlayer){
 		String nextPlayer="";
 		player.add(player.remove());

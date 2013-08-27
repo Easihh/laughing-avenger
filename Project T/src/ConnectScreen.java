@@ -1,26 +1,21 @@
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
-import java.awt.BorderLayout;
 
 
 public class ConnectScreen extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7355877931403219143L;
 	private JTextField JAccount;
-	private ConnectScreen frame;
 	private JPasswordField JPassword;
 	public ConnectScreen(){
-		frame=this;
-		//setDefaultCloseOperation(EXIT_ON_CLOSE);
-		//setSize(500,500);
-		//getContentPane().setLayout(null);
 		setVisible(true);
 		setLayout(null);
 		JAccount = new JTextField();
@@ -37,10 +32,7 @@ public class ConnectScreen extends JPanel {
 		JButton bntLogin = new JButton("Login");
 		bntLogin.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent ev) {
-				//Client.cg=new ClientGUI(JAccount.getText(),JPassword.getPassword());
 				Client.client.start(JAccount.getText(),JPassword.getPassword());
-					//frame.setVisible(false);
-					//Client.cg.startGame();
 			}
 		});
 		bntLogin.setBounds(215, 255, 89, 23);

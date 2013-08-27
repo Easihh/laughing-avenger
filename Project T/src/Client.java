@@ -1,7 +1,9 @@
 
+import java.awt.Graphics;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.NoRouteToHostException;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -20,22 +22,27 @@ public class Client extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static int PORT = 4444;
 	private final static String HOST = "96.21.2.128";
-	private ClientGUI cg;
+	public static ClientGUI cg;
 	/**
 	 * Launch the application.
+	 * @throws NoRouteToHostException 
 	 */
-	public boolean start(){
+	public boolean start(String username,char[] password){
+		String mypassword="";
+		cg.username=username;
+		for(int i=0;i<password.length;i++)
+			mypassword+=password[i];
 		try 
 		{		
 			socket= new Socket(HOST, PORT);	
-			cg.setTextArea("You connected to " + HOST);
-			//new ChatMessage(cg.username,1," has connected from "+socket.getInetAddress().getHostAddress());
-			//cg.setTextArea("You connected from " + socket.getInetAddress().getHostAddress());		
+			//Chat.textArea.setText(Chat.textArea.getText()+"\nYou connected to " + HOST+ " from "+socket.getInetAddress().getHostAddress());
 		} 
 		catch (Exception noServer)
 		{
-			cg.setTextArea("The server might not be up at this time.");
-			cg.setTextArea("Please try again later.");
+			JOptionPane.showMessageDialog(this, "Server is down","Error 1",JOptionPane.ERROR_MESSAGE);
+			//System.exit(1);
+			//Chat.textArea.setText(Chat.textArea.getText()+"The server might not be up at this time.");
+			//cg.setTextArea("Please try again later.");
 			//System.out.println("The server might not be up at this time.");
 			//System.out.println("Please try again later.");
 			return false;
@@ -44,16 +51,15 @@ public class Client extends JFrame {
 		try{
 			in  = new ObjectInputStream(socket.getInputStream());
 			out = new ObjectOutputStream(socket.getOutputStream());
-			out.writeObject(new ChatMessage(cg.username,2,cg.password));
+			out.writeObject(new ChatMessage(username,2,mypassword));
 			//cg.setTextArea("Stream Sucess");
 		}
 		catch (IOException eIO) {
-			cg.setTextArea("Exception creating new Input/output Streams: " + eIO);
+			//cg.setTextArea("Exception creating new Input/output Streams: " + eIO);
 			//System.out.println("Exception creating new Input/output Streams: " + eIO);
 			return false;
 		}
 		new ListenServer().start();
-		//cg.setupWrite(out);
 		return true;
 	}
 	public static void main(String[] args) {
@@ -73,27 +79,55 @@ public class Client extends JFrame {
 			ChatMessage cm;
 					while (true){
 						try{
-							//System.out.println((String)in.readObject());
-							//if(in.available()>0){
 							cm=(ChatMessage)in.readObject();
-							//if(cm.getMessage()!=null){//cg.setTextArea(cm.getMessage());
-							if(cm.getMessage().equalsIgnoreCase("Start"))
-								cg.setupGame();
-							if(cm.getType()==1)cg.setTextArea(cm.getFrom()+":"+cm.getMessage());
+							if(cm.getType()==1)Chat.textArea.setText(Chat.textArea.getText()+"\n"+"<"+cm.getFrom()+">"+" "+cm.getMessage());
+							if(cm.getType()==2)cg.startGame(cm.getMessage());
 							if(cm.getType()==4)cg.updateHp(cm.getFrom(),999);
-							if(cm.getType()==5)cg.setTextArea(cm.getFrom()+":"+cm.getMessage());
+							if(cm.getType()==6){
+								cg.setPlayerList(cm.getPlayer());
+								cg.setupGame();
+								}
+							if(cm.getType()==8 && cm.getFrom().equalsIgnoreCase(ClientGUI.username)){
+								Game_view.dice=cm.dice_Result;
+								cg.panel.checkTurn(cm.getMessage());
+								cg.panel.repaint();
+								}
+							if(cm.getType()==9){
+								cg.panel.checkTurn(cm.getMessage());
+								}
+							if(cm.getType()==11){
+								Game_view.bid=cm.bid;
+								cg.panel.updateLabel(cm.getFrom());
+								cg.panel.endTurn(cm.getFrom());
+								}
+							if(cm.getType()==13){
+								cg.panel.checkTurn(cm.getFrom());
 							}
+							if(cm.getType()==14){
+								cg.setPlayerList(cm.getPlayer());
+								cg.panel.isLiar(cm.getFrom(),cm.getMessage());
+							}
+							if(cm.getType()==15) cg.panel.resetPlay();
+							if(cm.getType()==16){
+								cg.setPlayerList(cm.getPlayer());
+								cg.panel.endGame(cm.getMessage());
+							}
+							if(cm.getType()==17)cg.panel.endTurn(cm.getFrom());
+							if(cg.theChat!=null &&cg.theChat.textArea.getText().length()!=0)Chat.textArea.setCaretPosition(Chat.textArea.getText().length()-1);
+						}
 						catch(SocketException Se){
 							JFrame MessageError=new JFrame();
 							JOptionPane errMessage=new JOptionPane();
-							errMessage.showMessageDialog(MessageError, "Connection to Server has been lost.","Error 999",errMessage.ERROR_MESSAGE);
+							errMessage.showMessageDialog(MessageError, "Connection to Server has been lost.","Error 999",JOptionPane.ERROR_MESSAGE);
 							break;
 						}
 						catch (IOException e) {
 								e.printStackTrace();
+								break;
 							} 
 						catch (ClassNotFoundException e) {
 								e.printStackTrace();
+								break;
 							}
 						}
 				}

@@ -13,6 +13,13 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Random;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -27,13 +34,14 @@ public class ServerGUI extends JFrame {
 	public ObjectOutputStream out;
 	private JPanel control_panel;
 	private JButton btnStartGame;
+	private Database theDatabase;
+	String startingPlayer="";
+	Queue<Player> player=new LinkedList<Player>();
 	/**
 	 * Launch the application.
 	 */
-	//public static void main(String[] args) {
-	//}
 	public void append(String From,String message){
-		textArea.setText(textArea.getText()+From+":"+message+"\n");
+		textArea.setText(textArea.getText()+"\n"+From+":"+message);
 	}
 	public String getMessage(){
 		return message;
@@ -47,13 +55,13 @@ public class ServerGUI extends JFrame {
 	public ServerGUI() {
 		setTitle("Server Client");
 		setVisible(true);
+		theDatabase=new Database();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		//setBounds(150, 150, 450, 450);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.NORTH);
 		
@@ -61,7 +69,7 @@ public class ServerGUI extends JFrame {
 		textArea.setLineWrap(true);
 		textArea.setEditable(false);
 		textArea.setRows(8);
-		textArea.setColumns(20);
+		textArea.setColumns(25);
 		scrollPane.add(textArea);
 		scrollPane.setViewportView(textArea);
 		JPanel panel = new JPanel();
@@ -90,10 +98,18 @@ public class ServerGUI extends JFrame {
 		btnStartGame = new JButton("Start Game");
 		btnStartGame.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent ev) {
+				try {
+					theDatabase.setGame();
+					player=theDatabase.getPlayerList();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				startingPlayer=player.peek().name;
 				for(int i=0;i<Server.al.size();i++){
 					if(!Server.al.get(i).socket.isClosed())
 					try{
-						Server.al.get(i).out.writeObject(new ChatMessage("Server",1,"Start"));
+						Server.al.get(i).out.writeObject(new ChatMessage("<Server>",6,player));
+						Server.al.get(i).out.writeObject(new ChatMessage("<Server>",9,startingPlayer));
 					}catch (IOException e){
 						e.printStackTrace();
 					}
@@ -108,17 +124,20 @@ public class ServerGUI extends JFrame {
 	}
 	static void broadcast(String from,int type,String theMessage){
 		for(int i=Server.al.size()-1;i>=0;i--){
-			//if(Server.al.get(i).socket.isClosed())
-				//disconnect(i);
-			//else//if(!Server.al.get(i).socket.isClosed())
-		try {
-		Server.al.get(i).out.writeObject(new ChatMessage(from,type,theMessage));
+			if(!Server.al.get(i).socket.isClosed())
+				try {Server.al.get(i).out.writeObject(new ChatMessage(from,type,theMessage));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	}
+}
 	public void disconnect(int id){
 		Server.al.remove(id);
+	}
+	public String getNextTurn(String lastPlayer){
+		String nextPlayer="";
+		player.add(player.remove());
+		nextPlayer=player.peek().name;
+		return nextPlayer;
 	}
 }

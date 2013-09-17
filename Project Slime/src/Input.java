@@ -34,13 +34,13 @@ public class Input implements KeyListener {
 		int keycode=e.getKeyCode();
 		if(keycode==KeyEvent.VK_A){
 			if(Slime.hero.dir==Character.direction.Left){
-				Slime.hero.charState=Character.state.Standing;
+			//	Slime.hero.charState=Character.state.Standing;
 			}
 			Slime.hero.isPressedLeft=false;
 		}
 		if(keycode==KeyEvent.VK_D){
 			if(Slime.hero.dir==Character.direction.Right){
-				Slime.hero.charState=Character.state.Standing;
+			//	Slime.hero.charState=Character.state.Standing;
 			}
 			Slime.hero.isPressedRight=false;
 		}

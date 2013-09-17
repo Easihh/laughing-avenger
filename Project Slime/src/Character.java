@@ -1,5 +1,7 @@
 import java.awt.Color;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
@@ -16,7 +18,10 @@ import javax.swing.JLabel;
 
 
 public class Character {
+	Tile colliding_Tile;
 	public boolean isCollidingSlope=false;
+	public int portraitX_size=32;
+	public int portraitY_size=32;
 	public int polygonType;
 	private BufferedImage theplayer;
 	Animation left=new Animation();
@@ -48,7 +53,7 @@ public class Character {
 	public Character(int x,int y){
 		this.x=x;
 		this.y=y;
-		current_health=100;
+		current_health=75;
 		maxHealth=100;
 		isInvincible=false;
 		vspeed=-10;
@@ -74,60 +79,45 @@ public class Character {
 		
 	}
 	public void draw(Graphics g){
-		double amount;
-		g.setColor(Color.blue);
 		switch(dir){
 		case Left:	g.drawImage((Image)left.getImage(), (int)x, (int)y, (int)width, (int)height, null);
 					break;
 		case Right:	g.drawImage((Image)right.getImage(), (int)x, (int)y, (int)width, (int)height, null);
 					break;
 		}
-		g.setColor(Color.DARK_GRAY);
-		if(x>Slime.scroll_x && y<Slime.scroll_y){
-			g.drawRect((int)x-Slime.scroll_x,0, hpbar_width, 16);
-			g.setColor(Color.red);
-			amount=hpbar_width*(current_health/maxHealth);
-			g.fillRect((int)x-Slime.scroll_x,0, (int)amount, 16);
-			g.setColor(Color.BLACK);
-			g.fillRect((int)x-Slime.scroll_x+(int)(amount),0, (int)(hpbar_width-amount), 16);
-		}
-		if(x>Slime.scroll_x && y>Slime.scroll_y){
-			g.drawRect((int)x-Slime.scroll_x, (int)y-Slime.scroll_y, hpbar_width, 16);
-			g.setColor(Color.red);
-			amount=hpbar_width*(current_health/maxHealth);
-			g.fillRect((int)x-Slime.scroll_x, (int)y-Slime.scroll_y, (int)amount, 16);
-			g.setColor(Color.BLACK);
-			g.fillRect((int)(x-Slime.scroll_x+amount),(int)y-Slime.scroll_y, (int)(hpbar_width-amount), 16);
-		}
-		if(x<Slime.scroll_x && y<Slime.scroll_y){
-			g.drawRect(0,0, hpbar_width, 16);
-			g.setColor(Color.red);
-			amount=hpbar_width*(current_health/maxHealth);
-			g.fillRect(0,0, (int)amount, 16);
-			g.setColor(Color.BLACK);
-			g.fillRect((int)(amount),0, (int)(hpbar_width-amount), 16);
-		}
-		if(x<Slime.scroll_x && y>Slime.scroll_y){
-			g.drawRect(0,(int)y-Slime.scroll_y, hpbar_width, 16);
-			g.setColor(Color.red);
-			amount=hpbar_width*(current_health/maxHealth);
-			g.fillRect(0,(int)y-Slime.scroll_y, (int)amount, 16);
-			g.setColor(Color.BLACK);
-			g.fillRect((int)(amount),(int)y-Slime.scroll_y, (int)(hpbar_width-amount), 16);
-		}
+		g.setColor(Color.gray);	
+		if(x>Slime.scroll_x && y<Slime.scroll_y)	
+			drawbar(g,(int)x-Slime.scroll_x,0, hpbar_width, 16);
+		if(x>Slime.scroll_x && y>Slime.scroll_y)
+			drawbar(g,(int)x-Slime.scroll_x, (int)y-Slime.scroll_y, hpbar_width, 16);
+		if(x<Slime.scroll_x && y<Slime.scroll_y)
+			drawbar(g,0,0, hpbar_width, 16);
+		if(x<Slime.scroll_x && y>Slime.scroll_y)
+			drawbar(g,0,(int)y-Slime.scroll_y, hpbar_width, 16);
 		g.setColor(Color.red);
 		g.drawString("Player"+playernumber, (int)(x-(width/2)), (int)(y-8));
-		g.drawRect((int)x, (int)y, (int)width, (int)height);
-		//g.drawString("Player"+playernumber, (int)x+8, (int)x);
-		//g.setColor(Color.blue);
-		//g.drawRect((int)topmask.x, (int)topmask.y, (int)topmask.width, (int)topmask.height);
-		//g.setColor(Color.cyan);
-		//g.drawRect((int)leftmask.x, (int)leftmask.y, (int)leftmask.width, (int)leftmask.height);
-		//g.setColor(Color.DARK_GRAY);
-		//g.drawRect((int)rightmask.x, (int)rightmask.y, (int)rightmask.width, (int)rightmask.height);
+		g.drawRect((int)x, (int)y, (int)width, (int)height);		
+	}
+	private void drawbar(Graphics g,int x,int y,int width,int height) {
+		double amount=hpbar_width*(current_health/maxHealth);
+		g.drawRect(x,y,portraitX_size,portraitY_size);
+		int[] xpoint={x+portraitX_size+16,x+width+portraitX_size+16,x+180+portraitX_size+16,x+portraitX_size+5};
+		int[] ypoint={y+(portraitY_size/2),y+(portraitY_size/2),y+(height/2)+(portraitY_size/2),y+(height/2)+(portraitY_size/2)};
+		Polygon maxhpbar=new Polygon(xpoint, ypoint, 4);
+		g.setColor(new Color(0x00ff00));
 		//g.setColor(Color.green);
-		//g.drawRect((int)downmask.x, (int)downmask.y, (int)downmask.width, (int)downmask.height);
-		
+		g.drawPolygon(maxhpbar);
+		g.fillPolygon(maxhpbar);
+		if(current_health<maxHealth){
+			int[] xpoint2={(int)(x+16+portraitX_size+amount+5),(int)(x+width+portraitX_size+16),(int)(x+width+portraitX_size+16-5),(int)(x+16+portraitX_size+amount)};
+			int[] ypoint2={y+(portraitY_size/2),y+(portraitY_size/2),y+(height/2)+(portraitY_size/2),y+(height/2)+(portraitY_size/2)};
+			Polygon currenthpbar=new Polygon(xpoint2, ypoint2, 4);
+			g.setColor(new Color(0xdc143c));
+			g.drawPolygon(currenthpbar);
+			g.fillPolygon(currenthpbar);
+		}
+		g.setColor(Color.darkGray);
+		g.drawString("Player "+playernumber,x+portraitX_size+12,y+12);
 	}
 	public void jump(){
 		charState=state.Jumping;
@@ -189,7 +179,7 @@ public class Character {
 				}
 			}
 			if(dir==direction.Right && isPressedRight){
-				collisionRight=getCollision(new Point((int)(x+width),(int)(y)),new Point((int)(x+width),(int)(y+height-2)));
+				collisionRight=getCollision(new Point((int)(x+width-1),(int)(y)),new Point((int)(x+width-1),(int)(y+height-2)));
 				if(collisionRight){
 					if(charState==state.Falling || charState==state.Standing){
 						if(polygonType==1){//on a down slope
@@ -206,22 +196,37 @@ public class Character {
 						}
 					}
 				}
-				else{//nothing infront of me so move move
+				else{//nothing infront of me so move
 					x+=movement_speed;
 					mastermask.x=x;
 					hspeed=1;
 				}
 			}
-				if(charState==state.Falling)
-				charState=state.Standing;
+				if(charState==state.Falling){
+					if(polygonType==4){
+						switchPress(colliding_Tile);
+						colliding_Tile.destroyShape();
+						}
+					charState=state.Standing;
+			}
 		}
 	}
 	private boolean getCollision(Point pt1,Point pt2) {
 		for(Tile aTile:Level.tile)
 			if(aTile.shape.contains(pt1)|| aTile.shape.contains(pt2)){
 				polygonType=aTile.type;
+				colliding_Tile=aTile;
 				return true;
-			}
+				}
 		return false;
+	}
+	private void switchPress(Tile aTile){
+		BufferedImage img;
+		try {
+			img = ImageIO.read(getClass().getResource("/tileset/buttonRed_pressed.png"));
+			aTile.img=img;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

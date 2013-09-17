@@ -16,14 +16,6 @@ public class Tile {
 		this.height=img.getHeight(null);
 		build();
 	}
-	public Tile(int x, int y,int width,int height, int type){
-		this.x=x;
-		this.y=y;
-		this.type=type;
-		this.width=width;
-		this.height=height;
-		build();
-	}
 	private void build() {
 		switch(type){
 		case 1: int[] xcoord={x,x+width,x};
@@ -35,11 +27,15 @@ public class Tile {
 				int[] ycoord2={y+height,y,y+height};
 				shape=new Polygon(xcoord2, ycoord2, 3);
 				break;
-		case 3: int[] xcoord3={x,x+width,x+width,x};
+		case 3:
+		case 4:	int[] xcoord3={x,x+width,x+width,x};
 				int[] ycoord3={y,y,y+height,y+height};
 				shape=new Polygon(xcoord3, ycoord3, 4);
 				break;
 		}
-		Level.poly.add(shape);
+		//Level.poly.add(shape);
+	}
+	public void destroyShape() {
+		shape=new Polygon();
 	}
 }

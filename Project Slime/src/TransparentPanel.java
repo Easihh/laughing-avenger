@@ -9,13 +9,14 @@ import java.awt.FlowLayout;
 
 public class TransparentPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
+	protected float transparency=0.5f;
 	public TransparentPanel(){
 		setBackground(Color.BLACK);
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 	}
 	public void paintComponent(Graphics g){
 		Graphics2D g2d=(Graphics2D)g.create();
-		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
 		super.paintComponent(g2d);
 		g2d.dispose();
 	}

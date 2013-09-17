@@ -22,6 +22,7 @@ public class Slime extends JFrame {
 	static JLayeredPane contentPane;
 	private long nano=1000000000L;
 	private long last_invincible;
+	private long last_monsterspawn;
 	static Level themap;
 	static int scroll_x;
 	static int scroll_y;
@@ -31,8 +32,6 @@ public class Slime extends JFrame {
 	static Slime frame;
 	static MenuOption menu;
 	PlatformPanel platpanel;
-	//private PlatformPanel platform=new PlatformPanel();
-	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -55,8 +54,9 @@ public class Slime extends JFrame {
 		screensize_y=500;
 		scroll_x=screensize_x/2;
 		scroll_y=screensize_y/2;
-		hero=new Character(48, 144);
+		hero=new Character(96, 144);
 		last_invincible=System.nanoTime();
+		last_monsterspawn=System.nanoTime();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//setIgnoreRepaint(true);
 		DisplayMode dm=new DisplayMode(800, 600, 16, DisplayMode.REFRESH_RATE_UNKNOWN);
@@ -72,16 +72,15 @@ public class Slime extends JFrame {
 		addKeyListener(new Input());
 		start();
 	}
-	public void checkMonsterCollision(){
+	public void checkMonster(){
 		for(Monster aMonster:Level.monsterlist){
-			aMonster.setMovement();
-			for(Block ablock:Level.map){
-				if(aMonster.mask.getBounds().intersects(ablock) && ablock.type==99){
-					if(aMonster.dir==Monster.direction.Left)
-						aMonster.dir=Monster.direction.Right;
-					else aMonster.dir=Monster.direction.Left;
-				}
-			}
+			aMonster.update();
+		}
+	}
+	public void monsterSpawn(){
+		if((System.nanoTime()-last_monsterspawn)/nano >5){
+			Level.monsterlist.add(new Monster(144,384,1));
+			last_monsterspawn=System.nanoTime();
 		}
 	}
 	public void checkCollision(){
@@ -111,9 +110,10 @@ public class Slime extends JFrame {
 					sleep/=1000000;
 					try {
 						Thread.sleep(sleep);
-						checkMonsterCollision();
+						checkMonster();
 						checkCollision();
 						hero.gravity();
+						monsterSpawn();
 						repaint();
 						prev=System.nanoTime();
 					}catch (InterruptedException e) {

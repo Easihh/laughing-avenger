@@ -1,7 +1,5 @@
 import java.awt.Image;
 import java.awt.Graphics;
-import javax.swing.ImageIcon;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.awt.geom.Rectangle2D;

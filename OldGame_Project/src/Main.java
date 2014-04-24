@@ -1,32 +1,20 @@
 import java.net.URL;
 import java.util.ArrayList;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.KeyboardFocusManager;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
-import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import javax.imageio.ImageIO;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.AbstractAction;
-import javax.swing.JDesktopPane;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.Action;  
-import javax.swing.JComponent;  
-import javax.swing.KeyStroke; 
-import javax.swing.event.InternalFrameListener;
 public class Main extends JFrame implements Runnable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private long lastLoopTime;
 	static private int fps=0;
 	//private Graphics g;

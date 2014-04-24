@@ -1,11 +1,6 @@
 import java.awt.Graphics;
 import java.net.*;
 import java.util.ArrayList;
-import java.awt.image.*;
-import java.io.*;
-import java.awt.Image;
-
-import javax.imageio.ImageIO;
 public class Map {
 	String[][] mapRepresentation;
 	private int x;

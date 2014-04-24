@@ -1,32 +1,25 @@
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.awt.KeyboardFocusManager;
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Graphics;
 import java.awt.Window;
 import java.awt.Component;
-import java.awt.Image;
-import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.Action;
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.KeyStroke;
 import javax.swing.JPanel;
 import javax.swing.JButton;
-import java.awt.Dialog.ModalityType;
 import java.awt.Point;
 import java.net.URL;
 import java.util.ArrayList;
 public class Inventory extends JDialog{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Character link;
 	InventoryPanel myinventory=new InventoryPanel();
 	ArrayList<Item> myInventory=new ArrayList<Item>();

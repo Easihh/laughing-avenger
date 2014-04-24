@@ -2,8 +2,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
-
 public class Selector extends Rectangle2D.Double{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public Selector(){
 		super();
 		height=32;

@@ -1,10 +1,6 @@
 import java.awt.Graphics;
-import java.util.Random;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.net.URL;
 import java.awt.Image;
-import javax.imageio.ImageIO;
 abstract class Monster {
 	private static int id;
 	private int myID;

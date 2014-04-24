@@ -4,6 +4,7 @@ public class Sprite {
 ArrayList<aScene> Animation=new ArrayList<aScene>();
 private int anim_Index;
 private int animMaxIndex;
+
 	public Sprite(){
 		animMaxIndex=0;
 	anim_Index=0;

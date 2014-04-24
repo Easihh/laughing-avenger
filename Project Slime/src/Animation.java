@@ -1,7 +1,6 @@
 import java.awt.Image;
 import java.util.ArrayList;
 
-
 public class Animation {
 	long nano=1000000000L;
 	ArrayList<Sprite> spr=new ArrayList<Sprite>();

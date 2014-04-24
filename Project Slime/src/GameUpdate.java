@@ -1,6 +1,5 @@
 
 public class GameUpdate extends Thread{
-
 	@Override
 	public void run() {
 		long nano=1000000000L;

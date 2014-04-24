@@ -1,7 +1,6 @@
 import java.awt.Image;
 import java.awt.Polygon;
 
-
 public class Tile {
 	int x,y,width,height;
 	Image img;

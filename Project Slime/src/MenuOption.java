@@ -1,22 +1,18 @@
-import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-
-import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.BorderLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
-import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
 public class MenuOption extends TransparentPanel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public MenuOption() {
 		setLayout(null);

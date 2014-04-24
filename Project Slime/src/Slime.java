@@ -1,21 +1,18 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.DisplayMode;
 import java.awt.EventQueue;
-import java.awt.Point;
-import java.awt.Polygon;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.CardLayout;
-import javax.swing.JTextField;
+
 
 
 
 public class Slime extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	static boolean isInMenu=false;
 	Screen myScreen=new Screen();
 	static JLabel hitpoint=new JLabel();

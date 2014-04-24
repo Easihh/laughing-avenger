@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 

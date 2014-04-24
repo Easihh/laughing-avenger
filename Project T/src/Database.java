@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
-
 public class Database {
 	Statement stmt=null;
 	ResultSet rs=null;

@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.sql.SQLException;
-
 public class ConnectionCheck extends Thread{
 	Database mydatabase=new Database();
 	public void run(){

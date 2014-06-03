@@ -60,7 +60,6 @@ public class Character {
 			getImagefromSpriteSheet(img,walk_right);
 			img=ImageIO.read(getClass().getResource("/tileset/shoot_sheet.png"));
 			getProjectileSheet(img);
-			//projectile_img=ImageIO.read(getClass().getResource("/tileset/shoot2.png"));
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -79,7 +78,6 @@ public class Character {
 	private void getImagefromSpriteSheet(BufferedImage spriteSheet,
 			Animation Animation) {
 		BufferedImage[] animation_array=new BufferedImage[cols]; 
-		// TODO Auto-generated method stub
 		 for(int i=0;i<rows;i++){
 			 for(int j=0;j<cols;j++){
 				animation_array[(i*cols)+j]=spriteSheet.getSubimage(j*width, i*height, width, height);
@@ -115,19 +113,58 @@ public class Character {
 	}
 	public void update(){
 		movement();
-		if(Character.isShooting)
+		if(Character.isShooting && weapon!=null)
 			bullet_Collision();
 	}
 	private void bullet_Collision() {
 		for(Tile aTile:Level.map_tile){
-			if(weapon.shape.contains(aTile.x,aTile.y))
-				for(Tile theTile:Level.map_tile){
-					if(weapon.shape.contains(theTile.x,theTile.y+height-1))
-						Character.isShooting=false;	
+			if(weapon.dir==Game.Direction.Right){
+				if(aTile.shape.contains(weapon.x+width,weapon.y) && aTile.shape.contains(weapon.x+width,weapon.y+height-1))
+					Character.isShooting=false;
+			}
+			if(weapon.dir==Game.Direction.Left){
+				if(aTile.shape.contains(weapon.x-movement,weapon.y) && aTile.shape.contains(weapon.x-movement,weapon.y+height-1))
+					Character.isShooting=false;
+			}
+			if(weapon.dir==Game.Direction.Up){
+				if(aTile.shape.contains(weapon.x+width-1,weapon.y-1) && aTile.shape.contains(weapon.x,weapon.y-1))
+					Character.isShooting=false;
+			}
+			if(weapon.dir==Game.Direction.Down){
+				if(aTile.shape.contains(weapon.x+width-1,weapon.y+height) && aTile.shape.contains(weapon.x,weapon.y+height))
+					Character.isShooting=false;
 			}
 		}
-		
+		//if still no full collision check if bullet is colliding with two tile instead of 1
+		if(Character.isShooting){
+			for(Tile aTile:Level.map_tile){
+				if(weapon.dir==Game.Direction.Right && aTile.shape.contains(weapon.x+width,weapon.y)){//check top part collision
+					for(Tile theTile:Level.map_tile){
+					 if(theTile.shape.contains(weapon.x+width,weapon.y+height-1))//check bottom part collision
+						Character.isShooting=false;
+				}
+			}
+				if(weapon.dir==Game.Direction.Left && aTile.shape.contains(weapon.x-movement,weapon.y)){//check top part collision
+					for(Tile theTile:Level.map_tile){
+					 if(theTile.shape.contains(weapon.x-movement,weapon.y+height-1))//check bottom part collision
+						Character.isShooting=false;
+				}
+			}
+				if(weapon.dir==Game.Direction.Up && aTile.shape.contains(weapon.x,weapon.y-1)){//check left part collision
+					for(Tile theTile:Level.map_tile){
+					 if(theTile.shape.contains(weapon.x+width-1,weapon.y-1))//check right part collision
+						Character.isShooting=false;
+				}
+			}
+				if(weapon.dir==Game.Direction.Down && aTile.shape.contains(weapon.x,weapon.y+height)){//check left part collision
+					for(Tile theTile:Level.map_tile){
+					 if(theTile.shape.contains(weapon.x+width-1,weapon.y+height))//check right part collision
+						Character.isShooting=false;
+				}
+			}
+		}
 	}
+}
 	private boolean checkCollision(Point pt1,Point pt2) {
 		if(Level.goal.shape.contains(pt1)|| Level.goal.shape.contains(pt2))
 			if(Level.goal.getType()==5)
@@ -144,7 +181,7 @@ public class Character {
 				
 				case 2: if(aTile.shape.contains(pt1) && aTile.shape.contains(pt2)){
 							select_Tile=aTile;
-							aTile.moveTile(step,lastKey);
+							aTile.moveTile(step);
 						}
 						break;
 				case 3: takeHeart(aTile);
@@ -165,7 +202,6 @@ public class Character {
 	private void movement() {
 		checkMovementState();
 		if(!keypressed.isEmpty()&& !isMoving){//if a button direction is held down
-			//last_animation_update=System.nanoTime();
 			if(keypressed.size()==1)
 				lastKey=keypressed.get(0);//get last pressed button
 			else
@@ -236,10 +272,7 @@ public class Character {
 			}
 		}
 	}
-		else{		
-				//isMoving=false;
-			}
-	}
+}
 	private void checkMovementState() {
 		if(targetX<0){
 			if(dir==Game.Direction.Left){
@@ -319,37 +352,26 @@ public class Character {
 				toRemove=abutton;
 		}
 		keypressed.remove(toRemove);
-		//snapGrid();
-
-	}
-	private static void snapGrid() {
-		/*if(isPushing){
-			if(x%step>0)
-				x-=x%step;
-		}*/
-		if(x%step>0){
-				if(x%step<step/2)
-					x-=x%step;
-				else
-					x+=step-x%step;
-		}
-		if(y%step>0){
-				if(y%step<step/2)
-					y-=y%step;
-				else
-					y+=step-y%step;
-		}
 	}
 	public static void fireProjectile() {
-		snapGrid();
 		if(!Character.isShooting)
 			if(ammo>=1){
 				Character.isShooting=true;
-				if(Character.dir==Game.Direction.Down || Character.dir==Game.Direction.Up)
-					Character.weapon=new Projectile(x,y,projectile_img[1],Character.dir);
-				else
-					Character.weapon=new Projectile(x,y,projectile_img[0],Character.dir);
-			}
+				createProjectile();
+			}	
+	}
+	private static void createProjectile() {
+		switch(Character.dir){
+		
+		case Right:	Character.weapon=new Projectile(x+targetX,y,projectile_img[0],Character.dir);
+					break;
+		case Left:	Character.weapon=new Projectile(x+targetX,y,projectile_img[0],Character.dir);
+					break;
+		case Up:	Character.weapon=new Projectile(x,y+targetX,projectile_img[1],Character.dir);
+					break;
+		case Down:	Character.weapon=new Projectile(x,y+targetX,projectile_img[1],Character.dir);
+					break;
+		}
 		
 	}
 }

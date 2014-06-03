@@ -1,7 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Polygon;
 
 
@@ -26,54 +25,28 @@ public class Tile {
 		img=image;
 		type=99;// we have a background
 	}
-	public void moveTile(int movement,Game.button abutton){
-		switch(abutton){
-		case D: 	if(!checkCollison(x+width,y,x+width,y+height-1) && Character.dir==Game.Direction.Right){
-							Character.targetX=Character.step;
-							Character.isMoving=true;
-							Character.isPushing=true;
+	public void moveTile(int movement){
+		if(!checkCollison(x+width,y,x+width,y+height-1) && Character.dir==Game.Direction.Right){
+						Character.targetX=Character.step;
+						Character.isMoving=true;
+						Character.isPushing=true;
 					}
-					if(!checkCollison(x,y+height,x+width-1,y+height)&& Character.dir==Game.Direction.Down){
+		if(!checkCollison(x,y+height,x+width-1,y+height)&& Character.dir==Game.Direction.Down){
 						Character.targetX=Character.step;
 						Character.isMoving=true;
 						Character.isPushing=true;
 						
 					}
-					if(!checkCollison(x,y-1,x+width-1,y-1)&& Character.dir==Game.Direction.Up){
+		if(!checkCollison(x,y-1,x+width-1,y-1)&& Character.dir==Game.Direction.Up){
 						Character.targetX=-Character.step;
 						Character.isMoving=true;
 						Character.isPushing=true;
 					}
-					break;
-		case A: 	if(!checkCollison(x-1,y,x-1,y+height-1)&& Character.dir==Game.Direction.Left){
+		if(!checkCollison(x-1,y,x-1,y+height-1)&& Character.dir==Game.Direction.Left){
 						Character.targetX=-Character.step;
 						Character.isMoving=true;
 						Character.isPushing=true;
 					}
-					if(!checkCollison(x,y+height,x+width-1,y+height)&& Character.dir==Game.Direction.Down){
-						Character.targetX=Character.step;
-						Character.isMoving=true;
-						Character.isPushing=true;
-					}
-					if(!checkCollison(x,y-1,x+width-1,y-1)&& Character.dir==Game.Direction.Up){
-						Character.targetX=-Character.step;
-						Character.isMoving=true;
-						Character.isPushing=true;
-					}
-					break;
-		case W: 	if(!checkCollison(x,y-1,x+width-1,y-1)&& Character.dir==Game.Direction.Up){
-						Character.targetX=-Character.step;
-						Character.isMoving=true;
-						Character.isPushing=true;
-					}
-					break;
-		case S: 	if(!checkCollison(x,y+height,x+width-1,y+height)&& Character.dir==Game.Direction.Down){
-						Character.targetX=Character.step;
-						Character.isMoving=true;
-						Character.isPushing=true;
-					}
-					break;
-		}
 		int[] xpoints={x,x+width,x+width,x};
 		int[] ypoints={y,y,y+height,y+height};
 		shape=new Polygon(xpoints, ypoints, 4);
@@ -108,8 +81,8 @@ public class Tile {
 			}
 		}
 		else
-			//g.drawImage(img,x,y,width,height,null);
-		g.drawPolygon(shape);
+			g.drawImage(img,x,y,width,height,null);
+		//g.drawPolygon(shape);
 	}
 
 }

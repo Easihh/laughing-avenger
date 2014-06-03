@@ -3,12 +3,12 @@ import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 
 public class Projectile {
-	private int x;
-	private int y;
+	public int x;
+	public int y;
 	private int width=24;
 	private int height=24;
 	private BufferedImage img=null;	
-	private Game.Direction dir;
+	public Game.Direction dir;
 	private int projectile_speed=4;
 	public Polygon shape;
 	public Projectile(int x,int y,BufferedImage img,Game.Direction dir){
@@ -36,9 +36,5 @@ public class Projectile {
 		shape=new Polygon(xpoints, ypoints, 4);
 		//g.drawPolygon(shape);
 		g.drawImage(img,x,y,null);
-		//if(x>=Level.map_width-24 || x<=24 || y<=24 || y>=Level.map_height-24){//missle going out of range
-			//Character.isShooting=false;			
-		//}
-		//System.out.println("ProjectTile Y"+y);
 	}
 }

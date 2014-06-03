@@ -1,0 +1,12 @@
+Version 0.11:
+
+-Loading tile bug assets from v0.1 fixed
+-Fixed racing bug with thread and bullet collision call.
+-Corrected issue that allowed to move block when not full aligned
+-Added Shooting to the game and with 1 tile or multiple tile collision.
+-Fixed Opened Chest image to no longer show a white spot.
+
+
+Version 0.1:
+
+Basic Mapping,Movement & Collision,Character animation) no issues.

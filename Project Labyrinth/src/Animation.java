@@ -10,6 +10,7 @@ public class Animation {
 	public Animation(int max, int next){
 		max_index=max;
 		next_frame=next;
+		animation=new BufferedImage[max];
 	}
 	public void increaseIndex(long last_update){
 		if((System.nanoTime()-last_update)/nano>next_frame){

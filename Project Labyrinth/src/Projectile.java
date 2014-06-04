@@ -9,7 +9,7 @@ public class Projectile {
 	private int height=24;
 	private BufferedImage img=null;	
 	public Game.Direction dir;
-	private int projectile_speed=4;
+	private int projectile_speed=6;
 	public Polygon shape;
 	public Projectile(int x,int y,BufferedImage img,Game.Direction dir){
 		this.x=x;

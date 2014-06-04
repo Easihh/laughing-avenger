@@ -60,10 +60,23 @@ public class Character {
 			getImagefromSpriteSheet(img,walk_right);
 			img=ImageIO.read(getClass().getResource("/tileset/shoot_sheet.png"));
 			getProjectileSheet(img);
+			img=ImageIO.read(getClass().getResource("/tileset/monster_state.png"));
+			getMonsterStatesheet(img);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	private void getMonsterStatesheet(BufferedImage StateSheet) {
+		int sheet_row=1;
+		int sheet_cols=2;
+		Level.monsterState=new BufferedImage[sheet_row*sheet_cols];
+		for(int i=0;i<sheet_row;i++){
+			 for(int j=0;j<sheet_cols;j++){
+				Level.monsterState[(i*sheet_cols)+j]=StateSheet.getSubimage(j*width, i*height, width, height);
+			 }
+		}
+		
 	}
 	private void getProjectileSheet(BufferedImage spriteSheet) {
 		int sheet_row=1;
@@ -119,20 +132,32 @@ public class Character {
 	private void bullet_Collision() {
 		for(Tile aTile:Level.map_tile){
 			if(weapon.dir==Game.Direction.Right){
-				if(aTile.shape.contains(weapon.x+width,weapon.y) && aTile.shape.contains(weapon.x+width,weapon.y+height-1))
+				if(aTile.shape.contains(weapon.x+width,weapon.y) && aTile.shape.contains(weapon.x+width,weapon.y+height-1)){
 					Character.isShooting=false;
+					if(aTile.isMonster())
+						aTile.transform();
+				}
 			}
 			if(weapon.dir==Game.Direction.Left){
-				if(aTile.shape.contains(weapon.x-movement,weapon.y) && aTile.shape.contains(weapon.x-movement,weapon.y+height-1))
+				if(aTile.shape.contains(weapon.x-movement,weapon.y) && aTile.shape.contains(weapon.x-movement,weapon.y+height-1)){
 					Character.isShooting=false;
+				if(aTile.isMonster())
+					aTile.transform();
+				}
 			}
 			if(weapon.dir==Game.Direction.Up){
-				if(aTile.shape.contains(weapon.x+width-1,weapon.y-1) && aTile.shape.contains(weapon.x,weapon.y-1))
+				if(aTile.shape.contains(weapon.x+width-1,weapon.y-1) && aTile.shape.contains(weapon.x,weapon.y-1)){
 					Character.isShooting=false;
+				if(aTile.isMonster())
+					aTile.transform();
+				}
 			}
 			if(weapon.dir==Game.Direction.Down){
-				if(aTile.shape.contains(weapon.x+width-1,weapon.y+height) && aTile.shape.contains(weapon.x,weapon.y+height))
+				if(aTile.shape.contains(weapon.x+width-1,weapon.y+height) && aTile.shape.contains(weapon.x,weapon.y+height)){
 					Character.isShooting=false;
+				if(aTile.isMonster())
+					aTile.transform();
+				}
 			}
 		}
 		//if still no full collision check if bullet is colliding with two tile instead of 1

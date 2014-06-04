@@ -22,10 +22,11 @@ public class Level {
 	static int heart_amount=0;
 	static Tile map_background;
 	static ArrayList<Tile> map_tile=new ArrayList<Tile>();
-	private static BufferedImage[] game_tileset=new BufferedImage[50];
+	static BufferedImage[] game_tileset=new BufferedImage[50];
 	static Tile goal;
 	static Tile goal_top;
 	static Tile door;
+	public static BufferedImage[] monsterState;
 	public Level(){
 		try {
 			setBackground("start");
@@ -78,7 +79,12 @@ public class Level {
 }
 	private void createTile(String attributeValue) throws IOException {
 		BufferedImage img=null;
+		BufferedImage sprite_sheet=null;
 		int type=0;
+		int maxFrame=0;
+		int nextFrame=0;
+		boolean isMonster=false;
+		Tile aTile;
 		switch(attributeValue){
 		case "0": 	type=99;//no tile;show background
 					break;
@@ -101,14 +107,32 @@ public class Level {
 					break;
 		case "7": 	img=game_tileset[6];//goal chest closed
 					type=4;
-					goal=new Tile(coordX,coordY,img,type);
+					goal=new Tile(coordX,coordY,img,type,false);
+					break;
+		case "11": 	img=game_tileset[10];//Green worm monster Left
+					type=1;
+					isMonster=true;
+					maxFrame=2;
+					nextFrame=1000;
+					sprite_sheet=ImageIO.read(getClass().getResource("/tileset/worm_left.png"));
+					break;
+		case "12": 	img=game_tileset[11];//Green worm monster right
+					type=1;
+					isMonster=true;
+					maxFrame=2;
+					nextFrame=1000;
+					sprite_sheet=ImageIO.read(getClass().getResource("/tileset/worm_right.png"));
 					break;
 		case "13": 	img=game_tileset[12];//door opened
 					type=1;
 					break;
 		}
+		aTile=new Tile(coordX,coordY,img,type,isMonster);
+		if(aTile.isMonster()){
+			aTile.setAnimation(sprite_sheet,maxFrame,nextFrame);
+		}
 		if(type!=99 && type!=4)
-			map_tile.add(new Tile(coordX,coordY,img,type));
+			map_tile.add(aTile);
 	}
 	public void render(Graphics g){
 		map_background.render(g);
@@ -121,19 +145,26 @@ public class Level {
 	}
 	public static void openChest() {
 		BufferedImage img=game_tileset[7];//bottom part of chest
-		goal=new Tile(goal.x,goal.y,img,5);	
+		goal=new Tile(goal.x,goal.y,img,5,false);	
 		img=game_tileset[8];//top part of chest
-		goal_top=new Tile(goal.x,goal.y-24,img,5);	
+		goal_top=new Tile(goal.x,goal.y-24,img,5,false);	
 	}
 	public static void takeGoal() {
 		BufferedImage img=game_tileset[9];//bottom part of chest empty
-		goal=new Tile(goal.x,goal.y,img,5);
+		goal=new Tile(goal.x,goal.y,img,5,false);
+		ArrayList<Tile> toRemove=new ArrayList<Tile>();
+		//open the goal
 		for(Tile aTile:map_tile){
 			if(aTile.img==game_tileset[1]){
 				aTile.type=4;
 				aTile.img=game_tileset[12];
 			}
+		//Delete all Monster
+			if(aTile.isMonster()){
+				toRemove.add(aTile);
+			}
 		}
+		map_tile.removeAll(toRemove);
 	}
 	public static void nextLevel() {
 		// TODO Auto-generated method stub

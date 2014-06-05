@@ -6,29 +6,41 @@ import java.awt.image.BufferedImage;
 
 
 public class Tile {
-	 int x;
-	 int y;
-	private int width=24;
-	private int height=24;
+	private final int height=24;
+	private final int width=24;
+	private final long nano=1000000L;
+	private boolean isMonster=false;
 	private int index=0;
 	private int maxFrame=0;
 	private int nextFrame=0;
-	private final long nano=1000000L;
-	private long time_since_transform=0;
+	private int oldX;
+	private int oldY;
+	private int oldtype;
+	private int type;//1=rock 2=moveable green block,3=heartcard,4=closed goal,5=opened chest,6=monster(worm),99=background
 	private long last_animation_update=0;
-	private int TransformedState=0;
+	private long time_since_transform=0;
+	private Image old_img;
 	private Image previousState;
-	private boolean isMonster=false;
-	Image img;
-	Animation animation;
-	int type;//1=rock 2=moveable green block,3=heartcard,4=closed goal,5=opened chest,6=monster(worm),99=background
+	
+	public Animation animation;
+	public boolean isMovingAcrossScreen = false;
+	public Game.Direction dir;
+	public int TransformedState=0;
+	public int x;
+	public int y;
+	public Image img;
 	public Polygon shape;
+	
 	public Tile(int x, int y,Image image,int type,boolean isMonster) {
 		this.x=x;
 		this.y=y;
+		oldX=x;
+		oldY=y;
 		this.type=type;
+		oldtype=type;
 		this.isMonster=isMonster;
 		img=image;
+		old_img=image;
 		int[] xpoints={x,x+width,x+width,x};
 		int[] ypoints={y,y,y+height,y+height};
 		shape=new Polygon(xpoints, ypoints, 4);
@@ -64,7 +76,6 @@ public class Tile {
 		shape=new Polygon(xpoints, ypoints, 4);
 	}
 	private boolean checkCollison(int x1,int y1,int x2,int y2) {
-		// TODO Auto-generated method stub
 		for(Tile aTile:Level.map_tile){
 			if(aTile.shape.contains(x1,y1)|| aTile.shape.contains(x2,y2)){
 				return true;
@@ -94,13 +105,45 @@ public class Tile {
 		}
 		else{
 				checkState();
-				if(isMonster && TransformedState==0)
+				if(isMonster && TransformedState==0 && !isMovingAcrossScreen)
 					g.drawImage(animation.animation[index],x,y,width,height,null);
-				else
+				else{
+					if(isMovingAcrossScreen)
+						updateLocation();
+					if(!isOffScreen())
 				g.drawImage(img,x,y,width,height,null);
+				}
 		}
 		//g.drawPolygon(shape);
 		updateAnimation();
+	}
+	private void updateLocation() {
+		switch(dir){
+		case Left:	x-=8;
+					break;
+		case Right:	x+=8;
+					break;
+		case Down:	y+=8;
+					break;
+		case Up:	y-=8;
+					break;
+		}
+	}
+	public boolean isOffScreen(){
+		if(x>Level.map_width || x<0 || y<0 || y>Level.map_height){
+			Tile aTile=this;
+			aTile.x=oldX;
+			aTile.y=oldY;
+			aTile.type=oldtype;
+			aTile.img=old_img;	
+			aTile.isMovingAcrossScreen=false;
+			aTile.TransformedState=0;
+			Level.addRespawn(aTile);
+			aTile.updateMask();
+			Level.toRemove.add(aTile);//remove the tile if it goes offscreen
+			return true;
+		}
+		return false;
 	}
 	public void updateAnimation(){
 		if(isMonster && TransformedState==0)
@@ -144,6 +187,14 @@ public class Tile {
 				animation.animation[(i*maxFrame)+j]=anim_sheet.getSubimage(j*width, i*height, width, height);
 			 }
 		 }
+	}
+	public void moveAcross_Screen(Game.Direction dir){
+		type=4;//tile can now pass through everything
+		isMovingAcrossScreen = true;
+		this.dir=dir;
+	}
+	public void setType(int i) {
+		type=i;	
 	}
 
 }

@@ -7,9 +7,7 @@ public class Labyrinth extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private MainPanel mainPane;
-	/**
-	 * Launch the application.
-	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -23,9 +21,6 @@ public class Labyrinth extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public Labyrinth() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(new Dimension(480,424));
@@ -43,8 +38,6 @@ public class Labyrinth extends JFrame {
 			long timer=0;
 			long prev=System.nanoTime();
 			int fps=0;
-			//final int max_movement_per_second=12;
-			//int movement_tick=0;
 			public void run(){
 				while(true){
 				fps++;
@@ -53,10 +46,7 @@ public class Labyrinth extends JFrame {
 					sleep/=1000000;
 					try {
 						Thread.sleep(sleep);
-						//if(movement_tick!=max_movement_per_second){
-							MainPanel.hero.update();
-							//movement_tick++;
-						//}
+						MainPanel.hero.update();
 						repaint();
 						prev=System.nanoTime();
 					}catch (InterruptedException e) {
@@ -65,7 +55,6 @@ public class Labyrinth extends JFrame {
 				}
 				if((System.nanoTime()-timer)/nano>=1){						
 					setTitle("Project:Labyrinth FPS:"+fps);
-					//movement_tick=0;
 					fps=0;
 					timer=System.nanoTime();
 				}

@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -12,21 +12,26 @@ import javax.xml.stream.XMLStreamReader;
 
 
 public class Level {
+	private final long nano=1000000000L;
 	private final int tileSize=24; //24x24
-	private int tileset_rows=4;
-	private int tileset_cols=4;
-	static int map_width=384;
-	static int map_height=384;
+	private final int tileset_rows=4;
+	private final int tileset_cols=4;
 	private int coordX=0;
 	private int coordY=0;
-	static int heart_amount=0;
-	static Tile map_background;
-	static ArrayList<Tile> map_tile=new ArrayList<Tile>();
-	static BufferedImage[] game_tileset=new BufferedImage[50];
-	static Tile goal;
-	static Tile goal_top;
-	static Tile door;
+	private Tile map_background;
+	private static ArrayList<Tile> toRespawn=new ArrayList<Tile>();
+	private static Vector<Long> Respawn_Timer=new Vector<Long>();
+	private static Tile goal_top;
+	
+	public final static int map_width=384;
+	public final static int map_height=384;
+	public static int heart_amount=0;
+	public static ArrayList<Tile> map_tile=new ArrayList<Tile>();
+	public static ArrayList<Tile> toRemove=new ArrayList<Tile>();
+	public static BufferedImage[] game_tileset=new BufferedImage[50];
 	public static BufferedImage[] monsterState;
+	public static Tile goal;
+	
 	public Level(){
 		try {
 			setBackground("start");
@@ -142,6 +147,27 @@ public class Level {
 		for(Tile aTile:map_tile){
 			aTile.render(g);
 		}
+		if(!toRemove.isEmpty()){
+			map_tile.removeAll(toRemove);
+			toRemove.clear();
+		}
+		if(!toRespawn.isEmpty() && goal.getType()!=5){
+			checkRespawn();
+		}
+	}
+	private void checkRespawn() {
+		for(int i=0;i<Respawn_Timer.size();i++){
+			if((System.nanoTime()-Respawn_Timer.elementAt(i))/nano >10){
+				map_tile.add(toRespawn.get(i));
+				Respawn_Timer.remove(i);
+				toRespawn.remove(i);
+			}
+		}
+		
+	}
+	static void addRespawn(Tile tile) {
+		toRespawn.add(tile);
+		Respawn_Timer.add(System.nanoTime());
 	}
 	public static void openChest() {
 		BufferedImage img=game_tileset[7];//bottom part of chest
@@ -152,11 +178,10 @@ public class Level {
 	public static void takeGoal() {
 		BufferedImage img=game_tileset[9];//bottom part of chest empty
 		goal=new Tile(goal.x,goal.y,img,5,false);
-		ArrayList<Tile> toRemove=new ArrayList<Tile>();
 		//open the goal
 		for(Tile aTile:map_tile){
 			if(aTile.img==game_tileset[1]){
-				aTile.type=4;
+				aTile.setType(4);
 				aTile.img=game_tileset[12];
 			}
 		//Delete all Monster
@@ -167,7 +192,6 @@ public class Level {
 		map_tile.removeAll(toRemove);
 	}
 	public static void nextLevel() {
-		// TODO Auto-generated method stub
 		System.out.println("Next Level");
 	}
 }

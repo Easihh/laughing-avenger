@@ -10,32 +10,33 @@ import javax.imageio.ImageIO;
 
 
 public class Character {
-	public static int x;
-	public static int y;
-	private static int ammo;
-	public static boolean isShooting;
-	public static boolean isPushing;
-	private int width=24;
-	private int height=24;
-	private int rows=1;// character animation row
-	private int cols=5;// character animation colum
+	private final int width=24;
+	private final int height=24;
+	private final int rows=1;// character animation row
+	private final int cols=5;// character animation colum
 	private final int movement=2;
-	final static int step=12;
-	static boolean isMoving;
-	private BufferedImage img=null;
 	private Animation walk_down=null;
 	private Animation walk_up=null;
 	private Animation walk_left=null;
 	private Animation walk_right=null;
-	static long last_animation_update=0;
-	static public Game.button lastKey;
-	static public Game.button lastPressed;
-	static ArrayList<Game.button> keypressed=new ArrayList<Game.button>();
-	static public Game.Direction dir;
-	static Projectile weapon=null;
-	static private BufferedImage[] projectile_img;
-	static private Tile select_Tile;
-	static int targetX=0;
+	private BufferedImage img=null;
+	private static  BufferedImage[] projectile_img;
+	private static int ammo;
+	private static int x;
+	private static int y;
+	private static Tile select_Tile;
+	
+	public final static int step=12;
+	public static ArrayList<Game.button> keypressed=new ArrayList<Game.button>();
+	public static boolean isShooting;
+	public static boolean isPushing;
+	public static boolean isMoving;
+	public static Game.button lastKey;
+	public static Game.Direction dir;
+	public static int targetX=0;
+	public static long last_animation_update=0;
+	public static Projectile weapon=null;
+		
 	public Character(int x, int y){
 		Character.x=x;
 		Character.y=y;
@@ -135,31 +136,31 @@ public class Character {
 				if(aTile.shape.contains(weapon.x+width,weapon.y) && aTile.shape.contains(weapon.x+width,weapon.y+height-1)){
 					Character.isShooting=false;
 					if(aTile.isMonster())
-						aTile.transform();
+						checkMonsterState(aTile);
 				}
 			}
 			if(weapon.dir==Game.Direction.Left){
 				if(aTile.shape.contains(weapon.x-movement,weapon.y) && aTile.shape.contains(weapon.x-movement,weapon.y+height-1)){
 					Character.isShooting=false;
-				if(aTile.isMonster())
-					aTile.transform();
+					if(aTile.isMonster())
+						checkMonsterState(aTile);
 				}
 			}
 			if(weapon.dir==Game.Direction.Up){
 				if(aTile.shape.contains(weapon.x+width-1,weapon.y-1) && aTile.shape.contains(weapon.x,weapon.y-1)){
 					Character.isShooting=false;
-				if(aTile.isMonster())
-					aTile.transform();
+					if(aTile.isMonster())
+						checkMonsterState(aTile);
 				}
 			}
 			if(weapon.dir==Game.Direction.Down){
 				if(aTile.shape.contains(weapon.x+width-1,weapon.y+height) && aTile.shape.contains(weapon.x,weapon.y+height)){
 					Character.isShooting=false;
-				if(aTile.isMonster())
-					aTile.transform();
-				}
+					if(aTile.isMonster())
+						checkMonsterState(aTile);
 			}
 		}
+	}
 		//if still no full collision check if bullet is colliding with two tile instead of 1
 		if(Character.isShooting){
 			for(Tile aTile:Level.map_tile){
@@ -190,6 +191,14 @@ public class Character {
 		}
 	}
 }
+	public void checkMonsterState(Tile aTile) {
+		
+		if(aTile.isMonster() && aTile.TransformedState==0)
+			aTile.transform();
+		else if(aTile.isMonster() && (aTile.TransformedState==1 || aTile.TransformedState==2))
+			aTile.moveAcross_Screen(weapon.dir);
+		
+	}
 	private boolean checkCollision(Point pt1,Point pt2) {
 		if(Level.goal.shape.contains(pt1)|| Level.goal.shape.contains(pt2))
 			if(Level.goal.getType()==5)

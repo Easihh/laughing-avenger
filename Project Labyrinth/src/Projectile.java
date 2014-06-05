@@ -3,14 +3,16 @@ import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 
 public class Projectile {
+	private BufferedImage img=null;	
+	private final int height=24;
+	private final int width=24;
+	private final int projectile_speed=6;
+	
+	public Game.Direction dir;
 	public int x;
 	public int y;
-	private int width=24;
-	private int height=24;
-	private BufferedImage img=null;	
-	public Game.Direction dir;
-	private int projectile_speed=6;
 	public Polygon shape;
+	
 	public Projectile(int x,int y,BufferedImage img,Game.Direction dir){
 		this.x=x;
 		this.y=y;

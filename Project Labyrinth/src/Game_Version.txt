@@ -1,4 +1,11 @@
+Version 0.13:
+
+-Shooting a monster again while it is in ball form will throw it off screen
+-Monsters should now respawn 10 seconds after being last killed
+-Taking the chest jewel now stop monster from respawning.
+
 Version 0.12:
+
 -Added first monster(Green worm)
 -Monster now transform into a ball when shot at and can be moved like block
 -10 seconds after being shot the monster return to its former state

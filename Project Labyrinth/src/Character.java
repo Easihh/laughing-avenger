@@ -22,8 +22,8 @@ public class Character {
 	private BufferedImage img=null;
 	private static  BufferedImage[] projectile_img;
 	private static int ammo;
-	private static int x;
-	private static int y;
+	public static int x;
+	public static int y;
 	private static Tile select_Tile;
 	
 	public final static int step=12;
@@ -129,6 +129,21 @@ public class Character {
 		movement();
 		if(Character.isShooting && weapon!=null)
 			bullet_Collision();
+		checkMonsterBulletCollision();
+	}
+	private void checkMonsterBulletCollision() {
+			
+		for(Tile theTile:Level.map_tile){
+			if(theTile.myProjectile!=null){
+				Tile currentTile=theTile;
+				for(Tile aTile:Level.map_tile){
+					if(aTile.shape.contains(currentTile.myProjectile.x,currentTile.myProjectile.y) && currentTile!=aTile){
+						if(aTile.getType()!=6)//if its a tree the shot traverse it
+							theTile.canShoot=true;
+					}
+				}
+			}
+		}
 	}
 	private void bullet_Collision() {
 		for(Tile aTile:Level.map_tile){

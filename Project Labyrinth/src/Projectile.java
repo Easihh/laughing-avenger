@@ -6,7 +6,7 @@ public class Projectile {
 	private BufferedImage img=null;	
 	private final int height=24;
 	private final int width=24;
-	private final int projectile_speed=6;
+	int projectile_speed=6;
 	
 	public Game.Direction dir;
 	public int x;

@@ -15,7 +15,7 @@ public class Level {
 	private final long nano=1000000000L;
 	private final int tileSize=24; //24x24
 	private final int tileset_rows=4;
-	private final int tileset_cols=4;
+	private final int tileset_cols=8;
 	private int coordX=0;
 	private int coordY=0;
 	private Tile map_background;
@@ -85,11 +85,13 @@ public class Level {
 	private void createTile(String attributeValue) throws IOException {
 		BufferedImage img=null;
 		BufferedImage sprite_sheet=null;
+		BufferedImage projectileIMG=null;
 		int type=0;
 		int maxFrame=0;
 		int nextFrame=0;
 		boolean isMonster=false;
 		Tile aTile;
+		Game.Direction dir=null;
 		switch(attributeValue){
 		case "0": 	type=99;//no tile;show background
 					break;
@@ -104,39 +106,68 @@ public class Level {
 					heart_amount+=1;
 					type=3;
 					break;
-		case "5": 	img=game_tileset[4];//moveable green block
+		case "6": 	MainPanel.hero=new Character(coordX,coordY);
+					type=0;
+					break;
+		case "9": 	img=game_tileset[8];//moveable green block
 					type=2;
 					break;
-		case "6": 	img=game_tileset[5];//tree
-					type=1;
+		case "10": 	img=game_tileset[9];//tree
+					type=6;
 					break;
-		case "7": 	img=game_tileset[6];//goal chest closed
+		case "11": 	img=game_tileset[10];//goal chest closed
 					type=4;
 					goal=new Tile(coordX,coordY,img,type,false);
 					break;
-		case "11": 	img=game_tileset[10];//Green worm monster Left
+		case "19": 	img=game_tileset[18];//Green worm monster Left
 					type=1;
 					isMonster=true;
 					maxFrame=2;
 					nextFrame=1000;
 					sprite_sheet=ImageIO.read(getClass().getResource("/tileset/worm_left.png"));
 					break;
-		case "12": 	img=game_tileset[11];//Green worm monster right
+		case "20": 	img=game_tileset[19];//Green worm monster right
 					type=1;
 					isMonster=true;
 					maxFrame=2;
 					nextFrame=1000;
 					sprite_sheet=ImageIO.read(getClass().getResource("/tileset/worm_right.png"));
 					break;
-		case "13": 	img=game_tileset[12];//door opened
+		case "5": 	img=game_tileset[4];//door opened
 					type=1;
+					break;
+		case "25": 	img=game_tileset[24];//dragon sleeping up
+					isMonster=true;
+					dir=Game.Direction.Up;
+					projectileIMG=ImageIO.read(getClass().getResource("/tileset/dragon_shot_up.png"));
+					type=7;
+					break;
+		case "26": 	img=game_tileset[25];//dragon sleeping down
+					isMonster=true;
+					dir=Game.Direction.Down;
+					projectileIMG=ImageIO.read(getClass().getResource("/tileset/dragon_shot_down.png"));
+					type=8;
+					break;
+		case "27": 	img=game_tileset[26];//dragon sleeping left
+					isMonster=true;
+					dir=Game.Direction.Left;
+					projectileIMG=ImageIO.read(getClass().getResource("/tileset/dragon_shot_left.png"));
+					type=9;
+					break;
+		case "28": 	img=game_tileset[27];//dragon sleeping right
+					isMonster=true;
+					dir=Game.Direction.Right;
+					projectileIMG=ImageIO.read(getClass().getResource("/tileset/dragon_shot_right.png"));
+					type=10;
 					break;
 		}
 		aTile=new Tile(coordX,coordY,img,type,isMonster);
 		if(aTile.isMonster()){
 			aTile.setAnimation(sprite_sheet,maxFrame,nextFrame);
+			aTile.projectile_img=projectileIMG;
+			aTile.dir=dir;
 		}
-		if(type!=99 && type!=4)
+		if(type!=99 && type!=4 && type!=0)
 			map_tile.add(aTile);
 	}
 	public void render(Graphics g){
@@ -170,19 +201,39 @@ public class Level {
 		Respawn_Timer.add(System.nanoTime());
 	}
 	public static void openChest() {
-		BufferedImage img=game_tileset[7];//bottom part of chest
+		BufferedImage img=game_tileset[11];//bottom part of chest
 		goal=new Tile(goal.x,goal.y,img,5,false);	
-		img=game_tileset[8];//top part of chest
+		img=game_tileset[16];//top part of chest
 		goal_top=new Tile(goal.x,goal.y-24,img,5,false);	
+		//awake all monster
+		for(Tile aTile:map_tile){
+			switch(aTile.getType()){
+			case 7: //awake dragon up
+					aTile.canShoot=true;
+					break;
+			case 8: //awake dragon down
+					aTile.img=game_tileset[12];
+					aTile.canShoot=true;
+					break;
+			case 9: //awake dragon left
+					aTile.img=game_tileset[13];
+					aTile.canShoot=true;
+					break;
+			case 10://awake dragon right
+					aTile.img=game_tileset[6];
+					aTile.canShoot=true;
+					break;
+			}
+		}
 	}
 	public static void takeGoal() {
-		BufferedImage img=game_tileset[9];//bottom part of chest empty
+		BufferedImage img=game_tileset[17];//bottom part of chest empty
 		goal=new Tile(goal.x,goal.y,img,5,false);
 		//open the goal
 		for(Tile aTile:map_tile){
 			if(aTile.img==game_tileset[1]){
 				aTile.setType(4);
-				aTile.img=game_tileset[12];
+				aTile.img=game_tileset[4];
 			}
 		//Delete all Monster
 			if(aTile.isMonster()){

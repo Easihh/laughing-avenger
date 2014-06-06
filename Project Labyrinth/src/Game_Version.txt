@@ -1,3 +1,9 @@
+Version 0.14:
+
+-Added monster(Sleeping Dragon)
+-Certain Monster now wake up and do different ability once all the hearts are taken
+-Implemented Monster shooting  and its collision detection
+
 Version 0.13:
 
 -Shooting a monster again while it is in ball form will throw it off screen

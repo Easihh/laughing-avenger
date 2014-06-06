@@ -16,11 +16,13 @@ public class Tile {
 	private int oldX;
 	private int oldY;
 	private int oldtype;
-	private int type;//1=rock 2=moveable green block,3=heartcard,4=closed goal,5=opened chest,6=monster(worm),99=background
+	private int type;//1=rock 2=moveable green block,3=heartcard,4=closed goal,5=opened chest,6=tree,99=background
 	private long last_animation_update=0;
 	private long time_since_transform=0;
 	private Image old_img;
 	private Image previousState;
+	public Projectile myProjectile;
+	public boolean canShoot=false;
 	
 	public Animation animation;
 	public boolean isMovingAcrossScreen = false;
@@ -30,6 +32,7 @@ public class Tile {
 	public int y;
 	public Image img;
 	public Polygon shape;
+	public BufferedImage projectile_img;
 	
 	public Tile(int x, int y,Image image,int type,boolean isMonster) {
 		this.x=x;
@@ -105,8 +108,14 @@ public class Tile {
 		}
 		else{
 				checkState();
-				if(isMonster && TransformedState==0 && !isMovingAcrossScreen)
+				if(isMonster && TransformedState==0 && !isMovingAcrossScreen){
+					if(maxFrame>0)
 					g.drawImage(animation.animation[index],x,y,width,height,null);
+					else
+						g.drawImage(img,x,y,width,height,null);
+					if(projectile_img!=null)//this monster can shoot
+						fireProjectile(g);
+				}
 				else{
 					if(isMovingAcrossScreen)
 						updateLocation();
@@ -114,8 +123,40 @@ public class Tile {
 				g.drawImage(img,x,y,width,height,null);
 				}
 		}
-		//g.drawPolygon(shape);
 		updateAnimation();
+	}
+	private void fireProjectile(Graphics g) {
+		if(canShoot){
+			if(LineofSight()){
+				myProjectile=new Projectile(x,y,projectile_img,dir);
+				canShoot=false;
+				myProjectile.projectile_speed=3;
+			}
+		}
+		if(myProjectile!=null && !canShoot){
+			//System.out.println("X"+myProjectile.x);
+			//System.out.println("Y"+myProjectile.y);
+			myProjectile.render(g);
+		}
+		
+	}
+	private boolean LineofSight() {
+		switch(dir){
+		
+		case Down: if((Character.x+Character.step==x || Character.x==x || Character.x-Character.step==x) && y<Character.y)
+						return true;
+					break;
+		case Up:	if((x-Character.step==Character.x || x==Character.x|| x+Character.step==Character.x) && y>Character.y)
+						return true;
+					break;
+		case Left:	if((Character.y-Character.step==y || Character.y+Character.step==y ||y==Character.y) && x>Character.x)
+						return true;
+					break;
+		case Right:	if((Character.y-Character.step==y || Character.y+Character.step==y || y==Character.y) && x<Character.x)
+						return true;
+					break;
+		}
+		return false;
 	}
 	private void updateLocation() {
 		switch(dir){

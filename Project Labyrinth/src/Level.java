@@ -109,6 +109,10 @@ public class Level {
 		case "6": 	MainPanel.hero=new Character(coordX,coordY);
 					type=0;
 					break;
+		case "8": 	img=game_tileset[7];//medusa sleeping
+					type=11;
+					isMonster=true;
+					break;
 		case "9": 	img=game_tileset[8];//moveable green block
 					type=2;
 					break;
@@ -222,7 +226,7 @@ public class Level {
 			case 10://awake dragon right
 					aTile.img=game_tileset[6];
 					aTile.canShoot=true;
-					break;
+					break;				
 			}
 		}
 	}

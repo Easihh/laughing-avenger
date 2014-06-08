@@ -3,6 +3,9 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 
 public class Tile {
@@ -44,6 +47,8 @@ public class Tile {
 		this.isMonster=isMonster;
 		img=image;
 		old_img=image;
+		if(type==11)
+			canShoot=true;
 		int[] xpoints={x,x+width,x+width,x};
 		int[] ypoints={y,y,y+height,y+height};
 		shape=new Polygon(xpoints, ypoints, 4);
@@ -113,7 +118,6 @@ public class Tile {
 					g.drawImage(animation.animation[index],x,y,width,height,null);
 					else
 						g.drawImage(img,x,y,width,height,null);
-					if(projectile_img!=null)//this monster can shoot
 						fireProjectile(g);
 				}
 				else{
@@ -127,18 +131,110 @@ public class Tile {
 	}
 	private void fireProjectile(Graphics g) {
 		if(canShoot){
-			if(LineofSight()){
-				myProjectile=new Projectile(x,y,projectile_img,dir);
-				canShoot=false;
-				myProjectile.projectile_speed=3;
+			if(type!=11){//not a medusa
+				if(LineofSight()){
+					myProjectile=new Projectile(x,y,projectile_img,dir);
+					canShoot=false;
+					myProjectile.projectile_speed=3;
+				}
 			}
-		}
+			else
+				try {
+						MultiDirectionSight();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+			}
 		if(myProjectile!=null && !canShoot){
 			//System.out.println("X"+myProjectile.x);
 			//System.out.println("Y"+myProjectile.y);
 			myProjectile.render(g);
 		}
 		
+	}
+	private void MultiDirectionSight() throws IOException {
+		boolean shoot=false;
+		/*Case Down*/
+		if(Character.x==x  && y<Character.y){
+				//hero found in line of sight
+			// Check if there is an object inbetween
+			dir=Game.Direction.Down;
+			if(!Object_inBetween()){
+				shoot=true;
+				projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_down.png"));
+			}
+		}
+		/*Case Up*/
+		if( x==Character.x && y>Character.y){
+			dir=Game.Direction.Up;
+			if(!Object_inBetween()){
+				shoot=true;
+				projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_up.png"));
+			}
+		}
+		/*Case Left*/
+		if(y==Character.y && x>Character.x){
+			dir=Game.Direction.Left;
+			if(!Object_inBetween()){
+				shoot=true;
+				projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_left.png"));
+			}
+		}
+		/*Case Right*/
+		if(y==Character.y && x<Character.x){
+			dir=Game.Direction.Right;
+			if(!Object_inBetween()){
+				shoot=true;
+				projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_right.png"));
+			}
+		}
+		if(shoot){
+			myProjectile=new Projectile(x,y,projectile_img,dir);
+			canShoot=false;
+			myProjectile.projectile_speed=6;
+			dir=null;
+		}
+	}
+	private boolean Object_inBetween() {
+		switch(dir){
+		case Down:	for(Tile aTile:Level.map_tile){
+						for(int i=y;i<=Character.y;i+=2){
+							if(aTile.x==x || aTile.x+12==x || aTile.x-12==x)
+								if(aTile.y==i && aTile!=this)
+									if(aTile.getType()!=6)//projectile bypass tree
+										return true;
+							}
+						}
+					break;
+		case Up:	for(Tile aTile:Level.map_tile){
+						for(int i=y;i>=Character.y;i-=2){
+							if(aTile.x==x || aTile.x+12==x || aTile.x-12==x)
+								if(aTile.y==i && aTile!=this)
+									if(aTile.getType()!=6)//projectile bypass tree
+										return true;
+							}
+						}		
+					break;
+		case Left:	for(Tile aTile:Level.map_tile){
+						for(int i=x;i>=Character.x;i-=2){
+							if(aTile.y==y || aTile.y+12==y || aTile.y-12==y)
+								if(aTile.x==i && aTile!=this)
+									if(aTile.getType()!=6)//projectile bypass tree
+										return true;
+							}
+						}		
+					break;
+		case Right:	for(Tile aTile:Level.map_tile){
+						for(int i=x;i<=Character.x;i+=2){
+							if(aTile.y==y || aTile.y+12==y || aTile.y-12==y)
+								if(aTile.x==i && aTile!=this)
+									if(aTile.getType()!=6)//projectile bypass tree
+										return true;
+							}
+						}		
+					break;
+		}
+		return false;
 	}
 	private boolean LineofSight() {
 		switch(dir){

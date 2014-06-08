@@ -36,7 +36,6 @@ public class Projectile {
 		int[] xpoints={x,x+width,x+width,x};
 		int[] ypoints={y,y,y+height,y+height};
 		shape=new Polygon(xpoints, ypoints, 4);
-		//g.drawPolygon(shape);
 		g.drawImage(img,x,y,null);
 	}
 }

@@ -36,7 +36,7 @@ public class Character {
 	public static int targetX=0;
 	public static long last_animation_update=0;
 	public static Projectile weapon=null;
-		
+	
 	public Character(int x, int y){
 		Character.x=x;
 		Character.y=y;
@@ -129,17 +129,66 @@ public class Character {
 		movement();
 		if(Character.isShooting && weapon!=null)
 			bullet_Collision();
-		checkMonsterBulletCollision();
+		MonsterBulletCollision();
+		CollisionWithBullet();
 	}
-	private void checkMonsterBulletCollision() {
-			
+	private void CollisionWithBullet(){
+		for(Tile aTile:Level.map_tile){
+			if(aTile.myProjectile!=null){
+				Projectile projectile=aTile.myProjectile;
+				switch(projectile.dir){
+				case Right:	if(projectile.shape.contains(x+width-1,y) || 
+								projectile.shape.contains(x+width-1,y+height))
+								System.out.println("DEAD");
+							break;
+				case Left:	if(projectile.shape.contains(x,y) || 
+								projectile.shape.contains(x,y+height-1))
+								System.out.println("DEAD");
+							break;
+				case Down:	if(projectile.shape.contains(x+width,y+height-1) || 
+								projectile.shape.contains(x,y+height-1))
+								System.out.println("DEAD");
+							break;
+				case Up:	if(projectile.shape.contains(x+width-1,y) || 
+								projectile.shape.contains(x,y))
+								System.out.println("DEAD");
+							break;
+				}
+			}
+		}
+	}
+	private void MonsterBulletCollision() {
+		/** Search if there is a  tile touching the bullet 
+		 *  Destroy the bullet if it touch anything solid like a rock but not tree.
+		 * */
+		
 		for(Tile theTile:Level.map_tile){
 			if(theTile.myProjectile!=null){
-				Tile currentTile=theTile;
+				Projectile myProjectile=theTile.myProjectile;
 				for(Tile aTile:Level.map_tile){
-					if(aTile.shape.contains(currentTile.myProjectile.x,currentTile.myProjectile.y) && currentTile!=aTile){
-						if(aTile.getType()!=6)//if its a tree the shot traverse it
-							theTile.canShoot=true;
+					switch(myProjectile.dir){					
+					case Down:	if(aTile.shape.contains(myProjectile.x+width-1,myProjectile.y+height) || 
+									aTile.shape.contains(myProjectile.x,myProjectile.y+height))
+									if(aTile.getType()!=6)//if its a tree the shot traverse it
+										theTile.canShoot=true;
+								break;
+					case Right:	if(aTile.shape.contains(myProjectile.x+width,myProjectile.y) || 
+									aTile.shape.contains(myProjectile.x+width,myProjectile.y+height-1))
+									if(aTile.getType()!=6)//if its a tree the shot traverse it
+										theTile.canShoot=true;
+								break;
+					case Left: 	if(aTile.shape.contains(myProjectile.x-movement,myProjectile.y) || 
+									aTile.shape.contains(myProjectile.x-movement,myProjectile.y+height-1))
+									if(aTile.getType()!=6)//if its a tree the shot traverse it
+										theTile.canShoot=true;
+								break;
+					case Up: 	if(aTile.shape.contains(myProjectile.x+width-1,myProjectile.y-1) || 
+									aTile.shape.contains(myProjectile.x,myProjectile.y-1))
+									if(aTile.getType()!=6){//if its a tree the shot traverse it
+										theTile.canShoot=true;
+										//System.out.println(theTile.getType());
+									}
+								break;
 					}
 				}
 			}

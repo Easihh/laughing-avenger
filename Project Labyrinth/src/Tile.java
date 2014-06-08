@@ -134,6 +134,9 @@ public class Tile {
 			if(type!=11){//not a medusa
 				if(LineofSight()){
 					myProjectile=new Projectile(x,y,projectile_img,dir);
+					Sound.DragonSound.stop();
+					Sound.DragonSound.setFramePosition(0);
+					Sound.DragonSound.start();
 					canShoot=false;
 					myProjectile.projectile_speed=3;
 				}
@@ -190,6 +193,7 @@ public class Tile {
 		}
 		if(shoot){
 			myProjectile=new Projectile(x,y,projectile_img,dir);
+			Sound.MedusaSound.start();
 			canShoot=false;
 			myProjectile.projectile_speed=6;
 			dir=null;
@@ -329,6 +333,10 @@ public class Tile {
 		type=4;//tile can now pass through everything
 		isMovingAcrossScreen = true;
 		this.dir=dir;
+		Sound.ShotSound.stop();
+		Sound.MonsterDestroyed.stop();
+		Sound.MonsterDestroyed.setFramePosition(0);
+		Sound.MonsterDestroyed.start();
 	}
 	public void setType(int i) {
 		type=i;	

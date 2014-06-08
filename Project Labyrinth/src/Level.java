@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Vector;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.Clip;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -36,7 +37,7 @@ public class Level {
 		try {
 			setBackground("start");
 			getGameTile();
-			//Sound.LevelMusic.loop();
+			loadSound();
 		} catch (IOException GameBackground) {
 			GameBackground.printStackTrace();
 		}
@@ -65,6 +66,20 @@ public class Level {
 		catch (IOException | XMLStreamException e){
 			e.printStackTrace();
 		}
+	}
+	private void loadSound() {
+		@SuppressWarnings("unused")
+		Sound aSound; 
+		aSound=new Sound("StageMusic");
+		aSound=new Sound("HeartSound");
+		aSound=new Sound("DoorOpen");
+		aSound=new Sound("MedusaSound");
+		aSound=new Sound("DragonSound");
+		aSound=new Sound("ChestOpen");
+		aSound=new Sound("MonsterDestroyed");
+		aSound=new Sound("ShotSound");
+		aSound=new Sound("Death");
+		Sound.StageMusic.loop(Clip.LOOP_CONTINUOUSLY);	
 	}
 	private void getGameTile() throws IOException {
 		BufferedImage img=ImageIO.read(getClass().getResource("/tileset/game_tileset.png"));
@@ -205,8 +220,11 @@ public class Level {
 		Respawn_Timer.add(System.nanoTime());
 	}
 	public static void openChest() {
+		Sound.ChestOpen.stop();
+		Sound.ChestOpen.setFramePosition(0);
+		Sound.ChestOpen.start();
 		BufferedImage img=game_tileset[11];//bottom part of chest
-		goal=new Tile(goal.x,goal.y,img,5,false);	
+		goal=new Tile(goal.x,goal.y,img,5,false);
 		img=game_tileset[16];//top part of chest
 		goal_top=new Tile(goal.x,goal.y-24,img,5,false);	
 		//awake all monster
@@ -245,6 +263,7 @@ public class Level {
 			}
 		}
 		map_tile.removeAll(toRemove);
+		Sound.DoorOpen.start();
 	}
 	public static void nextLevel() {
 		System.out.println("Next Level");

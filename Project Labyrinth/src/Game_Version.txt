@@ -1,4 +1,10 @@
+Version 0.16:
+
+-Most of the Game Sounds have been added.
+-Game Music has been added.
+
 Version 0.15:
+
 -Added Monster(Medusa)
 -Added Character Collision with monster bullet
 -Game can now correctly detect when you should be dead.Actual Death does not do anything yet

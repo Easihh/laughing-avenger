@@ -14,6 +14,7 @@ public class Labyrinth extends JFrame {
 				try {
 					Labyrinth frame = new Labyrinth();
 					frame.setVisible(true);
+					//Sound.LevelMusic.loop();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -23,7 +24,7 @@ public class Labyrinth extends JFrame {
 
 	public Labyrinth() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(new Dimension(480,424));
+		setSize(new Dimension(480,416));
 		setResizable(false);
 		mainPane = new MainPanel();
 		setContentPane(mainPane);

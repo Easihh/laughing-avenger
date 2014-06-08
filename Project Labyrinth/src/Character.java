@@ -139,19 +139,23 @@ public class Character {
 				switch(projectile.dir){
 				case Right:	if(projectile.shape.contains(x+width-1,y) || 
 								projectile.shape.contains(x+width-1,y+height))
-								System.out.println("DEAD");
+								System.out.println("DEATH");
+								//Sound.Death.start();
 							break;
 				case Left:	if(projectile.shape.contains(x,y) || 
 								projectile.shape.contains(x,y+height-1))
-								System.out.println("DEAD");
+								System.out.println("DEATH");
+								//Sound.Death.start();
 							break;
 				case Down:	if(projectile.shape.contains(x+width,y+height-1) || 
 								projectile.shape.contains(x,y+height-1))
-								System.out.println("DEAD");
+								System.out.println("DEATH");
+								//Sound.Death.start();
 							break;
 				case Up:	if(projectile.shape.contains(x+width-1,y) || 
 								projectile.shape.contains(x,y))
-								System.out.println("DEAD");
+								System.out.println("DEATH");
+								//Sound.Death.start();
 							break;
 				}
 			}
@@ -293,6 +297,9 @@ public class Character {
 	private void takeHeart(Tile aTile) {
 		Level.map_tile.remove(aTile);
 		Level.heart_amount-=1;
+		Sound.HeartSound.stop();
+		Sound.HeartSound.setFramePosition(0);
+		Sound.HeartSound.start();
 		if(Level.heart_amount==0)
 			Level.openChest();
 		Character.ammo++;
@@ -456,6 +463,9 @@ public class Character {
 			if(ammo>=1){
 				Character.isShooting=true;
 				createProjectile();
+				Sound.ShotSound.stop();
+				Sound.ShotSound.setFramePosition(0);
+				Sound.ShotSound.start();
 			}	
 	}
 	private static void createProjectile() {

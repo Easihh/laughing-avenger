@@ -14,7 +14,6 @@ public class Labyrinth extends JFrame {
 				try {
 					Labyrinth frame = new Labyrinth();
 					frame.setVisible(true);
-					//Sound.LevelMusic.loop();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

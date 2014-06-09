@@ -1,7 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-
-import javax.swing.*;
 import javax.sound.sampled.*;
 
 public class Sound {

@@ -231,23 +231,49 @@ public class Level {
 		//awake all monster
 		for(Tile aTile:map_tile){
 			switch(aTile.getType()){
+			case 2: //Monster is in ball form; awake them
+					AwakeBall(aTile);
 			case 7: //awake dragon up
 					aTile.canShoot=true;
 					break;
 			case 8: //awake dragon down
 					aTile.img=game_tileset[12];
+					aTile.old_img=game_tileset[12];
 					aTile.canShoot=true;
 					break;
 			case 9: //awake dragon left
 					aTile.img=game_tileset[13];
+					aTile.old_img=game_tileset[13];
 					aTile.canShoot=true;
 					break;
 			case 10://awake dragon right
 					aTile.img=game_tileset[6];
+					aTile.old_img=game_tileset[6];
 					aTile.canShoot=true;
 					break;				
 			}
 		}
+	}
+	private static void AwakeBall(Tile aTile) {
+		switch(aTile.oldtype){
+		
+		case 7: //awake dragon up
+				aTile.canShoot=true;
+				break;
+		case 8: //awake dragon down
+				aTile.previousState=game_tileset[12];
+				aTile.canShoot=true;
+				break;
+		case 9: //awake dragon left
+				aTile.previousState=game_tileset[13];
+				aTile.canShoot=true;
+				break;
+		case 10://awake dragon right
+				aTile.previousState=game_tileset[6];
+				aTile.canShoot=true;
+				break;	
+		}
+		
 	}
 	public static void takeGoal() {
 		BufferedImage img=game_tileset[17];//bottom part of chest empty

@@ -1,3 +1,9 @@
+Version 0.18:
+
+-Fixed bug when Awakened Monster respawned incorrectly.
+-Fixed bug when target was shot twice very fast and third shot hit invisible wall.
+-Fixed bug when Monster in ball state would respawn incorrectly.
+
 Version 0.17:
 
 -All tiles/graphics are now 32x32 instead of 24x24

@@ -18,18 +18,20 @@ public class Tile {
 	private int nextFrame=0;
 	private int oldX;
 	private int oldY;
-	private int oldtype;
+	public int oldtype;
 	private int type;//1=rock 2=moveable green block,3=heartcard,4=closed goal,5=opened chest,6=tree,99=background
 	private long last_animation_update=0;
 	private long time_since_transform=0;
-	private Image old_img;
-	private Image previousState;
+	public Image old_img;
+	public Image previousState;
+	
+	
 	public Projectile myProjectile;
 	public boolean canShoot=false;
-	
 	public Animation animation;
 	public boolean isMovingAcrossScreen = false;
 	public Game.Direction dir;
+	public Game.Direction old_dir;
 	public int TransformedState=0;
 	public int x;
 	public int y;
@@ -149,8 +151,6 @@ public class Tile {
 					}
 			}
 		if(myProjectile!=null && !canShoot){
-			//System.out.println("X"+myProjectile.x);
-			//System.out.println("Y"+myProjectile.y);
 			myProjectile.render(g);
 		}
 		
@@ -279,6 +279,7 @@ public class Tile {
 			aTile.img=old_img;	
 			aTile.isMovingAcrossScreen=false;
 			aTile.TransformedState=0;
+			aTile.dir=old_dir;
 			Level.addRespawn(aTile);
 			aTile.updateMask();
 			Level.toRemove.add(aTile);//remove the tile if it goes offscreen
@@ -305,6 +306,7 @@ public class Tile {
 			TransformedState=0;
 			type=1;
 			img=previousState;
+			old_img=img;
 		}
 			
 		
@@ -329,10 +331,11 @@ public class Tile {
 			 }
 		 }
 	}
-	public void moveAcross_Screen(Game.Direction dir){
-		type=4;//tile can now pass through everything
+	public void moveAcross_Screen(Game.Direction direction){
+		shape.reset();//tile can now pass through everything
 		isMovingAcrossScreen = true;
-		this.dir=dir;
+		old_dir=dir;
+		dir=direction;
 		Sound.ShotSound.stop();
 		Sound.MonsterDestroyed.stop();
 		Sound.MonsterDestroyed.setFramePosition(0);

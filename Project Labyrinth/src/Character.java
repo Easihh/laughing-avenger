@@ -272,9 +272,12 @@ public class Character {
 				Level.takeGoal();
 		for(Tile aTile:Level.map_tile){
 			if(aTile.shape.contains(pt1) || aTile.shape.contains(pt2)){
-				if(aTile.isWalkable()){
+				if(aTile.shape.contains(pt1)&& aTile.shape.contains(pt2) && aTile.getType()==100){
 					if(Character.y<2*step)
 						Level.nextLevel(); //end door
+					return false;
+				}
+				if(aTile.isWalkable() && aTile.getType()!=100){
 					return false;
 				}
 				//we have a collision

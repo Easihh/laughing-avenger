@@ -1,3 +1,8 @@
+Version 0.20:
+
+-Fixed bug where you could walk through end level door and a rock at its right.
+-Added Medusa new art when player get too close to this monster.
+
 Version 0.19:
 
 -Added One-way Arrow-Block for all 4 direction.

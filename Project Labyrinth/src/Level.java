@@ -300,7 +300,7 @@ public class Level {
 		//open the goal
 		for(Tile aTile:map_tile){
 			if(aTile.img==game_tileset[1]){
-				aTile.setType(4);
+				aTile.setType(100);
 				aTile.img=game_tileset[4];
 			}
 		//Delete all Monster

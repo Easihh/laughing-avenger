@@ -94,7 +94,7 @@ public class Tile {
 		return false;
 	}
 	public boolean isWalkable(){
-		return(type==99 || type==4);
+		return(type==99 || type==4 ||type==100);
 	}
 	public int getType(){
 		return type;
@@ -157,10 +157,17 @@ public class Tile {
 	}
 	private void MultiDirectionSight() throws IOException {
 		boolean shoot=false;
+		boolean inRange=false;
 		/*Case Down*/
+		if((Character.x+Character.step==x|| Character.x-Character.step==x) && y<Character.y){
+			img=Level.game_tileset[14];
+			inRange=true;
+		}
 		if(Character.x==x  && y<Character.y){
 				//hero found in line of sight
 			// Check if there is an object inbetween
+			img=Level.game_tileset[14];//change to awaken medusa;
+			inRange=true;
 			dir=Game.Direction.Down;
 			if(!Object_inBetween()){
 				shoot=true;
@@ -168,24 +175,42 @@ public class Tile {
 			}
 		}
 		/*Case Up*/
+		if((Character.x+Character.step==x|| Character.x-Character.step==x) && y>Character.y){
+			img=Level.game_tileset[14];
+			inRange=true;
+		}
 		if( x==Character.x && y>Character.y){
 			dir=Game.Direction.Up;
+			inRange=true;
+			img=Level.game_tileset[14];//change to awaken medusa;
 			if(!Object_inBetween()){
 				shoot=true;
 				projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_up.png"));
 			}
 		}
 		/*Case Left*/
-		if(y==Character.y && x>Character.x){
+		if((Character.y+Character.step==y|| Character.y-Character.step==y) && x>Character.x){
+			img=Level.game_tileset[14];
+			inRange=true;
+		}
+		if((y==Character.y) && x>Character.x){
 			dir=Game.Direction.Left;
+			inRange=true;
+			img=Level.game_tileset[14];//change to awaken medusa;
 			if(!Object_inBetween()){
 				shoot=true;
 				projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_left.png"));
 			}
 		}
 		/*Case Right*/
+		if((Character.y+Character.step==y|| Character.y-Character.step==y) && x<Character.x){
+			img=Level.game_tileset[14];
+			inRange=true;
+		}
 		if(y==Character.y && x<Character.x){
 			dir=Game.Direction.Right;
+			inRange=true;
+			img=Level.game_tileset[14];//change to awaken medusa;
 			if(!Object_inBetween()){
 				shoot=true;
 				projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_right.png"));
@@ -197,6 +222,9 @@ public class Tile {
 			canShoot=false;
 			myProjectile.projectile_speed=6;
 			dir=null;
+		}
+		if(!inRange){
+			img=Level.game_tileset[7];
 		}
 	}
 	private boolean Object_inBetween() {

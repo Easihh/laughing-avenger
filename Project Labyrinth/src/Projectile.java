@@ -4,8 +4,8 @@ import java.awt.image.BufferedImage;
 
 public class Projectile {
 	private BufferedImage img=null;	
-	private final int height=24;
-	private final int width=24;
+	private final int height=32;
+	private final int width=32;
 	int projectile_speed=6;
 	
 	public Game.Direction dir;

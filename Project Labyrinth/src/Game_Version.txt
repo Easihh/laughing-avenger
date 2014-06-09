@@ -1,3 +1,10 @@
+Version 0.17:
+
+-All tiles/graphics are now 32x32 instead of 24x24
+-Fixed Gameplay to work with the new Tile's Size.
+Bug:-Awakened Monster respawn in the incorrect state.
+	-Shooting same target twice very fast allow for the next shot to hit an invisible block.
+
 Version 0.16:
 
 -Most of the Game Sounds have been added.

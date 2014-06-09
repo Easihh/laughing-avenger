@@ -24,7 +24,7 @@ public class Labyrinth extends JFrame {
 
 	public Labyrinth() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(new Dimension(480,416));
+		setSize(new Dimension(672,560));
 		setResizable(false);
 		mainPane = new MainPanel();
 		setContentPane(mainPane);

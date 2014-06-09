@@ -10,8 +10,8 @@ import javax.imageio.ImageIO;
 
 
 public class Character {
-	private final int width=24;
-	private final int height=24;
+	private final int width=32;
+	private final int height=32;
 	private final int rows=1;// character animation row
 	private final int cols=5;// character animation colum
 	private final int movement=2;
@@ -26,7 +26,7 @@ public class Character {
 	public static int y;
 	private static Tile select_Tile;
 	
-	public final static int step=12;
+	public final static int step=16;
 	public static ArrayList<Game.button> keypressed=new ArrayList<Game.button>();
 	public static boolean isShooting;
 	public static boolean isPushing;

@@ -14,7 +14,7 @@ import javax.xml.stream.XMLStreamReader;
 
 public class Level {
 	private final long nano=1000000000L;
-	private final int tileSize=24; //24x24
+	private final int tileSize=32; //24x24
 	private final int tileset_rows=4;
 	private final int tileset_cols=8;
 	private int coordX=0;
@@ -23,9 +23,10 @@ public class Level {
 	private static ArrayList<Tile> toRespawn=new ArrayList<Tile>();
 	private static Vector<Long> Respawn_Timer=new Vector<Long>();
 	private static Tile goal_top;
+	private static boolean canRespawn=true;
 	
-	public final static int map_width=384;
-	public final static int map_height=384;
+	public final static int map_width=512;
+	public final static int map_height=512;
 	public static int heart_amount=0;
 	public static ArrayList<Tile> map_tile=new ArrayList<Tile>();
 	public static ArrayList<Tile> toRemove=new ArrayList<Tile>();
@@ -201,7 +202,7 @@ public class Level {
 			map_tile.removeAll(toRemove);
 			toRemove.clear();
 		}
-		if(!toRespawn.isEmpty() && goal.getType()!=5){
+		if(!toRespawn.isEmpty() && canRespawn){
 			checkRespawn();
 		}
 	}
@@ -226,7 +227,7 @@ public class Level {
 		BufferedImage img=game_tileset[11];//bottom part of chest
 		goal=new Tile(goal.x,goal.y,img,5,false);
 		img=game_tileset[16];//top part of chest
-		goal_top=new Tile(goal.x,goal.y-24,img,5,false);	
+		goal_top=new Tile(goal.x,goal.y-32,img,5,false);	
 		//awake all monster
 		for(Tile aTile:map_tile){
 			switch(aTile.getType()){
@@ -263,6 +264,7 @@ public class Level {
 			}
 		}
 		map_tile.removeAll(toRemove);
+		canRespawn=false;
 		Sound.DoorOpen.start();
 	}
 	public static void nextLevel() {

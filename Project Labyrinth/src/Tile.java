@@ -9,8 +9,8 @@ import javax.imageio.ImageIO;
 
 
 public class Tile {
-	private final int height=24;
-	private final int width=24;
+	private final int height=32;
+	private final int width=32;
 	private final long nano=1000000L;
 	private boolean isMonster=false;
 	private int index=0;
@@ -203,7 +203,7 @@ public class Tile {
 		switch(dir){
 		case Down:	for(Tile aTile:Level.map_tile){
 						for(int i=y;i<=Character.y;i+=2){
-							if(aTile.x==x || aTile.x+12==x || aTile.x-12==x)
+							if(aTile.x==x || aTile.x+Character.step==x || aTile.x-Character.step==x)
 								if(aTile.y==i && aTile!=this)
 									if(aTile.getType()!=6)//projectile bypass tree
 										return true;
@@ -212,7 +212,7 @@ public class Tile {
 					break;
 		case Up:	for(Tile aTile:Level.map_tile){
 						for(int i=y;i>=Character.y;i-=2){
-							if(aTile.x==x || aTile.x+12==x || aTile.x-12==x)
+							if(aTile.x==x || aTile.x+Character.step==x || aTile.x-Character.step==x)
 								if(aTile.y==i && aTile!=this)
 									if(aTile.getType()!=6)//projectile bypass tree
 										return true;
@@ -221,7 +221,7 @@ public class Tile {
 					break;
 		case Left:	for(Tile aTile:Level.map_tile){
 						for(int i=x;i>=Character.x;i-=2){
-							if(aTile.y==y || aTile.y+12==y || aTile.y-12==y)
+							if(aTile.y==y || aTile.y+Character.step==y || aTile.y-Character.step==y)
 								if(aTile.x==i && aTile!=this)
 									if(aTile.getType()!=6)//projectile bypass tree
 										return true;
@@ -230,7 +230,7 @@ public class Tile {
 					break;
 		case Right:	for(Tile aTile:Level.map_tile){
 						for(int i=x;i<=Character.x;i+=2){
-							if(aTile.y==y || aTile.y+12==y || aTile.y-12==y)
+							if(aTile.y==y || aTile.y+Character.step==y || aTile.y-Character.step==y)
 								if(aTile.x==i && aTile!=this)
 									if(aTile.getType()!=6)//projectile bypass tree
 										return true;
@@ -260,13 +260,13 @@ public class Tile {
 	}
 	private void updateLocation() {
 		switch(dir){
-		case Left:	x-=8;
+		case Left:	x-=12;
 					break;
-		case Right:	x+=8;
+		case Right:	x+=12;
 					break;
-		case Down:	y+=8;
+		case Down:	y+=12;
 					break;
-		case Up:	y-=8;
+		case Up:	y-=12;
 					break;
 		}
 	}

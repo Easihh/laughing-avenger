@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 
-
 public class Character {
 	private final int width=32;
 	private final int height=32;
@@ -286,11 +285,37 @@ public class Character {
 							aTile.moveTile(step);
 						}
 						break;
-				case 3: takeHeart(aTile);
-						break;
+				case 3: 	takeHeart(aTile);
+							break;
+				case 12:	if(!OneWayArrow(aTile,pt1,pt2))
+									return false;
+							break;
 				}
 				return true;
 			}
+		}
+		return false;
+	}
+	private boolean OneWayArrow(Tile aTile, Point pt1, Point pt2) {
+		if(Character.dir==Game.Direction.Down && aTile.dir==Game.Direction.Up){
+			if(aTile.shape.contains(x,y+height-1) || aTile.shape.contains(x+width,y+height-1))
+				return false;//allow pass
+			return true; 
+		}
+		if(Character.dir==Game.Direction.Up && aTile.dir==Game.Direction.Down){
+			if(aTile.shape.contains(x,y) || aTile.shape.contains(x+width,y))
+				return false;
+			return true;
+		}
+		if(Character.dir==Game.Direction.Left && aTile.dir==Game.Direction.Right){
+			if(aTile.shape.contains(x,y) || aTile.shape.contains(x,y+height))
+				return false;
+			return true;
+		}
+		if(Character.dir==Game.Direction.Right && aTile.dir==Game.Direction.Left){
+			if(aTile.shape.contains(x+width-1,y) || aTile.shape.contains(x+width-1,y+height-1))
+				return false;
+			return true;
 		}
 		return false;
 	}

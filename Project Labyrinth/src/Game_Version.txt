@@ -1,7 +1,15 @@
+Version 0.19:
+
+-Added One-way Arrow-Block for all 4 direction.
+-Moving Normal block and monster currently don't work well with one-way arrow.
+-Medusa's projectile currently buggy/remain invisible after shot because you are supposed to be dead if they fire.
+-Its possible to walk through a rock if you are place mid-way between the door and the rock.
+-Rock tileset has been added
+
 Version 0.18:
 
 -Fixed bug when Awakened Monster respawned incorrectly.
--Fixed bug when target was shot twice very fast and third shot hit invisible wall.
+-Fixed bug when target was shot twice very fast and a third shot would hit an invisible wall.
 -Fixed bug when Monster in ball state would respawn incorrectly.
 
 Version 0.17:

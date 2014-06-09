@@ -11,7 +11,6 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-
 public class Level {
 	private final long nano=1000000000L;
 	private final int tileSize=32; //24x24
@@ -139,6 +138,10 @@ public class Level {
 					type=4;
 					goal=new Tile(coordX,coordY,img,type,false);
 					break;
+		case "16": 	img=game_tileset[15];//one-way down arrow
+					type=12;
+					dir=Game.Direction.Up;
+					break;
 		case "19": 	img=game_tileset[18];//Green worm monster Left
 					type=1;
 					isMonster=true;
@@ -152,6 +155,21 @@ public class Level {
 					maxFrame=2;
 					nextFrame=1000;
 					sprite_sheet=ImageIO.read(getClass().getResource("/tileset/worm_right.png"));
+					break;
+		case "21": 	img=game_tileset[20];//one-way left arrow
+					type=12;
+					dir=Game.Direction.Left;
+					break;
+		case "22": 	img=game_tileset[21];//one-way right arrow
+					type=12;
+					dir=Game.Direction.Right;
+					break;
+		case "29": 	img=game_tileset[28];//one-way down arrow
+					type=12;
+					dir=Game.Direction.Down;
+					break;	
+		case "30":	img=game_tileset[29];//rock wall
+					type=1;
 					break;
 		case "5": 	img=game_tileset[4];//door opened
 					type=1;
@@ -182,6 +200,7 @@ public class Level {
 					break;
 		}
 		aTile=new Tile(coordX,coordY,img,type,isMonster);
+		aTile.dir=dir;
 		if(aTile.isMonster()){
 			aTile.setAnimation(sprite_sheet,maxFrame,nextFrame);
 			aTile.projectile_img=projectileIMG;

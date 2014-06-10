@@ -290,8 +290,12 @@ public class Character {
 						break;
 				case 3: 	takeHeart(aTile);
 							break;
-				case 12:	if(!OneWayArrow(aTile,pt1,pt2))
+				case 12:	if(!searchBlock(pt1,pt2)){
+								if(!OneWayArrow(aTile))
 									return false;
+							}else{
+								aTile.moveTile(step);
+							}
 							break;
 				}
 				return true;
@@ -299,7 +303,18 @@ public class Character {
 		}
 		return false;
 	}
-	private boolean OneWayArrow(Tile aTile, Point pt1, Point pt2) {
+	private boolean searchBlock(Point pt1, Point pt2) {
+		for(Tile aTile:Level.map_tile){
+			if(aTile.shape.contains(pt1) || aTile.shape.contains(pt2)){
+				if(aTile.getType()==2){
+					select_Tile=aTile;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	private boolean OneWayArrow(Tile aTile) {
 		if(Character.dir==Game.Direction.Down && aTile.dir==Game.Direction.Up){
 			if(aTile.shape.contains(x,y+height-1) || aTile.shape.contains(x+width,y+height-1))
 				return false;//allow pass

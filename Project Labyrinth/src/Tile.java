@@ -1,12 +1,11 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 
 public class Tile {
 	private final int height=32;
@@ -49,7 +48,7 @@ public class Tile {
 		this.isMonster=isMonster;
 		img=image;
 		old_img=image;
-		if(type==11)
+		if(type==11 || type==22)
 			canShoot=true;
 		int[] xpoints={x,x+width,x+width,x};
 		int[] ypoints={y,y,y+height,y+height};
@@ -65,6 +64,10 @@ public class Tile {
 						Character.isMoving=true;
 						Character.isPushing=true;
 					}
+		//colliding with something check if one-way arrow and move accordingly
+		//else{
+			//	checkOneWayArrowCollision(aTile, tile)
+		//}
 		if(!checkCollison(x,y+height,x+width-1,y+height)&& Character.dir==Game.Direction.Down){
 						Character.targetX=Character.step;
 						Character.isMoving=true;
@@ -88,8 +91,36 @@ public class Tile {
 	private boolean checkCollison(int x1,int y1,int x2,int y2) {
 		for(Tile aTile:Level.map_tile){
 			if(aTile.shape.contains(x1,y1)|| aTile.shape.contains(x2,y2)){
+				if(aTile.getType()==12)
+					return(checkOneWayArrowCollision(aTile, this));
+				if(aTile.getType()==2)
+					return false;
 				return true;
 			}
+		}
+		return false;
+	}
+	private boolean checkOneWayArrowCollision(Tile aTile, Tile tile) {
+		if(Character.dir==Game.Direction.Down && aTile.dir==Game.Direction.Up){
+			if(aTile.shape.contains(tile.x,tile.y+height-1) || aTile.shape.contains(tile.x+width,tile.y+height-1))
+				return false;//allow pass
+			return true; 
+		}
+		if(Character.dir==Game.Direction.Up && aTile.dir==Game.Direction.Down){
+			if(aTile.shape.contains(tile.x,tile.y) || aTile.shape.contains(tile.x+width,tile.y))
+				return false;
+			return true;
+		}
+		if(Character.dir==Game.Direction.Left && aTile.dir==Game.Direction.Right){
+			System.out.println("tile:"+aTile.getType());
+			if(aTile.shape.contains(tile.x,tile.y) || aTile.shape.contains(tile.x,tile.y+height))
+				return false;
+			return true;
+		}
+		if(Character.dir==Game.Direction.Right && aTile.dir==Game.Direction.Left){
+			if(aTile.shape.contains(tile.x+width-1,tile.y) || aTile.shape.contains(tile.x+width-1,tile.y+height-1))
+				return false;
+			return true;
 		}
 		return false;
 	}
@@ -116,24 +147,54 @@ public class Tile {
 		else{
 				checkState();
 				if(isMonster && TransformedState==0 && !isMovingAcrossScreen){
-					if(maxFrame>0)
+					if(maxFrame>0){
 					g.drawImage(animation.animation[index],x,y,width,height,null);
+					if(type==22)
+						move();
+					}
 					else
+						//g.drawPolygon(shape);
 						g.drawImage(img,x,y,width,height,null);
 						fireProjectile(g);
 				}
-				else{
+				else{			
 					if(isMovingAcrossScreen)
 						updateLocation();
 					if(!isOffScreen())
 				g.drawImage(img,x,y,width,height,null);
+						//g.drawPolygon(shape);
 				}
 		}
 		updateAnimation();
 	}
+	private void move() {
+		switch(dir){
+		case Left: 	if(checkCollison(x-1, y, x-1, y+height-1)){
+						dir=Game.Direction.Right;
+					}else
+					x-=2;
+					break;
+		case Right: if(checkCollison(x+width, y+height-1, x+width, y)){
+						dir=Game.Direction.Left;
+					}else
+					x+=2;
+					break;
+		case Up: if(checkCollison(x+width-1, y-1, x, y-1)){
+						dir=Game.Direction.Down;
+					}else
+					y-=2;
+					break;
+		case Down: if(checkCollison(x+width-1, y+height, x, y+height)){
+					dir=Game.Direction.Up;
+					}else
+					y+=2;
+					break;
+		}
+		updateMask();
+	}
 	private void fireProjectile(Graphics g) {
 		if(canShoot){
-			if(type!=11){//not a medusa
+			if(type!=11 && type!=22){//not a medusa or donMedusa
 				if(LineofSight()){
 					myProjectile=new Projectile(x,y,projectile_img,dir);
 					Sound.DragonSound.stop();
@@ -158,62 +219,72 @@ public class Tile {
 	private void MultiDirectionSight() throws IOException {
 		boolean shoot=false;
 		boolean inRange=false;
+		Game.Direction dir=null;
 		/*Case Down*/
-		if((Character.x+Character.step==x|| Character.x-Character.step==x) && y<Character.y){
+		if((Character.x+Character.step==x|| Character.x-Character.step==x) && y<Character.y && type==11){
 			img=Level.game_tileset[14];
 			inRange=true;
 		}
 		if(Character.x==x  && y<Character.y){
 				//hero found in line of sight
 			// Check if there is an object inbetween
-			img=Level.game_tileset[14];//change to awaken medusa;
+			if(type==11)img=Level.game_tileset[14];//change to awaken medusa;
 			inRange=true;
 			dir=Game.Direction.Down;
-			if(!Object_inBetween()){
+			if(!Object_inBetween(dir)){
 				shoot=true;
-				projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_down.png"));
+				if(type==11)projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_down.png"));
+				if(type==22)
+					projectile_img=ImageIO.read(getClass().getResource("/tileset/DonMedusaShot_Down.png"));	
 			}
 		}
 		/*Case Up*/
-		if((Character.x+Character.step==x|| Character.x-Character.step==x) && y>Character.y){
+		if((Character.x+Character.step==x|| Character.x-Character.step==x) && y>Character.y && type==11){
 			img=Level.game_tileset[14];
 			inRange=true;
 		}
 		if( x==Character.x && y>Character.y){
 			dir=Game.Direction.Up;
 			inRange=true;
-			img=Level.game_tileset[14];//change to awaken medusa;
-			if(!Object_inBetween()){
+			if(type==11)img=Level.game_tileset[14];//change to awaken medusa;
+			if(!Object_inBetween(dir)){
 				shoot=true;
-				projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_up.png"));
+				if(type==11)projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_up.png"));
+				if(type==22)
+					projectile_img=ImageIO.read(getClass().getResource("/tileset/DonMedusaShot_Up.png"));	
 			}
 		}
 		/*Case Left*/
-		if((Character.y+Character.step==y|| Character.y-Character.step==y) && x>Character.x){
+		if((Character.y+Character.step==y|| Character.y-Character.step==y) && x>Character.x && type==11){
 			img=Level.game_tileset[14];
 			inRange=true;
 		}
 		if((y==Character.y) && x>Character.x){
 			dir=Game.Direction.Left;
 			inRange=true;
-			img=Level.game_tileset[14];//change to awaken medusa;
-			if(!Object_inBetween()){
+			if(type==11)img=Level.game_tileset[14];//change to awaken medusa;
+			if(!Object_inBetween(dir)){
 				shoot=true;
-				projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_left.png"));
+				if(type==11)projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_left.png"));
+				if(type==22)
+					projectile_img=ImageIO.read(getClass().getResource("/tileset/DonMedusaShot_Left.png"));	
 			}
 		}
 		/*Case Right*/
-		if((Character.y+Character.step==y|| Character.y-Character.step==y) && x<Character.x){
+		if((Character.y+Character.step==y|| Character.y-Character.step==y) && x<Character.x && type==11){
 			img=Level.game_tileset[14];
 			inRange=true;
 		}
 		if(y==Character.y && x<Character.x){
 			dir=Game.Direction.Right;
 			inRange=true;
-			img=Level.game_tileset[14];//change to awaken medusa;
-			if(!Object_inBetween()){
+			if(type==11)img=Level.game_tileset[14];//change to awaken medusa;
+			if(!Object_inBetween(dir)){
 				shoot=true;
+				if(type==11)
 				projectile_img=ImageIO.read(getClass().getResource("/tileset/medusa_shot_right.png"));
+				if(type==22)
+				projectile_img=ImageIO.read(getClass().getResource("/tileset/DonMedusaShot_Right.png"));	
 			}
 		}
 		if(shoot){
@@ -221,13 +292,13 @@ public class Tile {
 			Sound.MedusaSound.start();
 			canShoot=false;
 			myProjectile.projectile_speed=6;
-			dir=null;
+			//dir=null;
 		}
 		if(!inRange){
 			img=Level.game_tileset[7];
 		}
 	}
-	private boolean Object_inBetween() {
+	private boolean Object_inBetween(Game.Direction dir) {
 		switch(dir){
 		case Down:	for(Tile aTile:Level.map_tile){
 						for(int i=y;i<=Character.y;i+=2){

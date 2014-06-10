@@ -1,3 +1,10 @@
+
+Version 0.21:
+
+-Added Monster DonMedusa
+-The Wrong Graphic may appear when moving a block on top of the arrow becase of no depth draw.
+-Block now work correctly with one-way arrow.
+
 Version 0.20:
 
 -Fixed bug where you could walk through end level door and a rock at its right.

@@ -164,6 +164,22 @@ public class Level {
 					type=12;
 					dir=Game.Direction.Right;
 					break;
+		case "23": 	img=game_tileset[22];//DonMesusa Left-Right
+					isMonster=true;
+					type=22;
+					maxFrame=2;
+					nextFrame=500;
+					sprite_sheet=ImageIO.read(getClass().getResource("/tileset/DonMedusa.png"));
+					dir=Game.Direction.Left;
+					break;
+		case "24": 	img=game_tileset[22];//DonMesusa Up-Down
+					isMonster=true;
+					type=22;
+					maxFrame=2;
+					nextFrame=500;
+					sprite_sheet=ImageIO.read(getClass().getResource("/tileset/DonMedusa.png"));
+					dir=Game.Direction.Down;
+		break;
 		case "29": 	img=game_tileset[28];//one-way down arrow
 					type=12;
 					dir=Game.Direction.Down;

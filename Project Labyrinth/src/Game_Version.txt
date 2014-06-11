@@ -1,6 +1,6 @@
 Version 0.22
 
--Big Cleanup/Redesign of certain aspect.
+-Big Cleanup/Redesign of certain aspects.
 -One-Way arrow not yet redesigned.
 -Renamed Dragon to Gol.
 -Renamed Worm to Snakey.

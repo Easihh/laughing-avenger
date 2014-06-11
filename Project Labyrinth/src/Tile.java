@@ -22,7 +22,7 @@ public class Tile {
 	public Image img;
 	public Polygon shape;
 	public BufferedImage projectile_img;
-	
+	public Tile collision_tile;
 	public Tile(int x, int y,int type) {
 		this.x=x;
 		this.y=y;
@@ -65,27 +65,66 @@ public class Tile {
 		type=99;// we have a background
 	}
 	public void moveTile(int movement){
-		if(!checkCollison(x+width,y,x+width,y+height-1) && Character.dir==Game.Direction.Right){
+		switch(Character.dir){
+		
+		case Right:	if(!checkCollison(x+width,y,x+width,y+height-1) && Character.dir==Game.Direction.Right){
 						Character.targetX=Character.step;
 						Character.isMoving=true;
 						Character.isPushing=true;
+						}
+					else{
+						if(!OneWayArrow()){//allow passage
+							Character.targetX=Character.step;
+							Character.isMoving=true;
+							Character.isPushing=true;
+						}
 					}
-		if(!checkCollison(x,y+height,x+width-1,y+height)&& Character.dir==Game.Direction.Down){
+					break;
+					
+		case Down:	if(!checkCollison(x,y+height,x+width-1,y+height)&& Character.dir==Game.Direction.Down){
 						Character.targetX=Character.step;
 						Character.isMoving=true;
 						Character.isPushing=true;
-						
+						System.out.println("errr");
+						}
+					else{
+						if(!OneWayArrow()){//allow passage
+							Character.targetX=Character.step;
+							Character.isMoving=true;
+							Character.isPushing=true;
+							System.out.println("stuff");
+						}
 					}
-		if(!checkCollison(x,y-1,x+width-1,y-1)&& Character.dir==Game.Direction.Up){
+					break;
+		case Up:
+					if(!checkCollison(x,y-1,x+width-1,y-1)&& Character.dir==Game.Direction.Up){
 						Character.targetX=-Character.step;
 						Character.isMoving=true;
 						Character.isPushing=true;
+						}
+					else{	
+						if(!OneWayArrow()){//allow passage
+							Character.targetX=-Character.step;
+							Character.isMoving=true;
+							Character.isPushing=true;
+						}
 					}
-		if(!checkCollison(x-1,y,x-1,y+height-1)&& Character.dir==Game.Direction.Left){
+					break;
+		case Left:
+					if(!checkCollison(x-1,y,x-1,y+height-1)&& Character.dir==Game.Direction.Left){
 						Character.targetX=-Character.step;
 						Character.isMoving=true;
 						Character.isPushing=true;
+						}
+					else{
+						if(!OneWayArrow()){//allow passage
+							Character.targetX=-Character.step;
+							Character.isMoving=true;
+							Character.isPushing=true;
+						}
 					}
+					break;
+		}
 		int[] xpoints={x,x+width,x+width,x};
 		int[] ypoints={y,y,y+height,y+height};
 		shape=new Polygon(xpoints, ypoints, 4);
@@ -93,36 +132,9 @@ public class Tile {
 	private boolean checkCollison(int x1,int y1,int x2,int y2) {
 		for(Tile aTile:Level.map_tile){
 			if(aTile.shape.contains(x1,y1)|| aTile.shape.contains(x2,y2)){
-				if(aTile.getType()==12)
-					return(checkOneWayArrowCollision(aTile, this));
-				if(aTile.getType()==2)
-					return false;
+				collision_tile=aTile;
 				return true;
 			}
-		}
-		return false;
-	}
-	private boolean checkOneWayArrowCollision(Tile aTile, Tile tile) {
-		if(Character.dir==Game.Direction.Down && aTile.dir==Game.Direction.Up){
-			if(aTile.shape.contains(tile.x,tile.y+height-1) || aTile.shape.contains(tile.x+width,tile.y+height-1))
-				return false;//allow pass
-			return true; 
-		}
-		if(Character.dir==Game.Direction.Up && aTile.dir==Game.Direction.Down){
-			if(aTile.shape.contains(tile.x,tile.y) || aTile.shape.contains(tile.x+width,tile.y))
-				return false;
-			return true;
-		}
-		if(Character.dir==Game.Direction.Left && aTile.dir==Game.Direction.Right){
-			System.out.println("tile:"+aTile.getType());
-			if(aTile.shape.contains(tile.x,tile.y) || aTile.shape.contains(tile.x,tile.y+height))
-				return false;
-			return true;
-		}
-		if(Character.dir==Game.Direction.Right && aTile.dir==Game.Direction.Left){
-			if(aTile.shape.contains(tile.x+width-1,tile.y) || aTile.shape.contains(tile.x+width-1,tile.y+height-1))
-				return false;
-			return true;
 		}
 		return false;
 	}
@@ -247,5 +259,27 @@ public class Tile {
 	public void setType(int i) {
 		type=i;	
 	}
-
+	private boolean OneWayArrow() {
+		if(Character.dir==Game.Direction.Down && collision_tile.getType()==11){
+			if(collision_tile.shape.contains(x,y+height-1) || collision_tile.shape.contains(x+width,y+height-1))
+				return false;// pass through
+			return true; 
+		}
+		if(Character.dir==Game.Direction.Up && collision_tile.getType()==14){
+			if(collision_tile.shape.contains(x,y) ||collision_tile.shape.contains(x+width,y))
+				return false;
+			return true;
+		}
+		if(Character.dir==Game.Direction.Left && collision_tile.getType()==13){
+			if(collision_tile.shape.contains(x,y) || collision_tile.shape.contains(x,y+height))
+				return false;
+			return true;
+		}
+		if(Character.dir==Game.Direction.Right && collision_tile.getType()==12){
+			if(collision_tile.shape.contains(x+width-1,y) || collision_tile.shape.contains(x+width-1,y+height-1))
+				return false;
+			return true;
+		}
+		return false;
+	}
 }

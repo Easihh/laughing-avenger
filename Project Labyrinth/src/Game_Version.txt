@@ -1,4 +1,10 @@
-Version 0.22
+Version 0.23:
+
+-Redesigned and Fixed One-Arrow tile
+-Graphic glitch can happen if a block is pushed on a 
+one-way arrow in certain case because no draw event priority on tile currently.
+
+Version 0.22:
 
 -Big Cleanup/Redesign of certain aspects.
 -One-Way arrow not yet redesigned.
@@ -8,7 +14,7 @@ Version 0.22
 Version 0.21:
 
 -Added Monster DonMedusa.
--The Wrong Graphic may appear when moving a block on top of the arrow becase of no depth draw.
+-The Wrong Graphic may appear when moving a block on top of the arrow because of no depth draw.
 -Block now work correctly with one-way arrow.
 
 Version 0.20:

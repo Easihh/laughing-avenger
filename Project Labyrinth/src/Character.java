@@ -280,6 +280,7 @@ public class Character {
 					return false;
 				}
 				//we have a collision
+				System.out.println("type:"+aTile.getType());
 				switch(aTile.getType()){
 				
 				case 2: if(aTile.shape.contains(pt1) && aTile.shape.contains(pt2)){
@@ -289,13 +290,16 @@ public class Character {
 						break;
 				case 3: 	takeHeart(aTile);
 							break;
-				case 12:	if(!searchBlock(pt1,pt2)){
-								if(!OneWayArrow(aTile))
-									return false;
-							}else{
-								aTile.moveTile(step);
-							}
-							break;
+				case 11:	
+				case 12:
+				case 13:
+				case 14:if(!searchBlock(pt1,pt2)){
+							if(!OneWayArrow(aTile))
+								return false;
+						}
+						else
+							aTile.moveTile(step);
+						break;
 				}
 				return true;
 			}
@@ -314,22 +318,22 @@ public class Character {
 		return false;
 	}
 	private boolean OneWayArrow(Tile aTile) {
-		if(Character.dir==Game.Direction.Down && aTile.dir==Game.Direction.Up){
+		if(Character.dir==Game.Direction.Down && aTile.getType()==11){
 			if(aTile.shape.contains(x,y+height-1) || aTile.shape.contains(x+width,y+height-1))
 				return false;//allow pass
 			return true; 
 		}
-		if(Character.dir==Game.Direction.Up && aTile.dir==Game.Direction.Down){
+		if(Character.dir==Game.Direction.Up && aTile.getType()==14){
 			if(aTile.shape.contains(x,y) || aTile.shape.contains(x+width,y))
 				return false;
 			return true;
 		}
-		if(Character.dir==Game.Direction.Left && aTile.dir==Game.Direction.Right){
+		if(Character.dir==Game.Direction.Left && aTile.getType()==13){
 			if(aTile.shape.contains(x,y) || aTile.shape.contains(x,y+height))
 				return false;
 			return true;
 		}
-		if(Character.dir==Game.Direction.Right && aTile.dir==Game.Direction.Left){
+		if(Character.dir==Game.Direction.Right && aTile.getType()==12){
 			if(aTile.shape.contains(x+width-1,y) || aTile.shape.contains(x+width-1,y+height-1))
 				return false;
 			return true;

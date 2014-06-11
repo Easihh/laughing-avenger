@@ -70,15 +70,14 @@ public class Snakey  extends Monster{
 		TransformedState=1;
 	}
 	private void checkState() {
-		if((System.nanoTime()-time_since_transform)/nano>7 && TransformedState==1){
+		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1){
 			TransformedState=2;
 			img=Level.monsterState[1];
 		}
-		if((System.nanoTime()-time_since_transform)/nano>10 && TransformedState==2){
+		if((System.nanoTime()-time_since_transform)/nano>1000 && TransformedState==2){
 			TransformedState=0;
 			type=1;
 			img=previousState;
-			//old_img=img;
 		}	
 	}
 }

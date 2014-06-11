@@ -126,23 +126,21 @@ public class Level {
 		case "11": 	//goal chest closed
 					goal=new Tile(coordX,coordY,4);
 					break;
-		//case "16": 	img=game_tileset[15];//one-way down arrow
-			//		type=12;
-				//	dir=Game.Direction.Up;
-					//break;
+		case "16": 	//one-way up arrow
+					Level.map_tile.add(new OneWayArrow(coordX,coordY,11));
+					break;
 		case "19": 	//Green worm monster Left
 					Level.map_tile.add(new Snakey(coordX,coordY,19));
 					break;
 		case "20": 	//Green worm monster right
 					Level.map_tile.add(new Snakey(coordX,coordY,20));
 					break;
-		case "21": 	//img=game_tileset[20];//one-way left arrow
+		case "21": 	//one-way left arrow
 					//type=12;
-					//dir=Game.Direction.Left;
+					Level.map_tile.add(new OneWayArrow(coordX,coordY,12));
 					break;
-		case "22": 	//img=game_tileset[21];//one-way right arrow
-					//type=12;
-					//dir=Game.Direction.Right;
+		case "22": 	//one-way right arrow
+					Level.map_tile.add(new OneWayArrow(coordX,coordY,13));
 					break;
 		case "23": 	//DonMesusa Left-Right
 					Level.map_tile.add(new DonMedusa(coordX,coordY,1));
@@ -150,9 +148,8 @@ public class Level {
 		case "24": 	//DonMesusa Up-Down
 					Level.map_tile.add(new DonMedusa(coordX,coordY,2));
 					break;
-		case "29": 	//img=game_tileset[28];//one-way down arrow
-					//type=12;
-					//dir=Game.Direction.Down;
+		case "29": 	//one-way down arrow
+					Level.map_tile.add(new OneWayArrow(coordX,coordY,14));
 					break;
 		case "30":	//rock wall
 					Level.map_tile.add(new Tile(coordX,coordY,30));

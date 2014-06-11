@@ -133,29 +133,31 @@ public class Character {
 	}
 	private void CollisionWithBullet(){
 		for(Tile aTile:Level.map_tile){
-			if(aTile.myProjectile!=null){
-				Projectile projectile=aTile.myProjectile;
-				switch(projectile.dir){
-				case Right:	if(projectile.shape.contains(x+width-1,y) || 
+			if(aTile instanceof Monster){
+				Monster aMonster=(Monster)aTile;
+				Projectile projectile=aMonster.projectile;
+				if(projectile!=null)
+					switch(projectile.dir){
+						case Right:	if(projectile.shape.contains(x+width-1,y) || 
 								projectile.shape.contains(x+width-1,y+height))
 								System.out.println("DEATH");
 								//Sound.Death.start();
-							break;
-				case Left:	if(projectile.shape.contains(x,y) || 
+								break;
+						case Left:	if(projectile.shape.contains(x,y) || 
 								projectile.shape.contains(x,y+height-1))
 								System.out.println("DEATH");
 								//Sound.Death.start();
-							break;
-				case Down:	if(projectile.shape.contains(x+width,y+height-1) || 
+								break;
+						case Down:	if(projectile.shape.contains(x+width,y+height-1) || 
 								projectile.shape.contains(x,y+height-1))
 								System.out.println("DEATH");
 								//Sound.Death.start();
-							break;
-				case Up:	if(projectile.shape.contains(x+width-1,y) || 
+								break;
+						case Up:	if(projectile.shape.contains(x+width-1,y) || 
 								projectile.shape.contains(x,y))
 								System.out.println("DEATH");
 								//Sound.Death.start();
-							break;
+								break;
 				}
 			}
 		}
@@ -166,30 +168,30 @@ public class Character {
 		 * */
 		
 		for(Tile theTile:Level.map_tile){
-			if(theTile.myProjectile!=null){
-				Projectile myProjectile=theTile.myProjectile;
-				for(Tile aTile:Level.map_tile){
-					switch(myProjectile.dir){					
-					case Down:	if(aTile.shape.contains(myProjectile.x+width-1,myProjectile.y+height) || 
-									aTile.shape.contains(myProjectile.x,myProjectile.y+height))
-									if(aTile.getType()!=6)//if its a tree the shot traverse it
-										theTile.canShoot=true;
-								break;
-					case Right:	if(aTile.shape.contains(myProjectile.x+width,myProjectile.y) || 
-									aTile.shape.contains(myProjectile.x+width,myProjectile.y+height-1))
-									if(aTile.getType()!=6)//if its a tree the shot traverse it
-										theTile.canShoot=true;
-								break;
-					case Left: 	if(aTile.shape.contains(myProjectile.x-movement,myProjectile.y) || 
-									aTile.shape.contains(myProjectile.x-movement,myProjectile.y+height-1))
-									if(aTile.getType()!=6)//if its a tree the shot traverse it
-										theTile.canShoot=true;
-								break;
-					case Up: 	if(aTile.shape.contains(myProjectile.x+width-1,myProjectile.y-1) || 
-									aTile.shape.contains(myProjectile.x,myProjectile.y-1))
-									if(aTile.getType()!=6){//if its a tree the shot traverse it
-										theTile.canShoot=true;
-										//System.out.println(theTile.getType());
+			if(theTile instanceof Monster){
+				Monster aMonster=(Monster)theTile;
+				if(aMonster.projectile!=null)
+					for(Tile aTile:Level.map_tile){
+							switch(aMonster.projectile.dir){
+							case Down:	if(aTile.shape.contains(aMonster.projectile.x+width-1,aMonster.projectile.y+height) || 
+											aTile.shape.contains(aMonster.projectile.x,aMonster.projectile.y+height))
+										if(aTile.getType()!=6)//if its a tree the shot traverse it
+											theTile.canShoot=true;
+										break;
+							case Right:	if(aTile.shape.contains(aMonster.projectile.x+width,aMonster.projectile.y) || 
+											aTile.shape.contains(aMonster.projectile.x+width,aMonster.projectile.y+height-1))
+										if(aTile.getType()!=6)//if its a tree the shot traverse it
+											theTile.canShoot=true;
+									break;
+							case Left: 	if(aTile.shape.contains(aMonster.projectile.x-movement,aMonster.projectile.y) || 
+											aTile.shape.contains(aMonster.projectile.x-movement,aMonster.projectile.y+height-1))
+										if(aTile.getType()!=6)//if its a tree the shot traverse it
+											theTile.canShoot=true;
+										break;
+							case Up: 	if(aTile.shape.contains(aMonster.projectile.x+width-1,aMonster.projectile.y-1) || 
+											aTile.shape.contains(aMonster.projectile.x,aMonster.projectile.y-1))
+										if(aTile.getType()!=6){//if its a tree the shot traverse it
+											theTile.canShoot=true;
 									}
 								break;
 					}
@@ -202,29 +204,29 @@ public class Character {
 			if(weapon.dir==Game.Direction.Right){
 				if(aTile.shape.contains(weapon.x+width,weapon.y) && aTile.shape.contains(weapon.x+width,weapon.y+height-1)){
 					Character.isShooting=false;
-					if(aTile.isMonster())
-						checkMonsterState(aTile);
+					if(aTile instanceof Monster)
+						checkMonsterState((Monster)aTile);
 				}
 			}
 			if(weapon.dir==Game.Direction.Left){
 				if(aTile.shape.contains(weapon.x-movement,weapon.y) && aTile.shape.contains(weapon.x-movement,weapon.y+height-1)){
 					Character.isShooting=false;
-					if(aTile.isMonster())
-						checkMonsterState(aTile);
+					if(aTile instanceof Monster)
+						checkMonsterState((Monster)aTile);
 				}
 			}
 			if(weapon.dir==Game.Direction.Up){
 				if(aTile.shape.contains(weapon.x+width-1,weapon.y-1) && aTile.shape.contains(weapon.x,weapon.y-1)){
 					Character.isShooting=false;
-					if(aTile.isMonster())
-						checkMonsterState(aTile);
+					if(aTile instanceof Monster)
+						checkMonsterState((Monster)aTile);
 				}
 			}
 			if(weapon.dir==Game.Direction.Down){
 				if(aTile.shape.contains(weapon.x+width-1,weapon.y+height) && aTile.shape.contains(weapon.x,weapon.y+height)){
 					Character.isShooting=false;
-					if(aTile.isMonster())
-						checkMonsterState(aTile);
+					if(aTile instanceof Monster)
+						checkMonsterState((Monster)aTile);
 			}
 		}
 	}
@@ -258,12 +260,12 @@ public class Character {
 		}
 	}
 }
-	public void checkMonsterState(Tile aTile) {
-		
-		if(aTile.isMonster() && aTile.TransformedState==0)
-			aTile.transform();
-		else if(aTile.isMonster() && (aTile.TransformedState==1 || aTile.TransformedState==2))
-			aTile.moveAcross_Screen(weapon.dir);
+	public void checkMonsterState(Monster aTile) {
+		if(aTile.TransformedState==0)
+				aTile.transform();
+		else if(aTile.TransformedState==1 || aTile.TransformedState==2){
+				aTile.moveAcross_Screen(weapon.dir);
+		}
 		
 	}
 	private boolean checkCollision(Point pt1,Point pt2) {
@@ -275,9 +277,6 @@ public class Character {
 				if(aTile.shape.contains(pt1)&& aTile.shape.contains(pt2) && aTile.getType()==100){
 					if(Character.y<2*step)
 						Level.nextLevel(); //end door
-					return false;
-				}
-				if(aTile.isWalkable() && aTile.getType()!=100){
 					return false;
 				}
 				//we have a collision

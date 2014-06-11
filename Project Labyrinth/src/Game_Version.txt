@@ -1,7 +1,13 @@
+Version 0.22
+
+-Big Cleanup/Redesign of certain aspect.
+-One-Way arrow not yet redesigned.
+-Renamed Dragon to Gol.
+-Renamed Worm to Snakey.
 
 Version 0.21:
 
--Added Monster DonMedusa
+-Added Monster DonMedusa.
 -The Wrong Graphic may appear when moving a block on top of the arrow becase of no depth draw.
 -Block now work correctly with one-way arrow.
 
@@ -16,7 +22,7 @@ Version 0.19:
 -Moving Normal block and monster currently don't work well with one-way arrow.
 -Medusa's projectile currently buggy/remain invisible after shot because you are supposed to be dead if they fire.
 -Its possible to walk through a rock if you are place mid-way between the door and the rock.
--Rock tileset has been added
+-Rock tileset has been added.
 
 Version 0.18:
 
@@ -26,7 +32,7 @@ Version 0.18:
 
 Version 0.17:
 
--All tiles/graphics are now 32x32 instead of 24x24
+-All tiles/graphics are now 32x32 instead of 24x24.
 -Fixed Gameplay to work with the new Tile's Size.
 Bug:-Awakened Monster respawn in the incorrect state.
 	-Shooting same target twice very fast allow for the next shot to hit an invisible block.
@@ -39,37 +45,37 @@ Version 0.16:
 Version 0.15:
 
 -Added Monster(Medusa)
--Added Character Collision with monster bullet
--Game can now correctly detect when you should be dead.Actual Death does not do anything yet
--Corrected issues with monster bullet collision with block 
+-Added Character Collision with monster bullet.
+-Game can now correctly detect when you should be dead.Actual Death does not do anything yet.
+-Corrected issues with monster bullet collision with block.
 -Medusa is currently missing change of art when player getting too close.
 
 Version 0.14:
 
 -Added monster(Sleeping Dragon)
--Certain Monster now wake up and do different ability once all the hearts are taken
--Implemented Monster shooting  and its collision detection
+-Certain Monster now wake up and do different ability once all the hearts are taken.
+-Implemented Monster shooting  and its collision detection.
 
 Version 0.13:
 
--Shooting a monster again while it is in ball form will throw it off screen
--Monsters should now respawn 10 seconds after being last killed
+-Shooting a monster again while it is in ball form will throw it off screen.
+-Monsters should now respawn 10 seconds after being last killed.
 -Taking the chest jewel now stop monster from respawning.
 
 Version 0.12:
 
--Added first monster(Green worm)
--Monster now transform into a ball when shot at and can be moved like block
--10 seconds after being shot the monster return to its former state
--Taking the chest Jewel now kill all monster
--First passing at Monster Animations
+-Added first monster(Green worm).
+-Monster now transform into a ball when shot at and can be moved like block.
+-10 seconds after being shot the monster return to its former state.
+-Taking the chest Jewel now kill all monster.
+-First passing at Monster Animations.
 -Removed old unused assets and added new one to fit the above.
 
 Version 0.11:
 
--Loading tile bug assets from v0.1 fixed
+-Loading tile bug assets from v0.1 fixed.
 -Fixed racing bug with thread and bullet collision call.
--Corrected issue that allowed to move block when not full aligned
+-Corrected issue that allowed to move block when not full aligned.
 -Added Shooting to the game and with 1 tile or multiple tile collision.
 -Fixed Opened Chest image to no longer show a white spot.
 

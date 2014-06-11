@@ -13,7 +13,7 @@ public class Sound {
 	static Clip ChestOpen;
 	static Clip Death;
     public Sound(String Filename) {
-        File Sound= new File("src/"+Filename+".wav");
+        File Sound= new File("src/Sound/"+Filename+".wav");
         Clip clip;
 		try {
 			clip = AudioSystem.getClip();

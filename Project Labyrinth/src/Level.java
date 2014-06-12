@@ -3,6 +3,8 @@ import java.awt.image.BufferedImage;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.PriorityQueue;
 import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.Clip;
@@ -28,6 +30,7 @@ public class Level {
 	public final static int map_height=512;
 	public static int heart_amount=0;
 	public static ArrayList<Tile> map_tile=new ArrayList<Tile>();
+	//public static PriorityQueue<Tile> map_tile=new PriorityQueue<Tile>();
 	public static ArrayList<Tile> toRemove=new ArrayList<Tile>();
 	public static BufferedImage[] game_tileset=new BufferedImage[50];
 	public static BufferedImage[] monsterState;
@@ -66,6 +69,7 @@ public class Level {
 		catch (IOException | XMLStreamException e){
 			e.printStackTrace();
 		}
+		Collections.sort(Level.map_tile);
 	}
 	private void loadSound() {
 		@SuppressWarnings("unused")
@@ -136,7 +140,6 @@ public class Level {
 					Level.map_tile.add(new Snakey(coordX,coordY,20));
 					break;
 		case "21": 	//one-way left arrow
-					//type=12;
 					Level.map_tile.add(new OneWayArrow(coordX,coordY,12));
 					break;
 		case "22": 	//one-way right arrow
@@ -167,8 +170,6 @@ public class Level {
 					Level.map_tile.add(new Gol(coordX,coordY,10));
 					break;
 		//case "32": 	img=game_tileset[31];//Leeper
-					//isMonster=true;
-			//		type=1;
 				//	break;
 		}
 	}
@@ -192,6 +193,7 @@ public class Level {
 		for(int i=0;i<Respawn_Timer.size();i++){
 			if((System.nanoTime()-Respawn_Timer.elementAt(i))/nano >10){
 				map_tile.add(toRespawn.get(i));
+				//Collections.sort(Level.map_tile);
 				Respawn_Timer.remove(i);
 				toRespawn.remove(i);
 			}
@@ -206,9 +208,7 @@ public class Level {
 		Sound.ChestOpen.stop();
 		Sound.ChestOpen.setFramePosition(0);
 		Sound.ChestOpen.start();
-		//BufferedImage img=game_tileset[11];//bottom part of chest
 		goal=new Tile(goal.x,goal.y,5);
-		//img=game_tileset[16];//top part of chest
 		goal_top=new Tile(goal.x,goal.y-32,98);	
 		//awake all monster
 		for(Tile aTile:map_tile){
@@ -220,17 +220,14 @@ public class Level {
 					break;
 			case 8: //awake dragon down
 					aTile.img=game_tileset[12];
-					//aTile.old_img=game_tileset[12];
 					aTile.canShoot=true;
 					break;
 			case 9: //awake dragon left
 					aTile.img=game_tileset[13];
-					//aTile.old_img=game_tileset[13];
 					aTile.canShoot=true;
 					break;
 			case 10://awake dragon right
 					aTile.img=game_tileset[6];
-					//aTile.old_img=game_tileset[6];
 					aTile.canShoot=true;
 					break;				
 			}
@@ -262,7 +259,6 @@ public class Level {
 		
 	}
 	public static void takeGoal() {
-		//BufferedImage img=game_tileset[17];//bottom part of chest empty
 		goal=new Tile(goal.x,goal.y,97);
 		//open the goal
 		for(Tile aTile:map_tile){

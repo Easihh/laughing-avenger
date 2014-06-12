@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+
 import javax.imageio.ImageIO;
 
 
@@ -23,7 +25,7 @@ public class Character {
 	private static int ammo;
 	public static int x;
 	public static int y;
-	private static Tile select_Tile;
+	public static Tile select_Tile;
 	
 	public final static int step=16;
 	public static ArrayList<Game.button> keypressed=new ArrayList<Game.button>();
@@ -280,12 +282,11 @@ public class Character {
 					return false;
 				}
 				//we have a collision
-				System.out.println("type:"+aTile.getType());
 				switch(aTile.getType()){
 				
 				case 2: if(aTile.shape.contains(pt1) && aTile.shape.contains(pt2)){
 							select_Tile=aTile;
-							aTile.moveTile(step);
+							aTile.moveTile(step,pt1,pt2);
 						}
 						break;
 				case 3: 	takeHeart(aTile);
@@ -293,12 +294,13 @@ public class Character {
 				case 11:	
 				case 12:
 				case 13:
-				case 14:if(!searchBlock(pt1,pt2)){
+				case 14:if(!searchBlock(pt1,pt2)){ //no block infront
 							if(!OneWayArrow(aTile))
 								return false;
 						}
-						else
-							aTile.moveTile(step);
+						else 	if(select_Tile.shape.contains(pt1) && select_Tile.shape.contains(pt2)){
+									aTile.moveTile(step,pt1,pt2);
+						}
 						break;
 				}
 				return true;
@@ -342,6 +344,7 @@ public class Character {
 	}
 	private void takeHeart(Tile aTile) {
 		Level.map_tile.remove(aTile);
+		Collections.sort(Level.map_tile);
 		Level.heart_amount-=1;
 		Sound.HeartSound.stop();
 		Sound.HeartSound.setFramePosition(0);

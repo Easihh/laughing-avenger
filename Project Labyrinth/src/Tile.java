@@ -1,14 +1,16 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 
-public class Tile {
+public class Tile implements Comparable<Tile> {
 	protected final int height=32;
 	protected final int width=32;
 	protected int maxFrame=0;
 	private int nextFrame=0;
+	public int depth=1;
 	public int oldX;
 	public int oldY;
 	public int oldtype;
@@ -22,7 +24,7 @@ public class Tile {
 	public Image img;
 	public Polygon shape;
 	public BufferedImage projectile_img;
-	public Tile collision_tile;
+	public Tile collision_tile=null;
 	public Tile(int x, int y,int type) {
 		this.x=x;
 		this.y=y;
@@ -46,6 +48,7 @@ public class Tile {
 		case 1: 	img=Level.game_tileset[0];//rock
 					break;
 		case 2: 	img=Level.game_tileset[8];//moveable block
+					depth=2;
 					break;	
 		case 3: 	img=Level.game_tileset[2];//heart
 					break;
@@ -64,16 +67,25 @@ public class Tile {
 		img=image;
 		type=99;// we have a background
 	}
-	public void moveTile(int movement){
+	public void moveTile(int movement, Point pt1, Point pt2){
 		switch(Character.dir){
 		
 		case Right:	if(!checkCollison(x+width,y,x+width,y+height-1) && Character.dir==Game.Direction.Right){
-						Character.targetX=Character.step;
-						Character.isMoving=true;
-						Character.isPushing=true;
+								searchOneWayArrow(x,y,x,y,x,y);
+								if(collision_tile==null){
+									Character.targetX=Character.step;
+									Character.isMoving=true;
+									Character.isPushing=true;
+								}
+								if(collision_tile!=null && collision_tile.getType()!=12){
+									Character.targetX=Character.step;
+									Character.isMoving=true;
+									Character.isPushing=true;
+								}
 						}
 					else{
-						if(!OneWayArrow()){//allow passage
+						searchOneWayArrow(x+width,y+height-1,x+width,y,x,y);
+						if(collision_tile!=null && !OneWayArrow(pt1,pt2)){//allow passage
 							Character.targetX=Character.step;
 							Character.isMoving=true;
 							Character.isPushing=true;
@@ -82,28 +94,44 @@ public class Tile {
 					break;
 					
 		case Down:	if(!checkCollison(x,y+height,x+width-1,y+height)&& Character.dir==Game.Direction.Down){
-						Character.targetX=Character.step;
-						Character.isMoving=true;
-						Character.isPushing=true;
-						System.out.println("errr");
-						}
-					else{
-						if(!OneWayArrow()){//allow passage
+						searchOneWayArrow(x,y,x,y,x,y);
+						if(collision_tile==null){
 							Character.targetX=Character.step;
 							Character.isMoving=true;
 							Character.isPushing=true;
-							System.out.println("stuff");
+						}
+						if(collision_tile!=null && collision_tile.getType()!=11){
+							Character.targetX=Character.step;
+							Character.isMoving=true;
+							Character.isPushing=true;
+						}
+					}
+					else{
+						searchOneWayArrow(x,y+height,x+width-1,y+height,x,y);
+						if( collision_tile!=null && !OneWayArrow(pt1,pt2)){//allow passage
+							Character.targetX=Character.step;
+							Character.isMoving=true;
+							Character.isPushing=true;
 						}
 					}
 					break;
 		case Up:
 					if(!checkCollison(x,y-1,x+width-1,y-1)&& Character.dir==Game.Direction.Up){
-						Character.targetX=-Character.step;
-						Character.isMoving=true;
-						Character.isPushing=true;
+						searchOneWayArrow(x,y,x,y,x,y);
+						if(collision_tile==null){
+							Character.targetX=-Character.step;
+							Character.isMoving=true;
+							Character.isPushing=true;
 						}
-					else{	
-						if(!OneWayArrow()){//allow passage
+						if(collision_tile!=null && collision_tile.getType()!=14){
+							Character.targetX=-Character.step;
+							Character.isMoving=true;
+							Character.isPushing=true;
+						}
+					}
+					else{
+						searchOneWayArrow(x,y-1,x+width-1,y-1,x,y+height-1);
+						if(collision_tile!=null && !OneWayArrow(pt1,pt2)){//allow passage
 							Character.targetX=-Character.step;
 							Character.isMoving=true;
 							Character.isPushing=true;
@@ -112,12 +140,21 @@ public class Tile {
 					break;
 		case Left:
 					if(!checkCollison(x-1,y,x-1,y+height-1)&& Character.dir==Game.Direction.Left){
-						Character.targetX=-Character.step;
-						Character.isMoving=true;
-						Character.isPushing=true;
+						searchOneWayArrow(x,y,x,y,x,y);
+						if(collision_tile==null){
+							Character.targetX=-Character.step;
+							Character.isMoving=true;
+							Character.isPushing=true;
 						}
+						if(collision_tile!=null && collision_tile.getType()!=13){
+							Character.targetX=-Character.step;
+							Character.isMoving=true;
+							Character.isPushing=true;
+						}
+					}
 					else{
-						if(!OneWayArrow()){//allow passage
+						searchOneWayArrow(x-1,y,x-1,y+height-1,x+width-1,y);
+						if(collision_tile!=null && !OneWayArrow(pt1,pt2)){//allow passage
 							Character.targetX=-Character.step;
 							Character.isMoving=true;
 							Character.isPushing=true;
@@ -129,10 +166,22 @@ public class Tile {
 		int[] ypoints={y,y,y+height,y+height};
 		shape=new Polygon(xpoints, ypoints, 4);
 	}
+	private boolean searchOneWayArrow(int x1,int y1,int x2,int y2,int x3,int y3) {
+		for(Tile aTile:Level.map_tile){
+			if(aTile.shape.contains(x1,y1)|| aTile.shape.contains(x2,y2) || 
+					aTile.shape.contains(x3,y3)){
+				if(aTile instanceof OneWayArrow){
+					collision_tile=aTile;
+					return true;
+				}
+			}
+		}
+		collision_tile=null;
+		return false;
+	}
 	private boolean checkCollison(int x1,int y1,int x2,int y2) {
 		for(Tile aTile:Level.map_tile){
 			if(aTile.shape.contains(x1,y1)|| aTile.shape.contains(x2,y2)){
-				collision_tile=aTile;
 				return true;
 			}
 		}
@@ -259,27 +308,45 @@ public class Tile {
 	public void setType(int i) {
 		type=i;	
 	}
-	private boolean OneWayArrow() {
-		if(Character.dir==Game.Direction.Down && collision_tile.getType()==11){
-			if(collision_tile.shape.contains(x,y+height-1) || collision_tile.shape.contains(x+width,y+height-1))
-				return false;// pass through
-			return true; 
+	private boolean OneWayArrow(Point pt1, Point pt2) {
+		if(Character.dir==Game.Direction.Down){
+			if(collision_tile.getType()==11){
+				if(collision_tile.shape.contains(x,y+height-1) || collision_tile.shape.contains(x+width,y+height-1))
+					return false;// pass through
+				return true; 	
+			}
+			return false;
 		}
-		if(Character.dir==Game.Direction.Up && collision_tile.getType()==14){
-			if(collision_tile.shape.contains(x,y) ||collision_tile.shape.contains(x+width,y))
-				return false;
-			return true;
+		if(Character.dir==Game.Direction.Up){
+			if(collision_tile.getType()==14){
+				if(collision_tile.shape.contains(x,y) || collision_tile.shape.contains(x+width,y))
+					return false;
+				return true;		
+			}
+			return false;
 		}
-		if(Character.dir==Game.Direction.Left && collision_tile.getType()==13){
-			if(collision_tile.shape.contains(x,y) || collision_tile.shape.contains(x,y+height))
-				return false;
-			return true;
+		if(Character.dir==Game.Direction.Left){
+			if(collision_tile.getType()==13){
+				if(collision_tile.shape.contains(x,y) || collision_tile.shape.contains(x,y+height))
+					return false;
+				return true;
+				}
+			return false;
 		}
-		if(Character.dir==Game.Direction.Right && collision_tile.getType()==12){
-			if(collision_tile.shape.contains(x+width-1,y) || collision_tile.shape.contains(x+width-1,y+height-1))
-				return false;
-			return true;
+		if(Character.dir==Game.Direction.Right){
+			if(collision_tile.getType()==12){
+				if(collision_tile.shape.contains(x+width-1,y) || collision_tile.shape.contains(x+width-1,y+height-1))
+					return false;
+				return true;
+			}
+			return false;
 		}
 		return false;
+	}
+	@Override
+	public int compareTo(Tile anotherTile) {
+		if(depth<anotherTile.depth)return -1;
+		if(depth==anotherTile.depth)return 0;
+		return 1;
 	}
 }

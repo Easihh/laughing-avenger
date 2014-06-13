@@ -36,6 +36,7 @@ public class Gol extends Monster {
 	@Override
 	public void transform() {
 		previousState=img;
+		oldtype=type;
 		type=2;
 		img=Level.monsterState[0];
 		time_since_transform=System.nanoTime();	
@@ -60,9 +61,8 @@ public class Gol extends Monster {
 		}
 		if((System.nanoTime()-time_since_transform)/nano>10 && TransformedState==2){
 			TransformedState=0;
-			type=1;
+			type=oldtype;
 			img=previousState;
-			//old_img=img;
 		}	
 	}
 	public boolean isOffScreen(){

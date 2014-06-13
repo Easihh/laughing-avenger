@@ -1,6 +1,7 @@
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 
 public class Labyrinth extends JFrame {
@@ -25,7 +26,7 @@ public class Labyrinth extends JFrame {
 	public Labyrinth() {
 		GameState=GameState.Paused;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(new Dimension(672,560));
+		setSize(new Dimension(672,540));
 		setResizable(false);
 		mainPane = new MainPanel();
 		setContentPane(mainPane);

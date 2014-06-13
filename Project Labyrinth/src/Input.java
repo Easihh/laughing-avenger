@@ -26,10 +26,6 @@ public class Input implements KeyListener {
 				}
 		}
 		if(keycode==KeyEvent.VK_SPACE){
-			for(Tile aTile:Level.map_tile){
-				System.out.println("Type:"+aTile.getType());
-				//System.out.println("Depth:"+aTile.depth);
-			}
 			Character.fireProjectile();
 		}
 		if(keycode==KeyEvent.VK_ESCAPE){

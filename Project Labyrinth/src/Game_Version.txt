@@ -1,3 +1,8 @@
+Version 0.24A:
+
+-Fixed an issue with Snakey not transforming into stage2 in ball form.
+-Fixed an issue with Monster respawning of incorrect type if killed 10 second or less before chest open.
+
 Version 0.24:
 
 -Fixed several issues with moving block with full and partial collision with other tile.

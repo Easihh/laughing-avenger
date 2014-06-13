@@ -4,7 +4,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.PriorityQueue;
 import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.Clip;
@@ -25,12 +24,12 @@ public class Level {
 	private static Vector<Long> Respawn_Timer=new Vector<Long>();
 	private static Tile goal_top;
 	private static boolean canRespawn=true;
+	private static boolean chestIsOpen=false;
 	
 	public final static int map_width=512;
 	public final static int map_height=512;
 	public static int heart_amount=0;
 	public static ArrayList<Tile> map_tile=new ArrayList<Tile>();
-	//public static PriorityQueue<Tile> map_tile=new PriorityQueue<Tile>();
 	public static ArrayList<Tile> toRemove=new ArrayList<Tile>();
 	public static BufferedImage[] game_tileset=new BufferedImage[50];
 	public static BufferedImage[] monsterState;
@@ -102,7 +101,6 @@ public class Level {
 	map_background=new Tile(img);
 }
 	private void createTile(String attributeValue) throws IOException {
-
 		switch(attributeValue){
 		case "0": 	//blank tile;show background
 					break;	
@@ -192,19 +190,41 @@ public class Level {
 	private void checkRespawn() {
 		for(int i=0;i<Respawn_Timer.size();i++){
 			if((System.nanoTime()-Respawn_Timer.elementAt(i))/nano >10){
+				if(chestIsOpen)
+					getCorrectType(toRespawn.get(i));
 				map_tile.add(toRespawn.get(i));
-				//Collections.sort(Level.map_tile);
 				Respawn_Timer.remove(i);
 				toRespawn.remove(i);
 			}
 		}
 		
 	}
+	private void getCorrectType(Tile aTile) {
+		
+		switch(aTile.getType()){
+		case 7: //awake dragon up
+				aTile.canShoot=true;
+				break;
+		case 8: //awake dragon down
+				aTile.img=game_tileset[12];
+				aTile.canShoot=true;
+				break;
+		case 9: //awake dragon left
+				aTile.img=game_tileset[13];
+				aTile.canShoot=true;
+				break;
+		case 10://awake dragon right
+				aTile.img=game_tileset[6];
+				aTile.canShoot=true;
+				break;				
+		}
+	}
 	static void addRespawn(Tile tile) {
 		toRespawn.add(tile);
 		Respawn_Timer.add(System.nanoTime());
 	}
 	public static void openChest() {
+		chestIsOpen=true;
 		Sound.ChestOpen.stop();
 		Sound.ChestOpen.setFramePosition(0);
 		Sound.ChestOpen.start();

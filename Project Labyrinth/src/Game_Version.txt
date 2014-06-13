@@ -1,3 +1,7 @@
+Version 0.24B:
+
+-Fixed an issue where FPS/thread would go out of control and freeze game when not focused.
+
 Version 0.24A:
 
 -Fixed an issue with Snakey not transforming into stage2 in ball form.

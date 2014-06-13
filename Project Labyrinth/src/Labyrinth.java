@@ -1,17 +1,17 @@
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 
-public class Labyrinth extends JFrame {
+public class Labyrinth extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	private MainPanel mainPane;
+	static long prev;
 	enum GameState{Normal,Paused,Menu}
 	static GameState GameState;
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Labyrinth frame = new Labyrinth();
@@ -24,9 +24,8 @@ public class Labyrinth extends JFrame {
 	}
 
 	public Labyrinth() {
-		GameState=GameState.Paused;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(new Dimension(672,540));
+		setSize(new Dimension(672,512));
 		setResizable(false);
 		mainPane = new MainPanel();
 		setContentPane(mainPane);
@@ -49,8 +48,7 @@ public class Labyrinth extends JFrame {
 					sleep/=1000000;
 					try {
 						Thread.sleep(sleep);
-						//if(GameState!=GameState.Paused)
-							MainPanel.hero.update();
+						MainPanel.hero.update();
 						repaint();
 						prev=System.nanoTime();
 					}catch (InterruptedException e) {
@@ -61,6 +59,9 @@ public class Labyrinth extends JFrame {
 					setTitle("Project:Labyrinth FPS:"+fps);
 					fps=0;
 					timer=System.nanoTime();
+				}
+				if(System.nanoTime()-prev>=refresh_delay){
+					prev=System.nanoTime();
 				}
 			}
 		}

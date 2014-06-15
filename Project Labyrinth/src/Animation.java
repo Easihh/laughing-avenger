@@ -40,7 +40,6 @@ public class Animation {
 	}
 	public void setImage() {
 		myScene.get(index).current_duration+= (System.nanoTime()-last_update)/nano;
-		//System.out.println("time added:"+(System.nanoTime()-last_update)/nano);
 		if(myScene.get(index).current_duration>myScene.get(index).max_duration){
 			myScene.get(index).current_duration=0;
 			index++;

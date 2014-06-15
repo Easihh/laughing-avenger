@@ -10,26 +10,14 @@ public class MainPanel extends JPanel {
 	JLabel xposition,yposition;
 	public static Character hero=new Character(48, 48);
 	public MainPanel(){
-		setBackground(Color.black);
-		setLayout(null);
-		
-		xposition = new JLabel("New label");
-		xposition.setBounds(544, 64, 75, 25);
-		add(xposition);
-		xposition.setBackground(Color.BLACK);
-		xposition.setForeground(Color.WHITE);
-		
-		yposition = new JLabel("New label");
-		yposition.setBounds(544, 96, 75, 25);
-		add(yposition);
-		yposition.setForeground(Color.WHITE);
-		yposition.setBackground(Color.BLACK);
+		setBackground(Color.black);	
 	}
 	public void paintComponent(Graphics g){
 			super.paintComponent(g);
 			theLevel.render(g);
-			xposition.setText("X:"+Character.x);
-			yposition.setText("Y:"+Character.y);
+			g.setColor(Color.white);
+			g.drawString("x:"+Character.x, 544, 64);
+			g.drawString("y:"+Character.y, 544, 96);
 			//if(Labyrinth.GameState==Game.GameState.Death)
 				//Character.Death.render(g);
 			hero.render(g);

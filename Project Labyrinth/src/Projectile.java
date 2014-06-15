@@ -12,7 +12,6 @@ public class Projectile {
 	public int x;
 	public int y;
 	public Polygon shape;
-	
 	public Projectile(int x,int y,BufferedImage img,Game.Direction dir){
 		this.x=x;
 		this.y=y;

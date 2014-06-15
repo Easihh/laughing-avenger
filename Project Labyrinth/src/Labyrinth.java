@@ -42,13 +42,12 @@ public class Labyrinth extends JFrame{
 			int fps=0;
 			public void run(){
 				while(true){
-				fps++;
+					fps++;
 				if((System.nanoTime()-prev)<refresh_delay){
 					long sleep=refresh_delay-(System.nanoTime()-prev);
 					sleep/=1000000;
 					try {
 						Thread.sleep(sleep);
-						//if(GameState!=GameState.Death)
 						MainPanel.hero.update();
 						repaint();
 						prev=System.nanoTime();

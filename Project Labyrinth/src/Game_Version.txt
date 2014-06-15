@@ -1,3 +1,8 @@
+Version 0.26:
+
+-All animation now use the new animation code.
+-Currently a bug where monster update function is several time faster if lolo is moving.
+
 Version 0.25:
 
 -Lolo now has a death animation

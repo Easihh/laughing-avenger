@@ -30,8 +30,8 @@ public class MainPanel extends JPanel {
 			theLevel.render(g);
 			xposition.setText("X:"+Character.x);
 			yposition.setText("Y:"+Character.y);
-			if(Labyrinth.GameState==Game.GameState.Death)
-				Character.Death.render(g);
-			else hero.render(g);
+			//if(Labyrinth.GameState==Game.GameState.Death)
+				//Character.Death.render(g);
+			hero.render(g);
 	}
 }

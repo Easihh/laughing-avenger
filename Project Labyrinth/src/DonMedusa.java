@@ -9,10 +9,11 @@ public class DonMedusa extends Monster {
 	private Game.Direction projectile_dir;
 	private final long nano=1000000L;
 	private int index=0;
-	private int nextFrame=500;
-	long last_animation_update;
+	BufferedImage[] spriteSheet;
+	Animation DonMedusaAnimation;
 	public DonMedusa(int x, int y, int type) {
 		super(x, y, type);
+		DonMedusaAnimation=new Animation();
 		canShoot=true;
 		try {getImg();} catch (IOException e) {e.printStackTrace();}
 		if(type==1)//left to right
@@ -21,8 +22,16 @@ public class DonMedusa extends Monster {
 	}
 
 	private void getImg() throws IOException {
-		super.img=ImageIO.read(getClass().getResource("/tileset/DonMedusa.png"));
-		setAnimation((BufferedImage)super.img, 2);
+		BufferedImage img=null;
+		spriteSheet=new BufferedImage[2];
+		img=ImageIO.read(getClass().getResource("/tileset/DonMedusa.png"));
+		for(int i=0;i<1;i++){//all animation on same row
+			 for(int j=0;j<2;j++){
+				spriteSheet[(i*maxFrame)+j]=img.getSubimage(j*width, i*height, width, height);
+			 }
+		 }
+		DonMedusaAnimation.AddScene(spriteSheet[0], 500);
+		DonMedusaAnimation.AddScene(spriteSheet[1], 500);
 		bullet_type=new BufferedImage[4];
 		bullet_type[0]=ImageIO.read(getClass().getResource("/tileset/projectile/DonMedusa_shot_right.png"));
 		bullet_type[1]=ImageIO.read(getClass().getResource("/tileset/projectile/DonMedusa_shot_left.png"));
@@ -35,10 +44,10 @@ public class DonMedusa extends Monster {
 
 	@Override
 	public void render(Graphics g) {
-		updateAnimation();
+		DonMedusaAnimation.setImage();
 		move();
 		fireProjectile(g);
-		g.drawImage(super.animation.animation[index], x,y,width,height,null);
+		g.drawImage(DonMedusaAnimation.getImage(), x,y,width,height,null);
 	}
 	public void fireProjectile(Graphics g){
 		if(canShoot){
@@ -46,14 +55,6 @@ public class DonMedusa extends Monster {
 		}
 		if(projectile!=null && !canShoot)
 			projectile.render(g);
-	}
-	public void updateAnimation(){
-			if((System.nanoTime()-last_animation_update)/nano>nextFrame){
-				last_animation_update=System.nanoTime();
-				index++;
-				if(index==super.maxFrame)
-					index=0;
-			}
 	}
 	private void MultiDirectionSight(){
 		boolean shoot=false;

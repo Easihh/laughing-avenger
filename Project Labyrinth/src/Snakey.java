@@ -4,8 +4,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Snakey  extends Monster{
-	//private int index=0;
-	private int nextFrame=1000;
 	private final long nano=1000000L;
 	long last_animation_update;
 	private long time_since_transform;

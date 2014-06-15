@@ -48,19 +48,19 @@ public class Character {
 		isPushing=false;
 		 dir=Game.Direction.Down;
 		 lastKey=Game.button.None;
-		 walk_down=new Animation(cols,100);
-		 walk_up=new Animation(cols,100);
-		 walk_left=new Animation(cols,100);
-		 walk_right=new Animation(cols,100);
+		 walk_down=new Animation();
+		 walk_up=new Animation();
+		 walk_left=new Animation();
+		 walk_right=new Animation();
 		 try {
 			img=ImageIO.read(getClass().getResource("/tileset/Lolo_down.png"));
-			getImagefromSpriteSheet(img,walk_down);
+			getImagefromSpriteSheet(img,walk_down,"down");
 			img=ImageIO.read(getClass().getResource("/tileset/Lolo_up.png"));
-			getImagefromSpriteSheet(img,walk_up);
+			getImagefromSpriteSheet(img,walk_up,"up");
 			img=ImageIO.read(getClass().getResource("/tileset/Lolo_left.png"));
-			getImagefromSpriteSheet(img,walk_left);
+			getImagefromSpriteSheet(img,walk_left,"left");
 			img=ImageIO.read(getClass().getResource("/tileset/Lolo_right.png"));
-			getImagefromSpriteSheet(img,walk_right);
+			getImagefromSpriteSheet(img,walk_right,"right");
 			img=ImageIO.read(getClass().getResource("/tileset/shoot_sheet.png"));
 			getProjectileSheet(img);
 			img=ImageIO.read(getClass().getResource("/tileset/monster_state.png"));
@@ -92,34 +92,47 @@ public class Character {
 		}			
 	}
 	private void getImagefromSpriteSheet(BufferedImage spriteSheet,
-			Animation Animation) {
-		BufferedImage[] animation_array=new BufferedImage[cols]; 
+			Animation Animation,String direction) {
+		BufferedImage[] img=new BufferedImage[cols]; 
 		 for(int i=0;i<rows;i++){
 			 for(int j=0;j<cols;j++){
-				animation_array[(i*cols)+j]=spriteSheet.getSubimage(j*width, i*height, width, height);
+				img[(i*cols)+j]=spriteSheet.getSubimage(j*width, i*height, width, height);			
 			 }
 		 }
-		 Animation.animation=animation_array;
+		 switch(direction){ 
+		 case "left":	for(int i=0;i<cols;i++)
+			 				walk_left.AddScene(img[i],100);
+			 			break;
+		 case "right":	for(int i=0;i<cols;i++)
+							walk_right.AddScene(img[i],100);
+			 			break;
+		 case "down":	for(int i=0;i<cols;i++)
+							walk_down.AddScene(img[i],100);
+			 			break;
+		 case "up":		for(int i=0;i<cols;i++)
+							walk_up.AddScene(img[i],100);
+			 			break;
+		 }
 	}
 	public void render(Graphics g){
 		g.setColor(Color.red);
 		switch(dir){
 	
-		case Down:	if(keypressed.size()==0)
-						walk_down.index=0;
-					g.drawImage(walk_down.animation[walk_down.index],x,y,width,height,null);
+		case Down:	if(keypressed.size()==0)					
+						walk_down.reset();
+					g.drawImage(walk_down.getImage(),x,y,width,height,null);
 					break;
 		case Up:	if(keypressed.size()==0)
-						walk_up.index=0;
-					g.drawImage(walk_up.animation[walk_up.index],x,y,width,height,null);
+						walk_up.reset();
+					g.drawImage(walk_up.getImage(),x,y,width,height,null);
 					break;
 		case Right:	if(keypressed.size()==0)
-						walk_right.index=0;
-					g.drawImage(walk_right.animation[walk_right.index],x,y,width,height,null);
+						walk_right.reset();
+					g.drawImage(walk_right.getImage(),x,y,width,height,null);
 					break;
 		case Left:	if(keypressed.size()==0)
-						walk_left.index=0;
-					g.drawImage(walk_left.animation[walk_left.index],x,y,width,height,null);
+						walk_left.reset();
+					g.drawImage(walk_left.getImage(),x,y,width,height,null);
 					break;
 		default: 	g.drawRect(x, y, width, height);
 					break;
@@ -363,7 +376,7 @@ public class Character {
 				lastKey=keypressed.get(keypressed.size()-1);//get last pressed button
 			if(lastKey==Game.button.W){
 				dir=Game.Direction.Up;
-				walk_up.increaseIndex(last_animation_update);
+				walk_up.setImage();
 				if(!checkCollision(new Point(x+width-1,y-1),new Point((int)(x),y-1))){
 						targetX=-step;
 						isMoving=true;
@@ -371,7 +384,7 @@ public class Character {
 			}
 			if(lastKey==Game.button.S){
 				dir=Game.Direction.Down;			
-				walk_down.increaseIndex(last_animation_update);
+				walk_down.setImage();
 				if(!checkCollision(new Point(x+width-1,y+height),new Point((int)(x),y+height))){
 					targetX=step;
 					isMoving=true;
@@ -381,13 +394,13 @@ public class Character {
 				if(checkKeypressed()){
 					switch(dir){
 					case Down:	if(!checkCollision(new Point(x+width-1,y+height),new Point((int)(x),y+height))){
-									walk_down.increaseIndex(last_animation_update);
+									walk_down.setImage();
 									targetX=step;
 									isMoving=true;
 								}
 								break;
 					case Up:	if(!checkCollision(new Point(x+width-1,y-1),new Point((int)(x),y-1))){
-									walk_up.increaseIndex(last_animation_update);
+									walk_up.setImage();
 									targetX=-step;
 									isMoving=true;
 								}
@@ -395,7 +408,7 @@ public class Character {
 					}
 				}else{
 					dir=Game.Direction.Right;
-					walk_right.increaseIndex(last_animation_update);
+					walk_right.setImage();
 					if(!checkCollision(new Point(x+width,y+height-1),new Point((int)(x+width),y))){
 						targetX=step;
 						isMoving=true;
@@ -406,20 +419,20 @@ public class Character {
 				if(checkKeypressed()){
 					switch(dir){
 					case Down:	if(!checkCollision(new Point(x+width-1,y+height),new Point((int)(x),y+height))){
-									walk_down.increaseIndex(last_animation_update);
+									walk_down.setImage();
 									targetX=step;
 									isMoving=true;
 								}
 								break;
 					case Up:	if(!checkCollision(new Point(x+width-1,y-1),new Point((int)(x),y-1))){
-									walk_up.increaseIndex(last_animation_update);
+									walk_up.setImage();
 									targetX=-step;
 									isMoving=true;
 								}
 								break;
 					}
 				}else{	dir=Game.Direction.Left;			
-						walk_left.increaseIndex(last_animation_update);
+						walk_left.setImage();
 						if(!checkCollision(new Point(x-movement,y),new Point((int)(x-movement),y+height-1))){
 								targetX=-step;
 								isMoving=true;
@@ -433,7 +446,7 @@ public class Character {
 			if(dir==Game.Direction.Left){
 				targetX+=movement;
 				Character.x-=movement;
-				walk_left.increaseIndex(last_animation_update);
+				walk_left.setImage();
 				if(isPushing){
 					select_Tile.x-=movement;
 					select_Tile.updateMask();
@@ -441,7 +454,7 @@ public class Character {
 			}else{//up
 				targetX+=movement;
 				Character.y-=movement;
-				walk_up.increaseIndex(last_animation_update);
+				walk_up.setImage();
 				if(isPushing){
 					select_Tile.y-=movement;
 					select_Tile.updateMask();
@@ -452,7 +465,7 @@ public class Character {
 			if(dir==Game.Direction.Right){
 				targetX-=movement;
 				Character.x+=movement;
-				walk_right.increaseIndex(last_animation_update);
+				walk_right.setImage();
 				if(isPushing){
 					select_Tile.x+=movement;
 					select_Tile.updateMask();
@@ -460,7 +473,7 @@ public class Character {
 			}else{//down
 				targetX-=movement;
 				Character.y+=movement;
-				walk_down.increaseIndex(last_animation_update);
+				walk_down.setImage();
 				if(isPushing){
 					select_Tile.y+=movement;
 					select_Tile.updateMask();

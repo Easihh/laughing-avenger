@@ -18,19 +18,6 @@ public class Animation {
 		total_time=0;
 		last_update=System.nanoTime();
 	}
-	public Animation(int max, int next){
-		max_index=max;
-		next_frame=next;
-		animation=new BufferedImage[max];
-	}
-	public void increaseIndex(long last_update){
-		if((System.nanoTime()-last_update)/nano>next_frame){
-			index++;
-			if(index==max_index)
-			index=0;
-			Character.last_animation_update=System.nanoTime();
-		}
-	}
 	public void AddScene(Image img, long duration){
 		myScene.add(new Scene(img,duration));
 		total_time+=duration;
@@ -47,6 +34,10 @@ public class Animation {
 		if(index>myScene.size()-1)
 			index=0;
 		last_update=System.nanoTime();
+	}
+	public void reset(){
+		myScene.get(index).current_duration=0;
+		index=0;
 	}
 	private class Scene{
 		Image img;

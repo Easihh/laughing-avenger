@@ -9,7 +9,6 @@ public class Tile implements Comparable<Tile> {
 	protected final int height=32;
 	protected final int width=32;
 	protected int maxFrame=0;
-	private int nextFrame=0;
 	public int depth=1;
 	public int oldX;
 	public int oldY;
@@ -284,17 +283,6 @@ public class Tile implements Comparable<Tile> {
 		case Up:	y-=12;
 					break;
 		}
-	}
-	/* Check the state of the Tile and revert it back to its original image 10second after being shot*/
-	public void setAnimation(BufferedImage anim_sheet,int maxFrame){
-		//nextFrame=next;
-		animation=new Animation(maxFrame,nextFrame);
-		this.maxFrame=maxFrame;
-		 for(int i=0;i<1;i++){//all animation on same row
-			 for(int j=0;j<maxFrame;j++){
-				animation.animation[(i*maxFrame)+j]=anim_sheet.getSubimage(j*width, i*height, width, height);
-			 }
-		 }
 	}
 	public void moveAcross_Screen(Game.Direction direction){
 		shape.reset();//tile can now pass through everything

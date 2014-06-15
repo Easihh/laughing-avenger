@@ -8,8 +8,7 @@ public class Labyrinth extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private MainPanel mainPane;
 	static long prev;
-	enum GameState{Normal,Paused,Menu}
-	static GameState GameState;
+	static Game.GameState GameState;
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -24,8 +23,9 @@ public class Labyrinth extends JFrame{
 	}
 
 	public Labyrinth() {
+		GameState=GameState.Normal;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(new Dimension(672,512));
+		setSize(new Dimension(672,540));
 		setResizable(false);
 		mainPane = new MainPanel();
 		setContentPane(mainPane);
@@ -48,6 +48,7 @@ public class Labyrinth extends JFrame{
 					sleep/=1000000;
 					try {
 						Thread.sleep(sleep);
+						//if(GameState!=GameState.Death)
 						MainPanel.hero.update();
 						repaint();
 						prev=System.nanoTime();

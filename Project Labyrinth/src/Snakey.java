@@ -4,31 +4,38 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Snakey  extends Monster{
-	private int index=0;
+	//private int index=0;
 	private int nextFrame=1000;
 	private final long nano=1000000L;
 	long last_animation_update;
 	private long time_since_transform;
-	
+	Animation SnakeyAnimation;
+	BufferedImage spriteSheet[];
 	public Snakey(int x, int y, int type) {
 		super(x, y, type);
+		SnakeyAnimation=new Animation();
+		spriteSheet=new BufferedImage[2];
 		try {getImage();} catch (IOException e) {e.printStackTrace();}
 	}
 	private void getImage() throws IOException {
-
-		if(super.type==19){
-			super.img=ImageIO.read(getClass().getResource("/tileset/worm_left.png"));
+		BufferedImage img=null;
+		if(super.type==20)
+			img=ImageIO.read(getClass().getResource("/tileset/worm_right.png"));
+		if(super.type==19)
+			img=ImageIO.read(getClass().getResource("/tileset/worm_left.png"));
+		for(int i=0;i<1;i++){//all animation on same row
+				 for(int j=0;j<2;j++){
+					spriteSheet[(i*maxFrame)+j]=img.getSubimage(j*width, i*height, width, height);
+				 }
+			 }
+			SnakeyAnimation.AddScene(spriteSheet[0], 1000);
+			SnakeyAnimation.AddScene(spriteSheet[1], 1000);
 		}
-		if(super.type==20){
-			super.img=ImageIO.read(getClass().getResource("/tileset/worm_right.png"));
-		}
-		setAnimation((BufferedImage)super.img, 2);
-	}
 	public void render(Graphics g){
 		updateAnimation();
 		checkState();
 		if(TransformedState==0 && !isMovingAcrossScreen){
-			g.drawImage(super.animation.animation[index], x,y,width,height,null);
+			g.drawImage(SnakeyAnimation.getImage(), x,y,width,height,null);
 		}
 		else{	if(isMovingAcrossScreen)
 					super.updateLocation();
@@ -54,12 +61,7 @@ public class Snakey  extends Monster{
 	}
 	public void updateAnimation(){
 		if(TransformedState==0)
-			if((System.nanoTime()-last_animation_update)/nano>nextFrame){
-				last_animation_update=System.nanoTime();
-				index++;
-				if(index==super.maxFrame)
-					index=0;
-			}
+			SnakeyAnimation.setImage();
 	}
 	@Override
 	public void transform() {

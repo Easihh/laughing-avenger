@@ -3,6 +3,7 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 
+
 public class MainPanel extends JPanel {
 	private Level theLevel=new Level();
 	private static final long serialVersionUID = 1L;
@@ -26,9 +27,11 @@ public class MainPanel extends JPanel {
 	}
 	public void paintComponent(Graphics g){
 			super.paintComponent(g);
+			theLevel.render(g);
 			xposition.setText("X:"+Character.x);
 			yposition.setText("Y:"+Character.y);
-			theLevel.render(g);
-			hero.render(g);
+			if(Labyrinth.GameState==Game.GameState.Death)
+				Character.Death.render(g);
+			else hero.render(g);
 	}
 }

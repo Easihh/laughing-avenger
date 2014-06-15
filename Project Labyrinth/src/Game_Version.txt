@@ -1,3 +1,10 @@
+Version 0.25:
+
+-Lolo now has a death animation
+-Death animation timing is ok but implementation is off since its on the old non refactored animation code
+-Started to refactor Animation code.
+-Monster Snakey is now on the new animation code.
+
 Version 0.24B:
 
 -Fixed an issue where FPS/thread would go out of control and freeze game when not focused.

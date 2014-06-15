@@ -37,11 +37,12 @@ public class Character {
 	public static int targetX=0;
 	public static long last_animation_update=0;
 	public static Projectile weapon=null;
-	
+	public static Death Death;
 	public Character(int x, int y){
 		Character.x=x;
 		Character.y=y;
 		Character.ammo=0;
+		Death=new Death();
 		isShooting=false;
 		isMoving=false;
 		isPushing=false;

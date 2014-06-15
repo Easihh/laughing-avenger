@@ -5,8 +5,6 @@ import java.util.Vector;
 
 public class Animation {
 	private final long nano=1000000L;
-	private int next_frame=0;
-	private int max_index=0;
 	Vector<Scene> myScene;
 	public BufferedImage[] animation=null;
 	public int index;

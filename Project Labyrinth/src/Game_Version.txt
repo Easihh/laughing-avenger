@@ -1,3 +1,8 @@
+
+Version 0.28:
+
+-Reworked collision with moving Block as previous code worked with one-way tile only.
+
 Version 0.27:
 
 -Death and its Animation is now fully working.

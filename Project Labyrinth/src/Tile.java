@@ -11,6 +11,7 @@ public class Tile implements Comparable<Tile> {
 	public int oldY;
 	public int oldtype;
 	public int type;
+	public boolean isSolid=true;;
 	public boolean isMovingAcrossScreen = false;
 	public Game.Direction dir;
 	protected int x;

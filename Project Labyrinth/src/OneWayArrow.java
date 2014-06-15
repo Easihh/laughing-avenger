@@ -5,6 +5,7 @@ public class OneWayArrow  extends Tile{
 
 	public OneWayArrow(int x, int y, int type) {
 		super(x, y, type);
+		isSolid=false;
 		getImage();
 	}
 	public void getImage(){

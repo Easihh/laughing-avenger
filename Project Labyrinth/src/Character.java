@@ -320,7 +320,7 @@ public class Character {
 				case 2: if(aTile.shape.contains(pt1) && aTile.shape.contains(pt2)){
 							select_Tile=aTile;
 							Block Tile=(Block)aTile;
-							Tile.moveTile(step,pt1,pt2);
+							Tile.moveTile(step);
 						}
 						break;
 				case 3: 	takeHeart(aTile);
@@ -334,7 +334,7 @@ public class Character {
 						}
 						else 	if(select_Tile.shape.contains(pt1) && select_Tile.shape.contains(pt2)){
 									Block Tile=(Block)select_Tile;
-									Tile.moveTile(step,pt1,pt2);
+									Tile.moveTile(step);
 						}
 						break;
 				}

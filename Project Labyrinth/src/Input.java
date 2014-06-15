@@ -27,8 +27,6 @@ public class Input implements KeyListener {
 		}
 		if(keycode==KeyEvent.VK_SPACE){
 			Character.fireProjectile();
-			//Labyrinth.GameState=Game.GameState.Death;
-			//Sound.Death.start();
 		}
 		if(keycode==KeyEvent.VK_ESCAPE){
 		}

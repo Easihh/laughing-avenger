@@ -7,8 +7,7 @@ import javax.imageio.ImageIO;
 public class DonMedusa extends Monster {
 	private BufferedImage[] bullet_type;
 	private Game.Direction projectile_dir;
-	private final long nano=1000000L;
-	private int index=0;
+	private BufferedImage projectile_img;
 	BufferedImage[] spriteSheet;
 	Animation DonMedusaAnimation;
 	public DonMedusa(int x, int y, int type) {
@@ -27,7 +26,7 @@ public class DonMedusa extends Monster {
 		img=ImageIO.read(getClass().getResource("/tileset/DonMedusa.png"));
 		for(int i=0;i<1;i++){//all animation on same row
 			 for(int j=0;j<2;j++){
-				spriteSheet[(i*maxFrame)+j]=img.getSubimage(j*width, i*height, width, height);
+				spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
 			 }
 		 }
 		DonMedusaAnimation.AddScene(spriteSheet[0], 500);

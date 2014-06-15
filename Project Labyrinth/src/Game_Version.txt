@@ -1,3 +1,10 @@
+Version 0.27:
+
+-Death and its Animation is now fully working.
+-Reworked the base tile class.
+-Can now go to the next levels without issues.
+-Fixed flickering of Medusa image when player is running by him and in range.
+
 Version 0.26A:
 
 -Fixed bug that was causing game update to update much faster than intended if 

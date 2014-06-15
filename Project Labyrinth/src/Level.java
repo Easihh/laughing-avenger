@@ -17,35 +17,45 @@ public class Level {
 	private final int tileSize=32; //24x24
 	private final int tileset_rows=4;
 	private final int tileset_cols=8;
-	private int coordX=0;
-	private int coordY=0;
+	private int coordX;
+	private int coordY;
 	private Tile map_background;
-	private static ArrayList<Tile> toRespawn=new ArrayList<Tile>();
-	private static Vector<Long> Respawn_Timer=new Vector<Long>();
+	private static ArrayList<Tile> toRespawn;
+	private static Vector<Long> Respawn_Timer;
 	private static Tile goal_top;
 	private static boolean canRespawn=true;
 	private static boolean chestIsOpen=false;
+	private static int room=1;
 	
 	public final static int map_width=512;
 	public final static int map_height=512;
-	public static int heart_amount=0;
-	public static ArrayList<Tile> map_tile=new ArrayList<Tile>();
-	public static ArrayList<Tile> toRemove=new ArrayList<Tile>();
-	public static BufferedImage[] game_tileset=new BufferedImage[50];
+	public static int heart_amount;
+	public static ArrayList<Tile> map_tile;
+	public static ArrayList<Tile> toRemove;
+	public static BufferedImage[] game_tileset;
 	public static BufferedImage[] monsterState;
 	public static Tile goal;
 	
 	public Level(){
 		try {
+			coordX=0;
+			coordY=0;
+			goal_top=null;
+			heart_amount=0;
+			map_tile=new ArrayList<Tile>();
+			toRemove=new ArrayList<Tile>();
+			toRespawn=new ArrayList<Tile>();
+			Respawn_Timer=new Vector<Long>();
+			game_tileset=new BufferedImage[50];
+			//Labyrinth.GameState=Game.GameState.Normal;
 			setBackground("start");
 			getGameTile();
-			loadSound();
 		} catch (IOException GameBackground) {
 			GameBackground.printStackTrace();
 		}
 		XMLInputFactory inputFactory= XMLInputFactory.newFactory();
 		try{
-			FileReader fileReader= new FileReader("src/testmap.TMX");
+			FileReader fileReader= new FileReader("src/Level"+room+"map.TMX");
 			XMLStreamReader reader= inputFactory.createXMLStreamReader(fileReader);
 			while(reader.hasNext()){
 				int eventType=reader.getEventType();
@@ -69,20 +79,6 @@ public class Level {
 			e.printStackTrace();
 		}
 		Collections.sort(Level.map_tile);
-	}
-	private void loadSound() {
-		@SuppressWarnings("unused")
-		Sound aSound; 
-		aSound=new Sound("StageMusic");
-		aSound=new Sound("HeartSound");
-		aSound=new Sound("DoorOpen");
-		aSound=new Sound("MedusaSound");
-		aSound=new Sound("DragonSound");
-		aSound=new Sound("ChestOpen");
-		aSound=new Sound("MonsterDestroyed");
-		aSound=new Sound("ShotSound");
-		aSound=new Sound("Death");
-		Sound.StageMusic.loop(Clip.LOOP_CONTINUOUSLY);	
 	}
 	private void getGameTile() throws IOException {
 		BufferedImage img=ImageIO.read(getClass().getResource("/tileset/game_tileset.png"));
@@ -120,7 +116,7 @@ public class Level {
 					Level.map_tile.add(new Medusa(coordX,coordY,0));
 					break;
 		case "9": 	//moveable green block
-					Level.map_tile.add(new Tile(coordX,coordY,2));
+					Level.map_tile.add(new Block(coordX,coordY,2));
 					break;
 		case "10": 	//tree
 					Level.map_tile.add(new Tile(coordX,coordY,6));
@@ -191,7 +187,7 @@ public class Level {
 		for(int i=0;i<Respawn_Timer.size();i++){
 			if((System.nanoTime()-Respawn_Timer.elementAt(i))/nano >10){
 				if(chestIsOpen)
-					getCorrectType(toRespawn.get(i));
+					getCorrectType((Monster)toRespawn.get(i));
 				map_tile.add(toRespawn.get(i));
 				Respawn_Timer.remove(i);
 				toRespawn.remove(i);
@@ -199,23 +195,23 @@ public class Level {
 		}
 		
 	}
-	private void getCorrectType(Tile aTile) {
+	private void getCorrectType(Monster Monster) {
 		
-		switch(aTile.getType()){
+		switch(Monster.getType()){
 		case 7: //awake dragon up
-				aTile.canShoot=true;
+				Monster.canShoot=true;
 				break;
 		case 8: //awake dragon down
-				aTile.img=game_tileset[12];
-				aTile.canShoot=true;
+				Monster.img=game_tileset[12];
+				Monster.canShoot=true;
 				break;
 		case 9: //awake dragon left
-				aTile.img=game_tileset[13];
-				aTile.canShoot=true;
+				Monster.img=game_tileset[13];
+				Monster.canShoot=true;
 				break;
 		case 10://awake dragon right
-				aTile.img=game_tileset[6];
-				aTile.canShoot=true;
+				Monster.img=game_tileset[6];
+				Monster.canShoot=true;
 				break;				
 		}
 	}
@@ -232,48 +228,48 @@ public class Level {
 		goal_top=new Tile(goal.x,goal.y-32,98);	
 		//awake all monster
 		for(Tile aTile:map_tile){
-			switch(aTile.getType()){
-			case 2: //Monster is in ball form; awake them
-					AwakeBall(aTile);
-			case 7: //awake dragon up
-					aTile.canShoot=true;
-					break;
-			case 8: //awake dragon down
-					aTile.img=game_tileset[12];
-					aTile.canShoot=true;
-					break;
-			case 9: //awake dragon left
-					aTile.img=game_tileset[13];
-					aTile.canShoot=true;
-					break;
-			case 10://awake dragon right
-					aTile.img=game_tileset[6];
-					aTile.canShoot=true;
-					break;				
+			if(aTile instanceof Monster){
+				Monster Monster=(Monster)aTile;
+				switch(aTile.getType()){
+					case 2: //Monster is in ball form; awake them
+							AwakeBall(aTile);
+					case 7: //awake dragon up
+							Monster.canShoot=true;
+							break;
+					case 8: //awake dragon down
+							Monster.img=game_tileset[12];
+							Monster.canShoot=true;
+							break;
+					case 9: //awake dragon left
+							Monster.img=game_tileset[13];
+							Monster.canShoot=true;
+							break;
+					case 10://awake dragon right
+							Monster.img=game_tileset[6];
+							Monster.canShoot=true;
+							break;	
+				}
 			}
 		}
 	}
 	private static void AwakeBall(Tile aTile) {
-		Monster aMonster;
+		Monster Monster=(Monster)aTile;
 		switch(aTile.oldtype){
 		
 		case 7: //awake dragon up
-				aTile.canShoot=true;
+				Monster.canShoot=true;
 				break;
 		case 8: //awake dragon down
-				aMonster=(Monster)aTile;
-				aMonster.previousState=game_tileset[12];
-				aMonster.canShoot=true;
+				Monster.previousState=game_tileset[12];
+				Monster.canShoot=true;
 				break;
 		case 9: //awake dragon left
-				aMonster=(Monster)aTile;
-				aMonster.previousState=game_tileset[13];
-				aMonster.canShoot=true;
+				Monster.previousState=game_tileset[13];
+				Monster.canShoot=true;
 				break;
 		case 10://awake dragon right
-				aMonster=(Monster)aTile;
-				aMonster.previousState=game_tileset[6];
-				aMonster.canShoot=true;
+				Monster.previousState=game_tileset[6];
+				Monster.canShoot=true;
 				break;	
 		}
 		
@@ -296,6 +292,20 @@ public class Level {
 		Sound.DoorOpen.start();
 	}
 	public static void nextLevel() {
-		System.out.println("Next Level");
+		room+=1;
+		MainPanel.theLevel=new Level();
+	}
+	public static void restart() {
+		MainPanel.theLevel=new Level();
+		Labyrinth.GameState=Game.GameState.Normal;
+		Sound.Death.setFramePosition(0);
+		Sound.DoorOpen.setFramePosition(0);
+		Sound.DragonSound.setFramePosition(0);
+		Sound.HeartSound.setFramePosition(0);
+		Sound.MedusaSound.setFramePosition(0);
+		Sound.MonsterDestroyed.setFramePosition(0);
+		Sound.ShotSound.setFramePosition(0);
+		Sound.StageMusic.setFramePosition(0);
+		Sound.StageMusic.loop(Clip.LOOP_CONTINUOUSLY);	
 	}
 }

@@ -1,9 +1,6 @@
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Vector;
-
 import javax.imageio.ImageIO;
 
 
@@ -12,11 +9,12 @@ public class Death {
 	int height=32;
 	BufferedImage img;
 	BufferedImage[] animation;
+	Animation Death;
 	final long nano=1000000L;
-	int index=0;
-	//Vector<BufferedImage> DeathSprite;
 	long time_since_last_animation=0;
+	boolean isDone=false;
 	public Death(){
+		Death=new Animation();
 		getSpriteFromSheet();
 		time_since_last_animation=System.nanoTime();
 	}
@@ -30,39 +28,30 @@ public class Death {
 				animation[(i*maxFrame)+j]=img.getSubimage(j*width, i*height, width, height);
 			 }
 		 }
+		 Death.AddScene(animation[0], 100);
+		 Death.AddScene(animation[1], 100);
+		 Death.AddScene(animation[2], 100);
+		 Death.AddScene(animation[1], 100);
+		 Death.AddScene(animation[2], 100);
+		 Death.AddScene(animation[1], 100);
+		 Death.AddScene(animation[2], 100);
+		 Death.AddScene(animation[1], 100);
+		 Death.AddScene(animation[2], 100);
+		 Death.AddScene(animation[3], 500);
 	}
 	public void render(Graphics g){
-	if((System.nanoTime()-time_since_last_animation)/nano<200){
-			g.drawImage(animation[0], Character.x,Character.y,width,height ,null);
-			System.out.println("TEst1");
+		isDone();
+		if(!isDone){
+			Death.setImage();
+			g.drawImage(Death.getImage(),Character.x,Character.y,width,height,null);
+		}
 	}
-	else if((System.nanoTime()-time_since_last_animation)/nano>=200 && (System.nanoTime()-time_since_last_animation)/nano<400){
-		System.out.println("TEst2");
-		g.drawImage((Image)animation[1], Character.x,Character.y,width,height ,null);
-	}
-	else if((System.nanoTime()-time_since_last_animation)/nano>=400 && (System.nanoTime()-time_since_last_animation)/nano<600){
-		System.out.println("TEst3");
-		g.drawImage((Image)animation[2], Character.x,Character.y,width,height ,null);
-	}
-	else if((System.nanoTime()-time_since_last_animation)/nano>=600 && (System.nanoTime()-time_since_last_animation)/nano<800){
-		g.drawImage((Image)animation[1], Character.x,Character.y,width,height ,null);
-		System.out.println("TEst4");
-	}
-	else if((System.nanoTime()-time_since_last_animation)/nano>=800 && (System.nanoTime()-time_since_last_animation)/nano<1000){
-		g.drawImage((Image)animation[2], Character.x,Character.y,width,height ,null);
-		System.out.println("TEst5");
-	}
-	else if((System.nanoTime()-time_since_last_animation)/nano>=1000 && (System.nanoTime()-time_since_last_animation)/nano<1200){
-		g.drawImage((Image)animation[1], Character.x,Character.y,width,height ,null);
-		System.out.println("TEst6");
-	}
-	else if((System.nanoTime()-time_since_last_animation)/nano>=1200 && (System.nanoTime()-time_since_last_animation)/nano<1400){
-		g.drawImage((Image)animation[2], Character.x,Character.y,width,height ,null);
-		System.out.println("TEst7");
-	}
-	else if((System.nanoTime()-time_since_last_animation)/nano>1400 && (System.nanoTime()-time_since_last_animation)/nano<1600){
-		g.drawImage((Image)animation[3], Character.x,Character.y,width,height ,null);
-		System.out.println("TEst8");
-	}
+	private void isDone(){
+		if(Death.index==9){
+			if(Death.getSceneCurrentDuration(9)+(System.nanoTime()-Death.last_update)/nano >Death.getSceneMaxDuration(9)){
+				isDone=true;
+				Level.restart();
+			}
+		}
 	}
 }

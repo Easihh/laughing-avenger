@@ -1,16 +1,33 @@
 import java.awt.Color;
 import java.awt.Graphics;
+
+import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 
 
 public class MainPanel extends JPanel {
-	private Level theLevel=new Level();
+	static Level theLevel=new Level();
 	private static final long serialVersionUID = 1L;
 	JLabel xposition,yposition;
-	public static Character hero=new Character(48, 48);
+	public static Character hero;
 	public MainPanel(){
 		setBackground(Color.black);	
+		loadSound();
+	}
+	static void loadSound() {
+		@SuppressWarnings("unused")
+		Sound aSound; 
+		aSound=new Sound("StageMusic");
+		aSound=new Sound("HeartSound");
+		aSound=new Sound("DoorOpen");
+		aSound=new Sound("MedusaSound");
+		aSound=new Sound("DragonSound");
+		aSound=new Sound("ChestOpen");
+		aSound=new Sound("MonsterDestroyed");
+		aSound=new Sound("ShotSound");
+		aSound=new Sound("Death");
+		Sound.StageMusic.loop(Clip.LOOP_CONTINUOUSLY);	
 	}
 	public void paintComponent(Graphics g){
 			super.paintComponent(g);
@@ -18,8 +35,9 @@ public class MainPanel extends JPanel {
 			g.setColor(Color.white);
 			g.drawString("x:"+Character.x, 544, 64);
 			g.drawString("y:"+Character.y, 544, 96);
-			//if(Labyrinth.GameState==Game.GameState.Death)
-				//Character.Death.render(g);
-			hero.render(g);
+			if(Labyrinth.GameState==Game.GameState.Death && !Character.Death.isDone)
+				Character.Death.render(g);
+			if(Labyrinth.GameState!=Game.GameState.Death)
+				hero.render(g);
 	}
 }

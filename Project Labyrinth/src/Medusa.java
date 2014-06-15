@@ -5,6 +5,7 @@ import javax.imageio.ImageIO;
 
 public class Medusa extends Monster {
 	private BufferedImage[] bullet_type;
+	private BufferedImage projectile_img;
 	private Game.Direction projectile_dir;
 	public Medusa(int x, int y, int type) {
 		super(x, y, type);
@@ -38,7 +39,7 @@ public class Medusa extends Monster {
 		boolean shoot=false;
 		boolean inRange=false;
 		/*Case Down*/
-		if((Character.x+Character.step==x|| Character.x-Character.step==x) && y<Character.y){
+		if((Math.abs(Character.x-x) <=Character.step) && y<Character.y){
 			img=Level.game_tileset[14];
 			inRange=true;
 		}
@@ -54,7 +55,7 @@ public class Medusa extends Monster {
 			}
 		}
 		/*Case Up*/
-		if((Character.x+Character.step==x|| Character.x-Character.step==x) && y>Character.y){
+		if((Math.abs(Character.x-x)<=Character.step|| Character.x-Character.step==x) && y>Character.y){
 			img=Level.game_tileset[14];
 			inRange=true;
 		}
@@ -68,7 +69,7 @@ public class Medusa extends Monster {
 			}
 		}
 		/*Case Left*/
-		if((Character.y+Character.step==y|| Character.y-Character.step==y) && x>Character.x){
+		if((Math.abs(Character.y-y) <=Character.step)&& x>Character.x){
 			img=Level.game_tileset[14];
 			inRange=true;
 		}
@@ -82,7 +83,7 @@ public class Medusa extends Monster {
 			}
 		}
 		/*Case Right*/
-		if((Character.y+Character.step==y|| Character.y-Character.step==y) && x<Character.x){
+		if((Math.abs(Character.y-y) <=Character.step) && x<Character.x){
 			img=Level.game_tileset[14];
 			inRange=true;
 		}
@@ -100,6 +101,8 @@ public class Medusa extends Monster {
 			Sound.MedusaSound.start();
 			canShoot=false;
 			projectile.projectile_speed=6;
+			Sound.StageMusic.stop();
+			Labyrinth.GameState=Game.GameState.Paused;
 		}
 		if(!inRange)
 			img=Level.game_tileset[7];

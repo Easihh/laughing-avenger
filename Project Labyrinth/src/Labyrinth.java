@@ -23,7 +23,7 @@ public class Labyrinth extends JFrame{
 	}
 
 	public Labyrinth() {
-		GameState=GameState.Normal;
+		GameState=Game.GameState.Normal;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(new Dimension(672,540));
 		setResizable(false);

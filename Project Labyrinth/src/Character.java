@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import javax.imageio.ImageIO;
 
 
@@ -28,14 +27,14 @@ public class Character {
 	public static Tile select_Tile;
 	
 	public final static int step=16;
-	public static ArrayList<Game.button> keypressed=new ArrayList<Game.button>();
+	public static ArrayList<Game.button> keypressed;
 	public static boolean isShooting;
 	public static boolean isPushing;
 	public static boolean isMoving;
 	public static Game.button lastKey;
 	public static Game.Direction dir;
-	public static int targetX=0;
-	public static long last_animation_update=0;
+	public static int targetX;
+	//public static long last_animation_update=0;
 	public static Projectile weapon=null;
 	public static Death Death;
 	public Character(int x, int y){
@@ -48,10 +47,12 @@ public class Character {
 		isPushing=false;
 		 dir=Game.Direction.Down;
 		 lastKey=Game.button.None;
+		 keypressed=new ArrayList<Game.button>();
 		 walk_down=new Animation();
 		 walk_up=new Animation();
 		 walk_left=new Animation();
 		 walk_right=new Animation();
+		 targetX=0;
 		 try {
 			img=ImageIO.read(getClass().getResource("/tileset/Lolo_down.png"));
 			getImagefromSpriteSheet(img,walk_down,"down");
@@ -141,11 +142,17 @@ public class Character {
 			weapon.render(g);		
 	}
 	public void update(){
-		movement();
+		if(Labyrinth.GameState==Game.GameState.Normal){
+			movement();
+			MonsterBulletCollision();
+			CollisionWithBullet();
+		}
+		if(Labyrinth.GameState==Game.GameState.Paused){
+			MonsterBulletCollision();
+			CollisionWithBullet();
+		}
 		if(Character.isShooting && weapon!=null)
 			bullet_Collision();
-		MonsterBulletCollision();
-		CollisionWithBullet();
 	}
 	private void CollisionWithBullet(){
 		for(Tile aTile:Level.map_tile){
@@ -155,24 +162,32 @@ public class Character {
 				if(projectile!=null)
 					switch(projectile.dir){
 						case Right:	if(projectile.shape.contains(x+width-1,y) || 
-								projectile.shape.contains(x+width-1,y+height))
-								System.out.println("DEATH");
-								//Sound.Death.start();
+								projectile.shape.contains(x+width-1,y+height)){
+								projectile.projectile_speed=0;
+								Sound.Death.start();
+								Labyrinth.GameState=Game.GameState.Death;
+								}
 								break;
 						case Left:	if(projectile.shape.contains(x,y) || 
-								projectile.shape.contains(x,y+height-1))
-								System.out.println("DEATH");
-								//Sound.Death.start();
+								projectile.shape.contains(x,y+height-1)){
+								projectile.projectile_speed=0;
+								Sound.Death.start();
+								Labyrinth.GameState=Game.GameState.Death;
+								}
 								break;
 						case Down:	if(projectile.shape.contains(x+width,y+height-1) || 
-								projectile.shape.contains(x,y+height-1))
-								System.out.println("DEATH");
-								//Sound.Death.start();
+								projectile.shape.contains(x,y+height-1)){
+								projectile.projectile_speed=0;
+								Sound.Death.start();
+								Labyrinth.GameState=Game.GameState.Death;
+								}
 								break;
 						case Up:	if(projectile.shape.contains(x+width-1,y) || 
-								projectile.shape.contains(x,y))
-								System.out.println("DEATH");
-								//Sound.Death.start();
+								projectile.shape.contains(x,y)){
+								projectile.projectile_speed=0;
+								Sound.Death.start();
+								Labyrinth.GameState=Game.GameState.Death;
+								}
 								break;
 				}
 			}
@@ -192,22 +207,26 @@ public class Character {
 							case Down:	if(aTile.shape.contains(aMonster.projectile.x+width-1,aMonster.projectile.y+height) || 
 											aTile.shape.contains(aMonster.projectile.x,aMonster.projectile.y+height))
 										if(aTile.getType()!=6)//if its a tree the shot traverse it
-											theTile.canShoot=true;
+											if(aMonster instanceof Gol)
+												aMonster.canShoot=true;
 										break;
 							case Right:	if(aTile.shape.contains(aMonster.projectile.x+width,aMonster.projectile.y) || 
 											aTile.shape.contains(aMonster.projectile.x+width,aMonster.projectile.y+height-1))
 										if(aTile.getType()!=6)//if its a tree the shot traverse it
-											theTile.canShoot=true;
+											if(aMonster instanceof Gol)
+												aMonster.canShoot=true;
 									break;
 							case Left: 	if(aTile.shape.contains(aMonster.projectile.x-movement,aMonster.projectile.y) || 
 											aTile.shape.contains(aMonster.projectile.x-movement,aMonster.projectile.y+height-1))
 										if(aTile.getType()!=6)//if its a tree the shot traverse it
-											theTile.canShoot=true;
+											if(aMonster instanceof Gol)
+												aMonster.canShoot=true;
 										break;
 							case Up: 	if(aTile.shape.contains(aMonster.projectile.x+width-1,aMonster.projectile.y-1) || 
 											aTile.shape.contains(aMonster.projectile.x,aMonster.projectile.y-1))
 										if(aTile.getType()!=6){//if its a tree the shot traverse it
-											theTile.canShoot=true;
+											if(aMonster instanceof Gol)
+												aMonster.canShoot=true;
 									}
 								break;
 					}
@@ -300,7 +319,8 @@ public class Character {
 				
 				case 2: if(aTile.shape.contains(pt1) && aTile.shape.contains(pt2)){
 							select_Tile=aTile;
-							aTile.moveTile(step,pt1,pt2);
+							Block Tile=(Block)aTile;
+							Tile.moveTile(step,pt1,pt2);
 						}
 						break;
 				case 3: 	takeHeart(aTile);
@@ -313,7 +333,8 @@ public class Character {
 								return false;
 						}
 						else 	if(select_Tile.shape.contains(pt1) && select_Tile.shape.contains(pt2)){
-									aTile.moveTile(step,pt1,pt2);
+									Block Tile=(Block)select_Tile;
+									Tile.moveTile(step,pt1,pt2);
 						}
 						break;
 				}

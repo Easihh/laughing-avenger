@@ -23,7 +23,7 @@ public class Snakey  extends Monster{
 			img=ImageIO.read(getClass().getResource("/tileset/worm_left.png"));
 		for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<2;j++){
-					spriteSheet[(i*maxFrame)+j]=img.getSubimage(j*width, i*height, width, height);
+					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
 				 }
 			 }
 			SnakeyAnimation.AddScene(spriteSheet[0], 1000);

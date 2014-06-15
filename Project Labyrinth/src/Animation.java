@@ -39,6 +39,12 @@ public class Animation {
 		myScene.get(index).current_duration=0;
 		index=0;
 	}
+	public long getSceneMaxDuration(int i){
+		return myScene.get(i).max_duration;
+	}
+	public long getSceneCurrentDuration(int i){
+		return myScene.get(i).current_duration;
+	}
 	private class Scene{
 		Image img;
 		long current_duration;

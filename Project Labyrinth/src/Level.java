@@ -116,7 +116,7 @@ public class Level {
 					Level.map_tile.add(new Medusa(coordX,coordY,0));
 					break;
 		case "9": 	//moveable green block
-					Level.map_tile.add(new Block(coordX,coordY,2));
+					Level.map_tile.add(new Tile(coordX,coordY,2));
 					break;
 		case "10": 	//tree
 					Level.map_tile.add(new Tile(coordX,coordY,6));

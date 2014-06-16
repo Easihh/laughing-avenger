@@ -319,8 +319,7 @@ public class Character {
 				
 				case 2: if(aTile.shape.contains(pt1) && aTile.shape.contains(pt2)){
 							select_Tile=aTile;
-							Block Tile=(Block)aTile;
-							Tile.moveTile(step);
+							aTile.moveTile(step);
 						}
 						break;
 				case 3: 	takeHeart(aTile);
@@ -333,8 +332,7 @@ public class Character {
 								return false;
 						}
 						else 	if(select_Tile.shape.contains(pt1) && select_Tile.shape.contains(pt2)){
-									Block Tile=(Block)select_Tile;
-									Tile.moveTile(step);
+									select_Tile.moveTile(step);
 						}
 						break;
 				}

@@ -34,7 +34,7 @@ public class Character {
 	public static Game.Direction dir;
 	public static int ammo;
 	public static int targetX;
-	//public static long last_animation_update=0;
+	public static boolean powerActivated;
 	public static Projectile weapon=null;
 	public static Death Death;
 	public Character(int x, int y){
@@ -45,6 +45,7 @@ public class Character {
 		isShooting=false;
 		isMoving=false;
 		isPushing=false;
+		powerActivated=false;
 		 dir=Game.Direction.Down;
 		 lastKey=Game.button.None;
 		 keypressed=new ArrayList<Game.button>();
@@ -238,7 +239,7 @@ public class Character {
 		for(Tile aTile:Level.map_tile){
 			if(weapon.dir==Game.Direction.Right){
 				if(aTile.shape.contains(weapon.x+width,weapon.y) && aTile.shape.contains(weapon.x+width,weapon.y+height-1)){
-					if(!(aTile instanceof Water))
+					if(aTile.isSolid && (!(aTile instanceof Water)))
 						Character.isShooting=false;
 					if(aTile instanceof Monster)
 						checkMonsterState((Monster)aTile);
@@ -246,7 +247,7 @@ public class Character {
 			}
 			if(weapon.dir==Game.Direction.Left){
 				if(aTile.shape.contains(weapon.x-movement,weapon.y) && aTile.shape.contains(weapon.x-movement,weapon.y+height-1)){
-					if(!(aTile instanceof Water))
+					if(aTile.isSolid && (!(aTile instanceof Water)))
 						Character.isShooting=false;
 					if(aTile instanceof Monster)
 						checkMonsterState((Monster)aTile);
@@ -254,7 +255,7 @@ public class Character {
 			}
 			if(weapon.dir==Game.Direction.Up){
 				if(aTile.shape.contains(weapon.x+width-1,weapon.y-1) && aTile.shape.contains(weapon.x,weapon.y-1)){
-					if(!(aTile instanceof Water))
+					if(aTile.isSolid && (!(aTile instanceof Water)))
 						Character.isShooting=false;
 					if(aTile instanceof Monster)
 						checkMonsterState((Monster)aTile);
@@ -262,7 +263,7 @@ public class Character {
 			}
 			if(weapon.dir==Game.Direction.Down){
 				if(aTile.shape.contains(weapon.x+width-1,weapon.y+height) && aTile.shape.contains(weapon.x,weapon.y+height)){
-					if(!(aTile instanceof Water))
+					if(aTile.isSolid && (!(aTile instanceof Water)))
 						Character.isShooting=false;
 					if(aTile instanceof Monster)
 						checkMonsterState((Monster)aTile);
@@ -275,29 +276,37 @@ public class Character {
 				if(weapon.dir==Game.Direction.Right && aTile.shape.contains(weapon.x+width,weapon.y)){//check top part collision
 					for(Tile theTile:Level.map_tile){
 					 if(theTile.shape.contains(weapon.x+width,weapon.y+height-1))//check bottom part collision
-						 if(aTile.isSolid || theTile.isSolid)
-							 Character.isShooting=false;
+						 if(!(aTile instanceof Water) && !(theTile instanceof Water)){
+							 if(aTile.isSolid || theTile.isSolid)
+								 Character.isShooting=false;
+						 }
 				}
 			}
 				if(weapon.dir==Game.Direction.Left && aTile.shape.contains(weapon.x-movement,weapon.y)){//check top part collision
 					for(Tile theTile:Level.map_tile){
 					 if(theTile.shape.contains(weapon.x-movement,weapon.y+height-1))//check bottom part collision
-						 if(aTile.isSolid || theTile.isSolid)
-							 Character.isShooting=false;
+						 if(!(aTile instanceof Water) && !(theTile instanceof Water)){
+							 if(aTile.isSolid || theTile.isSolid)
+								 Character.isShooting=false;
+						 }
 				}
 			}
 				if(weapon.dir==Game.Direction.Up && aTile.shape.contains(weapon.x,weapon.y-1)){//check left part collision
 					for(Tile theTile:Level.map_tile){
 					 if(theTile.shape.contains(weapon.x+width-1,weapon.y-1))//check right part collision
-						 if(aTile.isSolid || theTile.isSolid)
-							 Character.isShooting=false;
+						 if(!(aTile instanceof Water) && !(theTile instanceof Water)){
+							 if(aTile.isSolid || theTile.isSolid)
+								 Character.isShooting=false;
+						 }
 				}
 			}
 				if(weapon.dir==Game.Direction.Down && aTile.shape.contains(weapon.x,weapon.y+height)){//check left part collision
 					for(Tile theTile:Level.map_tile){
 					 if(theTile.shape.contains(weapon.x+width-1,weapon.y+height))//check right part collision
-						 if(aTile.isSolid || theTile.isSolid)
-							 Character.isShooting=false;
+						 if(!(aTile instanceof Water) && !(theTile instanceof Water)){
+							 if(aTile.isSolid || theTile.isSolid)
+								 Character.isShooting=false;
+						 }
 				}
 			}
 		}
@@ -323,6 +332,7 @@ public class Character {
 					return false;
 				}
 				//we have a collision
+				
 				switch(aTile.getType()){
 				
 				case 2: if(aTile.shape.contains(pt1) && aTile.shape.contains(pt2)){
@@ -343,6 +353,24 @@ public class Character {
 									select_Tile.moveTile(step);
 						}
 						break;
+				case 91:
+				case 92:
+				case 93:if(!searchBlock(pt1,pt2)){
+							Tile collision_1=getCollidingTile(pt1.x, pt1.y);
+							Tile collision_2=getCollidingTile(pt2.x, pt2.y);
+							if(collision_1!=null && collision_2!=null && !collision_1.isSolid && !collision_2.isSolid){
+									return false;
+							}
+							if(collision_1!=null && collision_2==null && !collision_1.isSolid)
+								return false;
+							if(collision_2!=null && collision_1==null && !collision_2.isSolid)
+								return false;
+							}
+					else	if(select_Tile.shape.contains(pt1) && select_Tile.shape.contains(pt2))
+								select_Tile.moveTile(step);
+							break;
+				case 94: 	takeHeart(aTile);
+							break;
 				}
 				return true;
 			}
@@ -392,7 +420,8 @@ public class Character {
 		Sound.HeartSound.start();
 		if(Level.heart_amount==0)
 			Level.openChest();
-		Character.ammo++;
+		if(aTile.getType()==3)
+			Character.ammo+=2;
 	}
 	private void movement() {
 		checkMovementState();
@@ -558,6 +587,98 @@ public class Character {
 				Sound.ShotSound.start();
 			}	
 	}
+	public static boolean checkPower() {
+		Sound.PowerUsed.setFramePosition(0);
+		Tile colliding_tile1=null;
+		Tile colliding_tile2=null;
+		Tile toDelete=null;
+		Tile toAdd=null;
+		switch(Character.dir){
+		case Up:	colliding_tile1=getCollidingTile(x,y-1);
+					colliding_tile2=getCollidingTile(x+32-1,y-1);
+					if(colliding_tile1 instanceof Water && colliding_tile2 instanceof Water)
+						if(colliding_tile1==colliding_tile2)
+							for(Tile aTile:Level.map_tile){
+								if(aTile==colliding_tile1){
+									toDelete=aTile;
+									toAdd=new Tile(x,y-32,91);
+								}
+							}
+					if(toDelete!=null){
+						Level.map_tile.add(toAdd);
+						Level.map_tile.remove(toDelete);
+						Collections.sort(Level.map_tile);
+						Sound.PowerUsed.start();
+						return true;
+					}
+					break;
+		case Down:	colliding_tile1=getCollidingTile(x+32-1,y+32);
+					colliding_tile2=getCollidingTile(x,y+32);
+					if(colliding_tile1 instanceof Water && colliding_tile2 instanceof Water)
+						if(colliding_tile1==colliding_tile2)
+							for(Tile aTile:Level.map_tile){
+								if(aTile==colliding_tile1){
+									toDelete=aTile;
+									toAdd=new Tile(x,y+32,91);
+								}
+							}
+					if(toDelete!=null){
+						Level.map_tile.add(toAdd);
+						Level.map_tile.remove(toDelete);
+						Collections.sort(Level.map_tile);
+						Sound.PowerUsed.start();
+						return true;
+					}
+					break;
+		case Left:	colliding_tile1=getCollidingTile(x-1,y);
+					colliding_tile2=getCollidingTile(x-1,y+32-1);
+					if(colliding_tile1 instanceof Water && colliding_tile2 instanceof Water)
+						if(colliding_tile1==colliding_tile2)
+							for(Tile aTile:Level.map_tile){
+								if(aTile==colliding_tile1){
+									toDelete=aTile;
+									toAdd=new Tile(x-32,y,93);
+								}
+							}
+					if(toDelete!=null){
+						Level.map_tile.add(toAdd);
+						Level.map_tile.remove(toDelete);
+						Collections.sort(Level.map_tile);
+						Sound.PowerUsed.start();
+						return true;
+					}
+					break;
+		case Right:	colliding_tile1=getCollidingTile(x+32,y);
+					colliding_tile2=getCollidingTile(x+32,y+32-1);
+					if(colliding_tile1 instanceof Water && colliding_tile2 instanceof Water)
+						if(colliding_tile1==colliding_tile2)
+							for(Tile aTile:Level.map_tile){
+								if(aTile==colliding_tile1){
+									toDelete=aTile;
+									toAdd=new Tile(x+32,y,92);
+								}
+							}
+					if(toDelete!=null){
+						Level.map_tile.add(toAdd);
+						Level.map_tile.remove(toDelete);
+						Collections.sort(Level.map_tile);
+						Sound.PowerUsed.start();
+						return true;
+					}
+					break;
+			}
+		return false;
+	}
+	private static Tile getCollidingTile(int x1,int y1) {
+		for(Tile aTile:Level.map_tile){
+			if(aTile.shape.contains(x1,y1)){
+				//if(aTile.getType()!=93 && aTile.getType()!=92 && aTile.getType()!=91){//dont care if bridge infront already
+					return aTile;
+				//}
+				}	
+			}
+		return null;
+		}
 	private static void createProjectile() {
 		switch(Character.dir){
 		

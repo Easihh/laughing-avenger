@@ -26,7 +26,11 @@ public class Input implements KeyListener {
 				}
 		}
 		if(keycode==KeyEvent.VK_SPACE){
-			Character.fireProjectile();
+			boolean check=false;
+			if(Character.powerActivated)
+				check=Character.checkPower();
+			if(!check)
+				Character.fireProjectile();
 		}
 		if(keycode==KeyEvent.VK_ESCAPE){
 		}

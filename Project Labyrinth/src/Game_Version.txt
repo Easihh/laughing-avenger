@@ -1,3 +1,11 @@
+Version 0.30:
+
+-Now gain 2 ammo instead of 1 per special heart card.
+-Added another type of heart card that does not give ammo.
+-Ladder Power has been added.
+-Fixed racing thread issue with restarting level that allowed. 
+level to be rendered before the tile were added to the Master tile array. 
+
 Version 0.29:
 
 -Added Shoot counter and graphic in main screen.

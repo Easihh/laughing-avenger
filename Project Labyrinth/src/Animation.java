@@ -37,6 +37,12 @@ public class Animation {
 		myScene.get(index).current_duration=0;
 		index=0;
 	}
+	public void replaceAnimation(Image img){
+		index=0;
+		myScene.clear();
+		total_time=0;
+		myScene.add(new Scene(img,0));
+	}
 	public long getSceneMaxDuration(int i){
 		return myScene.get(i).max_duration;
 	}

@@ -79,6 +79,7 @@ public class Level {
 			e.printStackTrace();
 		}
 		Collections.sort(Level.map_tile);
+		Labyrinth.level_is_loaded=true;
 	}
 	private void getGameTile() throws IOException {
 		BufferedImage img=ImageIO.read(getClass().getResource("/tileset/game_tileset.png"));
@@ -106,9 +107,13 @@ public class Level {
 		case "2": 	//door
 					Level.map_tile.add(new Tile(coordX,coordY,96));
 					break;
-		case "3": 	//heartcard
+		case "3": 	//heartcard gives ammo
 					heart_amount+=1;
 					Level.map_tile.add(new Tile(coordX,coordY,3));
+					break;
+		case "4": 	//heartcard does not give ammo
+					heart_amount+=1;
+					Level.map_tile.add(new Tile(coordX,coordY,94));
 					break;
 		case "6": 	MainPanel.hero=new Character(coordX,coordY);
 					break;
@@ -166,6 +171,15 @@ public class Level {
 		case "33": 	//animated water
 					Level.map_tile.add(new Water(coordX,coordY,95));
 					break;
+		case "34": 	//ladder left
+					Level.map_tile.add(new Tile(coordX,coordY,93));
+					break;
+		case "41": 	//ladder right
+					Level.map_tile.add(new Tile(coordX,coordY,92));
+					break;	
+		case "42": 	//ladder up and down
+					Level.map_tile.add(new Tile(coordX,coordY,91));
+					break;	
 		}
 	}
 	public void render(Graphics g){
@@ -297,6 +311,7 @@ public class Level {
 		MainPanel.theLevel=new Level();
 	}
 	public static void restart() {
+		Labyrinth.level_is_loaded=false;
 		MainPanel.theLevel=new Level();
 		Labyrinth.GameState=Game.GameState.Normal;
 		Sound.Death.setFramePosition(0);
@@ -305,6 +320,7 @@ public class Level {
 		Sound.HeartSound.setFramePosition(0);
 		Sound.MedusaSound.setFramePosition(0);
 		Sound.MonsterDestroyed.setFramePosition(0);
+		Sound.PowerUsed.setFramePosition(0);
 		Sound.ShotSound.setFramePosition(0);
 		Sound.StageMusic.setFramePosition(0);
 		Sound.StageMusic.loop(Clip.LOOP_CONTINUOUSLY);	

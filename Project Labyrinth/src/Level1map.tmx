@@ -75,11 +75,11 @@
    <tile gid="10"/>
    <tile gid="10"/>
    <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="42"/>
+   <tile gid="34"/>
+   <tile gid="33"/>
+   <tile gid="33"/>
+   <tile gid="41"/>
    <tile gid="10"/>
    <tile gid="10"/>
    <tile gid="10"/>
@@ -135,7 +135,7 @@
    <tile gid="30"/>
    <tile gid="30"/>
    <tile gid="10"/>
-   <tile gid="0"/>
+   <tile gid="3"/>
    <tile gid="0"/>
    <tile gid="20"/>
    <tile gid="0"/>
@@ -146,7 +146,7 @@
    <tile gid="0"/>
    <tile gid="19"/>
    <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="3"/>
    <tile gid="10"/>
    <tile gid="30"/>
    <tile gid="30"/>
@@ -158,7 +158,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="4"/>
    <tile gid="0"/>
    <tile gid="10"/>
    <tile gid="10"/>

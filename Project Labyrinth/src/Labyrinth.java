@@ -8,6 +8,7 @@ public class Labyrinth extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private MainPanel mainPane;
 	static long prev;
+	static boolean level_is_loaded=false;
 	static Game.GameState GameState;
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -48,10 +49,12 @@ public class Labyrinth extends JFrame{
 					sleep/=1000000;
 					try {
 						Thread.sleep(sleep);
-						MainPanel.hero.update();
-						for(Tile tile:Level.map_tile)
-							tile.update();
-						repaint();
+						if(Labyrinth.level_is_loaded){
+							MainPanel.hero.update();
+							for(Tile tile:Level.map_tile)
+								tile.update();
+								repaint();
+						}
 						prev=System.nanoTime();
 					}catch (InterruptedException e) {
 						e.printStackTrace();

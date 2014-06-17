@@ -10,7 +10,7 @@ public class Water extends Tile{
 	BufferedImage[] single_img;
 	public Water(int x, int y, int type) {
 		super(x, y, type);
-		isSolid=false;
+		//isSolid=false;
 		Animation=new Animation();
 		getImage();
 	}

@@ -33,6 +33,17 @@ public class Tile implements Comparable<Tile> {
 	}
 	private void getImage() {
 		switch(type){
+		case 91: 	img=Level.game_tileset[41];//up-down ladder
+					isSolid=false;
+					break;
+		case 92: 	img=Level.game_tileset[40];//right ladder
+					isSolid=false;
+					break;
+		case 93: 	img=Level.game_tileset[33];//left ladder
+					isSolid=false;
+					break;
+		case 94: 	img=Level.game_tileset[2];//heart give no ammo
+					break;
 		case 95: 	img=Level.game_tileset[32];//water
 					break;
 		case 96: 	img=Level.game_tileset[1];//door closed
@@ -44,8 +55,9 @@ public class Tile implements Comparable<Tile> {
 		case 1: 	img=Level.game_tileset[0];//rock
 					break;	
 		case 2: 	img=Level.game_tileset[8];//moveable block
+					depth=2;
 					break;
-		case 3: 	img=Level.game_tileset[2];//heart
+		case 3: 	img=Level.game_tileset[2];//heart give ammo
 					break;
 		case 4: 	img=Level.game_tileset[10];//chest closed
 					break;

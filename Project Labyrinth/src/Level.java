@@ -15,7 +15,7 @@ import javax.xml.stream.XMLStreamReader;
 public class Level {
 	private final long nano=1000000000L;
 	private final int tileSize=32; //24x24
-	private final int tileset_rows=4;
+	private final int tileset_rows=8;
 	private final int tileset_cols=8;
 	private int coordX;
 	private int coordY;
@@ -46,7 +46,7 @@ public class Level {
 			toRemove=new ArrayList<Tile>();
 			toRespawn=new ArrayList<Tile>();
 			Respawn_Timer=new Vector<Long>();
-			game_tileset=new BufferedImage[50];
+			game_tileset=new BufferedImage[100];
 			//Labyrinth.GameState=Game.GameState.Normal;
 			setBackground("start");
 			getGameTile();
@@ -163,8 +163,9 @@ public class Level {
 		case "28": 	//gol sleeping right
 					Level.map_tile.add(new Gol(coordX,coordY,10));
 					break;
-		//case "32": 	img=game_tileset[31];//Leeper
-				//	break;
+		case "33": 	//animated water
+					Level.map_tile.add(new Water(coordX,coordY,95));
+					break;
 		}
 	}
 	public void render(Graphics g){

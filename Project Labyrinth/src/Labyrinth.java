@@ -49,6 +49,8 @@ public class Labyrinth extends JFrame{
 					try {
 						Thread.sleep(sleep);
 						MainPanel.hero.update();
+						for(Tile tile:Level.map_tile)
+							tile.update();
 						repaint();
 						prev=System.nanoTime();
 					}catch (InterruptedException e) {

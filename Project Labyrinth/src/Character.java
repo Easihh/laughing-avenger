@@ -20,8 +20,6 @@ public class Character {
 	private Animation walk_left=null;
 	private Animation walk_right=null;
 	private BufferedImage img=null;
-	private static  BufferedImage[] projectile_img;
-	private static int ammo;
 	public static int x;
 	public static int y;
 	public static Tile select_Tile;
@@ -31,8 +29,10 @@ public class Character {
 	public static boolean isShooting;
 	public static boolean isPushing;
 	public static boolean isMoving;
+	public static  BufferedImage[] projectile_img;
 	public static Game.button lastKey;
 	public static Game.Direction dir;
+	public static int ammo;
 	public static int targetX;
 	//public static long last_animation_update=0;
 	public static Projectile weapon=null;
@@ -238,28 +238,32 @@ public class Character {
 		for(Tile aTile:Level.map_tile){
 			if(weapon.dir==Game.Direction.Right){
 				if(aTile.shape.contains(weapon.x+width,weapon.y) && aTile.shape.contains(weapon.x+width,weapon.y+height-1)){
-					Character.isShooting=false;
+					if(!(aTile instanceof Water))
+						Character.isShooting=false;
 					if(aTile instanceof Monster)
 						checkMonsterState((Monster)aTile);
 				}
 			}
 			if(weapon.dir==Game.Direction.Left){
 				if(aTile.shape.contains(weapon.x-movement,weapon.y) && aTile.shape.contains(weapon.x-movement,weapon.y+height-1)){
-					Character.isShooting=false;
+					if(!(aTile instanceof Water))
+						Character.isShooting=false;
 					if(aTile instanceof Monster)
 						checkMonsterState((Monster)aTile);
 				}
 			}
 			if(weapon.dir==Game.Direction.Up){
 				if(aTile.shape.contains(weapon.x+width-1,weapon.y-1) && aTile.shape.contains(weapon.x,weapon.y-1)){
-					Character.isShooting=false;
+					if(!(aTile instanceof Water))
+						Character.isShooting=false;
 					if(aTile instanceof Monster)
 						checkMonsterState((Monster)aTile);
 				}
 			}
 			if(weapon.dir==Game.Direction.Down){
 				if(aTile.shape.contains(weapon.x+width-1,weapon.y+height) && aTile.shape.contains(weapon.x,weapon.y+height)){
-					Character.isShooting=false;
+					if(!(aTile instanceof Water))
+						Character.isShooting=false;
 					if(aTile instanceof Monster)
 						checkMonsterState((Monster)aTile);
 			}
@@ -271,25 +275,29 @@ public class Character {
 				if(weapon.dir==Game.Direction.Right && aTile.shape.contains(weapon.x+width,weapon.y)){//check top part collision
 					for(Tile theTile:Level.map_tile){
 					 if(theTile.shape.contains(weapon.x+width,weapon.y+height-1))//check bottom part collision
-						Character.isShooting=false;
+						 if(aTile.isSolid || theTile.isSolid)
+							 Character.isShooting=false;
 				}
 			}
 				if(weapon.dir==Game.Direction.Left && aTile.shape.contains(weapon.x-movement,weapon.y)){//check top part collision
 					for(Tile theTile:Level.map_tile){
 					 if(theTile.shape.contains(weapon.x-movement,weapon.y+height-1))//check bottom part collision
-						Character.isShooting=false;
+						 if(aTile.isSolid || theTile.isSolid)
+							 Character.isShooting=false;
 				}
 			}
 				if(weapon.dir==Game.Direction.Up && aTile.shape.contains(weapon.x,weapon.y-1)){//check left part collision
 					for(Tile theTile:Level.map_tile){
 					 if(theTile.shape.contains(weapon.x+width-1,weapon.y-1))//check right part collision
-						Character.isShooting=false;
+						 if(aTile.isSolid || theTile.isSolid)
+							 Character.isShooting=false;
 				}
 			}
 				if(weapon.dir==Game.Direction.Down && aTile.shape.contains(weapon.x,weapon.y+height)){//check left part collision
 					for(Tile theTile:Level.map_tile){
 					 if(theTile.shape.contains(weapon.x+width-1,weapon.y+height))//check right part collision
-						Character.isShooting=false;
+						 if(aTile.isSolid || theTile.isSolid)
+							 Character.isShooting=false;
 				}
 			}
 		}

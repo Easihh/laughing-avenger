@@ -33,6 +33,8 @@ public class Tile implements Comparable<Tile> {
 	}
 	private void getImage() {
 		switch(type){
+		case 95: 	img=Level.game_tileset[32];//water
+					break;
 		case 96: 	img=Level.game_tileset[1];//door closed
 					break;
 		case 97: 	img=Level.game_tileset[17];//chest bottom empty
@@ -88,65 +90,42 @@ public class Tile implements Comparable<Tile> {
 		else
 			g.drawImage(img,x,y,width,height,null);
 	}
-	public void move() {
-		switch(dir){
-		case Left: 	if(checkCollison(x-1, y, x-1, y+height-1)){
-						dir=Game.Direction.Right;
-					}else
-					x-=2;
-					break;
-		case Right: if(checkCollison(x+width, y+height-1, x+width, y)){
-						dir=Game.Direction.Left;
-					}else
-					x+=2;
-					break;
-		case Up: if(checkCollison(x+width-1, y-1, x, y-1)){
-						dir=Game.Direction.Down;
-					}else
-					y-=2;
-					break;
-		case Down: if(checkCollison(x+width-1, y+height, x, y+height)){
-					dir=Game.Direction.Up;
-					}else
-					y+=2;
-					break;
-		}
-		updateMask();
-	}
+	public void update(){}
 	protected boolean Object_inBetween(String direction) {
 		switch(direction){
 		case "Down":	for(Tile aTile:Level.map_tile){
 						for(int i=y;i<=Character.y;i+=2){
-							if(aTile.x==x || aTile.x+Character.step==x || aTile.x-Character.step==x)
+							if(aTile.x==x || Math.abs(aTile.x-Character.x)<=Character.step)
 								if(aTile.y==i && aTile!=this)
-									if(aTile.getType()!=6)//projectile bypass tree
+									if(aTile.isSolid){
 										return true;
+									}
 							}
 						}
 					break;
 		case "Up":	for(Tile aTile:Level.map_tile){
 						for(int i=y;i>=Character.y;i-=2){
-							if(aTile.x==x || aTile.x+Character.step==x || aTile.x-Character.step==x)
+							if(aTile.x==x || Math.abs(aTile.x-Character.x)<=Character.step)
 								if(aTile.y==i && aTile!=this)
-									if(aTile.getType()!=6)//projectile bypass tree
+									if(aTile.isSolid)
 										return true;
 							}
 						}		
 					break;
 		case "Left":	for(Tile aTile:Level.map_tile){
 						for(int i=x;i>=Character.x;i-=2){
-							if(aTile.y==y || aTile.y+Character.step==y || aTile.y-Character.step==y)
+							if(aTile.y==y || Math.abs(aTile.y-Character.y)<=Character.step)
 								if(aTile.x==i && aTile!=this)
-									if(aTile.getType()!=6)//projectile bypass tree
+									if(aTile.isSolid)
 										return true;
 							}
 						}		
 					break;
 		case "Right":	for(Tile aTile:Level.map_tile){
 						for(int i=x;i<=Character.x;i+=2){
-							if(aTile.y==y || aTile.y+Character.step==y || aTile.y-Character.step==y)
+							if(aTile.y==y || Math.abs(aTile.y-Character.y)<=Character.step)
 								if(aTile.x==i && aTile!=this)
-									if(aTile.getType()!=6)//projectile bypass tree
+									if(aTile.isSolid)
 										return true;
 							}
 						}		
@@ -246,12 +225,16 @@ public class Tile implements Comparable<Tile> {
 						}
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
+						if(collision_tile!=null && collision_tile instanceof Water)
+							willMove=false;
 						getCollidingTile(x+width,y);//bottom part collision
 						if(collision_tile!=null && collision_tile.getType()==12){
 							if(checkArrow(12))
 								willMove=false;
 						}
 						if(collision_tile!=null && collision_tile.isSolid)
+							willMove=false;
+						if(collision_tile!=null && collision_tile instanceof Water)
 							willMove=false;
 						if(willMove){
 							Character.targetX=Character.step;
@@ -290,12 +273,16 @@ public class Tile implements Comparable<Tile> {
 						if(collision_tile!=null && collision_tile.getType()==11)
 							if(checkArrow(11))
 									willMove=false;
+						if(collision_tile!=null && collision_tile instanceof Water)
+							willMove=false;
 						getCollidingTile(x+width-1,y+height);//bottom part collision
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
 						if(collision_tile!=null && collision_tile.getType()==11)
 							if(checkArrow(11))
 									willMove=false;
+						if(collision_tile!=null && collision_tile instanceof Water)
+							willMove=false;
 						if(willMove){
 							Character.targetX=Character.step;
 							Character.isMoving=true;
@@ -332,6 +319,8 @@ public class Tile implements Comparable<Tile> {
 							if(checkArrow(14))
 								willMove=false;
 						}
+						if(collision_tile!=null && collision_tile instanceof Water)
+								willMove=false;
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
 						getCollidingTile(x+width-1,y-1);//bottom part collision
@@ -339,6 +328,8 @@ public class Tile implements Comparable<Tile> {
 							if(checkArrow(14))
 								willMove=false;
 						}
+						if(collision_tile!=null && collision_tile instanceof Water)
+							willMove=false;
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
 						if(willMove){
@@ -375,13 +366,17 @@ public class Tile implements Comparable<Tile> {
 							if(checkArrow(13))
 								willMove=false;
 						}
+						if(collision_tile!=null && collision_tile instanceof Water)
+							willMove=false;
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
-						getCollidingTile(x-1,y+height-1);//bottom part collision
+						getCollidingTile(x-1,y+height-1);//bottom part collision			
 						if(collision_tile!=null && collision_tile.getType()==13){
 							if(checkArrow(13))
 								willMove=false;
 						}
+						if(collision_tile!=null && collision_tile instanceof Water)
+							willMove=false;
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
 						if(willMove){

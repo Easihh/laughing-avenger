@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
 import javax.sound.sampled.Clip;
@@ -9,13 +10,15 @@ import javax.swing.JLabel;
 public class MainPanel extends JPanel {
 	static Level theLevel=new Level();
 	private static final long serialVersionUID = 1L;
+	private Font font;
 	JLabel xposition,yposition;
 	public static Character hero;
 	public MainPanel(){
 		setBackground(Color.black);	
 		loadSound();
+		font=new Font("Serif", Font.BOLD, 24);
 	}
-	static void loadSound() {
+	private void loadSound() {
 		@SuppressWarnings("unused")
 		Sound aSound; 
 		aSound=new Sound("StageMusic");
@@ -33,6 +36,9 @@ public class MainPanel extends JPanel {
 			super.paintComponent(g);
 			theLevel.render(g);
 			g.setColor(Color.white);
+			g.drawImage(Character.projectile_img[0],528,128,null);
+			g.setFont(font);
+			g.drawString(""+Character.ammo,536,180);
 			g.drawString("x:"+Character.x, 544, 64);
 			g.drawString("y:"+Character.y, 544, 96);
 			if(Labyrinth.GameState==Game.GameState.Death && !Character.Death.isDone)

@@ -43,17 +43,20 @@ public class DonMedusa extends Monster {
 
 	@Override
 	public void render(Graphics g) {
-		DonMedusaAnimation.setImage();
-		move();
-		fireProjectile(g);
-		g.drawImage(DonMedusaAnimation.getImage(), x,y,width,height,null);
-	}
-	public void fireProjectile(Graphics g){
-		if(canShoot){
-			MultiDirectionSight();
-		}
 		if(projectile!=null && !canShoot)
 			projectile.render(g);
+		g.drawImage(DonMedusaAnimation.getImage(), x,y,width,height,null);
+	}
+	public void fireProjectile(){
+		if(canShoot)
+			MultiDirectionSight();
+	}
+	public void update(){
+		fireProjectile();
+		if(Labyrinth.GameState==Game.GameState.Normal)
+			move();
+		fireProjectile();
+		DonMedusaAnimation.setImage();
 	}
 	private void MultiDirectionSight(){
 		boolean shoot=false;
@@ -93,9 +96,36 @@ public class DonMedusa extends Monster {
 		}
 		if(shoot){
 			projectile=new Projectile(x,y,projectile_img,projectile_dir);
+			System.out.println("X:"+x);
+			System.out.println("Y:"+y);
 			Sound.MedusaSound.start();
 			canShoot=false;
 			projectile.projectile_speed=6;
+			Sound.StageMusic.stop();
+			Labyrinth.GameState=Game.GameState.Paused;
 		}
+	}
+	public void move() {
+		switch(dir){
+		case Left: 	if(checkCollison(x-1, y, x-1, y+height-1)){
+						dir=Game.Direction.Right;
+					}else x-=2;
+					break;
+		case Right: if(checkCollison(x+width, y+height-1, x+width, y)){
+						dir=Game.Direction.Left;
+					}else x+=2;
+					break;
+		case Up: if(checkCollison(x+width-1, y-1, x, y-1)){
+						dir=Game.Direction.Down;
+					}else
+					y-=2;
+					break;
+		case Down: if(checkCollison(x+width-1, y+height, x, y+height)){
+					dir=Game.Direction.Up;
+					}else
+					y+=2;
+					break;
+		}
+		updateMask();
 	}
 }

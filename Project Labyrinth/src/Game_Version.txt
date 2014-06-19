@@ -1,3 +1,8 @@
+
+Version 0.31:
+
+-Phantom Monster(Rocky) has been added.
+
 Version 0.30:
 
 -Now gain 2 ammo instead of 1 per special heart card.

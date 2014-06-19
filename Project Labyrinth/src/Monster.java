@@ -4,6 +4,7 @@ import java.awt.Image;
 
 public abstract class Monster extends Tile {
 	public Image previousState;
+	public boolean isActive;
 	protected int TransformedState=0;
 	protected Projectile projectile;
 	protected boolean canShoot=false;

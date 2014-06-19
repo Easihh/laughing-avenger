@@ -174,6 +174,12 @@ public class Level {
 		case "34": 	//ladder left
 					Level.map_tile.add(new Tile(coordX,coordY,93));
 					break;
+		case "35": 	//Phantom left
+					Level.map_tile.add(new Phantom(coordX,coordY,0));
+					break;
+		case "36": 	//Skull
+					Level.map_tile.add(new Skull(coordX,coordY,15));
+					break;
 		case "41": 	//ladder right
 					Level.map_tile.add(new Tile(coordX,coordY,92));
 					break;	
@@ -227,7 +233,11 @@ public class Level {
 		case 10://awake dragon right
 				Monster.img=game_tileset[6];
 				Monster.canShoot=true;
-				break;				
+				break;
+		case 15://awake skull
+				Monster.img=game_tileset[35];
+				Monster.isActive=true;
+				break;		
 		}
 	}
 	static void addRespawn(Tile tile) {
@@ -262,6 +272,10 @@ public class Level {
 					case 10://awake dragon right
 							Monster.img=game_tileset[6];
 							Monster.canShoot=true;
+							break;
+					case 15://awake skull
+							Monster.img=game_tileset[35];
+							Monster.isActive=true;
 							break;	
 				}
 			}
@@ -285,6 +299,10 @@ public class Level {
 		case 10://awake dragon right
 				Monster.previousState=game_tileset[6];
 				Monster.canShoot=true;
+				break;	
+		case 15://awake skull
+				Monster.previousState=game_tileset[35];
+				Monster.isActive=true;
 				break;	
 		}
 		

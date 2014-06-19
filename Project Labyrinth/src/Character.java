@@ -35,6 +35,7 @@ public class Character {
 	public static int ammo;
 	public static int targetX;
 	public static boolean powerActivated;
+	public static boolean beingPushed=false;
 	public static Projectile weapon=null;
 	public static Death Death;
 	public Character(int x, int y){
@@ -353,6 +354,16 @@ public class Character {
 									select_Tile.moveTile(step);
 						}
 						break;
+				case 15: //skull
+							if(aTile instanceof Monster){
+								Monster Monster=(Monster)aTile;
+								if(Monster.isActive){
+									Sound.StageMusic.stop();
+									Sound.Death.start();
+									Labyrinth.GameState=Game.GameState.Death;
+								}
+							}
+						break;
 				case 91:
 				case 92:
 				case 93:if(!searchBlock(pt1,pt2)){
@@ -430,7 +441,7 @@ public class Character {
 				lastKey=keypressed.get(0);//get last pressed button
 			else
 				lastKey=keypressed.get(keypressed.size()-1);//get last pressed button
-			if(lastKey==Game.button.W){
+			if(lastKey==Game.button.W && !beingPushed){
 				dir=Game.Direction.Up;
 				walk_up.setImage();
 				if(!checkCollision(new Point(x+width-1,y-1),new Point((int)(x),y-1))){
@@ -438,7 +449,7 @@ public class Character {
 						isMoving=true;
 				}
 			}
-			if(lastKey==Game.button.S){
+			if(lastKey==Game.button.S && !beingPushed){
 				dir=Game.Direction.Down;			
 				walk_down.setImage();
 				if(!checkCollision(new Point(x+width-1,y+height),new Point((int)(x),y+height))){

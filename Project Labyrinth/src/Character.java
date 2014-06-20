@@ -38,6 +38,7 @@ public class Character {
 	public static boolean beingPushed=false;
 	public static Projectile weapon=null;
 	public static Death Death;
+	public static Point lastPosition;
 	public Character(int x, int y){
 		Character.x=x;
 		Character.y=y;
@@ -148,6 +149,7 @@ public class Character {
 			movement();
 			MonsterBulletCollision();
 			CollisionWithBullet();
+			CollisionWithMonster();
 		}
 		if(Labyrinth.GameState==Game.GameState.Paused){
 			MonsterBulletCollision();
@@ -155,6 +157,16 @@ public class Character {
 		}
 		if(Character.isShooting && weapon!=null)
 			bullet_Collision();
+	}
+	private void CollisionWithMonster() {
+		for(Tile aTile:Level.map_tile){
+			if(aTile instanceof Skull)
+				if(aTile.shape.contains(new Point(Character.x,Character.y))){
+					Sound.Death.start();
+					Labyrinth.GameState=Game.GameState.Death;
+				}
+		}
+		
 	}
 	private void CollisionWithBullet(){
 		for(Tile aTile:Level.map_tile){
@@ -208,25 +220,25 @@ public class Character {
 							switch(aMonster.projectile.dir){
 							case Down:	if(aTile.shape.contains(aMonster.projectile.x+width-1,aMonster.projectile.y+height) || 
 											aTile.shape.contains(aMonster.projectile.x,aMonster.projectile.y+height))
-										if(aTile.getType()!=6)//if its a tree the shot traverse it
+										if(aTile.getType()!=6 && aTile.getType()!=95)//if its a tree the shot traverse it
 											if(aMonster instanceof Gol)
 												aMonster.canShoot=true;
 										break;
 							case Right:	if(aTile.shape.contains(aMonster.projectile.x+width,aMonster.projectile.y) || 
 											aTile.shape.contains(aMonster.projectile.x+width,aMonster.projectile.y+height-1))
-										if(aTile.getType()!=6)//if its a tree the shot traverse it
+										if(aTile.getType()!=6 && aTile.getType()!=95)//if its a tree the shot traverse it
 											if(aMonster instanceof Gol)
 												aMonster.canShoot=true;
 									break;
 							case Left: 	if(aTile.shape.contains(aMonster.projectile.x-movement,aMonster.projectile.y) || 
 											aTile.shape.contains(aMonster.projectile.x-movement,aMonster.projectile.y+height-1))
-										if(aTile.getType()!=6)//if its a tree the shot traverse it
+										if(aTile.getType()!=6 && aTile.getType()!=95)//if its a tree the shot traverse it
 											if(aMonster instanceof Gol)
 												aMonster.canShoot=true;
 										break;
 							case Up: 	if(aTile.shape.contains(aMonster.projectile.x+width-1,aMonster.projectile.y-1) || 
 											aTile.shape.contains(aMonster.projectile.x,aMonster.projectile.y-1))
-										if(aTile.getType()!=6){//if its a tree the shot traverse it
+										if(aTile.getType()!=6 && aTile.getType()!=95){//if its a tree the shot traverse it
 											if(aMonster instanceof Gol)
 												aMonster.canShoot=true;
 									}

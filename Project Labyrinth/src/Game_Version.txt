@@ -1,5 +1,11 @@
 Version 0.32:
 
+-Gol projectile now correctly bypass water tile.
+-Player now always die if in contact with Skull.
+-Skull AI pathfinding will now follow you to your death implemented via A* algorithme.
+
+Version 0.32:
+
 -Skull Monster has been added
 -Skull AI currently has weak pathing.
 

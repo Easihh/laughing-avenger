@@ -1,7 +1,5 @@
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 
 public class Input implements KeyListener {
 	@Override
@@ -33,43 +31,8 @@ public class Input implements KeyListener {
 				check=Character.checkPower();
 			if(!check)
 				Character.fireProjectile();
-			checkPath();
 		}
 		if(keycode==KeyEvent.VK_ESCAPE){
-		}
-	}
-
-	private void checkPath() {
-		int TargetX=192;
-		int TargetY=192;
-		ArrayList<Point> Open=new ArrayList<Point>();
-		ArrayList<Point> Close=new ArrayList<Point>();
-		Open.add(new Point(Character.x,Character.y));
-		int StartX=0;
-		int StartY=0;
-		int DeltaX=Character.x-256;
-		int DeltaY=Character.y-224;
-		while(Character.x+StartX!=TargetX){
-			if(DeltaX>0){//target is to the left
-				//System.out.println("STARTX"+StartX);
-				if(!checkCollison(Character.x+StartX-1,Character.y+StartY,Character.x+StartX-1,Character.y+32-1+StartY)){//left
-					StartX-=16;
-					Open.add(new Point(Character.x+StartX,Character.y+StartY));
-				}
-				else if(!checkCollison(Character.x+StartX+32-1,Character.y+32+StartY,Character.x+StartX,Character.y+32+StartY)){//down
-					StartY+=16;
-					Open.add(new Point(Character.x+StartX,Character.y+StartY));
-				}
-				else if(!checkCollison(Character.x+32-1+StartX,Character.y-1+StartY,Character.x+StartX,Character.y-1+StartY)){//up
-					StartY-=16;
-					Open.add(new Point(Character.x+StartX,Character.y+StartY));
-				}
-				//if(!checkCollision(new Point(x+width-1,y-1),new Point((int)(x),y-1))){
-				else StartX-=16;
-			}
-		}
-		for(Point aPoint:Open){
-			System.out.println(aPoint);
 		}
 	}
 	public boolean checkCollison(int x1,int y1,int x2,int y2) {
@@ -89,5 +52,6 @@ public class Input implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {
 	}
-
 }
+
+

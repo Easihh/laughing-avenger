@@ -1,18 +1,24 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Stack;
 
 import javax.imageio.ImageIO;
-
 
 public class Skull extends Monster{
 	private BufferedImage[] skull_img;
 	private final long nano=1000000L;
 	private long time_since_transform;
 	private int step_to_move;
+	private boolean path_exist=false;
+	Stack<Node> Path;
 	Animation Skull;
+	Node nextMovement;
 	public Skull(int x,int y, int type) {
 		super(x, y, type);
+		Path=new Stack<Node>();
 		dir=Game.Direction.Left;
 		isActive=false;
 		Skull=new Animation();
@@ -87,54 +93,112 @@ public class Skull extends Monster{
 		}	
 	}
 	public void move() {
-		if(step_to_move==0)
-			shortestPath();
-		else{
-			switch(dir){
-				case Left:  x-=2;
-							break;
-				case Right: x+=2;
-							break;
-				case Up: 	y-=2;			
-							break;
-				case Down: 	y+=2;
-							break;
+		System.out.println("TESt");
+		if(step_to_move==0 && Character.x%16==0 && Character.y%16==0){
+				System.out.println("Path");
+					getShortestPath();
+					if(path_exist){
+						if(Path.size()>1)//since current position was top stack;//
+							Path.pop();
+						if(!Path.isEmpty())nextMovement=Path.pop();
+						step_to_move=16;
+						if(nextMovement.data.x==x){//prepare to move along Y axis
+							if(nextMovement.data.y>y){//target is down
+								dir=Game.Direction.Down;
+							}
+							else dir=Game.Direction.Up;
+						}
+						if(nextMovement.data.y==y){//prepare to move along X axis
+							if(nextMovement.data.x>x){//target is on right
+								dir=Game.Direction.Right;
+							}
+							else dir=Game.Direction.Left;
+						}
+					}
 			}
-			step_to_move-=2;
-		}
+		if(step_to_move>0){	System.out.println("Step"+step_to_move);
+				switch(dir){
+				case Left:	x-=2;
+							break;
+				case Right:	x+=2;
+							break;
+				case Up:	y-=2;
+							break;
+				case Down:	y+=2;
+							break;
+				}
+				step_to_move-=2;
+			}
 		updateMask();
 	}
-	public void shortestPath(){
-		int targetX=x-Character.x;
-		int targetY=y-Character.y;
-		if(Math.abs(targetX)> Math.abs(targetY)){//Character is closer on the X axis
-			if(targetX>0){// Character is to the left of Skull
-				if(!checkCollison(x-1, y, x-1, y+height-1)){
-					step_to_move=16;
-					dir=Game.Direction.Left;
-				}
+	public void getShortestPath(){
+		Node goal=new Node(Character.x,Character.y);
+		ArrayList<Node> Open=new ArrayList<Node>();
+		ArrayList<Node> Closed=new ArrayList<Node>();
+		Path=new Stack<Node>();
+		path_exist=false;
+		Node root=new Node(x,y);
+		Node neighbor;
+		Open.add(root);	
+		while(!Open.isEmpty()){
+			Collections.sort(Open);
+			Node current=Open.get(0);
+			if(Closed.contains(goal)){
+				path_exist=true;
+				break;
 			}
-			else if(targetX<0){//Character is to the right of Skull			
-				if(!checkCollison(x+width, y+height-1, x+width, y)){
-					step_to_move=16;
-					dir=Game.Direction.Right;
-				}
+			Open.remove(current);
+			Closed.add(current);
+				if(!checkCollison(current.data.x-1,current.data.y,current.data.x-1,current.data.y+32-1)){//left
+					neighbor=new Node(current.data.x-16,current.data.y);
+					if(!Closed.contains(neighbor))
+						if(!Open.contains(neighbor) || (current.Gscore+1<neighbor.Gscore)){
+							neighbor.parent=current;
+							neighbor.Gscore=current.Gscore+1;
+							neighbor.updateScore(x, y);
+							if(!Open.contains(neighbor))
+									Open.add(neighbor);
+								}
+							}				
+					if(!checkCollison(current.data.x+32-1,current.data.y+32,current.data.x,current.data.y+32)){//down
+						neighbor=new Node(current.data.x,current.data.y+16);
+						if(!Closed.contains(neighbor))
+							if(!Open.contains(neighbor) || (current.Gscore+1<neighbor.Gscore)){
+								neighbor.parent=current;
+								neighbor.Gscore=current.Gscore+1;
+								neighbor.updateScore(x, y);
+								if(!Open.contains(neighbor))
+									Open.add(neighbor);
+							}
+					}
+					if(!checkCollison(current.data.x+32-1,current.data.y-1,current.data.x,current.data.y-1)){//up
+						neighbor=new Node(current.data.x,current.data.y-16);
+						if(!Closed.contains(neighbor))
+							if(!Open.contains(neighbor) || (current.Gscore+1<neighbor.Gscore)){
+								neighbor.parent=current;
+								neighbor.Gscore=current.Gscore+1;
+								neighbor.updateScore(x, y);
+								if(!Open.contains(neighbor))
+									Open.add(neighbor);
+							}
+					}
+					if(!checkCollison(current.data.x+32,current.data.y+32-1,current.data.x+32,current.data.y)){//right
+						neighbor=new Node(current.data.x+16,current.data.y);
+						if(!Closed.contains(neighbor))
+							if(!Open.contains(neighbor) || (current.Gscore+1<neighbor.Gscore)){
+								neighbor.parent=current;
+								neighbor.Gscore=current.Gscore+1;
+								neighbor.updateScore(x, y);
+								if(!Open.contains(neighbor))
+									Open.add(neighbor);
+							}
+					}
+			}
+			Node test=Closed.get(Closed.size()-1);
+			while(test!=null){
+				Path.add(test);
+				test=test.parent;
 			}
 		}
-		else{
-			if(targetY>0){// Character is  up from Skull
-				if(!checkCollison(x+width-1, y-1, x, y-1)){
-					dir=Game.Direction.Up;
-					step_to_move=16;
-				}
-			}
-			else if(targetY<0){//Character is down from Skull
-				if(!checkCollison(x+width-1, y+height, x, y+height)){
-					dir=Game.Direction.Down;
-					step_to_move=16;
-				}
-			}
-		}
-	}
 }
 

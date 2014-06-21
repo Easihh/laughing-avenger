@@ -38,6 +38,7 @@ public class MainPanel extends JPanel {
 		aSound=new Sound("ShotSound");
 		aSound=new Sound("Death");
 		aSound=new Sound("PowerUsed");
+		aSound=new Sound("Sleeper");
 		Sound.StageMusic.loop(Clip.LOOP_CONTINUOUSLY);	
 	}
 	public void paintComponent(Graphics g){

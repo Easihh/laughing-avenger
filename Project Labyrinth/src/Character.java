@@ -161,7 +161,7 @@ public class Character {
 	private void CollisionWithMonster() {
 		for(Tile aTile:Level.map_tile){
 			if(aTile instanceof Skull)
-				if(aTile.shape.contains(new Point(Character.x,Character.y))){
+				if(aTile.shape.intersects(x, y, width, height)){
 					Sound.Death.start();
 					Labyrinth.GameState=Game.GameState.Death;
 				}

@@ -168,6 +168,9 @@ public class Level {
 		case "28": 	//gol sleeping right
 					Level.map_tile.add(new Gol(coordX,coordY,10));
 					break;
+		case "32": 	//Leeper
+					Level.map_tile.add(new Leeper(coordX,coordY,16));
+					break;
 		case "33": 	//animated water
 					Level.map_tile.add(new Water(coordX,coordY,95));
 					break;
@@ -340,6 +343,7 @@ public class Level {
 		Sound.MonsterDestroyed.setFramePosition(0);
 		Sound.PowerUsed.setFramePosition(0);
 		Sound.ShotSound.setFramePosition(0);
+		Sound.Sleeper.setFramePosition(0);
 		Sound.StageMusic.setFramePosition(0);
 		Sound.StageMusic.loop(Clip.LOOP_CONTINUOUSLY);	
 	}

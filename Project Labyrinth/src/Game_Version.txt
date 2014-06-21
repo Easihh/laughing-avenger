@@ -1,3 +1,9 @@
+Version 0.33:
+
+-Monster Leeper and its AI has been added.
+-Added Leeper sleep sound.
+-Moving on the Leeper just before it sleep can trigger collision issue.
+
 Version 0.32:
 
 -Gol projectile now correctly bypass water tile.

@@ -13,6 +13,7 @@ public class Sound {
 	static Clip ChestOpen;
 	static Clip Death;
 	static Clip PowerUsed;
+	static Clip Sleeper;
     public Sound(String Filename) {
         File Sound= new File("src/Sound/"+Filename+".wav");
         Clip clip;
@@ -30,6 +31,7 @@ public class Sound {
 	        else if(Filename.equalsIgnoreCase("ChestOpen"))ChestOpen=clip;
 	        else if(Filename.equalsIgnoreCase("Death"))Death=clip;
 	        else if(Filename.equalsIgnoreCase("PowerUsed"))PowerUsed=clip;
+	        else if(Filename.equalsIgnoreCase("Sleeper"))Sleeper=clip;
 		} catch (LineUnavailableException e){ e.printStackTrace();}
 		catch (IOException io){io.printStackTrace();}
 		catch (UnsupportedAudioFileException uafe){uafe.printStackTrace();}

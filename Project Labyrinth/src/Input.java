@@ -1,3 +1,4 @@
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -34,14 +35,6 @@ public class Input implements KeyListener {
 		}
 		if(keycode==KeyEvent.VK_ESCAPE){
 		}
-	}
-	public boolean checkCollison(int x1,int y1,int x2,int y2) {
-		for(Tile aTile:Level.map_tile){
-			if(aTile.shape.contains(x1,y1)|| aTile.shape.contains(x2,y2)){
-				return true;
-			}
-		}
-		return false;
 	}
 	@Override
 	public void keyReleased(KeyEvent e) {

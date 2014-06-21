@@ -93,9 +93,7 @@ public class Skull extends Monster{
 		}	
 	}
 	public void move() {
-		System.out.println("TESt");
 		if(step_to_move==0 && Character.x%16==0 && Character.y%16==0){
-				System.out.println("Path");
 					getShortestPath();
 					if(path_exist){
 						if(Path.size()>1)//since current position was top stack;//
@@ -116,7 +114,7 @@ public class Skull extends Monster{
 						}
 					}
 			}
-		if(step_to_move>0){	System.out.println("Step"+step_to_move);
+		if(step_to_move>0){	
 				switch(dir){
 				case Left:	x-=2;
 							break;

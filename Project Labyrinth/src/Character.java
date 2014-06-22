@@ -35,11 +35,17 @@ public class Character {
 	public static Game.Direction dir;
 	public static int ammo;
 	public static int targetX;
-	public static boolean powerActivated;
+	public static boolean powerActivated_hammer;
+	public static boolean powerActivated_ladder;
+	public static boolean powerActivated_arrow;
 	public static boolean beingPushed=false;
 	public static Projectile weapon=null;
 	public static Death Death;
 	public static Point lastPosition;
+	public static Rectangle topleftMask=new Rectangle(x,y,16,16);
+	public static Rectangle toprightMask=new Rectangle(x+16,y,16,16);;
+	public static Rectangle bottomleftMask=new Rectangle(x,y+16,16,16);;
+	public static Rectangle bottomrightMask=new Rectangle(x+16,y+16,16,16);
 	public Character(int x, int y){
 		Character.x=x;
 		Character.y=y;
@@ -48,7 +54,9 @@ public class Character {
 		isShooting=false;
 		isMoving=false;
 		isPushing=false;
-		powerActivated=false;
+		powerActivated_hammer=false;
+		powerActivated_ladder=true;
+		powerActivated_arrow=false;
 		 dir=Game.Direction.Down;
 		 lastKey=Game.button.None;
 		 keypressed=new ArrayList<Game.button>();
@@ -158,6 +166,14 @@ public class Character {
 		}
 		if(Character.isShooting && weapon!=null)
 			bullet_Collision();
+		updateMask();
+	}
+	private void updateMask() {
+		topleftMask.setRect(new Rectangle(x,y,16,16));
+		toprightMask.setRect(new Rectangle(x+16,y,16,16));
+		bottomleftMask.setRect(new Rectangle(x,y+16,16,16));
+		bottomrightMask.setRect(new Rectangle(x+16,y+16,16,16));
+		
 	}
 	private void CollisionWithMonster() {
 		for(Tile aTile:Level.map_tile){
@@ -326,7 +342,7 @@ public class Character {
 		}
 	}
 }
-	public void checkMonsterState(Monster aTile) {
+	private void checkMonsterState(Monster aTile) {
 		if(aTile.TransformedState==0)
 				aTile.transform();
 		else if(aTile.TransformedState==1 || aTile.TransformedState==2){
@@ -353,7 +369,7 @@ public class Character {
 							if(isBehindBlock(aTile)){
 								select_Tile=aTile;
 								aTile.moveTile(step);
-							}else System.out.println("wtf");
+							}
 							break;
 				case 3: 	takeHeart(aTile);
 							break;
@@ -362,7 +378,8 @@ public class Character {
 				case 13:	//right one-way Arrow
 				case 14:	//down one-way Arrow
 							if(!searchBlock(mask)){ //no block infront
-								if(!OneWayArrow(aTile))
+								OneWayArrow arrow=(OneWayArrow)aTile;
+								if(!arrow.checkArrow())
 									return false;
 								}
 						else 	if(isBehindBlock(select_Tile))
@@ -415,29 +432,6 @@ public class Character {
 		case Up:		return(Character.x==aTile.x);
 		case Down: 		return(Character.x==aTile.x);
 					}
-		return false;
-	}
-	private boolean OneWayArrow(Tile aTile) {
-		if(Character.dir==Game.Direction.Down && aTile.getType()==11){
-			if(aTile.shape.contains(x,y+height-1) || aTile.shape.contains(x+width,y+height-1))
-				return false;//allow pass
-			return true; 
-		}
-		if(Character.dir==Game.Direction.Up && aTile.getType()==14){
-			if(aTile.shape.contains(x,y) || aTile.shape.contains(x+width,y))
-				return false;
-			return true;
-		}
-		if(Character.dir==Game.Direction.Left && aTile.getType()==13){
-			if(aTile.shape.contains(x,y) || aTile.shape.contains(x,y+height))
-				return false;
-			return true;
-		}
-		if(Character.dir==Game.Direction.Right && aTile.getType()==12){
-			if(aTile.shape.contains(x+width-1,y) || aTile.shape.contains(x+width-1,y+height-1))
-				return false;
-			return true;
-		}
 		return false;
 	}
 	private void takeHeart(Tile aTile) {
@@ -617,97 +611,12 @@ public class Character {
 			}	
 	}
 	public static boolean checkPower() {
-		Sound.PowerUsed.setFramePosition(0);
-		Tile colliding_tile1=null;
-		Tile colliding_tile2=null;
-		Tile toDelete=null;
-		Tile toAdd=null;
-		switch(Character.dir){
-		case Up:	colliding_tile1=getCollidingTile(x,y-1);
-					colliding_tile2=getCollidingTile(x+32-1,y-1);
-					if(colliding_tile1 instanceof Water && colliding_tile2 instanceof Water)
-						if(colliding_tile1==colliding_tile2)
-							for(Tile aTile:Level.map_tile){
-								if(aTile==colliding_tile1){
-									toDelete=aTile;
-									toAdd=new Tile(x,y-32,91);
-								}
-							}
-					if(toDelete!=null){
-						Level.map_tile.add(toAdd);
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.PowerUsed.start();
-						return true;
-					}
-					break;
-		case Down:	colliding_tile1=getCollidingTile(x+32-1,y+32);
-					colliding_tile2=getCollidingTile(x,y+32);
-					if(colliding_tile1 instanceof Water && colliding_tile2 instanceof Water)
-						if(colliding_tile1==colliding_tile2)
-							for(Tile aTile:Level.map_tile){
-								if(aTile==colliding_tile1){
-									toDelete=aTile;
-									toAdd=new Tile(x,y+32,91);
-								}
-							}
-					if(toDelete!=null){
-						Level.map_tile.add(toAdd);
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.PowerUsed.start();
-						return true;
-					}
-					break;
-		case Left:	colliding_tile1=getCollidingTile(x-1,y);
-					colliding_tile2=getCollidingTile(x-1,y+32-1);
-					if(colliding_tile1 instanceof Water && colliding_tile2 instanceof Water)
-						if(colliding_tile1==colliding_tile2)
-							for(Tile aTile:Level.map_tile){
-								if(aTile==colliding_tile1){
-									toDelete=aTile;
-									toAdd=new Tile(x-32,y,93);
-								}
-							}
-					if(toDelete!=null){
-						Level.map_tile.add(toAdd);
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.PowerUsed.start();
-						return true;
-					}
-					break;
-		case Right:	colliding_tile1=getCollidingTile(x+32,y);
-					colliding_tile2=getCollidingTile(x+32,y+32-1);
-					if(colliding_tile1 instanceof Water && colliding_tile2 instanceof Water)
-						if(colliding_tile1==colliding_tile2)
-							for(Tile aTile:Level.map_tile){
-								if(aTile==colliding_tile1){
-									toDelete=aTile;
-									toAdd=new Tile(x+32,y,92);
-								}
-							}
-					if(toDelete!=null){
-						Level.map_tile.add(toAdd);
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.PowerUsed.start();
-						return true;
-					}
-					break;
-			}
+		Power aPower=new Power();
+		if(powerActivated_ladder)aPower.useLadder();
+		if(powerActivated_hammer)aPower.useHammer();
+		if(powerActivated_arrow)aPower.useArrow();
 		return false;
 	}
-	private static Tile getCollidingTile(int x1,int y1) {
-		for(Tile aTile:Level.map_tile){
-			if(aTile.shape.contains(x1,y1)){
-				//if(aTile.getType()!=93 && aTile.getType()!=92 && aTile.getType()!=91){//dont care if bridge infront already
-					return aTile;
-				//}
-				}	
-			}
-		return null;
-		}
 	private static void createProjectile() {
 		switch(Character.dir){
 		

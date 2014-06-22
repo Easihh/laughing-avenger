@@ -1,3 +1,11 @@
+Version 0.34:
+-Added Hammer Power to destroy rock.
+-Added Hammer sound.
+-Added Power enabled sound.
+-Power is now flashing when activated.
+-Now possible to have multitude power per level or up to 3 time the same power.
+-Fixed Bug caused when player tried to use power when not aligned fully with the tile.
+
 Version 0.33A:
 
 -Improved collision code for most collision.

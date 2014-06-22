@@ -3,14 +3,16 @@ import java.io.IOException;
 import javax.sound.sampled.*;
 
 public class Sound {
+	public static Clip 	ArrowBridgePowerUsed;
 	public static Clip 	ChestOpen;
 	public static Clip 	Death;
 	public static Clip 	DoorOpen;
 	public static Clip	DragonSound;
+	public static Clip 	HammerPowerUsed;
 	public static Clip 	HeartSound;
 	public static Clip 	MedusaSound;
 	public static Clip	MonsterDestroyed;
-	public static Clip 	PowerUsed;
+	public static Clip	PowerEnabled;
 	public static Clip 	Sleeper;
 	public static Clip	ShotSound;
 	public static Clip 	StageMusic;
@@ -30,8 +32,10 @@ public class Sound {
 	        else if(Filename.equalsIgnoreCase("MonsterDestroyed"))MonsterDestroyed=clip;
 	        else if(Filename.equalsIgnoreCase("ChestOpen"))ChestOpen=clip;
 	        else if(Filename.equalsIgnoreCase("Death"))Death=clip;
-	        else if(Filename.equalsIgnoreCase("PowerUsed"))PowerUsed=clip;
+	        else if(Filename.equalsIgnoreCase("ArrowBridgePowerUsed"))ArrowBridgePowerUsed=clip;
 	        else if(Filename.equalsIgnoreCase("Sleeper"))Sleeper=clip;
+	        else if(Filename.equalsIgnoreCase("HammerPowerUsed"))HammerPowerUsed=clip;
+	        else if(Filename.equalsIgnoreCase("HammerPowerUsed"))PowerEnabled=clip;
 		} catch (LineUnavailableException e){ e.printStackTrace();}
 		catch (IOException io){io.printStackTrace();}
 		catch (UnsupportedAudioFileException uafe){uafe.printStackTrace();}

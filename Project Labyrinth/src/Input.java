@@ -27,7 +27,7 @@ public class Input implements KeyListener {
 		}
 		if(keycode==KeyEvent.VK_SPACE){
 			boolean check=false;
-			if(Character.powerActivated)
+			if(Character.powerActivated_ladder || Character.powerActivated_hammer || Character.powerActivated_arrow)
 				check=Character.checkPower();
 			if(!check)
 				Character.fireProjectile();

@@ -14,7 +14,7 @@ import javax.xml.stream.XMLStreamReader;
 
 public class Level {
 	private final long nano=1000000000L;
-	private final int tileSize=32; //24x24
+	private final int tileSize=32; 
 	private final int tileset_rows=8;
 	private final int tileset_cols=8;
 	private int coordX;
@@ -32,6 +32,7 @@ public class Level {
 	public static int heart_amount;
 	public static ArrayList<Tile> map_tile;
 	public static ArrayList<Tile> toRemove;
+	public static int[] Power;/// 1=Hammer, 2=Ladder, 3=Arrow Changer
 	public static BufferedImage[] game_tileset;
 	public static BufferedImage[] monsterState;
 	public static Tile goal;
@@ -47,6 +48,8 @@ public class Level {
 			toRespawn=new ArrayList<Tile>();
 			Respawn_Timer=new Vector<Long>();
 			game_tileset=new BufferedImage[100];
+			Power=new int[3];
+			verifyPowerAllowed();
 			setBackground("start");
 			getGameTile();
 		} catch (IOException GameBackground) {
@@ -79,6 +82,14 @@ public class Level {
 		}
 		Collections.sort(Level.map_tile);
 		Labyrinth.level_is_loaded=true;
+	}
+	private void verifyPowerAllowed() {
+		if(room==1){
+			Power[0]=2;
+			//Power[1]=1;
+			//Power[2]=3;
+		}
+		
 	}
 	private void getGameTile() throws IOException {
 		BufferedImage img=ImageIO.read(getClass().getResource("/tileset/game_tileset.png"));
@@ -334,13 +345,15 @@ public class Level {
 		Labyrinth.level_is_loaded=false;
 		MainPanel.theLevel=new Level();
 		Labyrinth.GameState=Game.GameState.Normal;
+		Sound.ArrowBridgePowerUsed.setFramePosition(0);
 		Sound.Death.setFramePosition(0);
 		Sound.DoorOpen.setFramePosition(0);
 		Sound.DragonSound.setFramePosition(0);
+		Sound.HammerPowerUsed.setFramePosition(0);
 		Sound.HeartSound.setFramePosition(0);
 		Sound.MedusaSound.setFramePosition(0);
 		Sound.MonsterDestroyed.setFramePosition(0);
-		Sound.PowerUsed.setFramePosition(0);
+		Sound.PowerEnabled.setFramePosition(0);
 		Sound.ShotSound.setFramePosition(0);
 		Sound.Sleeper.setFramePosition(0);
 		Sound.StageMusic.setFramePosition(0);

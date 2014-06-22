@@ -1,31 +1,29 @@
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
-
 import javax.imageio.ImageIO;
 
-
 public class Leeper extends Monster{
-	public boolean isSleeping;
-	long time_since_transform;
-	long nano=1000000L;
-	private int step_to_move;
+	private final long nano=1000000L;
+	private Animation walk_left;
+	private Animation walk_right;
+	private Animation walk_up;
+	private Animation walk_down;
+	private Animation sleep_left;
+	private Animation sleep_right;
+	private Animation sleep_up;
+	private Animation sleep_down;
+	private BufferedImage[] spriteSheet;
 	private boolean path_exist=false;
-	Stack<Node> Path;
-	BufferedImage[] spriteSheet;
-	Animation walk_left;
-	Animation walk_right;
-	Animation walk_up;
-	Animation walk_down;
-	Animation sleep_left;
-	Animation sleep_right;
-	Animation sleep_up;
-	Animation sleep_down;
-	Node nextMovement;
+	private int step_to_move;
+	private long time_since_transform;
+	private Node nextMovement;
+	private Stack<Node> Path;
+	public boolean isSleeping;
+	
 	public Leeper(int x, int y, int type) {
 		super(x, y, type);
 		isSleeping=false;
@@ -41,7 +39,50 @@ public class Leeper extends Monster{
 		sleep_down=new Animation();
 		getImage();
 	}
-	public void getImage(){
+	@Override
+	public void render(Graphics g) {
+		checkState();
+		if(!isSleeping){
+			if(TransformedState==0 && !isMovingAcrossScreen)
+				g.drawImage(getAnimation().getImage(), x, y, null);
+			else{
+				if(isMovingAcrossScreen)
+					super.updateLocation();
+				if(!isOffScreen())
+					g.drawImage(img,x,y,width,height,null); 
+				}	
+		}
+		else g.drawImage(getSleepAnimation().getImage(),x,y,null);
+	}
+	@Override
+	public void transform() {
+		if(!isSleeping){
+		previousState=img;
+		type=2;
+		img=Level.monsterState[0];
+		time_since_transform=System.nanoTime();	
+		TransformedState=1;
+		}
+	}
+	public void update(){
+		if(!isSleeping){
+			getAnimation().setImage();
+			if(TransformedState==0)move();
+		}
+		else getSleepAnimation().setImage();
+	}
+	private void checkState() {
+		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1){
+			TransformedState=2;
+			img=Level.monsterState[1];
+		}
+		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2){
+			TransformedState=0;
+			type=1;
+			img=previousState;
+		}	
+	}
+	private void getImage(){
 		BufferedImage img=null;
 		spriteSheet = new BufferedImage[2];
 		try {//left movement
@@ -111,38 +152,14 @@ public class Leeper extends Monster{
 			sleep_down.AddScene(spriteSheet[1], 500);
 			} catch (IOException e) {e.printStackTrace();}
 	}
-	@Override
-	public void transform() {
-		if(!isSleeping){
-		previousState=img;
-		type=2;
-		img=Level.monsterState[0];
-		time_since_transform=System.nanoTime();	
-		TransformedState=1;
+	private Animation getAnimation() {
+		switch(dir){
+		case Left: return walk_left;
+		case Right: return walk_right;
+		case Up: return walk_up;
+		case Down: return walk_down;
 		}
-	}
-	@Override
-	public void render(Graphics g) {
-		checkState();
-		if(!isSleeping){
-			if(TransformedState==0 && !isMovingAcrossScreen)
-				g.drawImage(getAnimation().getImage(), x, y, null);
-			else{
-				if(isMovingAcrossScreen)
-					super.updateLocation();
-				if(!isOffScreen())
-					g.drawImage(img,x,y,width,height,null); 
-				}	
-		}
-		else //g.drawPolygon(shape); 
-			g.drawImage(getSleepAnimation().getImage(),x,y,null);
-	}
-	public void update(){
-		if(!isSleeping){
-			getAnimation().setImage();
-			if(TransformedState==0)move();
-		}
-		else getSleepAnimation().setImage();
+		return null;
 	}
 	private Animation getSleepAnimation() {
 		switch(dir){
@@ -153,27 +170,7 @@ public class Leeper extends Monster{
 		}
 		return null;
 	}
-	private Animation getAnimation() {
-		switch(dir){
-		case Left: return walk_left;
-		case Right: return walk_right;
-		case Up: return walk_up;
-		case Down: return walk_down;
-		}
-		return null;
-	}
-	private void checkState() {
-		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1){
-			TransformedState=2;
-			img=Level.monsterState[1];
-		}
-		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2){
-			TransformedState=0;
-			type=1;
-			img=previousState;
-		}	
-	}
-	public boolean isOffScreen(){
+	private boolean isOffScreen(){
 		if(x>Level.map_width || x<0 || y<0 || y>Level.map_height){
 			Leeper aTile=this;
 			aTile.x=oldX;
@@ -190,9 +187,9 @@ public class Leeper extends Monster{
 		}
 		return false;
 	}
-	public void move() {
+	private void move() {
 		if(step_to_move==0 && Character.x%16==0 && Character.y%16==0){
-					getShortestPath();
+					shortestPath();
 					if(path_exist){
 						if(Path.size()>1)//since current position was top stack;//
 							Path.pop();
@@ -214,49 +211,44 @@ public class Leeper extends Monster{
 			}
 		if(step_to_move>0){	
 				switch(dir){
-				case Left:	if(shape.intersects(Character.x+2, Character.y, 32, 32)){
-								System.out.println(step_to_move);
+				case Left:	if(shape.intersects(Character.x+Character.targetX+2, Character.y, 32, 32)){
+								if(Character.targetX!=0)
+									x-=Character.targetX-Character.step;
+									Sound.Sleeper.setFramePosition(0);
+									Sound.Sleeper.start();
+									isSleeping=true;
+							}else	x-=2;
+							break;
+				case Right:	if(shape.intersects(Character.x-2-Character.targetX, Character.y, 32, 32)){
+								if(Character.targetX!=0)
+									x-=Character.targetX+Character.step;
+									Sound.Sleeper.setFramePosition(0);
+									Sound.Sleeper.start();
+									isSleeping=true;
+							}else x+=2;
+							break;
+				case Up:	if(shape.intersects(Character.x, Character.y+Character.targetX+2, 32, 32)){
+								if(Character.targetX!=0)
+									y+=Character.targetX+Character.step;
 								Sound.Sleeper.setFramePosition(0);
 								Sound.Sleeper.start();
 								isSleeping=true;
-								if(step_to_move!=16)
-									x+=step_to_move;
-							}else
-							x-=2;
+							}else y-=2;
 							break;
-				case Right:	if(shape.intersects(Character.x-2, Character.y, 32, 32)){
-					System.out.println(step_to_move);
+				case Down:	if(shape.intersects(Character.x, Character.y-Character.targetX-2, 32, 32)){
+								if(Character.targetX!=0)
+									y-=Character.targetX+Character.step;;
 								Sound.Sleeper.setFramePosition(0);
 								Sound.Sleeper.start();
 								isSleeping=true;
-								if(step_to_move!=16)
-									x-=step_to_move;
-							}else
-							x+=2;
+							}else y+=2;
 							break;
-				case Up:	if(shape.intersects(Character.x, Character.y+2, 32, 32)){
-								System.out.println(step_to_move);
-								Sound.Sleeper.setFramePosition(0);
-								Sound.Sleeper.start();
-								isSleeping=true;
-							}else
-							y-=2;
-							break;
-				case Down:	if(shape.intersects(Character.x, Character.y-2, 32, 32)){
-								System.out.println("target:"+Character.targetX);
-								System.out.println(step_to_move);
-								Sound.Sleeper.setFramePosition(0);
-								Sound.Sleeper.start();
-								isSleeping=true;
-							}else
-							y+=2;
-							break;
-				}
+						}
 				step_to_move-=2;
 			}
 		updateMask();
 	}
-	public void getShortestPath(){
+	private void shortestPath(){
 		Node goal=new Node(Character.x,Character.y);
 		ArrayList<Node> Open=new ArrayList<Node>();
 		ArrayList<Node> Closed=new ArrayList<Node>();

@@ -5,30 +5,16 @@ import javax.imageio.ImageIO;
 
 public class Snakey  extends Monster{
 	private final long nano=1000000L;
-	long last_animation_update;
+	private Animation SnakeyAnimation;
+	private BufferedImage spriteSheet[];
 	private long time_since_transform;
-	Animation SnakeyAnimation;
-	BufferedImage spriteSheet[];
+	
 	public Snakey(int x, int y, int type) {
 		super(x, y, type);
 		SnakeyAnimation=new Animation();
 		spriteSheet=new BufferedImage[2];
 		try {getImage();} catch (IOException e) {e.printStackTrace();}
 	}
-	private void getImage() throws IOException {
-		BufferedImage img=null;
-		if(super.type==20)
-			img=ImageIO.read(getClass().getResource("/tileset/worm_right.png"));
-		if(super.type==19)
-			img=ImageIO.read(getClass().getResource("/tileset/worm_left.png"));
-		for(int i=0;i<1;i++){//all animation on same row
-				 for(int j=0;j<2;j++){
-					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-				 }
-			 }
-			SnakeyAnimation.AddScene(spriteSheet[0], 1000);
-			SnakeyAnimation.AddScene(spriteSheet[1], 1000);
-		}
 	public void render(Graphics g){
 		updateAnimation();
 		checkState();
@@ -40,26 +26,6 @@ public class Snakey  extends Monster{
 				if(!isOffScreen())
 					g.drawImage(img,x,y,width,height,null);
 		}
-	}
-	public boolean isOffScreen(){
-		if(x>Level.map_width || x<0 || y<0 || y>Level.map_height){
-			Snakey aTile=this;
-			aTile.x=oldX;
-			aTile.y=oldY;
-			aTile.type=oldtype;
-			aTile.img=previousState;	
-			aTile.isMovingAcrossScreen=false;
-			aTile.TransformedState=0;
-			Level.addRespawn(aTile);
-			aTile.updateMask();
-			Level.toRemove.add(aTile);//remove the tile if it goes offscreen
-			return true;
-		}
-		return false;
-	}
-	public void updateAnimation(){
-		if(TransformedState==0)
-			SnakeyAnimation.setImage();
 	}
 	@Override
 	public void transform() {
@@ -79,5 +45,39 @@ public class Snakey  extends Monster{
 			type=1;
 			img=previousState;
 		}	
+	}
+	private void getImage() throws IOException {
+		BufferedImage img=null;
+		if(super.type==20)
+			img=ImageIO.read(getClass().getResource("/tileset/worm_right.png"));
+		if(super.type==19)
+			img=ImageIO.read(getClass().getResource("/tileset/worm_left.png"));
+		for(int i=0;i<1;i++){//all animation on same row
+				 for(int j=0;j<2;j++){
+					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
+				 }
+			 }
+			SnakeyAnimation.AddScene(spriteSheet[0], 1000);
+			SnakeyAnimation.AddScene(spriteSheet[1], 1000);
+		}
+	private boolean isOffScreen(){
+		if(x>Level.map_width || x<0 || y<0 || y>Level.map_height){
+			Snakey aTile=this;
+			aTile.x=oldX;
+			aTile.y=oldY;
+			aTile.type=oldtype;
+			aTile.img=previousState;	
+			aTile.isMovingAcrossScreen=false;
+			aTile.TransformedState=0;
+			Level.addRespawn(aTile);
+			aTile.updateMask();
+			Level.toRemove.add(aTile);//remove the tile if it goes offscreen
+			return true;
+		}
+		return false;
+	}
+	private void updateAnimation(){
+		if(TransformedState==0)
+			SnakeyAnimation.setImage();
 	}
 }

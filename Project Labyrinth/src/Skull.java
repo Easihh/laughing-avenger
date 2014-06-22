@@ -4,18 +4,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
-
 import javax.imageio.ImageIO;
 
 public class Skull extends Monster{
-	private BufferedImage[] skull_img;
 	private final long nano=1000000L;
-	private long time_since_transform;
-	private int step_to_move;
+	private Animation Skull;
 	private boolean path_exist=false;
-	Stack<Node> Path;
-	Animation Skull;
-	Node nextMovement;
+	private BufferedImage[] skull_img;
+	private int step_to_move;
+	private long time_since_transform;
+	private Node nextMovement;
+	private Stack<Node> Path;
+	
 	public Skull(int x,int y, int type) {
 		super(x, y, type);
 		Path=new Stack<Node>();
@@ -23,23 +23,6 @@ public class Skull extends Monster{
 		isActive=false;
 		Skull=new Animation();
 		getImage();
-	}
-	public void getImage(){
-		BufferedImage img=null;
-		skull_img=new BufferedImage[2];
-		try {img=ImageIO.read(getClass().getResource("/tileset/skull.png"));
-			} catch (IOException e) {e.printStackTrace();}
-		for(int i=0;i<1;i++){//all animation on same row
-			 for(int j=0;j<2;j++){
-				skull_img[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-			 }
-		 }
-		Skull.AddScene(skull_img[0], 500);
-		Skull.AddScene(skull_img[1], 500);
-	}
-	public void update(){
-		if(isActive)
-			move();
 	}
 	public void render(Graphics g){
 		checkState();
@@ -64,7 +47,35 @@ public class Skull extends Monster{
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;		
 	}
-	public boolean isOffScreen(){
+	public void update(){
+		if(isActive)
+			move();
+	}
+	private void checkState() {
+		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1){
+			TransformedState=2;
+			img=Level.monsterState[1];
+		}
+		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2){
+			TransformedState=0;
+			type=1;
+			img=previousState;
+		}	
+	}
+	private void getImage(){
+		BufferedImage img=null;
+		skull_img=new BufferedImage[2];
+		try {img=ImageIO.read(getClass().getResource("/tileset/skull.png"));
+			} catch (IOException e) {e.printStackTrace();}
+		for(int i=0;i<1;i++){//all animation on same row
+			 for(int j=0;j<2;j++){
+				skull_img[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
+			 }
+		 }
+		Skull.AddScene(skull_img[0], 500);
+		Skull.AddScene(skull_img[1], 500);
+	}
+	private boolean isOffScreen(){
 		if(x>Level.map_width || x<0 || y<0 || y>Level.map_height){
 			Skull aTile=this;
 			aTile.x=oldX;
@@ -81,18 +92,7 @@ public class Skull extends Monster{
 		}
 		return false;
 	}
-	private void checkState() {
-		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1){
-			TransformedState=2;
-			img=Level.monsterState[1];
-		}
-		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2){
-			TransformedState=0;
-			type=1;
-			img=previousState;
-		}	
-	}
-	public void move() {
+	private void move() {
 		if(step_to_move==0 && Character.x%16==0 && Character.y%16==0){
 					getShortestPath();
 					if(path_exist){
@@ -129,7 +129,7 @@ public class Skull extends Monster{
 			}
 		updateMask();
 	}
-	public void getShortestPath(){
+	private void getShortestPath(){
 		Node goal=new Node(Character.x,Character.y);
 		ArrayList<Node> Open=new ArrayList<Node>();
 		ArrayList<Node> Closed=new ArrayList<Node>();

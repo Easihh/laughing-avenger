@@ -47,7 +47,6 @@ public class Level {
 			toRespawn=new ArrayList<Tile>();
 			Respawn_Timer=new Vector<Long>();
 			game_tileset=new BufferedImage[100];
-			//Labyrinth.GameState=Game.GameState.Normal;
 			setBackground("start");
 			getGameTile();
 		} catch (IOException GameBackground) {
@@ -150,15 +149,9 @@ public class Level {
 		case "24": 	//DonMesusa Up-Down
 					Level.map_tile.add(new DonMedusa(coordX,coordY,2));
 					break;
-		case "29": 	//one-way down arrow
-					Level.map_tile.add(new OneWayArrow(coordX,coordY,14));
-					break;
-		case "30":	//rock wall
-					Level.map_tile.add(new Tile(coordX,coordY,30));
-					break;
 		case "25": 	//gol sleeping up
 					Level.map_tile.add(new Gol(coordX,coordY,7));
-					break;
+					break;	
 		case "26": 	//gol sleeping down
 					Level.map_tile.add(new Gol(coordX,coordY,8));
 					break;
@@ -167,6 +160,12 @@ public class Level {
 					break;
 		case "28": 	//gol sleeping right
 					Level.map_tile.add(new Gol(coordX,coordY,10));
+					break;			
+		case "29": 	//one-way down arrow
+					Level.map_tile.add(new OneWayArrow(coordX,coordY,14));
+					break;
+		case "30":	//rock wall
+					Level.map_tile.add(new Tile(coordX,coordY,30));
 					break;
 		case "32": 	//Leeper
 					Level.map_tile.add(new Leeper(coordX,coordY,16));

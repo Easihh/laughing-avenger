@@ -7,33 +7,33 @@ public class Medusa extends Monster {
 	private BufferedImage[] bullet_type;
 	private BufferedImage projectile_img;
 	private Game.Direction projectile_dir;
+
 	public Medusa(int x, int y, int type) {
 		super(x, y, type);
 		try {getImage();} catch (IOException e) {e.printStackTrace();}
 		canShoot=true;
 	}
-	public void getImage() throws IOException{
+	@Override
+	public void render(Graphics g) {
+		fireProjectile(g);
+		g.drawImage(img,x,y,width,height,null);
+	}
+	@Override
+	public void transform() {}//impossible to shot this monster
+	private void fireProjectile(Graphics g){
+		if(canShoot){
+			MultiDirectionSight();
+		}
+		if(projectile!=null && !canShoot)
+			projectile.render(g);
+	}
+	private void getImage() throws IOException{
 		img=Level.game_tileset[7];
 		bullet_type=new BufferedImage[4];
 		bullet_type[0]=ImageIO.read(getClass().getResource("/tileset/projectile/medusa_shot_right.png"));
 		bullet_type[1]=ImageIO.read(getClass().getResource("/tileset/projectile/medusa_shot_left.png"));
 		bullet_type[2]=ImageIO.read(getClass().getResource("/tileset/projectile/medusa_shot_down.png"));
 		bullet_type[3]=ImageIO.read(getClass().getResource("/tileset/projectile/medusa_shot_up.png"));
-	}
-	@Override
-	public void transform() {}//impossible to shot this monster
-
-	@Override
-	public void render(Graphics g) {
-		fireProjectile(g);
-		g.drawImage(img,x,y,width,height,null);
-	}
-	public void fireProjectile(Graphics g){
-		if(canShoot){
-			MultiDirectionSight();
-		}
-		if(projectile!=null && !canShoot)
-			projectile.render(g);
 	}
 	private void MultiDirectionSight(){
 		boolean shoot=false;

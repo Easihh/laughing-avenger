@@ -3,22 +3,40 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
 
 public class MainPanel extends JPanel {
-	static Level theLevel=new Level();
 	private static final long serialVersionUID = 1L;
+	private BufferedImage power_icon=null;
 	private Font font;
 	public static Character hero;
-	private BufferedImage power_icon=null;
+	public static Level theLevel=new Level();
+	
 	public MainPanel(){
 		setBackground(Color.black);	
 		loadSound();
 		font=new Font("Serif", Font.BOLD, 20);
 		loadPower();
+	}
+	public void paintComponent(Graphics g){
+			super.paintComponent(g);
+			theLevel.render(g);
+			g.setColor(Color.white);
+			g.drawImage(Character.projectile_img[0],528,128,null);
+			g.drawImage(power_icon, 528, 256,null);
+			g.drawImage(power_icon, 528, 288,null);
+			g.drawImage(power_icon, 528, 320,null);
+			g.setFont(font);
+			g.drawString("PW",528,240);
+			g.drawString(""+Character.ammo,536,180);
+			g.drawString("x:"+Character.x, 544, 64);
+			g.drawString("y:"+Character.y, 544, 96);
+			if(Labyrinth.GameState==Game.GameState.Death && !Character.Death.isDone)
+				Character.Death.render(g);
+			if(Labyrinth.GameState!=Game.GameState.Death)
+				hero.render(g);
 	}
 	private void loadPower() {
 		try {
@@ -40,23 +58,5 @@ public class MainPanel extends JPanel {
 		aSound=new Sound("PowerUsed");
 		aSound=new Sound("Sleeper");
 		Sound.StageMusic.loop(Clip.LOOP_CONTINUOUSLY);	
-	}
-	public void paintComponent(Graphics g){
-			super.paintComponent(g);
-			theLevel.render(g);
-			g.setColor(Color.white);
-			g.drawImage(Character.projectile_img[0],528,128,null);
-			g.drawImage(power_icon, 528, 256,null);
-			g.drawImage(power_icon, 528, 288,null);
-			g.drawImage(power_icon, 528, 320,null);
-			g.setFont(font);
-			g.drawString("PW",528,240);
-			g.drawString(""+Character.ammo,536,180);
-			g.drawString("x:"+Character.x, 544, 64);
-			g.drawString("y:"+Character.y, 544, 96);
-			if(Labyrinth.GameState==Game.GameState.Death && !Character.Death.isDone)
-				Character.Death.render(g);
-			if(Labyrinth.GameState!=Game.GameState.Death)
-				hero.render(g);
 	}
 }

@@ -7,14 +7,61 @@ import javax.imageio.ImageIO;
 
 public class Gol extends Monster {
 	private final long nano=1000000000L;
+	private BufferedImage projectile_img;
+	private Game.Direction projectile_dir;
 	private long time_since_transform;
-	BufferedImage projectile_img;
-	Game.Direction projectile_dir;
+	
 	public Gol(int x, int y, int type) {
 		super(x, y, type);
 		try {getImg();} catch (IOException e) {e.printStackTrace();}
 	}
 
+	@Override
+	public void render(Graphics g) {
+		checkState();
+		if(isMovingAcrossScreen)
+			super.updateLocation();
+		if(!isOffScreen()){
+			fireProjectile(g);
+			g.drawImage(img,x,y,width,height,null);
+		}
+	}
+	@Override
+	public void transform() {
+		previousState=img;
+		oldtype=type;
+		type=2;
+		img=Level.monsterState[0];
+		time_since_transform=System.nanoTime();	
+		TransformedState=1;
+	}
+
+	private void checkState() {
+		if((System.nanoTime()-time_since_transform)/nano>7 && TransformedState==1){
+			TransformedState=2;
+			img=Level.monsterState[1];
+		}
+		if((System.nanoTime()-time_since_transform)/nano>10 && TransformedState==2){
+			TransformedState=0;
+			type=oldtype;
+			img=previousState;
+		}	
+	}
+	private void fireProjectile(Graphics g) {
+		if(canShoot){
+				if(LineofSight()){
+					projectile=new Projectile(x,y,projectile_img,projectile_dir);
+					Sound.DragonSound.stop();
+					Sound.DragonSound.setFramePosition(0);
+					Sound.DragonSound.start();
+					canShoot=false;
+					projectile.projectile_speed=3;
+				}
+			}
+		if(projectile!=null && !canShoot){
+			projectile.render(g);
+		}	
+	}
 	private void getImg() throws IOException {
 		switch(type){
 		case 7:	projectile_img=ImageIO.read(getClass().getResource("/tileset/projectile/dragon_shot_up.png"));
@@ -32,40 +79,7 @@ public class Gol extends Monster {
 		}
 		
 	}
-
-	@Override
-	public void transform() {
-		previousState=img;
-		oldtype=type;
-		type=2;
-		img=Level.monsterState[0];
-		time_since_transform=System.nanoTime();	
-		TransformedState=1;
-	}
-
-	@Override
-	public void render(Graphics g) {
-		checkState();
-		if(isMovingAcrossScreen)
-			super.updateLocation();
-		if(!isOffScreen()){
-			fireProjectile(g);
-			g.drawImage(img,x,y,width,height,null);
-		}
-	}
-
-	private void checkState() {
-		if((System.nanoTime()-time_since_transform)/nano>7 && TransformedState==1){
-			TransformedState=2;
-			img=Level.monsterState[1];
-		}
-		if((System.nanoTime()-time_since_transform)/nano>10 && TransformedState==2){
-			TransformedState=0;
-			type=oldtype;
-			img=previousState;
-		}	
-	}
-	public boolean isOffScreen(){
+	private boolean isOffScreen(){
 		if(x>Level.map_width || x<0 || y<0 || y>Level.map_height){
 			Gol aTile=this;
 			aTile.x=oldX;
@@ -80,21 +94,6 @@ public class Gol extends Monster {
 			return true;
 		}
 		return false;
-	}
-	private void fireProjectile(Graphics g) {
-		if(canShoot){
-				if(LineofSight()){
-					projectile=new Projectile(x,y,projectile_img,projectile_dir);
-					Sound.DragonSound.stop();
-					Sound.DragonSound.setFramePosition(0);
-					Sound.DragonSound.start();
-					canShoot=false;
-					projectile.projectile_speed=3;
-				}
-			}
-		if(projectile!=null && !canShoot){
-			projectile.render(g);
-		}	
 	}
 	private boolean LineofSight() {
 		switch(type){

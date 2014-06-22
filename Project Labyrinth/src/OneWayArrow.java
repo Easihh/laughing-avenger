@@ -8,7 +8,10 @@ public class OneWayArrow  extends Tile{
 		isSolid=false;
 		getImage();
 	}
-	public void getImage(){
+	public void render(Graphics g){
+		g.drawImage(img,x,y,null);	
+	}
+	private void getImage(){
 		switch(type){
 		case 11:	super.img=Level.game_tileset[15]; //up
 					break;
@@ -19,8 +22,5 @@ public class OneWayArrow  extends Tile{
 		case 14:	super.img=Level.game_tileset[28];//down
 					break;
 		}
-	}
-	public void render(Graphics g){
-		g.drawImage(img,x,y,null);	
 	}
 }

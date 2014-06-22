@@ -3,22 +3,28 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-
 public class Death {
-	int width=32;
-	int height=32;
-	BufferedImage img;
-	BufferedImage[] animation;
-	Animation Death;
-	final long nano=1000000L;
-	long time_since_last_animation=0;
-	boolean isDone=false;
+	private final long nano=1000000L;
+	private final int  width=32;
+	private final int height=32;
+	private Animation Death;
+	private BufferedImage img;
+	private BufferedImage[] animation;
+	public boolean isDone=false;
+	
 	public Death(){
 		Death=new Animation();
 		getSpriteFromSheet();
-		time_since_last_animation=System.nanoTime();
 	}
-
+	
+	public void render(Graphics g){
+		isDone();
+		if(!isDone){
+			Death.setImage();
+			g.drawImage(Death.getImage(),Character.x,Character.y,width,height,null);
+		}
+	}
+	
 	private void getSpriteFromSheet() {
 		int maxFrame=4;
 		animation=new BufferedImage[50];
@@ -38,13 +44,6 @@ public class Death {
 		 Death.AddScene(animation[1], 100);
 		 Death.AddScene(animation[2], 100);
 		 Death.AddScene(animation[3], 500);
-	}
-	public void render(Graphics g){
-		isDone();
-		if(!isDone){
-			Death.setImage();
-			g.drawImage(Death.getImage(),Character.x,Character.y,width,height,null);
-		}
 	}
 	private void isDone(){
 		if(Death.index==9){

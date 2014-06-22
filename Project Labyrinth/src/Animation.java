@@ -1,24 +1,19 @@
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.util.Vector;
 
 
 public class Animation {
 	private final long nano=1000000L;
-	Vector<Scene> myScene;
-	public BufferedImage[] animation=null;
+	private Vector<Scene> myScene;
 	public int index;
-	public long total_time;
 	public long last_update;
 	public Animation(){
 		myScene=new Vector<Scene>();
 		index=0;
-		total_time=0;
 		last_update=System.nanoTime();
 	}
 	public void AddScene(Image img, long duration){
 		myScene.add(new Scene(img,duration));
-		total_time+=duration;
 	}
 	public Image getImage(){
 		return myScene.get(index).img;
@@ -33,15 +28,14 @@ public class Animation {
 			index=0;
 		last_update=System.nanoTime();
 	}
-	public void reset(){
-		myScene.get(index).current_duration=0;
-		index=0;
-	}
 	public void replaceAnimation(Image img){
 		index=0;
 		myScene.clear();
-		total_time=0;
 		myScene.add(new Scene(img,0));
+	}
+	public void reset(){
+		myScene.get(index).current_duration=0;
+		index=0;
 	}
 	public long getSceneMaxDuration(int i){
 		return myScene.get(i).max_duration;

@@ -6,12 +6,12 @@ public class Projectile {
 	private BufferedImage img=null;	
 	private final int height=32;
 	private final int width=32;
-	int projectile_speed=6;
-	
+	public int projectile_speed=6;	
 	public Game.Direction dir;
 	public int x;
 	public int y;
 	public Polygon shape;
+
 	public Projectile(int x,int y,BufferedImage img,Game.Direction dir){
 		this.x=x;
 		this.y=y;

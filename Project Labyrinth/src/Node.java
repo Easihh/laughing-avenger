@@ -1,11 +1,10 @@
 import java.awt.Point;
 	public class Node implements Comparable<Node>{
-	Point data=null;
-	boolean visited=false;
-	int Gscore=0;
-	int Fscore=0;
-	int Hscore=0;
-	Node parent=null;
+	private int Fscore=0;
+	private int Hscore=0;
+	public 	int Gscore=0;
+	public Point data=null;
+	public Node parent=null;
 	public Node(int x,int y){
 		data=new Point(x,y);
 		}

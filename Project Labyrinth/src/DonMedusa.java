@@ -5,11 +5,12 @@ import javax.imageio.ImageIO;
 
 
 public class DonMedusa extends Monster {
+	private Animation DonMedusaAnimation;
 	private BufferedImage[] bullet_type;
-	private Game.Direction projectile_dir;
 	private BufferedImage projectile_img;
-	BufferedImage[] spriteSheet;
-	Animation DonMedusaAnimation;
+	private BufferedImage[] spriteSheet;
+	private Game.Direction projectile_dir;
+	
 	public DonMedusa(int x, int y, int type) {
 		super(x, y, type);
 		DonMedusaAnimation=new Animation();
@@ -39,24 +40,48 @@ public class DonMedusa extends Monster {
 	}
 
 	@Override
-	public void transform() {}//impossible to hit this monster
-
-	@Override
 	public void render(Graphics g) {
 		if(projectile!=null && !canShoot)
 			projectile.render(g);
 		g.drawImage(DonMedusaAnimation.getImage(), x,y,width,height,null);
 	}
-	public void fireProjectile(){
-		if(canShoot)
-			MultiDirectionSight();
-	}
+	@Override
+	public void transform() {}//impossible to hit this monster
+	
 	public void update(){
 		fireProjectile();
 		if(Labyrinth.GameState==Game.GameState.Normal)
 			move();
 		fireProjectile();
 		DonMedusaAnimation.setImage();
+	}
+	
+	private void fireProjectile(){
+		if(canShoot)
+			MultiDirectionSight();
+	}
+	private void move() {
+		switch(dir){
+		case Left: 	if(checkCollison(x-1, y, x-1, y+height-1)){
+						dir=Game.Direction.Right;
+					}else x-=2;
+					break;
+		case Right: if(checkCollison(x+width, y+height-1, x+width, y)){
+						dir=Game.Direction.Left;
+					}else x+=2;
+					break;
+		case Up: if(checkCollison(x+width-1, y-1, x, y-1)){
+						dir=Game.Direction.Down;
+					}else
+					y-=2;
+					break;
+		case Down: if(checkCollison(x+width-1, y+height, x, y+height)){
+					dir=Game.Direction.Up;
+					}else
+					y+=2;
+					break;
+		}
+		updateMask();
 	}
 	private void MultiDirectionSight(){
 		boolean shoot=false;
@@ -104,28 +129,5 @@ public class DonMedusa extends Monster {
 			Sound.StageMusic.stop();
 			Labyrinth.GameState=Game.GameState.Paused;
 		}
-	}
-	public void move() {
-		switch(dir){
-		case Left: 	if(checkCollison(x-1, y, x-1, y+height-1)){
-						dir=Game.Direction.Right;
-					}else x-=2;
-					break;
-		case Right: if(checkCollison(x+width, y+height-1, x+width, y)){
-						dir=Game.Direction.Left;
-					}else x+=2;
-					break;
-		case Up: if(checkCollison(x+width-1, y-1, x, y-1)){
-						dir=Game.Direction.Down;
-					}else
-					y-=2;
-					break;
-		case Down: if(checkCollison(x+width-1, y+height, x, y+height)){
-					dir=Game.Direction.Up;
-					}else
-					y+=2;
-					break;
-		}
-		updateMask();
 	}
 }

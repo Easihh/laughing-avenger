@@ -3,17 +3,17 @@ import java.io.IOException;
 import javax.sound.sampled.*;
 
 public class Sound {
-	static Clip StageMusic;
-	static Clip HeartSound;
-	static Clip DoorOpen;
-	static Clip MedusaSound;
-	static Clip	DragonSound;
-	static Clip	ShotSound;
-	static Clip	MonsterDestroyed;
-	static Clip ChestOpen;
-	static Clip Death;
-	static Clip PowerUsed;
-	static Clip Sleeper;
+	public static Clip 	ChestOpen;
+	public static Clip 	Death;
+	public static Clip 	DoorOpen;
+	public static Clip	DragonSound;
+	public static Clip 	HeartSound;
+	public static Clip 	MedusaSound;
+	public static Clip	MonsterDestroyed;
+	public static Clip 	PowerUsed;
+	public static Clip 	Sleeper;
+	public static Clip	ShotSound;
+	public static Clip 	StageMusic;
     public Sound(String Filename) {
         File Sound= new File("src/Sound/"+Filename+".wav");
         Clip clip;

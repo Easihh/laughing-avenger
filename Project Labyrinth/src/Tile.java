@@ -31,64 +31,12 @@ public class Tile implements Comparable<Tile> {
 		int[] ypoints={y,y,y+height,y+height};
 		shape=new Polygon(xpoints, ypoints, 4);
 	}
-	private void getImage() {
-		switch(type){
-		case 91: 	img=Level.game_tileset[41];//up-down ladder
-					isSolid=false;
-					break;
-		case 92: 	img=Level.game_tileset[40];//right ladder
-					isSolid=false;
-					break;
-		case 93: 	img=Level.game_tileset[33];//left ladder
-					isSolid=false;
-					break;
-		case 94: 	img=Level.game_tileset[2];//heart give no ammo
-					break;
-		case 95: 	img=Level.game_tileset[32];//water
-					break;
-		case 96: 	img=Level.game_tileset[1];//door closed
-					break;
-		case 97: 	img=Level.game_tileset[17];//chest bottom empty
-					break;
-		case 98: 	img=Level.game_tileset[16];//chest open top
-					break;
-		case 1: 	img=Level.game_tileset[0];//rock
-					break;	
-		case 2: 	img=Level.game_tileset[8];//moveable block
-					depth=2;
-					break;
-		case 3: 	img=Level.game_tileset[2];//heart give ammo
-					break;
-		case 4: 	img=Level.game_tileset[10];//chest closed
-					break;
-		case 5: 	img=Level.game_tileset[11];//chest open bottom
-					break;
-		case 6: 	img=Level.game_tileset[9];//tree
-					break;
-		case 30: 	img=Level.game_tileset[29];//rockwall
-					break;
-		}
-		
-	}
 	public Tile(Image image) {
 		img=image;
 		type=99;// we have a background
 	}
-	public boolean checkCollison(int x1,int y1,int x2,int y2) {
-		for(Tile aTile:Level.map_tile){
-			if(aTile.shape.contains(x1,y1)|| aTile.shape.contains(x2,y2)){
-				return true;
-			}
-		}
-		return false;
-	}
 	public int getType(){
 		return type;
-	}
-	public void updateMask(){
-		int[] xpoints={x,x+width,x+width,x};
-		int[] ypoints={y,y,y+height,y+height};
-		shape=new Polygon(xpoints, ypoints, 4);
 	}
 	public void render(Graphics g) {
 		g.setColor(Color.BLUE);
@@ -102,8 +50,30 @@ public class Tile implements Comparable<Tile> {
 		else
 			g.drawImage(img,x,y,width,height,null);
 	}
-	public void update(){}
-	protected boolean Object_inBetween(String direction) {
+	public boolean checkCollison(int x1,int y1,int x2,int y2) {
+		for(Tile aTile:Level.map_tile){
+			if(aTile.shape.contains(x1,y1)|| aTile.shape.contains(x2,y2)){
+				return true;
+			}
+		}
+		return false;
+	}
+	@Override
+	public int compareTo(Tile anotherTile) {
+		if(depth<anotherTile.depth)return -1;
+		if(depth==anotherTile.depth)return 0;
+		return 1;
+	}
+	public void moveAcross_Screen(Game.Direction direction){
+		shape.reset();//tile can now pass through everything
+		isMovingAcrossScreen = true;
+		dir=direction;
+		Sound.ShotSound.stop();
+		Sound.MonsterDestroyed.stop();
+		Sound.MonsterDestroyed.setFramePosition(0);
+		Sound.MonsterDestroyed.start();
+	}
+	public boolean Object_inBetween(String direction) {
 		switch(direction){
 		case "Down":	for(Tile aTile:Level.map_tile){
 						for(int i=y;i<=Character.y;i+=2){
@@ -141,67 +111,6 @@ public class Tile implements Comparable<Tile> {
 										return true;
 							}
 						}		
-					break;
-		}
-		return false;
-	}
-	public void updateLocation() {
-		switch(dir){
-		case Left:	x-=12;
-					break;
-		case Right:	x+=12;
-					break;
-		case Down:	y+=12;
-					break;
-		case Up:	y-=12;
-					break;
-		}
-	}
-	public void moveAcross_Screen(Game.Direction direction){
-		shape.reset();//tile can now pass through everything
-		isMovingAcrossScreen = true;
-		dir=direction;
-		Sound.ShotSound.stop();
-		Sound.MonsterDestroyed.stop();
-		Sound.MonsterDestroyed.setFramePosition(0);
-		Sound.MonsterDestroyed.start();
-	}
-	public void setType(int i) {
-		type=i;	
-	}
-	@Override
-	public int compareTo(Tile anotherTile) {
-		if(depth<anotherTile.depth)return -1;
-		if(depth==anotherTile.depth)return 0;
-		return 1;
-	}
-	private boolean getCollidingTile(int x1,int y1) {
-		Tile thisTile=this;
-		for(Tile aTile:Level.map_tile){
-			if(aTile.shape.contains(x1,y1)){
-				if(aTile!=thisTile){
-					collision_tile=aTile;
-					return true;
-				}
-			}
-		}
-		collision_tile=null;
-		return false;
-	}
-	private boolean checkArrow(int type) {
-		switch(type){
-		case 11:	//one-way up arrow
-					if(y<=collision_tile.y)
-						return true;
-					break;
-		case 12:	if(x<=collision_tile.x)
-						return true;
-					break;
-		case 13:	if(x>=collision_tile.x)
-						return true;
-					break;
-		case 14:  	if(y>=collision_tile.y)
-						return true;
 					break;
 		}
 		return false;
@@ -403,5 +312,93 @@ public class Tile implements Comparable<Tile> {
 		int[] ypoints={y,y,y+height,y+height};
 		shape=new Polygon(xpoints, ypoints, 4);
 	}
-
+	public void setType(int i) {
+		type=i;
+	}
+	public void update(){}
+	public void updateLocation() {
+		switch(dir){
+		case Left:	x-=12;
+					break;
+		case Right:	x+=12;
+					break;
+		case Down:	y+=12;
+					break;
+		case Up:	y-=12;
+					break;
+		}
+	}
+	public void updateMask(){
+		int[] xpoints={x,x+width,x+width,x};
+		int[] ypoints={y,y,y+height,y+height};
+		shape=new Polygon(xpoints, ypoints, 4);
+	}
+	private boolean checkArrow(int type) {
+		switch(type){
+		case 11:	//one-way up arrow
+					if(y<=collision_tile.y)
+						return true;
+					break;
+		case 12:	if(x<=collision_tile.x)
+						return true;
+					break;
+		case 13:	if(x>=collision_tile.x)
+						return true;
+					break;
+		case 14:  	if(y>=collision_tile.y)
+						return true;
+					break;
+		}
+		return false;
+	}
+	private boolean getCollidingTile(int x1,int y1) {
+		Tile thisTile=this;
+		for(Tile aTile:Level.map_tile){
+			if(aTile.shape.contains(x1,y1)){
+				if(aTile!=thisTile){
+					collision_tile=aTile;
+					return true;
+				}
+			}
+		}
+		collision_tile=null;
+		return false;
+	}
+	private void getImage() {
+		switch(type){
+		case 1: 	img=Level.game_tileset[0];//rock
+					break;	
+		case 2: 	img=Level.game_tileset[8];//moveable block
+					depth=2;
+					break;
+		case 3: 	img=Level.game_tileset[2];//heart give ammo
+					break;
+		case 4: 	img=Level.game_tileset[10];//chest closed
+					break;
+		case 5: 	img=Level.game_tileset[11];//chest open bottom
+					break;
+		case 6: 	img=Level.game_tileset[9];//tree
+					break;
+		case 30: 	img=Level.game_tileset[29];//rockwall
+					break;
+		case 91: 	img=Level.game_tileset[41];//up-down ladder
+					isSolid=false;
+					break;
+		case 92: 	img=Level.game_tileset[40];//right ladder
+					isSolid=false;
+					break;
+		case 93: 	img=Level.game_tileset[33];//left ladder
+					isSolid=false;
+					break;
+		case 94: 	img=Level.game_tileset[2];//heart give no ammo
+					break;
+		case 96: 	img=Level.game_tileset[1];//door closed
+					break;
+		case 97: 	img=Level.game_tileset[17];//chest bottom empty
+					break;
+		case 98: 	img=Level.game_tileset[16];//chest open top
+					break;			
+		}
+		
+	}
 }

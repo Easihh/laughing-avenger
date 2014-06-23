@@ -32,6 +32,8 @@ public class Level {
 	public static int heart_amount;
 	public static ArrayList<Tile> map_tile;
 	public static ArrayList<Tile> toRemove;
+	public static ArrayList<Tile> toDelete;
+	public static ArrayList<Tile> toAdd;
 	public static int[] Power;/// 1=Hammer, 2=Ladder, 3=Arrow Changer
 	public static BufferedImage[] game_tileset;
 	public static BufferedImage[] monsterState;
@@ -45,6 +47,8 @@ public class Level {
 			heart_amount=0;
 			map_tile=new ArrayList<Tile>();
 			toRemove=new ArrayList<Tile>();
+			toAdd=new ArrayList<Tile>();
+			toDelete=new ArrayList<Tile>();
 			toRespawn=new ArrayList<Tile>();
 			Respawn_Timer=new Vector<Long>();
 			game_tileset=new BufferedImage[100];
@@ -206,6 +210,13 @@ public class Level {
 		goal.render(g);
 		if(goal_top!=null)
 			goal_top.render(g);
+		if(toDelete!=null || toAdd!=null){
+			map_tile.removeAll(toDelete);
+			map_tile.addAll(toAdd);
+			toAdd.clear();
+			toDelete.clear();
+			Collections.sort(map_tile);
+		}
 		for(Tile aTile:map_tile){
 			aTile.render(g);
 		}

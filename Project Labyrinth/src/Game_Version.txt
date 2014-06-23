@@ -1,3 +1,7 @@
+Version 0.35A:
+
+-Fixed a bug where using power could cause concurrent thread issues.
+
 Version 0.35:
 
 -Fixed an issue with new sound from last Version to cause restart Level to crash.

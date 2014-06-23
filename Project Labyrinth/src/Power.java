@@ -1,19 +1,13 @@
 import java.awt.Rectangle;
-import java.util.Collections;
-
 
 public class Power {
 	Tile colliding_tile1=null;
 	Tile colliding_tile2=null;
-	Tile toDelete=null;
-	Tile toAdd=null;
 	public Power(){
 		Sound.HammerPowerUsed.setFramePosition(0);
 		Sound.ArrowBridgePowerUsed.setFramePosition(0);
 	}
 	public	void useLadder() {
-		toDelete=null;
-		toAdd=null;
 		switch(Character.dir){
 		case Up:	colliding_tile1=getCollidingTile(new Rectangle(Character.x,Character.y-Character.step,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(Character.x+Character.step,Character.y-Character.step,16,16));
@@ -21,18 +15,13 @@ public class Power {
 						if(colliding_tile1==colliding_tile2)
 							for(Tile aTile:Level.map_tile){
 								if(aTile==colliding_tile1){
-									toDelete=aTile;
-									toAdd=new Tile(Character.x,Character.y-32,91);
+									Level.toDelete.add(aTile);
+									Level.toAdd.add(new Tile(aTile.x,aTile.y,91));
+									Sound.ArrowBridgePowerUsed.start();
+									//Character.powerActivated_ladder=false;
+									deletePower(2);
 								}
 							}
-					if(toDelete!=null){
-						Level.map_tile.add(toAdd);
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.ArrowBridgePowerUsed.start();
-						//Character.powerActivated_ladder=false;
-						deletePower(2);
-					}
 					break;
 		case Down:	colliding_tile1=getCollidingTile(new Rectangle(Character.x,Character.y+32,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(Character.x+Character.step,Character.y+32,16,16));
@@ -40,18 +29,13 @@ public class Power {
 						if(colliding_tile1==colliding_tile2)
 							for(Tile aTile:Level.map_tile){
 								if(aTile==colliding_tile1){
-									toDelete=aTile;
-									toAdd=new Tile(Character.x,Character.y+32,91);
+									Level.toDelete.add(aTile);
+									Level.toAdd.add(new Tile(aTile.x,aTile.y,91));
+									Sound.ArrowBridgePowerUsed.start();
+									//Character.powerActivated_ladder=false;
+									deletePower(2);
 								}
 							}
-					if(toDelete!=null){
-						Level.map_tile.add(toAdd);
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.ArrowBridgePowerUsed.start();
-						//Character.powerActivated_ladder=false;
-						deletePower(2);
-					}
 					break;
 		case Left:	colliding_tile1=getCollidingTile(new Rectangle(Character.x-Character.step,Character.y,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(Character.x-Character.step,Character.y+Character.step,16,16));
@@ -59,18 +43,13 @@ public class Power {
 						if(colliding_tile1==colliding_tile2)
 							for(Tile aTile:Level.map_tile){
 								if(aTile==colliding_tile1){
-									toDelete=aTile;
-									toAdd=new Tile(Character.x-32,Character.y,93);
+									Level.toDelete.add(aTile);
+									Level.toAdd.add(new Tile(aTile.x,aTile.y,93));
+									Sound.ArrowBridgePowerUsed.start();
+									//Character.powerActivated_ladder=false;
+									deletePower(2);
 								}
 							}
-					if(toDelete!=null){
-						Level.map_tile.add(toAdd);
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.ArrowBridgePowerUsed.start();
-						//Character.powerActivated_ladder=false;
-						deletePower(2);
-					}
 					break;
 		case Right:	colliding_tile1=getCollidingTile(new Rectangle(Character.x+32,Character.y,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(Character.x+32,Character.y+Character.step,16,16));
@@ -78,24 +57,17 @@ public class Power {
 						if(colliding_tile1==colliding_tile2)
 							for(Tile aTile:Level.map_tile){
 								if(aTile==colliding_tile1){
-									toDelete=aTile;
-									toAdd=new Tile(Character.x+32,Character.y,92);
+									Level.toDelete.add(aTile);
+									Level.toAdd.add(new Tile(aTile.x,aTile.y,92));
+									Sound.ArrowBridgePowerUsed.start();
+									//Character.powerActivated_ladder=false;
+									deletePower(2);
 								}
 							}
-					if(toDelete!=null){
-						Level.map_tile.add(toAdd);
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.ArrowBridgePowerUsed.start();
-						//Character.powerActivated_ladder=false;
-						deletePower(2);
-					}
 					break;
 			}
 	}
 	public void useHammer() {
-		toDelete=null;
-		toAdd=null;
 		switch(Character.dir){
 		case Up:	colliding_tile1=getCollidingTile(new Rectangle(Character.x,Character.y-Character.step,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(Character.x+Character.step,Character.y-Character.step,16,16));
@@ -104,16 +76,12 @@ public class Power {
 							if(colliding_tile1==colliding_tile2)
 								for(Tile aTile:Level.map_tile){
 									if(aTile==colliding_tile1){
-										toDelete=aTile;
+										Level.toDelete.add(aTile);
+										Sound.HammerPowerUsed.start();
+										//Character.powerActivated_hammer=false;
+										deletePower(1);
 									}
 								}
-					if(toDelete!=null){;
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.HammerPowerUsed.start();
-						//Character.powerActivated_hammer=false;
-						deletePower(1);
-					}
 					break;
 		case Down:	colliding_tile1=getCollidingTile(new Rectangle(Character.x,Character.y+32,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(Character.x+Character.step,Character.y+32,16,16));
@@ -122,16 +90,12 @@ public class Power {
 							if(colliding_tile1==colliding_tile2)
 								for(Tile aTile:Level.map_tile){
 									if(aTile==colliding_tile1){
-										toDelete=aTile;
+										Level.toDelete.add(aTile);
+										Sound.HammerPowerUsed.start();
+										//Character.powerActivated_hammer=false;
+										deletePower(1);
 									}
 								}
-					if(toDelete!=null){
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.HammerPowerUsed.start();
-						//Character.powerActivated_hammer=false;
-						deletePower(1);
-					}
 					break;
 		case Left:	colliding_tile1=getCollidingTile(new Rectangle(Character.x-Character.step,Character.y,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(Character.x-Character.step,Character.y+Character.step,16,16));
@@ -140,16 +104,12 @@ public class Power {
 							if(colliding_tile1==colliding_tile2)
 								for(Tile aTile:Level.map_tile){
 									if(aTile==colliding_tile1){
-										toDelete=aTile;
+										Level.toDelete.add(aTile);
+										Sound.HammerPowerUsed.start();
+										//Character.powerActivated_hammer=false;
+										deletePower(1);
 									}
 								}
-					if(toDelete!=null){
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.HammerPowerUsed.start();
-						//Character.powerActivated_hammer=false;
-						deletePower(1);
-					}
 					break;
 		case Right:	colliding_tile1=getCollidingTile(new Rectangle(Character.x+32,Character.y,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(Character.x+32,Character.y+Character.step,16,16));
@@ -158,22 +118,16 @@ public class Power {
 							if(colliding_tile1==colliding_tile2)
 								for(Tile aTile:Level.map_tile){
 									if(aTile==colliding_tile1){
-										toDelete=aTile;
+										Level.toDelete.add(aTile);
+										//Character.powerActivated_hammer=false;
+										Sound.HammerPowerUsed.start();
+										deletePower(1);
 									}
 								}
-					if(toDelete!=null){
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						//Character.powerActivated_hammer=false;
-						Sound.HammerPowerUsed.start();
-						deletePower(1);
-					}
 					break;
 			}
 	}
 	public void useArrow() {
-		toDelete=null;
-		toAdd=null;
 		switch(Character.dir){
 		case Up:	colliding_tile1=getCollidingTile(new Rectangle(Character.x,Character.y-Character.step,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(Character.x+Character.step,Character.y-Character.step,16,16));
@@ -181,19 +135,14 @@ public class Power {
 						if(colliding_tile1==colliding_tile2)
 							for(Tile aTile:Level.map_tile){
 								if(aTile==colliding_tile1){
-									toDelete=aTile;
+									Level.toDelete.add(aTile);
 									int type=getNewArrow(aTile);
-									toAdd=new OneWayArrow(aTile.x,aTile.y,type);
+									Level.toAdd.add((new OneWayArrow(aTile.x,aTile.y,type)));
+									Sound.ArrowBridgePowerUsed.start();
+									//Character.powerActivated_arrowr=false;
+									deletePower(3);
 								}
 							}
-					if(toDelete!=null){
-						Level.map_tile.add(toAdd);
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.ArrowBridgePowerUsed.start();
-						//Character.powerActivated_arrowr=false;
-						deletePower(3);
-					}
 					break;
 		case Down:	colliding_tile1=getCollidingTile(new Rectangle(Character.x,Character.y+32,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(Character.x+Character.step,Character.y+32,16,16));
@@ -201,19 +150,14 @@ public class Power {
 						if(colliding_tile1==colliding_tile2)
 							for(Tile aTile:Level.map_tile){
 								if(aTile==colliding_tile1){
-									toDelete=aTile;
+									Level.toDelete.add(aTile);
 									int type=getNewArrow(aTile);
-									toAdd=new OneWayArrow(aTile.x,aTile.y,type);
+									Level.toAdd.add((new OneWayArrow(aTile.x,aTile.y,type)));
+									Sound.ArrowBridgePowerUsed.start();
+									//Character.powerActivated_arrowr=false;
+									deletePower(3);
 								}
 							}
-					if(toDelete!=null){
-						Level.map_tile.add(toAdd);
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.ArrowBridgePowerUsed.start();
-						//Character.powerActivated_ladder=false;
-						deletePower(3);
-					}
 					break;
 		case Left:	colliding_tile1=getCollidingTile(new Rectangle(Character.x-Character.step,Character.y,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(Character.x-Character.step,Character.y+Character.step,16,16));
@@ -221,19 +165,14 @@ public class Power {
 						if(colliding_tile1==colliding_tile2)
 							for(Tile aTile:Level.map_tile){
 								if(aTile==colliding_tile1){
+									Level.toDelete.add(aTile);
 									int type=getNewArrow(aTile);
-									toDelete=aTile;
-									toAdd=new OneWayArrow(aTile.x,aTile.y,type);
+									Level.toAdd.add((new OneWayArrow(aTile.x,aTile.y,type)));
+									Sound.ArrowBridgePowerUsed.start();
+									//Character.powerActivated_arrowr=false;
+									deletePower(3);
 								}
 							}
-					if(toDelete!=null){
-						Level.map_tile.add(toAdd);
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.ArrowBridgePowerUsed.start();
-						//Character.powerActivated_ladder=false;
-						deletePower(3);
-					}
 					break;
 		case Right:	colliding_tile1=getCollidingTile(new Rectangle(Character.x+32,Character.y,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(Character.x+32,Character.y+Character.step,16,16));
@@ -241,19 +180,14 @@ public class Power {
 						if(colliding_tile1==colliding_tile2)
 							for(Tile aTile:Level.map_tile){
 								if(aTile==colliding_tile1){
+									Level.toDelete.add(aTile);
 									int type=getNewArrow(aTile);
-									toDelete=aTile;
-									toAdd=new OneWayArrow(aTile.x,aTile.y,type);
+									Level.toAdd.add((new OneWayArrow(aTile.x,aTile.y,type)));
+									Sound.ArrowBridgePowerUsed.start();
+									//Character.powerActivated_arrowr=false;
+									deletePower(3);
 								}
 							}
-					if(toDelete!=null){
-						Level.map_tile.add(toAdd);
-						Level.map_tile.remove(toDelete);
-						Collections.sort(Level.map_tile);
-						Sound.ArrowBridgePowerUsed.start();
-						//Character.powerActivated_ladder=false;
-						deletePower(3);
-					}
 					break;
 			}
 	}

@@ -85,9 +85,9 @@ public class Level {
 	}
 	private void verifyPowerAllowed() {
 		if(room==1){
-			Power[0]=2;
-			//Power[1]=1;
-			//Power[2]=3;
+			Power[0]=1;
+			Power[1]=2;
+			Power[2]=3;
 		}
 		
 	}

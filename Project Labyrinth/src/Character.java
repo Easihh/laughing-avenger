@@ -42,10 +42,6 @@ public class Character {
 	public static Projectile weapon=null;
 	public static Death Death;
 	public static Point lastPosition;
-	public static Rectangle topleftMask=new Rectangle(x,y,16,16);
-	public static Rectangle toprightMask=new Rectangle(x+16,y,16,16);;
-	public static Rectangle bottomleftMask=new Rectangle(x,y+16,16,16);;
-	public static Rectangle bottomrightMask=new Rectangle(x+16,y+16,16,16);
 	public Character(int x, int y){
 		Character.x=x;
 		Character.y=y;
@@ -54,9 +50,9 @@ public class Character {
 		isShooting=false;
 		isMoving=false;
 		isPushing=false;
-		powerActivated_hammer=false;
+		powerActivated_hammer=true;
 		powerActivated_ladder=true;
-		powerActivated_arrow=false;
+		powerActivated_arrow=true;
 		 dir=Game.Direction.Down;
 		 lastKey=Game.button.None;
 		 keypressed=new ArrayList<Game.button>();
@@ -166,21 +162,15 @@ public class Character {
 		}
 		if(Character.isShooting && weapon!=null)
 			bullet_Collision();
-		updateMask();
-	}
-	private void updateMask() {
-		topleftMask.setRect(new Rectangle(x,y,16,16));
-		toprightMask.setRect(new Rectangle(x+16,y,16,16));
-		bottomleftMask.setRect(new Rectangle(x,y+16,16,16));
-		bottomrightMask.setRect(new Rectangle(x+16,y+16,16,16));
-		
 	}
 	private void CollisionWithMonster() {
 		for(Tile aTile:Level.map_tile){
 			if(aTile instanceof Skull)
 				if(aTile.shape.intersects(x, y, width, height)){
+					if(((Skull) aTile).isActive){
 					Sound.Death.start();
 					Labyrinth.GameState=Game.GameState.Death;
+					}
 				}
 		}
 		
@@ -350,90 +340,80 @@ public class Character {
 		}
 		
 	}
-	private boolean checkCollision(Rectangle mask) {
-		if(Level.goal.shape.intersects(mask))
+	private boolean checkCollision(Rectangle mask1,Rectangle mask2) {
+		Tile intersect1=null;
+		Tile intersect2=null;
+		for(Tile aTile:Level.map_tile){
+			if(aTile.shape.intersects(mask1))
+					intersect1=aTile;
+			if(aTile.shape.intersects(mask2))
+					intersect2=aTile;
+		}
+		if(Level.goal.shape.intersects(mask1) && Level.goal.shape.intersects(mask2))
 			if(Level.goal.getType()==5)
 				Level.takeGoal();
-		for(Tile aTile:Level.map_tile){
-			if(aTile.shape.intersects(mask)){
-				if(aTile.getType()==100){
-					if(Character.y<2*step)
-						Level.nextLevel(); //end door
-					return false;
-				}
-				else{
-				//we have a collision with something			
-				switch(aTile.getType()){
-				
-				case 2: 	//moving green block
-							if(isBehindBlock(aTile)){
-								select_Tile=aTile;
-								aTile.moveTile(step);
-							}
+		//Full Collision on same tile
+		if(intersect1!=null && intersect2!=null){
+			if(intersect1==intersect2){
+				switch(intersect1.getType()){
+				case 1:		return true;//rock
+				case 2:		select_Tile=intersect1;
+							intersect1.moveTile(step);
+							return true;
+				case 3:		takeHeart(intersect1);
 							break;
-				case 3: 	takeHeart(aTile);
-							break;
+				case 6:		return true;//tree
 				case 11:	//One-way Arrow
 				case 12:	//left one-way Arrow
 				case 13:	//right one-way Arrow
 				case 14:	//down one-way Arrow
-							if(!searchBlock(mask)){ //no block infront
-								OneWayArrow arrow=(OneWayArrow)aTile;
-								if(!arrow.checkArrow())
-									return false;
-								}
-						else 	if(isBehindBlock(select_Tile))
-									select_Tile.moveTile(step);
-						break;
-				case 15: //skull
-							if(aTile instanceof Monster){
-								Monster Monster=(Monster)aTile;
-								if(Monster.isActive){
-									Sound.StageMusic.stop();
-									Sound.Death.start();
-									Labyrinth.GameState=Game.GameState.Death;
-								}
-							}
-						break;
-				case 91:	//ladder up-down
-				case 92: 	// ladder right
-				case 93:	//ladder left
-							if(searchBlock(mask)){
-								if(isBehindBlock(select_Tile)){
-									select_Tile.moveTile(step);
-								}
-							}
-							else if(isBehindBlock(aTile))return false;//aligned with bridge walk on it
+							OneWayArrow OneArrow=(OneWayArrow)intersect1;
+							return(OneArrow.checkArrow());
+				case 15:	return true;//Skull
+				case 19:	//worm
+				case 20:	return true;
+				case 30: 	return true;//rock wall
+				case 100:	if(Character.y<2*step)
+								Level.nextLevel(); //end door
+							return false;
+				case 94:  //heart give no ammo
+							takeHeart(intersect1);
 							break;
-				case 94: 	takeHeart(aTile);
-							break;
+				case 95:	return true;//water
+				case 96: 	return true;//door closed
+				case 99:  	return false; //the background tile
 				}
-				return true;
+				
+			}
+			else if(intersect1.isSolid || intersect2.isSolid)
+				return true; //both collision are different but could be same type of tile.	
+			
+		}
+		//One of the 2 collision mask is empty
+		else if(intersect1==null && intersect2!=null){
+				if(intersect2.isSolid){
+					if(intersect2.getType()!=3 && intersect2.getType()!=94) //hearth considered solid  for enemy projectile 
+						return true;
+				}
+				//not not solid object; look if its One-way Arrow
+				if(intersect2 instanceof OneWayArrow){
+					OneWayArrow anArrow=(OneWayArrow)intersect2;
+					return (anArrow.checkArrow());
+				}
+		}
+		else if(intersect2==null && intersect1!=null){
+			if(intersect1.isSolid){
+				if(intersect1.getType()!=3 && intersect1.getType()!=94) //hearth considered solid  for enemy projectile 
+					return true;
+			}
+			//not not solid object; look if its One-way Arrow
+			if(intersect1 instanceof OneWayArrow){
+				OneWayArrow anArrow=(OneWayArrow)intersect1;
+				return (anArrow.checkArrow());
 			}
 		}
-	}
 		return false;
 }
-	private boolean searchBlock(Rectangle mask) {
-		for(Tile aTile:Level.map_tile){
-			if(aTile.shape.intersects(mask)){
-				if(aTile.getType()==2){
-					select_Tile=aTile;
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	private boolean isBehindBlock(Tile aTile) {
-		switch(dir){
-		case Left:		return(Character.y==aTile.y);
-		case Right:		return(Character.y==aTile.y);
-		case Up:		return(Character.x==aTile.x);
-		case Down: 		return(Character.x==aTile.x);
-					}
-		return false;
-	}
 	private void takeHeart(Tile aTile) {
 		Level.map_tile.remove(aTile);
 		Collections.sort(Level.map_tile);
@@ -456,7 +436,7 @@ public class Character {
 			if(lastKey==Game.button.W && !beingPushed){
 				dir=Game.Direction.Up;
 				walk_up.setImage();
-				if(!checkCollision(new Rectangle(x,y-step,width,height))){
+				if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))){
 						targetX=-step;
 						isMoving=true;
 				}
@@ -464,7 +444,7 @@ public class Character {
 			if(lastKey==Game.button.S && !beingPushed){
 				dir=Game.Direction.Down;			
 				walk_down.setImage();
-				if(!checkCollision(new Rectangle(x,y+height,width,height/2))){
+				if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))){
 					targetX=step;
 					isMoving=true;
 				}
@@ -472,13 +452,13 @@ public class Character {
 			if(lastKey==Game.button.D){
 				if(checkKeypressed()){
 					switch(dir){
-					case Down:	if(!checkCollision(new Rectangle(x,y+height,width,height/2))){
+					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))){
 									walk_down.setImage();
 									targetX=step;
 									isMoving=true;
 								}
 								break;
-					case Up:	if(!checkCollision(new Rectangle(x,y-step,width,height))){
+					case Up:	if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))){
 									walk_up.setImage();
 									targetX=-step;
 									isMoving=true;
@@ -488,7 +468,7 @@ public class Character {
 				}else{
 					dir=Game.Direction.Right;
 					walk_right.setImage();
-					if(!checkCollision(new Rectangle(x+width,y,width/2,height))){
+					if(!checkCollision(new Rectangle(x+width,y,16,16),new Rectangle(x+width,y+step,16,16))){
 						targetX=step;
 						isMoving=true;
 					}
@@ -497,13 +477,13 @@ public class Character {
 			if(lastKey==Game.button.A){
 				if(checkKeypressed()){
 					switch(dir){
-					case Down:	if(!checkCollision(new Rectangle(x,y+height,width,height/2))){
+					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))){
 									walk_down.setImage();
 									targetX=step;
 									isMoving=true;
 								}
 								break;
-					case Up:	if(!checkCollision(new Rectangle(x,y-step,width,height))){
+					case Up:	if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))){
 									walk_up.setImage();
 									targetX=-step;
 									isMoving=true;
@@ -512,7 +492,7 @@ public class Character {
 					}
 				}else{	dir=Game.Direction.Left;			
 						walk_left.setImage();
-						if(!checkCollision(new Rectangle(x-step,y,width,height))){
+						if(!checkCollision(new Rectangle(x-step,y,16,16),new Rectangle(x-step,y+step,16,16))){
 								targetX=-step;
 								isMoving=true;
 				}

@@ -35,7 +35,7 @@ public class Sound {
 	        else if(Filename.equalsIgnoreCase("ArrowBridgePowerUsed"))ArrowBridgePowerUsed=clip;
 	        else if(Filename.equalsIgnoreCase("Sleeper"))Sleeper=clip;
 	        else if(Filename.equalsIgnoreCase("HammerPowerUsed"))HammerPowerUsed=clip;
-	        else if(Filename.equalsIgnoreCase("HammerPowerUsed"))PowerEnabled=clip;
+	        else if(Filename.equalsIgnoreCase("PowerEnabled"))PowerEnabled=clip;
 		} catch (LineUnavailableException e){ e.printStackTrace();}
 		catch (IOException io){io.printStackTrace();}
 		catch (UnsupportedAudioFileException uafe){uafe.printStackTrace();}

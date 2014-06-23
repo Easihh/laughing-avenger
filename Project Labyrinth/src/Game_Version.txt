@@ -1,3 +1,11 @@
+Version 0.35:
+
+-Fixed an issue with new sound from last Version to cause restart Level to crash.
+-Fixed an issue with multiple power use and activation at same time.
+-Arrow Power change has now been added.
+-The game now use better collision code for partial collision with single or multiple tile
+-Enemies(Leeper,Skull) no longer stop moving if no path exist to the Main character.
+
 Version 0.34:
 -Added Hammer Power to destroy rock.
 -Added Hammer sound.

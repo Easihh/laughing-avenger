@@ -3,6 +3,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 import java.util.Stack;
 import javax.imageio.ImageIO;
 
@@ -127,7 +128,51 @@ public class Skull extends Monster{
 				}
 				step_to_move-=2;
 			}
+		if(!path_exist){
+			switch(dir){
+			case Left:	if(!checkCollison(x-1, y, x-1, y+height-1))
+							x-=2;
+						else getnewDirection();
+						break;
+			case Right:	if(!checkCollison(x+width, y, x+width, y+height-1))
+							x+=2;
+						else getnewDirection();
+						break;
+			case Up:	if(!checkCollison(x, y-1, x+width-1, y-1))
+						y-=2;
+						else getnewDirection();
+						break;
+			case Down:	if(!checkCollison(x, y+height, x+width, y+height))
+							y+=2;
+						else getnewDirection();
+						break;
+			}
+		}
 		updateMask();
+	}
+	private void getnewDirection() {
+		int direction=0;
+		int new_direction=0;
+		if(dir==Game.Direction.Down)
+			direction=1;
+		if(dir==Game.Direction.Left)
+			direction=2;
+		if(dir==Game.Direction.Right)
+			direction=3;
+		if(dir==Game.Direction.Up)
+			direction=4;
+		Random random=new Random();
+		do
+			new_direction=random.nextInt(5);
+		while (new_direction==0 || new_direction==direction);
+		if(new_direction==1)
+			dir=Game.Direction.Down;
+		if(new_direction==2)
+			dir=Game.Direction.Left;
+		if(new_direction==3)
+			dir=Game.Direction.Right;
+		if(new_direction==4)
+			dir=Game.Direction.Up;
 	}
 	private void getShortestPath(){
 		Node goal=new Node(Character.x,Character.y);

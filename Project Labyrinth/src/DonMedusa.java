@@ -121,8 +121,6 @@ public class DonMedusa extends Monster {
 		}
 		if(shoot){
 			projectile=new Projectile(x,y,projectile_img,projectile_dir);
-			System.out.println("X:"+x);
-			System.out.println("Y:"+y);
 			Sound.MedusaSound.start();
 			canShoot=false;
 			projectile.projectile_speed=6;

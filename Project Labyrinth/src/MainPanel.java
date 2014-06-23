@@ -19,7 +19,7 @@ public class MainPanel extends JPanel {
 	public MainPanel(){
 		setBackground(Color.black);	
 		loadSound();
-		font=new Font("Serif", Font.BOLD, 20);
+		font=new Font("Serif", Font.BOLD, 18);
 		loadPower();
 	}
 	public void paintComponent(Graphics g){
@@ -27,7 +27,7 @@ public class MainPanel extends JPanel {
 			theLevel.render(g);
 			g.setColor(Color.white);
 			flash_icon.setImage();
-			g.drawImage(Character.projectile_img[0],528,128,null);
+			g.drawImage(Character.projectile_img[0],528,160,null);
 			if(Character.powerActivated_hammer || Character.powerActivated_ladder || Character.powerActivated_arrow){
 				g.drawImage(flash_icon.getImage(), 528, 256,null);
 				g.drawImage(flash_icon.getImage(), 528, 289,null);
@@ -47,10 +47,14 @@ public class MainPanel extends JPanel {
 					g.drawImage(Level.game_tileset[15], 529, 257+(32*i),null);
 			}
 			g.setFont(font);
+			g.drawString("LVL",528,54);
+			g.drawString(""+Level.room,544,86);
+			g.drawString("RM#",528,118);
+			g.drawString(""+Level.remake,544,150);
 			g.drawString("PW",528,240);
-			g.drawString(""+Character.ammo,536,180);
-			g.drawString("x:"+Character.x, 544, 64);
-			g.drawString("y:"+Character.y, 544, 96);
+			g.drawString(""+Character.ammo,544,212);
+			g.drawString("x:"+Character.x, 544, 400);
+			g.drawString("y:"+Character.y, 544, 432);
 			if(Labyrinth.GameState==Game.GameState.Death && !Character.Death.isDone)
 				Character.Death.render(g);
 			if(Labyrinth.GameState!=Game.GameState.Death)

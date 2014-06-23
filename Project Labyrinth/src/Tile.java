@@ -51,8 +51,9 @@ public class Tile implements Comparable<Tile> {
 			g.drawImage(img,x,y,width,height,null);
 	}
 	public boolean checkCollison(int x1,int y1,int x2,int y2) {
-		for(Tile aTile:Level.map_tile){
-			if(aTile.shape.contains(x1,y1)|| aTile.shape.contains(x2,y2)){
+		for(int i=0;i<Level.map_tile.size();i++){
+		//for(Tile aTile:Level.map_tile){
+			if(Level.map_tile.get(i).shape.contains(x1,y1)|| Level.map_tile.get(i).shape.contains(x2,y2)){
 				return true;
 			}
 		}
@@ -79,7 +80,7 @@ public class Tile implements Comparable<Tile> {
 						for(int i=y;i<=Character.y;i+=2){
 							if(aTile.x==x || Math.abs(aTile.x-Character.x)<=Character.step)
 								if(aTile.y==i && aTile!=this)
-									if(aTile.isSolid){
+									if(aTile.isSolid && aTile.getType()!=6){ //bypass tree
 										return true;
 									}
 							}
@@ -89,7 +90,7 @@ public class Tile implements Comparable<Tile> {
 						for(int i=y;i>=Character.y;i-=2){
 							if(aTile.x==x || Math.abs(aTile.x-Character.x)<=Character.step)
 								if(aTile.y==i && aTile!=this)
-									if(aTile.isSolid)
+									if(aTile.isSolid && aTile.getType()!=6)
 										return true;
 							}
 						}		
@@ -98,7 +99,7 @@ public class Tile implements Comparable<Tile> {
 						for(int i=x;i>=Character.x;i-=2){
 							if(aTile.y==y || Math.abs(aTile.y-Character.y)<=Character.step)
 								if(aTile.x==i && aTile!=this)
-									if(aTile.isSolid)
+									if(aTile.isSolid && aTile.getType()!=6)
 										return true;
 							}
 						}		
@@ -107,7 +108,7 @@ public class Tile implements Comparable<Tile> {
 						for(int i=x;i<=Character.x;i+=2){
 							if(aTile.y==y || Math.abs(aTile.y-Character.y)<=Character.step)
 								if(aTile.x==i && aTile!=this)
-									if(aTile.isSolid)
+									if(aTile.isSolid && aTile.getType()!=6)
 										return true;
 							}
 						}		
@@ -381,6 +382,12 @@ public class Tile implements Comparable<Tile> {
 					break;
 		case 30: 	img=Level.game_tileset[29];//rockwall
 					break;
+		case 89: 	img=Level.game_tileset[42];//Sand
+					isSolid=false;
+					break;
+		case 90: 	img=Level.game_tileset[43];//Grass
+					isSolid=false;
+					break;			
 		case 91: 	img=Level.game_tileset[41];//up-down ladder
 					isSolid=false;
 					break;

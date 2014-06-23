@@ -24,7 +24,7 @@ public class Labyrinth extends JFrame{
 	}
 
 	public Labyrinth() {
-		GameState=Game.GameState.Normal;
+		GameState=Game.GameState.NotStarted;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(new Dimension(672,540));
 		setResizable(false);
@@ -51,10 +51,12 @@ public class Labyrinth extends JFrame{
 						Thread.sleep(sleep);
 						if(Labyrinth.level_is_loaded){
 							MainPanel.hero.update();
+						}	
+						if(GameState!=Game.GameState.NotStarted && Labyrinth.level_is_loaded){
 							for(Tile tile:Level.map_tile)
 								tile.update();
-								repaint();
 						}
+						repaint();
 						prev=System.nanoTime();
 					}catch (InterruptedException e) {
 						e.printStackTrace();

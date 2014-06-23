@@ -39,7 +39,8 @@ public class Phantom extends Monster {
 	@Override
 	public void transform() {}//this monster is immune
 	public void update(){
-		move();
+		if(Labyrinth.GameState==Game.GameState.Normal)
+			move();
 		if(Character.beingPushed){
 			if(dir==Game.Direction.Down){
 				if(!checkCollison(Character.x+width-1, Character.y+height+3, Character.x, Character.y+height+3)){

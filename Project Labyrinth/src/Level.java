@@ -25,8 +25,9 @@ public class Level {
 	private static Tile goal_top;
 	private static boolean canRespawn=true;
 	private static boolean chestIsOpen=false;
-	private static int room=1;
 	
+	public static int room=1;
+	public static int remake=0;
 	public final static int map_width=512;
 	public final static int map_height=512;
 	public static int heart_amount;
@@ -86,6 +87,7 @@ public class Level {
 		}
 		Collections.sort(Level.map_tile);
 		Labyrinth.level_is_loaded=true;
+		Labyrinth.GameState=Game.GameState.NotStarted;
 	}
 	private void verifyPowerAllowed() {
 		if(room==1){
@@ -202,6 +204,15 @@ public class Level {
 					break;	
 		case "42": 	//ladder up and down
 					Level.map_tile.add(new Tile(coordX,coordY,91));
+					break;
+		case "43": 	//Sand
+					Level.map_tile.add(new Tile(coordX,coordY,89));
+					break;			
+		case "44": 	//Grass
+					Level.map_tile.add(new Tile(coordX,coordY,90));
+					break;
+		case "49": 	//Alma
+					Level.map_tile.add(new Alma(coordX,coordY,0));
 					break;	
 		}
 	}
@@ -349,13 +360,14 @@ public class Level {
 		Sound.DoorOpen.start();
 	}
 	public static void nextLevel() {
+		remake=0;
 		room+=1;
 		MainPanel.theLevel=new Level();
 	}
 	public static void restart() {
+		remake++;
 		Labyrinth.level_is_loaded=false;
 		MainPanel.theLevel=new Level();
-		Labyrinth.GameState=Game.GameState.Normal;
 		Sound.ArrowBridgePowerUsed.setFramePosition(0);
 		Sound.Death.setFramePosition(0);
 		Sound.DoorOpen.setFramePosition(0);

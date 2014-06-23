@@ -1,3 +1,17 @@
+Version 0.36:
+
+-Monster Alma has been added.
+-Monster can no longer move during your death.
+-Dying should now stop stage music while animation play.
+-Sand and Grass Tile have been Added.
+-Sand Tile now slow your Character when walking on it.
+-Game is now paused at start of each level until a player move.
+-Player can now suicide and restart level when stuck.
+-Corrected an issue from last build that made first level impossible to finish.
+-Added Level counter and how many time you died at this level.
+-Fixed small death delay when suiciding as soon as game start.
+-Fixed Bug where Medusa and DonMedusa projectile did not bypass Tree.
+
 Version 0.35A:
 
 -Fixed a bug where using power could cause concurrent thread issues.

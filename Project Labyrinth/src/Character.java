@@ -15,7 +15,7 @@ public class Character {
 	private final int height=32;
 	private final int rows=1;// character animation row
 	private final int cols=5;// character animation colum
-	private final int movement=2;
+	private int movement=2;
 	private Animation walk_down=null;
 	private Animation walk_up=null;
 	private Animation walk_left=null;
@@ -151,6 +151,9 @@ public class Character {
 	}
 	public void update(){
 		if(Labyrinth.GameState==Game.GameState.Normal){
+			if(isWalkingSand())
+				movement=1;
+			else movement=2;
 			movement();
 			MonsterBulletCollision();
 			CollisionWithBullet();
@@ -163,14 +166,32 @@ public class Character {
 		if(Character.isShooting && weapon!=null)
 			bullet_Collision();
 	}
+	private boolean isWalkingSand() {
+		for(Tile aTile:Level.map_tile){
+			if(aTile.getType()==89)
+				if(aTile.shape.intersects(x, y, width, height)){
+					return true;
+					}
+				}
+		return false;
+	}
 	private void CollisionWithMonster() {
 		for(Tile aTile:Level.map_tile){
 			if(aTile instanceof Skull)
 				if(aTile.shape.intersects(x, y, width, height)){
 					if(((Skull) aTile).isActive){
+					Sound.StageMusic.stop();
 					Sound.Death.start();
 					Labyrinth.GameState=Game.GameState.Death;
+					break;
 					}
+				}
+			if(aTile instanceof Alma)
+				if(aTile.shape.intersects(x, y, width, height)){
+					Sound.StageMusic.stop();
+					Sound.Death.start();
+					Labyrinth.GameState=Game.GameState.Death;
+					break;
 				}
 		}
 		
@@ -185,6 +206,7 @@ public class Character {
 						case Right:	if(projectile.shape.contains(x+width-1,y) || 
 								projectile.shape.contains(x+width-1,y+height)){
 								projectile.projectile_speed=0;
+								Sound.StageMusic.stop();
 								Sound.Death.start();
 								Labyrinth.GameState=Game.GameState.Death;
 								}
@@ -192,6 +214,7 @@ public class Character {
 						case Left:	if(projectile.shape.contains(x,y) || 
 								projectile.shape.contains(x,y+height-1)){
 								projectile.projectile_speed=0;
+								Sound.StageMusic.stop();
 								Sound.Death.start();
 								Labyrinth.GameState=Game.GameState.Death;
 								}
@@ -199,6 +222,7 @@ public class Character {
 						case Down:	if(projectile.shape.contains(x+width,y+height-1) || 
 								projectile.shape.contains(x,y+height-1)){
 								projectile.projectile_speed=0;
+								Sound.StageMusic.stop();
 								Sound.Death.start();
 								Labyrinth.GameState=Game.GameState.Death;
 								}
@@ -206,6 +230,7 @@ public class Character {
 						case Up:	if(projectile.shape.contains(x+width-1,y) || 
 								projectile.shape.contains(x,y)){
 								projectile.projectile_speed=0;
+								Sound.StageMusic.stop();
 								Sound.Death.start();
 								Labyrinth.GameState=Game.GameState.Death;
 								}

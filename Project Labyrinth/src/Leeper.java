@@ -68,7 +68,7 @@ public class Leeper extends Monster{
 	public void update(){
 		if(!isSleeping){
 			getAnimation().setImage();
-			if(TransformedState==0)move();
+			if(TransformedState==0 && Labyrinth.GameState==Game.GameState.Normal)move();
 		}
 		else getSleepAnimation().setImage();
 	}

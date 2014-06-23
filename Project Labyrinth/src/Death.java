@@ -34,7 +34,7 @@ public class Death {
 				animation[(i*maxFrame)+j]=img.getSubimage(j*width, i*height, width, height);
 			 }
 		 }
-		 Death.AddScene(animation[0], 1000);
+		 Death.AddScene(animation[0], 500);
 		 Death.AddScene(animation[1], 100);
 		 Death.AddScene(animation[2], 100);
 		 Death.AddScene(animation[1], 100);

@@ -179,7 +179,7 @@ public class Character {
 		for(Tile aTile:Level.map_tile){
 			if(aTile instanceof Skull)
 				if(aTile.shape.intersects(x, y, width, height)){
-					if(((Skull) aTile).isActive){
+					if(((Skull) aTile).isActive && ((Skull)aTile).TransformedState==0){
 					Sound.StageMusic.stop();
 					Sound.Death.start();
 					Labyrinth.GameState=Game.GameState.Death;
@@ -188,10 +188,12 @@ public class Character {
 				}
 			if(aTile instanceof Alma)
 				if(aTile.shape.intersects(x, y, width, height)){
-					Sound.StageMusic.stop();
-					Sound.Death.start();
-					Labyrinth.GameState=Game.GameState.Death;
-					break;
+					if(((Alma) aTile).TransformedState==0){
+						Sound.StageMusic.stop();
+						Sound.Death.start();
+						Labyrinth.GameState=Game.GameState.Death;
+						break;
+					}
 				}
 		}
 		

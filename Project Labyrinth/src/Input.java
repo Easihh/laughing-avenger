@@ -1,5 +1,9 @@
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Stack;
 
 public class Input implements KeyListener {
 	@Override
@@ -46,6 +50,7 @@ public class Input implements KeyListener {
 			Sound.Death.start();
 		}
 		if(keycode==KeyEvent.VK_ESCAPE){
+			shortestPath();
 		}
 	}
 	@Override
@@ -56,6 +61,86 @@ public class Input implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+	}
+	private void shortestPath(){
+		Node goal=new Node(Character.x,Character.y);
+		ArrayList<Node> Open=new ArrayList<Node>();
+		ArrayList<Node> Closed=new ArrayList<Node>();
+		
+		Stack<Node> Path = new Stack<Node>();
+		//path_exist=false;
+		Node root=new Node(192,192);
+		Node neighbor;
+		Open.add(root);	
+		while(!Open.isEmpty()){
+			Collections.sort(Open);
+			Node current=Open.get(0);
+			System.out.println("CurrentX:"+current.data.x);
+			System.out.println("CurrentY:"+current.data.y);
+			if(Closed.contains(goal)){
+				System.out.println("FOUND");
+				//path_exist=true;
+				break;
+			}
+			Open.remove(current);
+			Closed.add(current);
+			if(!checkCollison(new Rectangle(current.data.x-16,current.data.y,16,16),
+					new Rectangle(current.data.x-16,current.data.y+16,16,16))){//left
+				neighbor=new Node(current.data.x-16,current.data.y);
+				if(!Closed.contains(neighbor)){
+					if(!Open.contains(neighbor)){
+						Open.add(neighbor);
+						neighbor.parent=current;
+						neighbor.Gscore=current.Gscore+1;
+						neighbor.updateScore(192, 192);
+					}
+					if(Open.contains(neighbor) && (current.Gscore+1<neighbor.Gscore)){
+						neighbor.parent=current;
+						neighbor.Gscore=current.Gscore+1;
+						neighbor.updateScore(192, 192);
+					}
+				}
+			}
+			if(!checkCollison(new Rectangle(current.data.x,current.data.y+32,16,16),
+					new Rectangle(current.data.x+16,current.data.y+32,16,16))){//down
+				neighbor=new Node(current.data.x,current.data.y+16);
+					if(!Closed.contains(neighbor)){
+						if(!Open.contains(neighbor)){
+							Open.add(neighbor);
+							neighbor.parent=current;
+							neighbor.Gscore=current.Gscore+1;
+							neighbor.updateScore(192, 192);
+						}
+						if(Open.contains(neighbor) && (current.Gscore+1<neighbor.Gscore)){
+							neighbor.parent=current;
+							neighbor.Gscore=current.Gscore+1;
+							neighbor.updateScore(192, 192);
+						}
+					}
+				}
+			}
+			Node test=Closed.get(Closed.size()-1);
+			while(test!=null){
+				Path.add(test);
+				test=test.parent;
+			}		
+			for(Node aNode:Path){
+				System.out.println("NodeX:"+aNode.data.x);
+				System.out.println("NodeY:"+aNode.data.y);
+			}
+		}
+	public boolean checkCollison(Rectangle mask1,Rectangle mask2) {
+		for(int i=0;i<Level.map_tile.size();i++){
+			//infront of a full tile.
+			if(Level.map_tile.get(i).shape.intersects(mask1)&& Level.map_tile.get(i).shape.intersects(mask2)){
+				System.out.println("Type:"+Level.map_tile.get(i).getType());
+				if(Level.map_tile.get(i).isSolid)return true;
+			}
+			if(Level.map_tile.get(i).shape.intersects(mask1)|| Level.map_tile.get(i).shape.intersects(mask2)){
+				if(Level.map_tile.get(i).isSolid)return true;
+			}
+		}
+		return false;
 	}
 }
 

@@ -42,7 +42,7 @@ public class Snakey  extends Monster{
 		}
 		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2){
 			TransformedState=0;
-			type=1;
+			type=0;
 			img=previousState;
 		}	
 	}

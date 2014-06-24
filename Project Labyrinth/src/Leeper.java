@@ -1,4 +1,5 @@
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,10 +24,12 @@ public class Leeper extends Monster{
 	private long time_since_transform;
 	private Node nextMovement;
 	private Stack<Node> Path;
+	private int last_update=0;
 	public boolean isSleeping;
 	
 	public Leeper(int x, int y, int type) {
 		super(x, y, type);
+		depth=2;
 		isSleeping=false;
 		dir=Game.Direction.Left;
 		Path=new Stack<Node>();
@@ -79,7 +82,7 @@ public class Leeper extends Monster{
 		}
 		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2){
 			TransformedState=0;
-			type=1;
+			type=16;
 			img=previousState;
 		}	
 	}
@@ -181,6 +184,10 @@ public class Leeper extends Monster{
 			aTile.isMovingAcrossScreen=false;
 			aTile.isActive=isActive;
 			aTile.TransformedState=0;
+			aTile.path_exist=false;
+			aTile.last_update=0;
+			aTile.step_to_move=0;
+			aTile.dir=Game.Direction.Left;
 			Level.addRespawn(aTile);
 			aTile.updateMask();
 			Level.toRemove.add(aTile);//remove the tile if it goes offscreen
@@ -189,7 +196,9 @@ public class Leeper extends Monster{
 		return false;
 	}
 	private void move() {
-		if(step_to_move==0 && Character.x%16==0 && Character.y%16==0){
+		last_update++;
+		if(step_to_move==0 && Character.x%16==0 && x%16==0 && y%16==0 && Character.y%16==0 && last_update>=8){
+					last_update=0;
 					shortestPath();
 					if(path_exist){
 						if(Path.size()>1)//since current position was top stack;//
@@ -249,19 +258,19 @@ public class Leeper extends Monster{
 			}
 		if(!path_exist){
 			switch(dir){
-			case Left:	if(!checkCollison(x-1, y, x-1, y+height-1))
+			case Left:	if(!checkCollison(new Rectangle(x-2, y,2,16),new Rectangle( x-2,y+16,2,16)))
 							x-=2;
 						else getnewDirection();
 						break;
-			case Right:	if(!checkCollison(x+width, y, x+width, y+height-1))
+			case Right:	if(!checkCollison(new Rectangle(x+32, y,2,16),new Rectangle( x+32,y+16,2,16)))
 							x+=2;
 						else getnewDirection();
 						break;
-			case Up:	if(!checkCollison(x, y-1, x+width-1, y-1))
-						y-=2;
+			case Up:	if(!checkCollison(new Rectangle(x, y-2,16,2),new Rectangle( x+16,y-2,16,2)))
+							y-=2;
 						else getnewDirection();
 						break;
-			case Down:	if(!checkCollison(x, y+height, x+width, y+height))
+			case Down:	if(!checkCollison(new Rectangle(x, y+32,16,2),new Rectangle( x+16,y+32,16,2)))
 							y+=2;
 						else getnewDirection();
 						break;
@@ -311,49 +320,73 @@ public class Leeper extends Monster{
 			}
 			Open.remove(current);
 			Closed.add(current);
-				if(!checkCollison(current.data.x-1,current.data.y,current.data.x-1,current.data.y+32-1)){//left
+				if(!checkCollison(new Rectangle(current.data.x-16,current.data.y,16,16),
+						new Rectangle(current.data.x-16,current.data.y+16,16,16))){//left
 					neighbor=new Node(current.data.x-16,current.data.y);
-					if(!Closed.contains(neighbor))
-						if(!Open.contains(neighbor) || (current.Gscore+1<neighbor.Gscore)){
+					if(!Closed.contains(neighbor)){
+						if(!Open.contains(neighbor)){
+							Open.add(neighbor);
 							neighbor.parent=current;
 							neighbor.Gscore=current.Gscore+1;
 							neighbor.updateScore(x, y);
-							if(!Open.contains(neighbor))
-									Open.add(neighbor);
-								}
-							}				
-					if(!checkCollison(current.data.x+32-1,current.data.y+32,current.data.x,current.data.y+32)){//down
+						}
+						if(Open.contains(neighbor) && (current.Gscore+1<neighbor.Gscore)){
+							neighbor.parent=current;
+							neighbor.Gscore=current.Gscore+1;
+							neighbor.updateScore(x, y);
+						}
+					}
+				}				
+					if(!checkCollison(new Rectangle(current.data.x,current.data.y+32,16,16),
+							new Rectangle(current.data.x+16,current.data.y+32,16,16))){//down
 						neighbor=new Node(current.data.x,current.data.y+16);
-						if(!Closed.contains(neighbor))
-							if(!Open.contains(neighbor) || (current.Gscore+1<neighbor.Gscore)){
+						if(!Closed.contains(neighbor)){
+							if(!Open.contains(neighbor)){
+								Open.add(neighbor);
 								neighbor.parent=current;
 								neighbor.Gscore=current.Gscore+1;
 								neighbor.updateScore(x, y);
-								if(!Open.contains(neighbor))
-									Open.add(neighbor);
 							}
+							if(Open.contains(neighbor) && (current.Gscore+1<neighbor.Gscore)){
+								neighbor.parent=current;
+								neighbor.Gscore=current.Gscore+1;
+								neighbor.updateScore(x, y);
+							}
+						}
 					}
-					if(!checkCollison(current.data.x+32-1,current.data.y-1,current.data.x,current.data.y-1)){//up
+					if(!checkCollison(new Rectangle(current.data.x,current.data.y-16,16,16),
+							new Rectangle(current.data.x+16,current.data.y-16,16,16))){//up
 						neighbor=new Node(current.data.x,current.data.y-16);
-						if(!Closed.contains(neighbor))
-							if(!Open.contains(neighbor) || (current.Gscore+1<neighbor.Gscore)){
+						if(!Closed.contains(neighbor)){
+							if(!Open.contains(neighbor)){
+								Open.add(neighbor);
 								neighbor.parent=current;
 								neighbor.Gscore=current.Gscore+1;
 								neighbor.updateScore(x, y);
-								if(!Open.contains(neighbor))
-									Open.add(neighbor);
 							}
+							if(Open.contains(neighbor) && (current.Gscore+1<neighbor.Gscore)){
+								neighbor.parent=current;
+								neighbor.Gscore=current.Gscore+1;
+								neighbor.updateScore(x, y);
+							}
+						}
 					}
-					if(!checkCollison(current.data.x+32,current.data.y+32-1,current.data.x+32,current.data.y)){//right
+					if(!checkCollison(new Rectangle(current.data.x+32,current.data.y,16,16),
+							new Rectangle(current.data.x+32,current.data.y+16,16,16))){//right
 						neighbor=new Node(current.data.x+16,current.data.y);
-						if(!Closed.contains(neighbor))
-							if(!Open.contains(neighbor) || (current.Gscore+1<neighbor.Gscore)){
+						if(!Closed.contains(neighbor)){
+							if(!Open.contains(neighbor)){
+								Open.add(neighbor);
 								neighbor.parent=current;
 								neighbor.Gscore=current.Gscore+1;
 								neighbor.updateScore(x, y);
-								if(!Open.contains(neighbor))
-									Open.add(neighbor);
 							}
+							if(Open.contains(neighbor) && (current.Gscore+1<neighbor.Gscore)){
+								neighbor.parent=current;
+								neighbor.Gscore=current.Gscore+1;
+								neighbor.updateScore(x, y);
+							}
+						}
 					}
 			}
 			Node test=Closed.get(Closed.size()-1);
@@ -362,4 +395,13 @@ public class Leeper extends Monster{
 				test=test.parent;
 			}
 		}
+	public boolean checkCollison(Rectangle mask1,Rectangle mask2) {
+		for(int i=0;i<Level.map_tile.size();i++){
+			if(Level.map_tile.get(i).shape.intersects(mask1)|| Level.map_tile.get(i).shape.intersects(mask2)){
+				if(Level.map_tile.get(i).isSolid)
+					return true;
+			}
+		}
+		return false;
+	}
 }

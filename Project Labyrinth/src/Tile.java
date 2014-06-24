@@ -52,7 +52,6 @@ public class Tile implements Comparable<Tile> {
 	}
 	public boolean checkCollison(int x1,int y1,int x2,int y2) {
 		for(int i=0;i<Level.map_tile.size();i++){
-		//for(Tile aTile:Level.map_tile){
 			if(Level.map_tile.get(i).shape.contains(x1,y1)|| Level.map_tile.get(i).shape.contains(x2,y2)){
 				return true;
 			}

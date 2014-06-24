@@ -53,8 +53,8 @@ public class Labyrinth extends JFrame{
 							MainPanel.hero.update();
 						}	
 						if(GameState!=Game.GameState.NotStarted && Labyrinth.level_is_loaded){
-							for(Tile tile:Level.map_tile)
-								tile.update();
+							for(int i=0;i<Level.map_tile.size();i++)
+								Level.map_tile.get(i).update();
 						}
 						repaint();
 						prev=System.nanoTime();

@@ -1,3 +1,19 @@
+Version 0.37:
+
+-Fixed a bug where monster returning to their previous state after being shot
+allowed the hammer power to work on them.
+-Fixed a bug where Alma,Skull and Leeper respawned incorrectly.
+-Player can no longer die from touching monster who have been shot.
+-Alma,Skull and Leeper now have a higher drawing priority than One-Way tile.
+-Alma now bypass one-way tile when finding a path to the player.
+-Improved Alma,Skull,Leeper pathing.
+-Fixed a bug where Skull kept moving even if shot.
+-Alma can now be shot and transform in a ball form.
+-Skull and Leeper now correctly bypass sand and grass tile and One-way Arrow and bridge.
+-Skull now stop moving when character dies.
+-Monster now react much more quickly when a path is possible to the Character.
+-If Monster cant find path to the Character it should no longer severely affect game performance.
+
 Version 0.36:
 
 -Monster Alma has been added.

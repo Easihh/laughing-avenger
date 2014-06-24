@@ -193,7 +193,7 @@ public class Level {
 		case "34": 	//ladder left
 					Level.map_tile.add(new Tile(coordX,coordY,93));
 					break;
-		case "35": 	//Phantom left
+		case "35": 	//Phantom 
 					Level.map_tile.add(new Phantom(coordX,coordY,0));
 					break;
 		case "36": 	//Skull

@@ -1,3 +1,15 @@
+Version 0.38:
+
+-Level 3,4 Have been created.
+-No longer possible to be able to take an heart piece if not fully colliding with it.
+-Moving Tile,Phantom and Don Medusa  now work with newest collision code.
+-Monster can now be thrown into water to be killed and then respawned.
+-Shooting Skull,Alma,Leeper should no longer cause possible alignment issue for the monster.
+-Ball Form state 2 should now look less pixeled.
+-Lava has been added.
+-Monster projectile's should no longer pass below the Water.
+-Fixed an issue where the player could traverse the next tile when going to next level if the tile was close to starting point.
+
 Version 0.37:
 
 -Fixed a bug where monster returning to their previous state after being shot

@@ -11,6 +11,7 @@ public class Water extends Tile{
 	public Water(int x, int y, int type) {
 		super(x, y, type);
 		Water=new Animation();
+		depth=-1;
 		getImage();
 	}
 	public void render(Graphics g){

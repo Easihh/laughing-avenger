@@ -99,7 +99,7 @@ public class Alma extends Monster{
 	}
 	public void update(){
 		getAnimation().setImage();
-		if(TransformedState==0 && Labyrinth.GameState==Game.GameState.Normal)move();
+		if(Labyrinth.GameState==Game.GameState.Normal)move();
 	}
 	@Override
 	public void render(Graphics g) {
@@ -135,31 +135,38 @@ public class Alma extends Monster{
 			TransformedState=0;
 			type=0;
 			img=previousState;
+		}
+		if((System.nanoTime()-time_since_water)/nano>2000 && TransformedState==1 && isDrowning){
+			TransformedState=3;
+			img=Level.monsterState[2];
+		}
+		if((System.nanoTime()-time_since_water)/nano>3000 && TransformedState==3 && isDrowning){
+			TransformedState=4;
+			img=Level.monsterState[3];
+		}
+		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
+			Kill_Respawn();
 		}	
+	}
+	private void Kill_Respawn() {
+		Alma me=copy();
+		Level.addRespawn(me);
+		Level.toRemove.add(this);
+	}
+	public Alma copy(){
+		Alma clone=new Alma(oldX,oldY,oldtype);
+		return clone;
 	}
 	private boolean isOffScreen(){
 		if(x>Level.map_width || x<0 || y<0 || y>Level.map_height){
-			Alma aTile=this;
-			aTile.x=oldX;
-			aTile.y=oldY;
-			aTile.type=oldtype;
-			aTile.img=previousState;	
-			aTile.isMovingAcrossScreen=false;
-			aTile.TransformedState=0;
-			aTile.path_exist=false;
-			aTile.last_update=0;
-			aTile.step_to_move=0;
-			aTile.dir=Game.Direction.Left;
-			Level.addRespawn(aTile);
-			aTile.updateMask();
-			Level.toRemove.add(aTile);//remove the tile if it goes offscreen
+			Kill_Respawn();
 			return true;
 		}
 		return false;
 	}
 	private void move() {
 		last_update++;
-		if(step_to_move==0 && Character.x%16==0 && Character.y%16==0 && x%16==0 && y%16==0 && last_update>=8){
+		if(step_to_move==0 && Character.x%16==0 && Character.y%16==0 && x%16==0 && y%16==0 && last_update>=8 && TransformedState==0){
 					last_update=0;
 					shortestPath();
 					if(path_exist){
@@ -337,8 +344,9 @@ public class Alma extends Monster{
 		for(int i=0;i<Level.map_tile.size();i++){
 			if(Level.map_tile.get(i).shape.intersects(mask1)|| Level.map_tile.get(i).shape.intersects(mask2)){
 				if(Level.map_tile.get(i).isSolid)return true;
-				if(Level.map_tile.get(i).getType()==90)// cant walk on grass
+				if(Level.map_tile.get(i).getType()==90)// cant  walk on grass
 					return true;
+				
 			}
 		}
 		return false;

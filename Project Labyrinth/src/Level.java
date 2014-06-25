@@ -213,7 +213,10 @@ public class Level {
 					break;
 		case "49": 	//Alma
 					Level.map_tile.add(new Alma(coordX,coordY,0));
-					break;	
+					break;
+		case "50": 	//Lava
+					Level.map_tile.add(new Lava(coordX,coordY,88));
+					break;				
 		}
 	}
 	public void render(Graphics g){
@@ -362,6 +365,7 @@ public class Level {
 	public static void nextLevel() {
 		remake=0;
 		room+=1;
+		Labyrinth.level_is_loaded=false;
 		MainPanel.theLevel=new Level();
 	}
 	public static void restart() {

@@ -51,7 +51,7 @@ public class Skull extends Monster{
 		TransformedState=1;		
 	}
 	public void update(){
-		if(isActive && Labyrinth.GameState==Game.GameState.Normal && TransformedState==0)
+		if(isActive && Labyrinth.GameState==Game.GameState.Normal)
 			move();
 	}
 	private void checkState() {
@@ -63,7 +63,27 @@ public class Skull extends Monster{
 			TransformedState=0;
 			type=15;
 			img=previousState;
+		}
+		if((System.nanoTime()-time_since_water)/nano>2000 && TransformedState==1 && isDrowning){
+			TransformedState=3;
+			img=Level.monsterState[2];
+		}
+		if((System.nanoTime()-time_since_water)/nano>3000 && TransformedState==3 && isDrowning){
+			TransformedState=4;
+			img=Level.monsterState[3];
+		}
+		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
+			Kill_Respawn();
 		}	
+	}
+	private void Kill_Respawn() {
+		Skull me=copy();
+		Level.addRespawn(me);
+		Level.toRemove.add(this);
+	}
+	public Skull copy(){
+		Skull clone=new Skull(oldX,oldY,oldtype);
+		return clone;
 	}
 	private void getImage(){
 		BufferedImage img=null;
@@ -80,28 +100,14 @@ public class Skull extends Monster{
 	}
 	private boolean isOffScreen(){
 		if(x>Level.map_width || x<0 || y<0 || y>Level.map_height){
-			Skull aTile=this;
-			aTile.x=oldX;
-			aTile.y=oldY;
-			aTile.type=oldtype;
-			aTile.img=previousState;	
-			aTile.isMovingAcrossScreen=false;
-			aTile.isActive=isActive;
-			aTile.TransformedState=0;
-			aTile.path_exist=false;
-			aTile.update_counter=0;
-			aTile.step_to_move=0;
-			aTile.dir=Game.Direction.Left;
-			Level.addRespawn(aTile);
-			aTile.updateMask();
-			Level.toRemove.add(aTile);//remove the tile if it goes offscreen
+			Kill_Respawn();
 			return true;
 		}
 		return false;
 	}
 	private void move() {
 		update_counter++;
-		if(step_to_move==0 && Character.x%16==0 && Character.y%16==0 && x%16==0 && y%16==0 && update_counter>=8){
+		if(step_to_move==0 && Character.x%16==0 && Character.y%16==0 && x%16==0 && y%16==0 && update_counter>=8 && TransformedState==0){
 			update_counter=0;
 					shortestPath();
 					if(path_exist){

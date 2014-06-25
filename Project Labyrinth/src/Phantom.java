@@ -1,4 +1,5 @@
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
@@ -13,7 +14,6 @@ public class Phantom extends Monster {
 	private BufferedImage[] walk_up_img;
 	private BufferedImage[] walk_left_img;
 	private BufferedImage[] walk_right_img;
-	private int targetX=0;
 	public Phantom(int x, int y, int type) {
 		super(x, y, type);
 		dir=Game.Direction.Down;
@@ -43,23 +43,19 @@ public class Phantom extends Monster {
 			move();
 		if(Character.beingPushed){
 			if(dir==Game.Direction.Down){
-				if(!checkCollison(Character.x+width-1, Character.y+height+3, Character.x, Character.y+height+3)){
+				if(!checkCollision(new Rectangle(Character.x, Character.y+32,16,4),new Rectangle(Character.x+16, Character.y+32,16,4))){
 					Character.y+=4;
-					targetX-=4;
-					if(targetX==0)
-						Character.beingPushed=false;
+					Character.beingPushed=false;
 				}
 			}
 			if(dir==Game.Direction.Up){
-				if(!checkCollison(Character.x+width-1, Character.y-3, Character.x, Character.y-3)){
+				if(!checkCollision(new Rectangle(Character.x, Character.y-4,16,4),new Rectangle(Character.x+16, Character.y-4,16,4))){
 					Character.y-=4;
-					targetX-=4;
-					if(targetX==0)
-						Character.beingPushed=false;
+					Character.beingPushed=false;
+				}	
 			}
 		}
 	}
-}
 	private void getImage(){
 		walk_left=new Animation();
 		walk_right=new Animation();
@@ -146,7 +142,7 @@ public class Phantom extends Monster {
 	private void move() {
 		switch(dir){
 		case Left: 	if(!withinHeroDistance()){
-						if(checkCollison(x-1, y, x-1, y+height-1)){
+						if(checkCollision(new Rectangle(x-1, y,1,16),new Rectangle(x-1, y+16,1,16))){
 							getnewDirection();
 						}
 						else x-=1;
@@ -154,41 +150,35 @@ public class Phantom extends Monster {
 						walk_left.reset();
 					break;
 		case Right: if(!withinHeroDistance()){
-						if(checkCollison(x+width, y+height-1, x+width, y)){
+						if(checkCollision(new Rectangle(x+32, y,1,16),new Rectangle(x+32, y+16,1,16))){
 							getnewDirection();
 						}else x+=1;
 					}else
 							walk_right.reset();
 					break;
 		case Up: if(!withinHeroDistance()){
-					if(checkCollison(x+width-1, y-1, x, y-1)){
+					if(checkCollision(new Rectangle(x, y-1,16,1),new Rectangle(x+16, y-1,16,1))){
 						getnewDirection();
 					}else y-=1;
-				}else
-					if(!shape.contains(Character.x+width-1,Character.y+height-3)&& !shape.contains(Character.x,Character.y+height-3)){
+				}else//within distance
+					if(!shape.intersects(new Rectangle(Character.x,Character.y+32,16,4)) && !shape.intersects(
+							new Rectangle(Character.x+16,Character.y+32,16,4)))
 						y-=4;
-				}else
-					if(!checkCollison(Character.x+width-1, Character.y-15, Character.x, Character.y-15)){
-						if(!Character.beingPushed){
-							targetX=16;
-							Character.beingPushed=true;
-						}
-					}
+				else	
+							if(!Character.beingPushed)
+								Character.beingPushed=true;
 					break;
 		case Down: if(!withinHeroDistance()){
-						if(checkCollison(x+width-1, y+height, x, y+height)){
+						if(checkCollision(new Rectangle(x, y+32,16,1),new Rectangle(x+16, y+32,16,1))){
 							getnewDirection();
 						}else y+=1;
 					}else
-						if(!shape.contains(Character.x+width-1,Character.y-3)&& !shape.contains(Character.x,Character.y-3)){
+						if(!shape.intersects(new Rectangle(Character.x,Character.y-4,16,4)) && !shape.intersects(
+								new Rectangle(Character.x+16,Character.y-4,16,4)))
 							y+=4;
-						}else
-							if(!checkCollison(Character.x+width-1, Character.y+height+15, Character.x, Character.y+height+15)){
-									if(!Character.beingPushed){
-										targetX=16;
-										Character.beingPushed=true;
-									}
-								}
+						else	
+									if(!Character.beingPushed)
+										Character.beingPushed=true;							
 					break;
 				}
 		updateMask();

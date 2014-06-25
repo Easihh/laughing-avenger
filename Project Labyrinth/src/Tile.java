@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 
 public class Tile implements Comparable<Tile> {
 	protected final int height=32;
@@ -50,10 +51,11 @@ public class Tile implements Comparable<Tile> {
 		else
 			g.drawImage(img,x,y,width,height,null);
 	}
-	public boolean checkCollison(int x1,int y1,int x2,int y2) {
+	public boolean checkCollision(Rectangle mask1,Rectangle mask2) {
 		for(int i=0;i<Level.map_tile.size();i++){
-			if(Level.map_tile.get(i).shape.contains(x1,y1)|| Level.map_tile.get(i).shape.contains(x2,y2)){
-				return true;
+			if(Level.map_tile.get(i).shape.intersects(mask1)|| Level.map_tile.get(i).shape.intersects(mask2)){
+				if(Level.map_tile.get(i).isSolid)return true;
+				if(Level.map_tile.get(i) instanceof OneWayArrow)return true;
 			}
 		}
 		return false;
@@ -116,47 +118,51 @@ public class Tile implements Comparable<Tile> {
 		return false;
 	}
 	public void moveTile(int movement){
+		//We are behind the big 32*32 block or Monster in Block form
 		switch(Character.dir){
-		case Right:	if(!checkCollison(x+width,y,x+width,y+height-1) && Character.dir==Game.Direction.Right){
-						boolean willMove=true;
-						getCollidingTile(x,y);
-						if(collision_tile!=null && collision_tile.shape.contains(x,y) 
-								&& collision_tile.getType()==12){
-							if(checkArrow(12))//one way arrow left
-								willMove=false;
-						}
-						getCollidingTile(x,y+height-1);
-						if(collision_tile!=null && collision_tile.shape.contains(x,y+height) 
-								&& collision_tile.getType()==12){
-							if(checkArrow(12))
-								willMove=false;
-						}
-						if(willMove){
-							Character.targetX=Character.step;
-							Character.isMoving=true;
-							Character.isPushing=true;
-						}
-					}
+		case Right:	if(!checkCollision(new Rectangle(x+32,y,16,16),new Rectangle(x+32,y+16,16,16))){
+							//check for one-way arrow Below the block
+							boolean willMove=true;
+							getCollidingTile(new Rectangle(x,y,32,32));
+							if(collision_tile!=null && collision_tile.getType()==12){
+								if(checkArrow(12))
+									willMove=false;
+							}
+							if(willMove){
+								if(this instanceof Monster){
+									if(!((Monster)this).isDrowning){
+										Character.targetX=Character.step;
+										Character.isMoving=true;
+										Character.isPushing=true;
+															}
+								}
+								else{
+										Character.targetX=Character.step;
+										Character.isMoving=true;
+										Character.isPushing=true;
+									}
+								}
+							}
 					else{//Collision right
 						boolean willMove=true;
-						getCollidingTile(x+width,y+height-1);//top part collision
+						getCollidingTile(new Rectangle(x+32,y,16,16));//top part collision
 						if(collision_tile!=null && collision_tile.getType()==12){
 							if(checkArrow(12))
 								willMove=false;
 						}
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
-						if(collision_tile!=null && collision_tile instanceof Water)
-							willMove=false;
-						getCollidingTile(x+width,y);//bottom part collision
+						getCollidingTile(new Rectangle(x+32,y+16,16,16));//bottom part collision
 						if(collision_tile!=null && collision_tile.getType()==12){
 							if(checkArrow(12))
 								willMove=false;
 						}
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
-						if(collision_tile!=null && collision_tile instanceof Water)
-							willMove=false;
+						if(isFullyCollidingWithWater(new Rectangle(x+32,y+16,16,16),new Rectangle(x+32,y,16,16))){
+							if(this instanceof Monster)
+								((Monster)this).moveInWater();
+						}
 						if(willMove){
 							Character.targetX=Character.step;
 							Character.isMoving=true;
@@ -165,45 +171,45 @@ public class Tile implements Comparable<Tile> {
 					}
 					break;
 					
-		case Down:	if(!checkCollison(x,y+height,x+width-1,y+height)&& Character.dir==Game.Direction.Down){
-						// no collision in front of the Block but its possible the block is  already colliding with
-						//something
+		case Down:	if(!checkCollision(new Rectangle(x,y+32,16,16),new Rectangle(x+16,y+32,16,16))){
 						boolean willMove=true;
-						getCollidingTile(x,y);
-						if(collision_tile!=null && collision_tile.shape.contains(x,y) 
-								 && collision_tile.getType()==11){
-							if(checkArrow(11))//one-way up arrow
-								willMove=false;
-						}
-						getCollidingTile(x+width-1,y);
-						if(collision_tile!=null && collision_tile.shape.contains(x+width-1,y) 
-								 && collision_tile.getType()==11){
+						getCollidingTile(new Rectangle(x,y,32,32));
+						if(collision_tile!=null && collision_tile.getType()==11){
 							if(checkArrow(11))
 								willMove=false;
-						}						
+							}
 						if(willMove){
-							Character.targetX=Character.step;
-							Character.isMoving=true;
-							Character.isPushing=true;
-						}
+							if(this instanceof Monster){
+								if(!((Monster)this).isDrowning){
+									Character.targetX=Character.step;
+									Character.isMoving=true;
+									Character.isPushing=true;
+														}
+							}
+							else{
+									Character.targetX=Character.step;
+									Character.isMoving=true;
+									Character.isPushing=true;
+								}
+							}
 					}else{//There is a collision Down.
 						boolean willMove=true;
-						getCollidingTile(x,y+height);//top part collision
+						getCollidingTile(new Rectangle(x,y+32,16,16));//bottom left part collision
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
 						if(collision_tile!=null && collision_tile.getType()==11)
 							if(checkArrow(11))
 									willMove=false;
-						if(collision_tile!=null && collision_tile instanceof Water)
-							willMove=false;
-						getCollidingTile(x+width-1,y+height);//bottom part collision
+						getCollidingTile(new Rectangle(x+16,y+32,16,16));//bottom right part collision
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
 						if(collision_tile!=null && collision_tile.getType()==11)
 							if(checkArrow(11))
 									willMove=false;
-						if(collision_tile!=null && collision_tile instanceof Water)
-							willMove=false;
+						if(isFullyCollidingWithWater(new Rectangle(x+16,y+32,16,16),new Rectangle(x,y+32,16,16))){
+							if(this instanceof Monster)
+								((Monster)this).moveInWater();
+						}
 						if(willMove){
 							Character.targetX=Character.step;
 							Character.isMoving=true;
@@ -213,46 +219,47 @@ public class Tile implements Comparable<Tile> {
 						
 					break;
 		case Up:
-					if(!checkCollison(x,y-1,x+width-1,y-1)&& Character.dir==Game.Direction.Up){
+					if(!checkCollision(new Rectangle(x,y-16,16,16),new Rectangle(x+16,y-16,16,16))){
 						boolean willMove=true;
-						getCollidingTile(x,y);
-						if(collision_tile!=null && collision_tile.shape.contains(x,y) 
-								 && collision_tile.getType()==14){
-							if(checkArrow(14))//one-way down arrow
+						getCollidingTile(new Rectangle(x,y,32,32));
+						if(collision_tile!=null && collision_tile.getType()==14){
+							if(checkArrow(14))
 								willMove=false;
-						}	
-						getCollidingTile(x+width-1,y);
-						if(collision_tile!=null && collision_tile.shape.contains(x+width-1,y) 
-								 && collision_tile.getType()==14){
-							if(checkArrow(14))//one-way down arrow
-								willMove=false;
-						}	
+						}
 						if(willMove){
-							Character.targetX=-Character.step;
-							Character.isMoving=true;
-							Character.isPushing=true;
-						}
-						
-					}else{
+							if(this instanceof Monster){
+								if(!((Monster)this).isDrowning){
+									Character.targetX=-Character.step;
+									Character.isMoving=true;
+									Character.isPushing=true;
+														}
+							}
+							else{
+									Character.targetX=-Character.step;
+									Character.isMoving=true;
+									Character.isPushing=true;
+								}
+							}
+						}else{
 						boolean willMove=true;
-						getCollidingTile(x,y-1);//top part collision
+						getCollidingTile(new Rectangle(x,y-16,16,16));//top left part collision
 						if(collision_tile!=null && collision_tile.getType()==14){
 							if(checkArrow(14))
 								willMove=false;
 						}
-						if(collision_tile!=null && collision_tile instanceof Water)
-								willMove=false;
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
-						getCollidingTile(x+width-1,y-1);//bottom part collision
+						getCollidingTile(new Rectangle(x+16,y-16,16,16));//top right part collision
 						if(collision_tile!=null && collision_tile.getType()==14){
 							if(checkArrow(14))
 								willMove=false;
 						}
-						if(collision_tile!=null && collision_tile instanceof Water)
-							willMove=false;
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
+						if(isFullyCollidingWithWater(new Rectangle(x,y-16,16,16),new Rectangle(x+16,y-16,16,16))){
+							if(this instanceof Monster)
+								((Monster)this).moveInWater();
+						}
 						if(willMove){
 							Character.targetX=-Character.step;
 							Character.isMoving=true;
@@ -261,45 +268,47 @@ public class Tile implements Comparable<Tile> {
 					}
 					break;
 		case Left:
-					if(!checkCollison(x-1,y,x-1,y+height-1)&& Character.dir==Game.Direction.Left){
+					if(!checkCollision(new Rectangle(x-16,y,16,16),new Rectangle(x-16,y+16,16,16))){
 						boolean willMove=true;
-						getCollidingTile(x,y);
-						if(collision_tile!=null && collision_tile.shape.contains(x,y) 
-								 && collision_tile.getType()==13){
-							if(checkArrow(13))//one-way down arrow
-								willMove=false;
-						}
-						getCollidingTile(x,y+height-1);
-						if(collision_tile!=null && collision_tile.shape.contains(x,y+height-1) 
-								 && collision_tile.getType()==13){
-							if(checkArrow(13))//one-way down arrow
+						getCollidingTile(new Rectangle(x,y,32,32));
+						if(collision_tile!=null && collision_tile.getType()==13){
+							if(checkArrow(13))
 								willMove=false;
 						}
 						if(willMove){
-							Character.targetX=-Character.step;
-							Character.isMoving=true;
-							Character.isPushing=true;
-						}
+							if(this instanceof Monster){
+								if(!((Monster)this).isDrowning){
+									Character.targetX=-Character.step;
+									Character.isMoving=true;
+									Character.isPushing=true;
+														}
+							}
+							else{
+									Character.targetX=-Character.step;
+									Character.isMoving=true;
+									Character.isPushing=true;
+								}
+							}
 					}else{
 						boolean willMove=true;
-						getCollidingTile(x-1,y);//top part collision
+						getCollidingTile(new Rectangle(x-16,y,16,16));//top left part collision
 						if(collision_tile!=null && collision_tile.getType()==13){
 							if(checkArrow(13))
 								willMove=false;
 						}
-						if(collision_tile!=null && collision_tile instanceof Water)
-							willMove=false;
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
-						getCollidingTile(x-1,y+height-1);//bottom part collision			
+						getCollidingTile(new Rectangle(x-16,y+16,16,16));//bottom left part collision			
 						if(collision_tile!=null && collision_tile.getType()==13){
 							if(checkArrow(13))
 								willMove=false;
 						}
-						if(collision_tile!=null && collision_tile instanceof Water)
-							willMove=false;
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
+						if(isFullyCollidingWithWater(new Rectangle(x-16,y+16,16,16),new Rectangle(x-16,y,16,16))){
+							if(this instanceof Monster)
+								((Monster)this).moveInWater();
+						}
 						if(willMove){
 							Character.targetX=-Character.step;
 							Character.isMoving=true;
@@ -311,6 +320,15 @@ public class Tile implements Comparable<Tile> {
 		int[] xpoints={x,x+width,x+width,x};
 		int[] ypoints={y,y,y+height,y+height};
 		shape=new Polygon(xpoints, ypoints, 4);
+	}
+	private boolean isFullyCollidingWithWater(Rectangle mask1,
+			Rectangle mask2) {
+		for(int i=0;i<Level.map_tile.size();i++){
+			if(Level.map_tile.get(i).getType()==95)
+				if(Level.map_tile.get(i).shape.intersects(mask1) && Level.map_tile.get(i).shape.intersects(mask1))
+					return true;
+		}
+		return false;
 	}
 	public void setType(int i) {
 		type=i;
@@ -351,10 +369,10 @@ public class Tile implements Comparable<Tile> {
 		}
 		return false;
 	}
-	private boolean getCollidingTile(int x1,int y1) {
+	private boolean getCollidingTile(Rectangle mask) {
 		Tile thisTile=this;
 		for(Tile aTile:Level.map_tile){
-			if(aTile.shape.contains(x1,y1)){
+			if(aTile.shape.intersects(mask)){
 				if(aTile!=thisTile){
 					collision_tile=aTile;
 					return true;
@@ -388,12 +406,15 @@ public class Tile implements Comparable<Tile> {
 					isSolid=false;
 					break;			
 		case 91: 	img=Level.game_tileset[41];//up-down ladder
+					depth=-1;
 					isSolid=false;
 					break;
 		case 92: 	img=Level.game_tileset[40];//right ladder
+					depth=-1;
 					isSolid=false;
 					break;
 		case 93: 	img=Level.game_tileset[33];//left ladder
+					depth=-1;
 					isSolid=false;
 					break;
 		case 94: 	img=Level.game_tileset[2];//heart give no ammo
@@ -405,6 +426,5 @@ public class Tile implements Comparable<Tile> {
 		case 98: 	img=Level.game_tileset[16];//chest open top
 					break;			
 		}
-		
 	}
 }

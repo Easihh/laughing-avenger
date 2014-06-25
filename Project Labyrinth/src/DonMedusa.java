@@ -1,4 +1,5 @@
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -62,21 +63,21 @@ public class DonMedusa extends Monster {
 	}
 	private void move() {
 		switch(dir){
-		case Left: 	if(checkCollison(x-1, y, x-1, y+height-1)){
+		case Left: 	if(checkCollision(new Rectangle(x-2, y,2,16),new Rectangle(x-2, y+16,2,16))){
 						dir=Game.Direction.Right;
 					}else x-=2;
 					break;
-		case Right: if(checkCollison(x+width, y+height-1, x+width, y)){
+		case Right: if(checkCollision(new Rectangle(x+32, y,2,16),new Rectangle(x+32, y+16,2,16))){
 						dir=Game.Direction.Left;
 					}else x+=2;
 					break;
-		case Up: if(checkCollison(x+width-1, y-1, x, y-1)){
+		case Up: 	if(checkCollision(new Rectangle(x, y-2,16,2),new Rectangle(x+16, y-2,16,2))){
 						dir=Game.Direction.Down;
 					}else
 					y-=2;
 					break;
-		case Down: if(checkCollison(x+width-1, y+height, x, y+height)){
-					dir=Game.Direction.Up;
+		case Down: if(checkCollision(new Rectangle(x, y+32,16,2),new Rectangle(x+16, y+32,16,2))){
+						dir=Game.Direction.Up;
 					}else
 					y+=2;
 					break;

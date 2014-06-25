@@ -81,7 +81,7 @@ public class Character {
 	}
 	private void getMonsterStatesheet(BufferedImage StateSheet) {
 		int sheet_row=1;
-		int sheet_cols=2;
+		int sheet_cols=4;
 		Level.monsterState=new BufferedImage[sheet_row*sheet_cols];
 		for(int i=0;i<sheet_row;i++){
 			 for(int j=0;j<sheet_cols;j++){
@@ -302,6 +302,7 @@ public class Character {
 			}
 			if(weapon.dir==Game.Direction.Up){
 				if(aTile.shape.contains(weapon.x+width-1,weapon.y-1) && aTile.shape.contains(weapon.x,weapon.y-1)){
+					System.out.println("Type:"+aTile.shape.getBounds());
 					if(aTile.isSolid && (!(aTile instanceof Water)))
 						Character.isShooting=false;
 					if(aTile instanceof Monster)
@@ -363,6 +364,7 @@ public class Character {
 		if(aTile.TransformedState==0)
 				aTile.transform();
 		else if(aTile.TransformedState==1 || aTile.TransformedState==2){
+			if(!aTile.isDrowning)
 				aTile.moveAcross_Screen(weapon.dir);
 		}
 		
@@ -381,13 +383,16 @@ public class Character {
 				Level.takeGoal();
 		//Full Collision on same tile
 		if(intersect1!=null && intersect2!=null){
+			if(intersect1 instanceof Monster) return true;
 			if(intersect1==intersect2){
 				switch(intersect1.getType()){
 				case 1:		return true;//rock
 				case 2:		select_Tile=intersect1;
 							intersect1.moveTile(step);
-							return true;
-				case 3:		takeHeart(intersect1);
+							return true;//}
+				case 3:		if(Math.abs(intersect1.x-Character.x)<=16 && Math.abs(intersect1.y-Character.y)<=16){
+								takeHeart(intersect1);
+							}
 							break;
 				case 6:		return true;//tree
 				case 11:	//One-way Arrow
@@ -400,15 +405,19 @@ public class Character {
 				case 19:	//worm
 				case 20:	return true;
 				case 30: 	return true;//rock wall
-				case 100:	if(Character.y<2*step)
-								Level.nextLevel(); //end door
-							return false;
+				case 88:	return true; //lava
 				case 94:  //heart give no ammo
-							takeHeart(intersect1);
+							if(Math.abs(intersect1.x-Character.x)<=16 && Math.abs(intersect1.y-Character.y)<=16){
+								takeHeart(intersect1);
+							}
 							break;
 				case 95:	return true;//water
 				case 96: 	return true;//door closed
 				case 99:  	return false; //the background tile
+				case 100:	if(Character.y<2*step){
+								Level.nextLevel(); //end door
+								return true;}
+							return false;
 				}
 				
 			}
@@ -530,6 +539,7 @@ public class Character {
 	private void checkMovementState() {
 		if(targetX<0){
 			if(dir==Game.Direction.Left){
+				beingPushed=false;
 				targetX+=movement;
 				Character.x-=movement;
 				walk_left.setImage();
@@ -549,6 +559,7 @@ public class Character {
 		}
 		if(targetX>0){
 			if(dir==Game.Direction.Right){
+				beingPushed=false;
 				targetX-=movement;
 				Character.x+=movement;
 				walk_right.setImage();

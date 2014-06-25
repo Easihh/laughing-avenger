@@ -8,7 +8,6 @@ public class Snakey  extends Monster{
 	private Animation SnakeyAnimation;
 	private BufferedImage spriteSheet[];
 	private long time_since_transform;
-	
 	public Snakey(int x, int y, int type) {
 		super(x, y, type);
 		SnakeyAnimation=new Animation();
@@ -36,15 +35,35 @@ public class Snakey  extends Monster{
 		TransformedState=1;
 	}
 	private void checkState() {
-		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1){
+		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1 && !isDrowning){
 			TransformedState=2;
 			img=Level.monsterState[1];
 		}
-		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2){
+		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2 && !isDrowning){
 			TransformedState=0;
-			type=0;
+			type=19;
 			img=previousState;
+		}
+		if((System.nanoTime()-time_since_water)/nano>2000 && TransformedState==1 && isDrowning){
+			TransformedState=3;
+			img=Level.monsterState[2];
+		}
+		if((System.nanoTime()-time_since_water)/nano>3000 && TransformedState==3 && isDrowning){
+			TransformedState=4;
+			img=Level.monsterState[3];
+		}
+		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
+			Kill_Respawn();
 		}	
+	}
+	private void Kill_Respawn() {
+		Snakey me=copy();
+		Level.addRespawn(me);
+		Level.toRemove.add(this);
+	}
+	public Snakey  copy(){
+		Snakey clone=new Snakey(oldX,oldY,oldtype);
+		return clone;
 	}
 	private void getImage() throws IOException {
 		BufferedImage img=null;
@@ -62,16 +81,7 @@ public class Snakey  extends Monster{
 		}
 	private boolean isOffScreen(){
 		if(x>Level.map_width || x<0 || y<0 || y>Level.map_height){
-			Snakey aTile=this;
-			aTile.x=oldX;
-			aTile.y=oldY;
-			aTile.type=oldtype;
-			aTile.img=previousState;	
-			aTile.isMovingAcrossScreen=false;
-			aTile.TransformedState=0;
-			Level.addRespawn(aTile);
-			aTile.updateMask();
-			Level.toRemove.add(aTile);//remove the tile if it goes offscreen
+			Kill_Respawn();
 			return true;
 		}
 		return false;

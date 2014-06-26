@@ -28,7 +28,7 @@ public class Death {
 	private void getSpriteFromSheet() {
 		int maxFrame=4;
 		animation=new BufferedImage[50];
-		try {img=ImageIO.read(getClass().getResource("/tileset/lolo_death.png"));} catch (IOException e) {e.printStackTrace();}
+		try {img=ImageIO.read(getClass().getResourceAsStream("/tileset/lolo_death.png"));} catch (IOException e) {e.printStackTrace();}
 		 for(int i=0;i<1;i++){//all animation on same row
 			 for(int j=0;j<maxFrame;j++){
 				animation[(i*maxFrame)+j]=img.getSubimage(j*width, i*height, width, height);

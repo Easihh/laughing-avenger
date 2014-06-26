@@ -19,7 +19,7 @@ public class Lava extends Tile {
 	private void getImage(){
 		single_img=new BufferedImage[6];
 		BufferedImage img=null;
-		try {img=ImageIO.read(getClass().getResource("/tileset/lava.png"));} catch (IOException e) {e.printStackTrace();}
+		try {img=ImageIO.read(getClass().getResourceAsStream("/tileset/lava.png"));} catch (IOException e) {e.printStackTrace();}
 		for(int i=0;i<1;i++){//all animation on same row
 			 for(int j=0;j<6;j++){
 				single_img[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);

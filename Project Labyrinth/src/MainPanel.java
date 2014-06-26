@@ -65,9 +65,9 @@ public class MainPanel extends JPanel {
 		BufferedImage[] img=new BufferedImage[4];
 		BufferedImage anImg=null;
 		try {
-			power_icon=ImageIO.read(getClass().getResource("/tileset/power_icon.png"));
-			hammer_icon=ImageIO.read(getClass().getResource("/tileset/hammer.png"));
-			anImg=ImageIO.read(getClass().getResource("/tileset/flashing_icon.png"));
+			power_icon=ImageIO.read(getClass().getResourceAsStream("/tileset/power_icon.png"));
+			hammer_icon=ImageIO.read(getClass().getResourceAsStream("/tileset/hammer.png"));
+			anImg=ImageIO.read(getClass().getResourceAsStream("/tileset/flashing_icon.png"));
 			for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<4;j++){
 					img[(i*2)+j]=anImg.getSubimage(j*33, i*33, 33, 33);

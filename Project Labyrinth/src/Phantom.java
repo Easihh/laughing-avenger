@@ -67,7 +67,7 @@ public class Phantom extends Monster {
 		walk_down_img=new BufferedImage[3];
 		BufferedImage img=null;
 		try {
-			img=ImageIO.read(getClass().getResource("/tileset/phantom_walk_left.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/phantom_walk_left.png"));
 			} catch (IOException e) {e.printStackTrace();}
 		//left
 		for(int i=0;i<1;i++){//all animation on same row
@@ -80,7 +80,7 @@ public class Phantom extends Monster {
 		walk_left.AddScene(walk_left_img[2], 250);
 		//right
 		try {
-			img=ImageIO.read(getClass().getResource("/tileset/phantom_walk_right.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/phantom_walk_right.png"));
 			} catch (IOException e) {e.printStackTrace();}
 		for(int i=0;i<1;i++){//all animation on same row
 			 for(int j=0;j<3;j++){
@@ -92,7 +92,7 @@ public class Phantom extends Monster {
 		walk_right.AddScene(walk_right_img[2], 250);
 		///Down
 		try {
-			img=ImageIO.read(getClass().getResource("/tileset/phantom_walk_down.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/phantom_walk_down.png"));
 			} catch (IOException e) {e.printStackTrace();}
 		for(int i=0;i<1;i++){//all animation on same row
 			 for(int j=0;j<3;j++){
@@ -104,7 +104,7 @@ public class Phantom extends Monster {
 		walk_down.AddScene(walk_down_img[2], 250);
 		//up
 		try {
-			img=ImageIO.read(getClass().getResource("/tileset/phantom_walk_up.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/phantom_walk_up.png"));
 			} catch (IOException e) {e.printStackTrace();}
 		for(int i=0;i<1;i++){//all animation on same row
 			 for(int j=0;j<3;j++){

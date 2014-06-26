@@ -85,16 +85,16 @@ public class Gol extends Monster {
 	}
 	private void getImg() throws IOException {
 		switch(type){
-		case 7:	projectile_img=ImageIO.read(getClass().getResource("/tileset/projectile/dragon_shot_up.png"));
+		case 7:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_up.png"));
 				super.img=Level.game_tileset[24];
 				break;
-		case 8:	projectile_img=ImageIO.read(getClass().getResource("/tileset/projectile/dragon_shot_down.png"));
+		case 8:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_down.png"));
 				super.img=Level.game_tileset[25];
 				break;
-		case 9:	projectile_img=ImageIO.read(getClass().getResource("/tileset/projectile/dragon_shot_left.png"));
+		case 9:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_left.png"));
 				super.img=Level.game_tileset[26];
 				break;
-		case 10:projectile_img=ImageIO.read(getClass().getResource("/tileset/projectile/dragon_shot_right.png"));
+		case 10:projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_right.png"));
 				super.img=Level.game_tileset[27];
 				break;
 		}

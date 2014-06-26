@@ -21,7 +21,7 @@ public class Water extends Tile{
 	private void getImage(){
 		single_img=new BufferedImage[4];
 		BufferedImage img=null;
-		try {img=ImageIO.read(getClass().getResource("/tileset/water_sheet.png"));} catch (IOException e) {e.printStackTrace();}
+		try {img=ImageIO.read(getClass().getResourceAsStream("/tileset/water_sheet.png"));} catch (IOException e) {e.printStackTrace();}
 		for(int i=0;i<1;i++){//all animation on same row
 			 for(int j=0;j<4;j++){
 				single_img[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);

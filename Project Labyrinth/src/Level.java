@@ -1,7 +1,7 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Vector;
@@ -62,7 +62,7 @@ public class Level {
 		}
 		XMLInputFactory inputFactory= XMLInputFactory.newFactory();
 		try{
-			FileReader fileReader= new FileReader("src/Level"+room+"map.TMX");
+			InputStream fileReader= this.getClass().getResourceAsStream("Level"+room+"map.tmx");
 			XMLStreamReader reader= inputFactory.createXMLStreamReader(fileReader);
 			while(reader.hasNext()){
 				int eventType=reader.getEventType();
@@ -90,15 +90,15 @@ public class Level {
 		Labyrinth.GameState=Game.GameState.NotStarted;
 	}
 	private void verifyPowerAllowed() {
-		if(room==1){
+		/*if(room==1){
 			Power[0]=1;
 			Power[1]=2;
 			Power[2]=3;
-		}
+		}*/
 		
 	}
 	private void getGameTile() throws IOException {
-		BufferedImage img=ImageIO.read(getClass().getResource("/tileset/game_tileset.png"));
+		BufferedImage img=ImageIO.read(getClass().getResourceAsStream("/tileset/game_tileset.png"));
 		 for(int i=0;i<tileset_rows;i++){
 			 for(int j=0;j<tileset_cols;j++){
 				game_tileset[(i*tileset_cols)+j]=img.getSubimage(j*tileSize, i*tileSize, tileSize, tileSize);
@@ -109,7 +109,7 @@ public class Level {
 		BufferedImage img=null;
 		switch(background){
 		case "start":	
-					img=ImageIO.read(getClass().getResource("/tileset/testfloor.png"));
+					img=ImageIO.read(getClass().getResourceAsStream("/tileset/testfloor.png"));
 	}
 	map_background=new Tile(img);
 }
@@ -360,6 +360,7 @@ public class Level {
 		}
 		map_tile.removeAll(toRemove);
 		canRespawn=false;
+		Sound.resetSound();
 		Sound.DoorOpen.start();
 	}
 	public static void nextLevel() {
@@ -372,18 +373,8 @@ public class Level {
 		remake++;
 		Labyrinth.level_is_loaded=false;
 		MainPanel.theLevel=new Level();
-		Sound.ArrowBridgePowerUsed.setFramePosition(0);
-		Sound.Death.setFramePosition(0);
-		Sound.DoorOpen.setFramePosition(0);
-		Sound.DragonSound.setFramePosition(0);
-		Sound.HammerPowerUsed.setFramePosition(0);
-		Sound.HeartSound.setFramePosition(0);
-		Sound.MedusaSound.setFramePosition(0);
-		Sound.MonsterDestroyed.setFramePosition(0);
-		Sound.PowerEnabled.setFramePosition(0);
-		Sound.ShotSound.setFramePosition(0);
-		Sound.Sleeper.setFramePosition(0);
+		Sound.resetSound();
 		Sound.StageMusic.setFramePosition(0);
-		Sound.StageMusic.loop(Clip.LOOP_CONTINUOUSLY);	
+		Sound.StageMusic.loop(Clip.LOOP_CONTINUOUSLY);
 	}
 }

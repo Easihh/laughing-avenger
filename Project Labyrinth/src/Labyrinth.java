@@ -1,6 +1,7 @@
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import java.awt.Toolkit;
 
 
 public class Labyrinth extends JFrame{
@@ -24,6 +25,7 @@ public class Labyrinth extends JFrame{
 	}
 
 	public Labyrinth() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Labyrinth.class.getResource("/tileset/Game_Icon.png")));
 		GameState=Game.GameState.NotStarted;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(new Dimension(672,540));

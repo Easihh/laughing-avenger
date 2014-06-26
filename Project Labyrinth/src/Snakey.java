@@ -68,9 +68,9 @@ public class Snakey  extends Monster{
 	private void getImage() throws IOException {
 		BufferedImage img=null;
 		if(super.type==20)
-			img=ImageIO.read(getClass().getResource("/tileset/worm_right.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/worm_right.png"));
 		if(super.type==19)
-			img=ImageIO.read(getClass().getResource("/tileset/worm_left.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/worm_left.png"));
 		for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<2;j++){
 					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);

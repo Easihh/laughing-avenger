@@ -110,7 +110,7 @@ public class Leeper extends Monster{
 		BufferedImage img=null;
 		spriteSheet = new BufferedImage[2];
 		try {//left movement
-			img=ImageIO.read(getClass().getResource("/tileset/leeper_left.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_left.png"));
 			for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<2;j++){
 					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
@@ -119,7 +119,7 @@ public class Leeper extends Monster{
 			walk_left.AddScene(spriteSheet[0], 150);
 			walk_left.AddScene(spriteSheet[1], 150);
 			//left Sleep
-			img=ImageIO.read(getClass().getResource("/tileset/leeper_sleep_left.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_sleep_left.png"));
 			for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<2;j++){
 					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
@@ -128,7 +128,7 @@ public class Leeper extends Monster{
 			sleep_left.AddScene(spriteSheet[0], 500);
 			sleep_left.AddScene(spriteSheet[1], 500);
 			///Right movement
-			img=ImageIO.read(getClass().getResource("/tileset/leeper_right.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_right.png"));
 			for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<2;j++){
 					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
@@ -137,7 +137,7 @@ public class Leeper extends Monster{
 			walk_right.AddScene(spriteSheet[0], 150);
 			walk_right.AddScene(spriteSheet[1], 150);
 			//right Sleep
-			img=ImageIO.read(getClass().getResource("/tileset/leeper_sleep_right.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_sleep_right.png"));
 			for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<2;j++){
 					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
@@ -146,7 +146,7 @@ public class Leeper extends Monster{
 			sleep_right.AddScene(spriteSheet[0], 500);
 			sleep_right.AddScene(spriteSheet[1], 500);
 			//Up movement
-			img=ImageIO.read(getClass().getResource("/tileset/leeper_up.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_up.png"));
 			for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<2;j++){
 					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
@@ -157,7 +157,7 @@ public class Leeper extends Monster{
 			sleep_up.AddScene(spriteSheet[0], 500);
 			sleep_up.AddScene(spriteSheet[1], 500);
 			//Down movement
-			img=ImageIO.read(getClass().getResource("/tileset/leeper_down.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_down.png"));
 			for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<2;j++){
 					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
@@ -166,7 +166,7 @@ public class Leeper extends Monster{
 			walk_down.AddScene(spriteSheet[0], 150);
 			walk_down.AddScene(spriteSheet[1], 150);
 			//Down sleep
-			img=ImageIO.read(getClass().getResource("/tileset/leeper_sleep_down.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_sleep_down.png"));
 			for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<2;j++){
 					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);

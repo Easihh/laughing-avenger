@@ -34,10 +34,10 @@ public class DonMedusa extends Monster {
 		DonMedusaAnimation.AddScene(spriteSheet[0], 500);
 		DonMedusaAnimation.AddScene(spriteSheet[1], 500);
 		bullet_type=new BufferedImage[4];
-		bullet_type[0]=ImageIO.read(getClass().getResource("/tileset/projectile/DonMedusa_shot_right.png"));
-		bullet_type[1]=ImageIO.read(getClass().getResource("/tileset/projectile/DonMedusa_shot_left.png"));
-		bullet_type[2]=ImageIO.read(getClass().getResource("/tileset/projectile/DonMedusa_shot_down.png"));
-		bullet_type[3]=ImageIO.read(getClass().getResource("/tileset/projectile/DonMedusa_shot_up.png"));
+		bullet_type[0]=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/DonMedusa_shot_right.png"));
+		bullet_type[1]=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/DonMedusa_shot_left.png"));
+		bullet_type[2]=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/DonMedusa_shot_down.png"));
+		bullet_type[3]=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/DonMedusa_shot_up.png"));
 	}
 
 	@Override

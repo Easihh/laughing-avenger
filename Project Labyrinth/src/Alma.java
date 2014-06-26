@@ -37,7 +37,7 @@ public class Alma extends Monster{
 		BufferedImage img=null;
 		BufferedImage[] images=new BufferedImage[3];
 		try {
-			img=ImageIO.read(getClass().getResource("/tileset/alma_down.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/alma_down.png"));
 			//walk down
 			for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<3;j++){
@@ -48,7 +48,7 @@ public class Alma extends Monster{
 			walk_down.AddScene(images[1], 150);
 			walk_down.AddScene(images[2], 150);
 			//walk up
-			img=ImageIO.read(getClass().getResource("/tileset/alma_up.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/alma_up.png"));
 			for(int i=0;i<1;i++){//all animation on same row
 				for(int j=0;j<3;j++){
 					images[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
@@ -58,7 +58,7 @@ public class Alma extends Monster{
 			walk_up.AddScene(images[1], 150);
 			walk_up.AddScene(images[2], 150);
 			//walk left
-			img=ImageIO.read(getClass().getResource("/tileset/alma_left.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/alma_left.png"));
 			for(int i=0;i<1;i++){//all animation on same row
 				for(int j=0;j<3;j++){
 					images[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
@@ -68,7 +68,7 @@ public class Alma extends Monster{
 			walk_left.AddScene(images[1], 150);
 			walk_left.AddScene(images[2], 150);	
 			//walk right
-			img=ImageIO.read(getClass().getResource("/tileset/alma_right.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/alma_right.png"));
 			for(int i=0;i<1;i++){//all animation on same row
 				for(int j=0;j<3;j++){
 					images[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
@@ -78,7 +78,7 @@ public class Alma extends Monster{
 			walk_right.AddScene(images[1], 150);
 			walk_right.AddScene(images[2], 150);
 			//roll
-			img=ImageIO.read(getClass().getResource("/tileset/alma_roll.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/alma_roll.png"));
 			for(int i=0;i<1;i++){//all animation on same row
 				for(int j=0;j<2;j++){
 					images[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);

@@ -88,7 +88,7 @@ public class Skull extends Monster{
 	private void getImage(){
 		BufferedImage img=null;
 		skull_img=new BufferedImage[2];
-		try {img=ImageIO.read(getClass().getResource("/tileset/skull.png"));
+		try {img=ImageIO.read(getClass().getResourceAsStream("/tileset/skull.png"));
 			} catch (IOException e) {e.printStackTrace();}
 		for(int i=0;i<1;i++){//all animation on same row
 			 for(int j=0;j<2;j++){

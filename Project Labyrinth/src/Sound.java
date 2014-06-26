@@ -1,5 +1,7 @@
-import java.io.File;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
 import javax.sound.sampled.*;
 
 public class Sound {
@@ -17,7 +19,8 @@ public class Sound {
 	public static Clip	ShotSound;
 	public static Clip 	StageMusic;
     public Sound(String Filename) {
-        File Sound= new File("src/Sound/"+Filename+".wav");
+    	InputStream source=this.getClass().getResourceAsStream("/Sound/"+Filename+".wav");
+        InputStream Sound=new BufferedInputStream(source);
         Clip clip;
 		try {
 			clip = AudioSystem.getClip();
@@ -40,5 +43,18 @@ public class Sound {
 		catch (IOException io){io.printStackTrace();}
 		catch (UnsupportedAudioFileException uafe){uafe.printStackTrace();}
         // getAudioInputStream() also accepts a File or InputStream
+    }
+    public static void resetSound(){
+		Sound.ArrowBridgePowerUsed.setFramePosition(0);
+		Sound.Death.setFramePosition(0);
+		Sound.DoorOpen.setFramePosition(0);
+		Sound.DragonSound.setFramePosition(0);
+		Sound.HammerPowerUsed.setFramePosition(0);
+		Sound.HeartSound.setFramePosition(0);
+		Sound.MedusaSound.setFramePosition(0);
+		Sound.MonsterDestroyed.setFramePosition(0);
+		Sound.PowerEnabled.setFramePosition(0);
+		Sound.ShotSound.setFramePosition(0);
+		Sound.Sleeper.setFramePosition(0);
     }
 }

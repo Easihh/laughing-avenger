@@ -1,3 +1,10 @@
+Version 0.38A:
+
+-Added temporary Tray Icon to the program.
+-Last push did not correctly include level 3 and 4.
+-Fixed bug where chest Sound would not be played in the next level if player did not die.
+-Fixed code so that compiling to a single jar file can easily be done.
+
 Version 0.38:
 
 -Level 3,4 Have been created.

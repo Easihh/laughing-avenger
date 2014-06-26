@@ -50,9 +50,9 @@ public class Character {
 		isShooting=false;
 		isMoving=false;
 		isPushing=false;
-		powerActivated_hammer=true;
-		powerActivated_ladder=true;
-		powerActivated_arrow=true;
+		powerActivated_hammer=false;
+		powerActivated_ladder=false;
+		powerActivated_arrow=false;
 		 dir=Game.Direction.Down;
 		 lastKey=Game.button.None;
 		 keypressed=new ArrayList<Game.button>();
@@ -62,17 +62,17 @@ public class Character {
 		 walk_right=new Animation();
 		 targetX=0;
 		 try {
-			img=ImageIO.read(getClass().getResource("/tileset/Lolo_down.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/Lolo_down.png"));
 			getImagefromSpriteSheet(img,walk_down,"down");
-			img=ImageIO.read(getClass().getResource("/tileset/Lolo_up.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/Lolo_up.png"));
 			getImagefromSpriteSheet(img,walk_up,"up");
-			img=ImageIO.read(getClass().getResource("/tileset/Lolo_left.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/Lolo_left.png"));
 			getImagefromSpriteSheet(img,walk_left,"left");
-			img=ImageIO.read(getClass().getResource("/tileset/Lolo_right.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/Lolo_right.png"));
 			getImagefromSpriteSheet(img,walk_right,"right");
-			img=ImageIO.read(getClass().getResource("/tileset/shoot_sheet.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/shoot_sheet.png"));
 			getProjectileSheet(img);
-			img=ImageIO.read(getClass().getResource("/tileset/monster_state.png"));
+			img=ImageIO.read(getClass().getResourceAsStream("/tileset/monster_state.png"));
 			getMonsterStatesheet(img);
 			
 		} catch (IOException e) {
@@ -302,7 +302,6 @@ public class Character {
 			}
 			if(weapon.dir==Game.Direction.Up){
 				if(aTile.shape.contains(weapon.x+width-1,weapon.y-1) && aTile.shape.contains(weapon.x,weapon.y-1)){
-					System.out.println("Type:"+aTile.shape.getBounds());
 					if(aTile.isSolid && (!(aTile instanceof Water)))
 						Character.isShooting=false;
 					if(aTile instanceof Monster)

@@ -1,151 +1,51 @@
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import javax.imageio.ImageIO;
-
 
 public class Character {
 	private final int width=32;
 	private final int height=32;
-	private final int rows=1;// character animation row
-	private final int cols=5;// character animation colum
 	private int movement=2;
-	private Animation walk_down=null;
-	private Animation walk_up=null;
-	private Animation walk_left=null;
-	private Animation walk_right=null;
-	private BufferedImage img=null;
+	
 	public static int x;
 	public static int y;
 	public static Tile select_Tile;
-	
 	public final static int step=16;
 	public static ArrayList<Game.button> keypressed;
 	public static boolean isShooting;
 	public static boolean isPushing;
 	public static boolean isMoving;
-	public static  BufferedImage[] projectile_img;
 	public static Game.button lastKey;
 	public static Game.Direction dir;
 	public static int ammo;
 	public static int targetX;
-	public static boolean powerActivated_hammer;
-	public static boolean powerActivated_ladder;
-	public static boolean powerActivated_arrow;
 	public static boolean beingPushed=false;
 	public static Projectile weapon=null;
 	public static Death Death;
-	public static Point lastPosition;
+	public static boolean canShoot=false;
+	private Movement move;
+	public Power aPower;
 	public Character(int x, int y){
 		Character.x=x;
 		Character.y=y;
 		Character.ammo=0;
+		move= new Movement();
+		aPower=new Power();
 		Death=new Death();
 		isShooting=false;
 		isMoving=false;
 		isPushing=false;
-		powerActivated_hammer=false;
-		powerActivated_ladder=false;
-		powerActivated_arrow=false;
 		 dir=Game.Direction.Down;
 		 lastKey=Game.button.None;
 		 keypressed=new ArrayList<Game.button>();
-		 walk_down=new Animation();
-		 walk_up=new Animation();
-		 walk_left=new Animation();
-		 walk_right=new Animation();
 		 targetX=0;
-		 try {
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/Lolo_down.png"));
-			getImagefromSpriteSheet(img,walk_down,"down");
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/Lolo_up.png"));
-			getImagefromSpriteSheet(img,walk_up,"up");
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/Lolo_left.png"));
-			getImagefromSpriteSheet(img,walk_left,"left");
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/Lolo_right.png"));
-			getImagefromSpriteSheet(img,walk_right,"right");
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/shoot_sheet.png"));
-			getProjectileSheet(img);
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/monster_state.png"));
-			getMonsterStatesheet(img);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	private void getMonsterStatesheet(BufferedImage StateSheet) {
-		int sheet_row=1;
-		int sheet_cols=4;
-		Level.monsterState=new BufferedImage[sheet_row*sheet_cols];
-		for(int i=0;i<sheet_row;i++){
-			 for(int j=0;j<sheet_cols;j++){
-				Level.monsterState[(i*sheet_cols)+j]=StateSheet.getSubimage(j*width, i*height, width, height);
-			 }
-		}
-		
-	}
-	private void getProjectileSheet(BufferedImage spriteSheet) {
-		int sheet_row=1;
-		int sheet_cols=2;
-		projectile_img=new BufferedImage[sheet_row*sheet_cols];
-		for(int i=0;i<sheet_row;i++){
-			 for(int j=0;j<sheet_cols;j++){
-				projectile_img[(i*sheet_cols)+j]=spriteSheet.getSubimage(j*width, i*height, width, height);
-			 }
-		}			
-	}
-	private void getImagefromSpriteSheet(BufferedImage spriteSheet,
-			Animation Animation,String direction) {
-		BufferedImage[] img=new BufferedImage[cols]; 
-		 for(int i=0;i<rows;i++){
-			 for(int j=0;j<cols;j++){
-				img[(i*cols)+j]=spriteSheet.getSubimage(j*width, i*height, width, height);			
-			 }
-		 }
-		 switch(direction){ 
-		 case "left":	for(int i=0;i<cols;i++)
-			 				walk_left.AddScene(img[i],100);
-			 			break;
-		 case "right":	for(int i=0;i<cols;i++)
-							walk_right.AddScene(img[i],100);
-			 			break;
-		 case "down":	for(int i=0;i<cols;i++)
-							walk_down.AddScene(img[i],100);
-			 			break;
-		 case "up":		for(int i=0;i<cols;i++)
-							walk_up.AddScene(img[i],100);
-			 			break;
-		 }
 	}
 	public void render(Graphics g){
-		g.setColor(Color.red);
-		switch(dir){
-	
-		case Down:	if(keypressed.size()==0)					
-						walk_down.reset();
-					g.drawImage(walk_down.getImage(),x,y,width,height,null);
-					break;
-		case Up:	if(keypressed.size()==0)
-						walk_up.reset();
-					g.drawImage(walk_up.getImage(),x,y,width,height,null);
-					break;
-		case Right:	if(keypressed.size()==0)
-						walk_right.reset();
-					g.drawImage(walk_right.getImage(),x,y,width,height,null);
-					break;
-		case Left:	if(keypressed.size()==0)
-						walk_left.reset();
-					g.drawImage(walk_left.getImage(),x,y,width,height,null);
-					break;
-		default: 	g.drawRect(x, y, width, height);
-					break;
-		}
+		if(keypressed.size()==0)					
+			move.getWalkAnimation().reset();
+		g.drawImage(move.getWalkAnimation().getImage(),x,y,width,height,null);
 		if(Character.isShooting)
 			weapon.render(g);		
 	}
@@ -154,6 +54,11 @@ public class Character {
 			if(isWalkingSand())
 				movement=1;
 			else movement=2;
+			if(canShoot){
+				fireProjectile();
+				checkPower();
+				canShoot=false;
+			}
 			movement();
 			MonsterBulletCollision();
 			CollisionWithBullet();
@@ -378,45 +283,41 @@ public class Character {
 					intersect2=aTile;
 		}
 		if(Level.goal.shape.intersects(mask1) && Level.goal.shape.intersects(mask2))
-			if(Level.goal.getType()==5)
+			if(Level.goal.type==Tile.ID.BottomChestOpen.value)
 				Level.takeGoal();
 		//Full Collision on same tile
 		if(intersect1!=null && intersect2!=null){
-			if(intersect1 instanceof Monster) return true;
+			if(intersect1 instanceof Monster && ((Monster)intersect1).type!=Tile.ID.MoveableBlock.value) return true;
 			if(intersect1==intersect2){
 				switch(intersect1.getType()){
-				case 1:		return true;//rock
-				case 2:		select_Tile=intersect1;
-							intersect1.moveTile(step);
-							return true;//}
-				case 3:		if(Math.abs(intersect1.x-Character.x)<=16 && Math.abs(intersect1.y-Character.y)<=16){
+				case 0	:	return true; //rock
+				case 1	:	return true; //closed door
+				case 2:		if(Math.abs(intersect1.x-Character.x)<=16 && Math.abs(intersect1.y-Character.y)<=16){
 								takeHeart(intersect1);
 							}
 							break;
-				case 6:		return true;//tree
-				case 11:	//One-way Arrow
-				case 12:	//left one-way Arrow
-				case 13:	//right one-way Arrow
-				case 14:	//down one-way Arrow
-							OneWayArrow OneArrow=(OneWayArrow)intersect1;
-							return(OneArrow.checkArrow());
-				case 15:	return true;//Skull
-				case 19:	//worm
-				case 20:	return true;
-				case 30: 	return true;//rock wall
-				case 88:	return true; //lava
-				case 94:  //heart give no ammo
+				case 3:  	//heart give no ammo
 							if(Math.abs(intersect1.x-Character.x)<=16 && Math.abs(intersect1.y-Character.y)<=16){
 								takeHeart(intersect1);
 							}
-							break;
-				case 95:	return true;//water
-				case 96: 	return true;//door closed
-				case 99:  	return false; //the background tile
-				case 100:	if(Character.y<2*step){
+							break;	
+				case 4:		if(Character.y<2*step){
 								Level.nextLevel(); //end door
 								return true;}
 							return false;
+				case 8	:	//moveable block
+							select_Tile=intersect1;
+							intersect1.moveTile(step);
+							return true;
+				case 9: 	return true;//Tree
+				case 15:	//One-way Arrow
+				case 20:	//left one-way Arrow
+				case 21:	//right one-way Arrow
+				case 28:	//down one-way Arrow
+							OneWayArrow OneArrow=(OneWayArrow)intersect1;
+							return(OneArrow.checkArrow());
+				case 29:	return true; //rock wall;
+				case 32:	return true;//water
 				}
 				
 			}
@@ -427,7 +328,7 @@ public class Character {
 		//One of the 2 collision mask is empty
 		else if(intersect1==null && intersect2!=null){
 				if(intersect2.isSolid){
-					if(intersect2.getType()!=3 && intersect2.getType()!=94) //hearth considered solid  for enemy projectile 
+					if(intersect2.getType()!=Tile.ID.AmmoHeart.value && intersect2.getType()!=Tile.ID.NoAmmoHeart.value) //hearth considered solid  for enemy projectile 
 						return true;
 				}
 				//not not solid object; look if its One-way Arrow
@@ -438,7 +339,7 @@ public class Character {
 		}
 		else if(intersect2==null && intersect1!=null){
 			if(intersect1.isSolid){
-				if(intersect1.getType()!=3 && intersect1.getType()!=94) //hearth considered solid  for enemy projectile 
+				if(intersect1.getType()!=Tile.ID.AmmoHeart.value && intersect1.getType()!=Tile.ID.NoAmmoHeart.value) //hearth considered solid  for enemy projectile 
 					return true;
 			}
 			//not not solid object; look if its One-way Arrow
@@ -458,7 +359,7 @@ public class Character {
 		Sound.HeartSound.start();
 		if(Level.heart_amount==0)
 			Level.openChest();
-		if(aTile.getType()==3)
+		if(aTile.type==Tile.ID.AmmoHeart.value)
 			Character.ammo+=2;
 	}
 	private void movement() {
@@ -470,7 +371,7 @@ public class Character {
 				lastKey=keypressed.get(keypressed.size()-1);//get last pressed button
 			if(lastKey==Game.button.W && !beingPushed){
 				dir=Game.Direction.Up;
-				walk_up.setImage();
+				move.walk_up.setImage();
 				if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))){
 						targetX=-step;
 						isMoving=true;
@@ -478,7 +379,7 @@ public class Character {
 			}
 			if(lastKey==Game.button.S && !beingPushed){
 				dir=Game.Direction.Down;			
-				walk_down.setImage();
+				move.walk_down.setImage();
 				if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))){
 					targetX=step;
 					isMoving=true;
@@ -488,13 +389,13 @@ public class Character {
 				if(checkKeypressed()){
 					switch(dir){
 					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))){
-									walk_down.setImage();
+									move.walk_down.setImage();
 									targetX=step;
 									isMoving=true;
 								}
 								break;
 					case Up:	if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))){
-									walk_up.setImage();
+									move.walk_up.setImage();
 									targetX=-step;
 									isMoving=true;
 								}
@@ -502,7 +403,7 @@ public class Character {
 					}
 				}else{
 					dir=Game.Direction.Right;
-					walk_right.setImage();
+					move.walk_right.setImage();
 					if(!checkCollision(new Rectangle(x+width,y,16,16),new Rectangle(x+width,y+step,16,16))){
 						targetX=step;
 						isMoving=true;
@@ -513,20 +414,20 @@ public class Character {
 				if(checkKeypressed()){
 					switch(dir){
 					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))){
-									walk_down.setImage();
+									move.walk_down.setImage();
 									targetX=step;
 									isMoving=true;
 								}
 								break;
 					case Up:	if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))){
-									walk_up.setImage();
+									move.walk_up.setImage();
 									targetX=-step;
 									isMoving=true;
 								}
 								break;
 					}
 				}else{	dir=Game.Direction.Left;			
-						walk_left.setImage();
+						move.walk_left.setImage();
 						if(!checkCollision(new Rectangle(x-step,y,16,16),new Rectangle(x-step,y+step,16,16))){
 								targetX=-step;
 								isMoving=true;
@@ -541,7 +442,7 @@ public class Character {
 				beingPushed=false;
 				targetX+=movement;
 				Character.x-=movement;
-				walk_left.setImage();
+				move.walk_left.setImage();
 				if(isPushing){
 					select_Tile.x-=movement;
 					select_Tile.updateMask();
@@ -549,7 +450,7 @@ public class Character {
 			}else{//up
 				targetX+=movement;
 				Character.y-=movement;
-				walk_up.setImage();
+				move.walk_up.setImage();
 				if(isPushing){
 					select_Tile.y-=movement;
 					select_Tile.updateMask();
@@ -561,7 +462,7 @@ public class Character {
 				beingPushed=false;
 				targetX-=movement;
 				Character.x+=movement;
-				walk_right.setImage();
+				move.walk_right.setImage();
 				if(isPushing){
 					select_Tile.x+=movement;
 					select_Tile.updateMask();
@@ -569,7 +470,7 @@ public class Character {
 			}else{//down
 				targetX-=movement;
 				Character.y+=movement;
-				walk_down.setImage();
+				move.walk_down.setImage();
 				if(isPushing){
 					select_Tile.y+=movement;
 					select_Tile.updateMask();
@@ -599,14 +500,16 @@ public class Character {
 	}
 	public static void releaseButton(int keycode) {
 		switch(keycode){
-		case KeyEvent.VK_A:	removeKey(Game.button.A);
-							break;
-		case KeyEvent.VK_S:	removeKey(Game.button.S);
-							break;
-		case KeyEvent.VK_W:	removeKey(Game.button.W);
-							break;
-		case KeyEvent.VK_D:	removeKey(Game.button.D);
-							break;
+		case KeyEvent.VK_A:		removeKey(Game.button.A);
+								break;
+		case KeyEvent.VK_S:		removeKey(Game.button.S);
+								break;
+		case KeyEvent.VK_W:		removeKey(Game.button.W);
+								break;
+		case KeyEvent.VK_D:		removeKey(Game.button.D);
+								break;
+		case KeyEvent.VK_SPACE:	removeKey(Game.button.Space);
+								break;					
 		}
 	}
 	private static void removeKey(Game.button d) {
@@ -617,7 +520,7 @@ public class Character {
 		}
 		keypressed.remove(toRemove);
 	}
-	public static void fireProjectile() {
+	private void fireProjectile() {
 		if(!Character.isShooting)
 			if(ammo>=1){
 				Character.isShooting=true;
@@ -627,23 +530,21 @@ public class Character {
 				Sound.ShotSound.start();
 			}	
 	}
-	public static boolean checkPower() {
-		Power aPower=new Power();
-		if(powerActivated_ladder)aPower.useLadder();
-		if(powerActivated_hammer)aPower.useHammer();
-		if(powerActivated_arrow)aPower.useArrow();
-		return false;
+	private void checkPower() {
+		if(aPower.powerActivated_ladder)aPower.useLadder();
+		if(aPower.powerActivated_hammer)aPower.useHammer();
+		if(aPower.powerActivated_arrow)aPower.useArrow();
 	}
-	private static void createProjectile() {
+	private void createProjectile() {
 		switch(Character.dir){
 		
-		case Right:	Character.weapon=new Projectile(x+targetX,y,projectile_img[0],Character.dir);
+		case Right:	Character.weapon=new Projectile(x+targetX,y,Game.projectile_img.get(0),Character.dir);
 					break;
-		case Left:	Character.weapon=new Projectile(x+targetX,y,projectile_img[0],Character.dir);
+		case Left:	Character.weapon=new Projectile(x+targetX,y,Game.projectile_img.get(0),Character.dir);
 					break;
-		case Up:	Character.weapon=new Projectile(x,y+targetX,projectile_img[1],Character.dir);
+		case Up:	Character.weapon=new Projectile(x,y+targetX,Game.projectile_img.get(1),Character.dir);
 					break;
-		case Down:	Character.weapon=new Projectile(x,y+targetX,projectile_img[1],Character.dir);
+		case Down:	Character.weapon=new Projectile(x,y+targetX,Game.projectile_img.get(1),Character.dir);
 					break;
 		}
 		

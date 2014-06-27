@@ -29,15 +29,15 @@ public class Snakey  extends Monster{
 	@Override
 	public void transform() {
 		previousState=img;
-		type=2;
-		img=Level.monsterState[0];
+		type=Tile.ID.MoveableBlock.value;
+		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;
 	}
 	private void checkState() {
 		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1 && !isDrowning){
 			TransformedState=2;
-			img=Level.monsterState[1];
+			img=Game.monsterState.get(1);
 		}
 		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2 && !isDrowning){
 			TransformedState=0;
@@ -46,11 +46,11 @@ public class Snakey  extends Monster{
 		}
 		if((System.nanoTime()-time_since_water)/nano>2000 && TransformedState==1 && isDrowning){
 			TransformedState=3;
-			img=Level.monsterState[2];
+			img=Game.monsterState.get(2);
 		}
 		if((System.nanoTime()-time_since_water)/nano>3000 && TransformedState==3 && isDrowning){
 			TransformedState=4;
-			img=Level.monsterState[3];
+			img=Game.monsterState.get(3);
 		}
 		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
 			Kill_Respawn();
@@ -67,9 +67,9 @@ public class Snakey  extends Monster{
 	}
 	private void getImage() throws IOException {
 		BufferedImage img=null;
-		if(super.type==20)
+		if(type==Tile.ID.RightSnakey.value)
 			img=ImageIO.read(getClass().getResourceAsStream("/tileset/worm_right.png"));
-		if(super.type==19)
+		if(type==Tile.ID.LeftSnakey.value)
 			img=ImageIO.read(getClass().getResourceAsStream("/tileset/worm_left.png"));
 		for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<2;j++){

@@ -1,11 +1,9 @@
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Vector;
-import javax.imageio.ImageIO;
 import javax.sound.sampled.Clip;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -15,8 +13,6 @@ import javax.xml.stream.XMLStreamReader;
 public class Level {
 	private final long nano=1000000000L;
 	private final int tileSize=32; 
-	private final int tileset_rows=8;
-	private final int tileset_cols=8;
 	private int coordX;
 	private int coordY;
 	private Tile map_background;
@@ -32,16 +28,13 @@ public class Level {
 	public final static int map_height=512;
 	public static int heart_amount;
 	public static ArrayList<Tile> map_tile;
-	public static ArrayList<Tile> toRemove;
-	public static ArrayList<Tile> toDelete;
+	public static ArrayList<Tile> toRemove;//Monster to be removed and then respawned
+	public static ArrayList<Tile> toDelete;//tile to be deleted
 	public static ArrayList<Tile> toAdd;
 	public static int[] Power;/// 1=Hammer, 2=Ladder, 3=Arrow Changer
-	public static BufferedImage[] game_tileset;
-	public static BufferedImage[] monsterState;
 	public static Tile goal;
 	
 	public Level(){
-		try {
 			coordX=0;
 			coordY=0;
 			goal_top=null;
@@ -52,42 +45,40 @@ public class Level {
 			toDelete=new ArrayList<Tile>();
 			toRespawn=new ArrayList<Tile>();
 			Respawn_Timer=new Vector<Long>();
-			game_tileset=new BufferedImage[100];
 			Power=new int[3];
 			verifyPowerAllowed();
-			setBackground("start");
-			getGameTile();
-		} catch (IOException GameBackground) {
-			GameBackground.printStackTrace();
-		}
-		XMLInputFactory inputFactory= XMLInputFactory.newFactory();
-		try{
-			InputStream fileReader= this.getClass().getResourceAsStream("Level"+room+"map.tmx");
-			XMLStreamReader reader= inputFactory.createXMLStreamReader(fileReader);
-			while(reader.hasNext()){
-				int eventType=reader.getEventType();
-				switch (eventType){
-				case XMLStreamConstants.START_ELEMENT:
-					String elementName= reader.getLocalName();
-					if(elementName.equals("tile")){
-							createTile(reader.getAttributeValue(0));
-							if(coordX==map_width-tileSize){
-								coordX=0;
-								coordY += tileSize;
-							}
-							else coordX+=tileSize;
-					}
-				}
-				reader.next();
+			map_background=new Tile(Game.background);
+			try{readMap();}
+			catch (IOException | XMLStreamException e){
+				e.printStackTrace();
 			}
-			reader.close();
-		}
-		catch (IOException | XMLStreamException e){
-			e.printStackTrace();
-		}
 		Collections.sort(Level.map_tile);
 		Labyrinth.level_is_loaded=true;
 		Labyrinth.GameState=Game.GameState.NotStarted;
+	}
+	private void readMap() throws XMLStreamException, IOException {
+		
+		XMLInputFactory inputFactory= XMLInputFactory.newFactory();
+		InputStream fileReader= this.getClass().getResourceAsStream("Level"+room+"map.tmx");
+		XMLStreamReader reader= inputFactory.createXMLStreamReader(fileReader);
+		while(reader.hasNext()){
+			int eventType=reader.getEventType();
+			switch (eventType){
+			case XMLStreamConstants.START_ELEMENT:
+				String elementName= reader.getLocalName();
+				if(elementName.equals("tile")){
+						createTile(reader.getAttributeValue(0));
+						if(coordX==map_width-tileSize){
+							coordX=0;
+							coordY += tileSize;
+						}
+						else coordX+=tileSize;
+				}
+			}
+			reader.next();
+		}
+		reader.close();
+		
 	}
 	private void verifyPowerAllowed() {
 		/*if(room==1){
@@ -97,125 +88,109 @@ public class Level {
 		}*/
 		
 	}
-	private void getGameTile() throws IOException {
-		BufferedImage img=ImageIO.read(getClass().getResourceAsStream("/tileset/game_tileset.png"));
-		 for(int i=0;i<tileset_rows;i++){
-			 for(int j=0;j<tileset_cols;j++){
-				game_tileset[(i*tileset_cols)+j]=img.getSubimage(j*tileSize, i*tileSize, tileSize, tileSize);
-			 }
-		 }
-	}
-	private void setBackground(String background) throws IOException {
-		BufferedImage img=null;
-		switch(background){
-		case "start":	
-					img=ImageIO.read(getClass().getResourceAsStream("/tileset/testfloor.png"));
-	}
-	map_background=new Tile(img);
-}
 	private void createTile(String attributeValue) throws IOException {
 		switch(attributeValue){
 		case "0": 	//blank tile;show background
 					break;	
-		case "1":	//rock
-					Level.map_tile.add(new Tile(coordX,coordY,1));
+		case "1":	
+					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.Rock.value));
 					break;
-		case "2": 	//door
-					Level.map_tile.add(new Tile(coordX,coordY,96));
+		case "2": 	
+					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.ClosedDoor.value));
 					break;
-		case "3": 	//heartcard gives ammo
+		case "3": 	
 					heart_amount+=1;
-					Level.map_tile.add(new Tile(coordX,coordY,3));
+					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.AmmoHeart.value));
 					break;
-		case "4": 	//heartcard does not give ammo
+		case "4": 	
 					heart_amount+=1;
-					Level.map_tile.add(new Tile(coordX,coordY,94));
+					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.NoAmmoHeart.value));
 					break;
 		case "6": 	MainPanel.hero=new Character(coordX,coordY);
 					break;
-		case "8": 	//medusa sleeping
-					Level.map_tile.add(new Medusa(coordX,coordY,0));
+		case "8": 	
+					Level.map_tile.add(new Medusa(coordX,coordY,Tile.ID.SleepMedusa.value));
 					break;
-		case "9": 	//moveable green block
-					Level.map_tile.add(new Tile(coordX,coordY,2));
+		case "9": 	
+					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.MoveableBlock.value));
 					break;
-		case "10": 	//tree
-					Level.map_tile.add(new Tile(coordX,coordY,6));
+		case "10": 	
+					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.Tree.value));
 					break;
-		case "11": 	//goal chest closed
-					goal=new Tile(coordX,coordY,4);
+		case "11": 	
+					goal=new Tile(coordX,coordY,Tile.ID.ClosedChest.value);
 					break;
-		case "16": 	//one-way up arrow
-					Level.map_tile.add(new OneWayArrow(coordX,coordY,11));
+		case "16": 	
+					Level.map_tile.add(new OneWayArrow(coordX,coordY,Tile.ID.OneWayUp.value));
 					break;
-		case "19": 	//Green worm monster Left
-					Level.map_tile.add(new Snakey(coordX,coordY,19));
+		case "19": 	
+					Level.map_tile.add(new Snakey(coordX,coordY,Tile.ID.LeftSnakey.value));
 					break;
-		case "20": 	//Green worm monster right
-					Level.map_tile.add(new Snakey(coordX,coordY,20));
+		case "20": 	
+					Level.map_tile.add(new Snakey(coordX,coordY,Tile.ID.RightSnakey.value));
 					break;
-		case "21": 	//one-way left arrow
-					Level.map_tile.add(new OneWayArrow(coordX,coordY,12));
+		case "21": 	
+					Level.map_tile.add(new OneWayArrow(coordX,coordY,Tile.ID.OneWayLeft.value));
 					break;
-		case "22": 	//one-way right arrow
-					Level.map_tile.add(new OneWayArrow(coordX,coordY,13));
+		case "22": 	
+					Level.map_tile.add(new OneWayArrow(coordX,coordY,Tile.ID.OneWayRight.value));
 					break;
-		case "23": 	//DonMesusa Left-Right
-					Level.map_tile.add(new DonMedusa(coordX,coordY,1));
+		case "23": 	
+					Level.map_tile.add(new DonMedusa(coordX,coordY,Tile.ID.LeftRightDonMedusa.value));
 					break;
-		case "24": 	//DonMesusa Up-Down
-					Level.map_tile.add(new DonMedusa(coordX,coordY,2));
+		case "24": 	
+					Level.map_tile.add(new DonMedusa(coordX,coordY,Tile.ID.UpDownDonMedusa.value));
 					break;
-		case "25": 	//gol sleeping up
-					Level.map_tile.add(new Gol(coordX,coordY,7));
+		case "25": 	
+					Level.map_tile.add(new Gol(coordX,coordY,Tile.ID.GolUp.value));
 					break;	
-		case "26": 	//gol sleeping down
-					Level.map_tile.add(new Gol(coordX,coordY,8));
+		case "26": 	
+					Level.map_tile.add(new Gol(coordX,coordY,Tile.ID.GolDown.value));
 					break;
-		case "27": 	//gol sleeping left
-					Level.map_tile.add(new Gol(coordX,coordY,9));
+		case "27": 	
+					Level.map_tile.add(new Gol(coordX,coordY,Tile.ID.GolLeft.value));
 					break;
-		case "28": 	//gol sleeping right
-					Level.map_tile.add(new Gol(coordX,coordY,10));
+		case "28": 	
+					Level.map_tile.add(new Gol(coordX,coordY,Tile.ID.GolRight.value));
 					break;			
-		case "29": 	//one-way down arrow
-					Level.map_tile.add(new OneWayArrow(coordX,coordY,14));
+		case "29": 	
+					Level.map_tile.add(new OneWayArrow(coordX,coordY,Tile.ID.OneWayDown.value));
 					break;
-		case "30":	//rock wall
-					Level.map_tile.add(new Tile(coordX,coordY,30));
+		case "30":	
+					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.RockWall.value));
 					break;
-		case "32": 	//Leeper
-					Level.map_tile.add(new Leeper(coordX,coordY,16));
+		case "32": 	
+					Level.map_tile.add(new Leeper(coordX,coordY,Tile.ID.Leeper.value));
 					break;
-		case "33": 	//animated water
-					Level.map_tile.add(new Water(coordX,coordY,95));
+		case "33": 	
+					Level.map_tile.add(new Water(coordX,coordY,Tile.ID.Water.value));
 					break;
-		case "34": 	//ladder left
-					Level.map_tile.add(new Tile(coordX,coordY,93));
+		case "34": 	
+					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.LeftLadder.value));
 					break;
-		case "35": 	//Phantom 
-					Level.map_tile.add(new Phantom(coordX,coordY,0));
+		case "35": 	
+					Level.map_tile.add(new Phantom(coordX,coordY,Tile.ID.Phantom.value));
 					break;
-		case "36": 	//Skull
-					Level.map_tile.add(new Skull(coordX,coordY,15));
+		case "36": 	
+					Level.map_tile.add(new Skull(coordX,coordY,Tile.ID.Skull.value));
 					break;
-		case "41": 	//ladder right
-					Level.map_tile.add(new Tile(coordX,coordY,92));
+		case "41": 	
+					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.RightLadder.value));
 					break;	
-		case "42": 	//ladder up and down
-					Level.map_tile.add(new Tile(coordX,coordY,91));
+		case "42": 	
+					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.UpDownLadder.value));
 					break;
-		case "43": 	//Sand
-					Level.map_tile.add(new Tile(coordX,coordY,89));
+		case "43": 	
+					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.Sand.value));
 					break;			
-		case "44": 	//Grass
-					Level.map_tile.add(new Tile(coordX,coordY,90));
+		case "44": 	
+					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.Grass.value));
 					break;
-		case "49": 	//Alma
-					Level.map_tile.add(new Alma(coordX,coordY,0));
+		case "49": 	
+					Level.map_tile.add(new Alma(coordX,coordY,Tile.ID.Alma.value));
 					break;
-		case "50": 	//Lava
-					Level.map_tile.add(new Lava(coordX,coordY,88));
+		case "50": 	
+					Level.map_tile.add(new Lava(coordX,coordY,Tile.ID.Lava.value));
 					break;				
 		}
 	}
@@ -257,23 +232,23 @@ public class Level {
 	private void getCorrectType(Monster Monster) {
 		
 		switch(Monster.getType()){
-		case 7: //awake dragon up
+		case 24: //awake dragon up
 				Monster.canShoot=true;
 				break;
-		case 8: //awake dragon down
-				Monster.img=game_tileset[12];
+		case 25: //awake dragon down
+				Monster.img=Game.game_tileset.get(Tile.ID.GolDownAwaken.value);
 				Monster.canShoot=true;
 				break;
-		case 9: //awake dragon left
-				Monster.img=game_tileset[13];
+		case 26: //awake dragon left
+				Monster.img=Game.game_tileset.get(Tile.ID.GolLeftAwaken.value);
 				Monster.canShoot=true;
 				break;
-		case 10://awake dragon right
-				Monster.img=game_tileset[6];
+		case 27://awake dragon right
+				Monster.img=Game.game_tileset.get(Tile.ID.GolRightAwaken.value);
 				Monster.canShoot=true;
 				break;
-		case 15://awake skull
-				Monster.img=game_tileset[35];
+		case 35://awake skull
+				Monster.img=Game.game_tileset.get(Tile.ID.Skull.value);
 				Monster.isActive=true;
 				break;		
 		}
@@ -287,8 +262,8 @@ public class Level {
 		Sound.ChestOpen.stop();
 		Sound.ChestOpen.setFramePosition(0);
 		Sound.ChestOpen.start();
-		goal=new Tile(goal.x,goal.y,5);
-		goal_top=new Tile(goal.x,goal.y-32,98);	
+		goal=new Tile(goal.x,goal.y,Tile.ID.BottomChestOpen.value);
+		goal_top=new Tile(goal.x,goal.y-32,Tile.ID.TopChest.value);	
 		//awake all monster
 		for(Tile aTile:map_tile){
 			if(aTile instanceof Monster){
@@ -296,23 +271,23 @@ public class Level {
 				switch(aTile.getType()){
 					case 2: //Monster is in ball form; awake them
 							AwakeBall(aTile);
-					case 7: //awake dragon up
+					case 24: //awake dragon up
 							Monster.canShoot=true;
 							break;
-					case 8: //awake dragon down
-							Monster.img=game_tileset[12];
+					case 25: //awake dragon down
+							Monster.img=Game.game_tileset.get(Tile.ID.GolDownAwaken.value);
 							Monster.canShoot=true;
 							break;
-					case 9: //awake dragon left
-							Monster.img=game_tileset[13];
+					case 26: //awake dragon left
+							Monster.img=Game.game_tileset.get(Tile.ID.GolLeftAwaken.value);
 							Monster.canShoot=true;
 							break;
-					case 10://awake dragon right
-							Monster.img=game_tileset[6];
+					case 27://awake dragon right
+							Monster.img=Game.game_tileset.get(Tile.ID.GolRightAwaken.value);
 							Monster.canShoot=true;
 							break;
-					case 15://awake skull
-							Monster.img=game_tileset[35];
+					case 35://awake skull
+							Monster.img=Game.game_tileset.get(Tile.ID.Skull.value);
 							Monster.isActive=true;
 							break;	
 				}
@@ -322,36 +297,36 @@ public class Level {
 	private static void AwakeBall(Tile aTile) {
 		Monster Monster=(Monster)aTile;
 		switch(aTile.oldtype){
-		
-		case 7: //awake dragon up
+		case 24: //awake dragon up
 				Monster.canShoot=true;
 				break;
-		case 8: //awake dragon down
-				Monster.previousState=game_tileset[12];
+		case 25: //awake dragon down
+				Monster.previousState=Game.game_tileset.get(Tile.ID.GolDownAwaken.value);
 				Monster.canShoot=true;
 				break;
-		case 9: //awake dragon left
-				Monster.previousState=game_tileset[13];
+		case 26: //awake dragon left
+				Monster.previousState=Game.game_tileset.get(Tile.ID.GolLeftAwaken.value);
 				Monster.canShoot=true;
 				break;
-		case 10://awake dragon right
-				Monster.previousState=game_tileset[6];
+		case 27://awake dragon right
+				Monster.previousState=Game.game_tileset.get(Tile.ID.GolRightAwaken.value);
 				Monster.canShoot=true;
 				break;	
-		case 15://awake skull
-				Monster.previousState=game_tileset[35];
+		case 35://awake skull
+				Monster.previousState=Game.game_tileset.get(Tile.ID.Skull.value);
 				Monster.isActive=true;
 				break;	
 		}
 		
 	}
 	public static void takeGoal() {
-		goal=new Tile(goal.x,goal.y,97);
+		goal=new Tile(goal.x,goal.y,Tile.ID.BottomChestEmpty.value);
 		//open the goal
 		for(Tile aTile:map_tile){
-			if(aTile.img==game_tileset[1]){
-				aTile.setType(100);
-				aTile.img=game_tileset[4];
+			if(aTile.img==Game.game_tileset.get(Tile.ID.ClosedDoor.value)){
+				aTile.type=Tile.ID.OpenDoor.value;
+				aTile.isSolid=false;
+				aTile.img=Game.game_tileset.get(Tile.ID.OpenDoor.value);
 			}
 		//Delete all Monster
 			if(aTile instanceof Monster){

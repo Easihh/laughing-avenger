@@ -5,6 +5,18 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 
 public class Tile implements Comparable<Tile> {
+	enum ID{
+		Rock(0),ClosedDoor(1),AmmoHeart(2),NoAmmoHeart(3),OpenDoor(4),Character(5),GolRightAwaken(6),SleepMedusa(7),
+		MoveableBlock(8),Tree(9),ClosedChest(10),BottomChestOpen(11),GolDownAwaken(12),GolLeftAwaken(13),MedusaAwaken(14),
+		OneWayUp(15),TopChest(16),BottomChestEmpty(17),LeftSnakey(18),RightSnakey(19),OneWayLeft(20),OneWayRight(21),
+		LeftRightDonMedusa(22),UpDownDonMedusa(23),GolUp(24),GolDown(25),GolLeft(26),GolRight(27),OneWayDown(28),RockWall(29),
+		Leeper(31),Water(32),LeftLadder(33),Phantom(34),Skull(35),RightLadder(40),UpDownLadder(41),Sand(42),Grass(43),Alma(48),
+		Lava(49);
+		int value;
+        private ID(int value) {
+            this.value = value;
+        }
+	}
 	protected final int height=32;
 	protected final int width=32;
 	public int depth=1;
@@ -27,10 +39,30 @@ public class Tile implements Comparable<Tile> {
 		oldY=y;
 		this.type=type;
 		oldtype=type;
-		getImage();
+		img=Game.game_tileset.get(type);
+		setSolidState();
+		setDepth();
 		int[] xpoints={x,x+width,x+width,x};
 		int[] ypoints={y,y,y+height,y+height};
 		shape=new Polygon(xpoints, ypoints, 4);
+	}
+	private void setSolidState() {
+		switch(type){
+		case 33:
+		case 40:
+		case 41:isSolid=false;
+				break;
+		}
+		
+	}
+	private void setDepth() {
+		switch(type){
+		case 8: depth=2;
+				break;
+		case 32:depth=-1;
+				break;
+		}
+		
 	}
 	public Tile(Image image) {
 		img=image;
@@ -124,8 +156,8 @@ public class Tile implements Comparable<Tile> {
 							//check for one-way arrow Below the block
 							boolean willMove=true;
 							getCollidingTile(new Rectangle(x,y,32,32));
-							if(collision_tile!=null && collision_tile.getType()==12){
-								if(checkArrow(12))
+							if(collision_tile!=null && collision_tile.getType()==ID.OneWayLeft.value){
+								if(checkArrow(ID.OneWayLeft.value))
 									willMove=false;
 							}
 							if(willMove){
@@ -146,15 +178,15 @@ public class Tile implements Comparable<Tile> {
 					else{//Collision right
 						boolean willMove=true;
 						getCollidingTile(new Rectangle(x+32,y,16,16));//top part collision
-						if(collision_tile!=null && collision_tile.getType()==12){
-							if(checkArrow(12))
+						if(collision_tile!=null && collision_tile.getType()==ID.OneWayLeft.value){
+							if(checkArrow(ID.OneWayLeft.value))
 								willMove=false;
 						}
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
 						getCollidingTile(new Rectangle(x+32,y+16,16,16));//bottom part collision
-						if(collision_tile!=null && collision_tile.getType()==12){
-							if(checkArrow(12))
+						if(collision_tile!=null && collision_tile.getType()==ID.OneWayLeft.value){
+							if(checkArrow(ID.OneWayLeft.value))
 								willMove=false;
 						}
 						if(collision_tile!=null && collision_tile.isSolid)
@@ -174,8 +206,8 @@ public class Tile implements Comparable<Tile> {
 		case Down:	if(!checkCollision(new Rectangle(x,y+32,16,16),new Rectangle(x+16,y+32,16,16))){
 						boolean willMove=true;
 						getCollidingTile(new Rectangle(x,y,32,32));
-						if(collision_tile!=null && collision_tile.getType()==11){
-							if(checkArrow(11))
+						if(collision_tile!=null && collision_tile.getType()==ID.OneWayUp.value){
+							if(checkArrow(ID.OneWayUp.value))
 								willMove=false;
 							}
 						if(willMove){
@@ -197,14 +229,14 @@ public class Tile implements Comparable<Tile> {
 						getCollidingTile(new Rectangle(x,y+32,16,16));//bottom left part collision
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
-						if(collision_tile!=null && collision_tile.getType()==11)
-							if(checkArrow(11))
+						if(collision_tile!=null && collision_tile.getType()==ID.OneWayUp.value)
+							if(checkArrow(ID.OneWayUp.value))
 									willMove=false;
 						getCollidingTile(new Rectangle(x+16,y+32,16,16));//bottom right part collision
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
-						if(collision_tile!=null && collision_tile.getType()==11)
-							if(checkArrow(11))
+						if(collision_tile!=null && collision_tile.getType()==ID.OneWayUp.value)
+							if(checkArrow(ID.OneWayUp.value))
 									willMove=false;
 						if(isFullyCollidingWithWater(new Rectangle(x+16,y+32,16,16),new Rectangle(x,y+32,16,16))){
 							if(this instanceof Monster)
@@ -222,8 +254,8 @@ public class Tile implements Comparable<Tile> {
 					if(!checkCollision(new Rectangle(x,y-16,16,16),new Rectangle(x+16,y-16,16,16))){
 						boolean willMove=true;
 						getCollidingTile(new Rectangle(x,y,32,32));
-						if(collision_tile!=null && collision_tile.getType()==14){
-							if(checkArrow(14))
+						if(collision_tile!=null && collision_tile.getType()==Tile.ID.OneWayDown.value){
+							if(checkArrow(Tile.ID.OneWayDown.value))
 								willMove=false;
 						}
 						if(willMove){
@@ -243,15 +275,15 @@ public class Tile implements Comparable<Tile> {
 						}else{
 						boolean willMove=true;
 						getCollidingTile(new Rectangle(x,y-16,16,16));//top left part collision
-						if(collision_tile!=null && collision_tile.getType()==14){
-							if(checkArrow(14))
+						if(collision_tile!=null && collision_tile.getType()==Tile.ID.OneWayDown.value){
+							if(checkArrow(Tile.ID.OneWayDown.value))
 								willMove=false;
 						}
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
 						getCollidingTile(new Rectangle(x+16,y-16,16,16));//top right part collision
-						if(collision_tile!=null && collision_tile.getType()==14){
-							if(checkArrow(14))
+						if(collision_tile!=null && collision_tile.getType()==Tile.ID.OneWayDown.value){
+							if(checkArrow(Tile.ID.OneWayDown.value))
 								willMove=false;
 						}
 						if(collision_tile!=null && collision_tile.isSolid)
@@ -271,7 +303,7 @@ public class Tile implements Comparable<Tile> {
 					if(!checkCollision(new Rectangle(x-16,y,16,16),new Rectangle(x-16,y+16,16,16))){
 						boolean willMove=true;
 						getCollidingTile(new Rectangle(x,y,32,32));
-						if(collision_tile!=null && collision_tile.getType()==13){
+						if(collision_tile!=null && collision_tile.getType()==Tile.ID.OneWayRight.value){
 							if(checkArrow(13))
 								willMove=false;
 						}
@@ -292,15 +324,15 @@ public class Tile implements Comparable<Tile> {
 					}else{
 						boolean willMove=true;
 						getCollidingTile(new Rectangle(x-16,y,16,16));//top left part collision
-						if(collision_tile!=null && collision_tile.getType()==13){
-							if(checkArrow(13))
+						if(collision_tile!=null && collision_tile.getType()==Tile.ID.OneWayRight.value){
+							if(checkArrow(Tile.ID.OneWayRight.value))
 								willMove=false;
 						}
 						if(collision_tile!=null && collision_tile.isSolid)
 							willMove=false;
 						getCollidingTile(new Rectangle(x-16,y+16,16,16));//bottom left part collision			
-						if(collision_tile!=null && collision_tile.getType()==13){
-							if(checkArrow(13))
+						if(collision_tile!=null && collision_tile.getType()==Tile.ID.OneWayRight.value){
+							if(checkArrow(Tile.ID.OneWayRight.value))
 								willMove=false;
 						}
 						if(collision_tile!=null && collision_tile.isSolid)
@@ -324,14 +356,11 @@ public class Tile implements Comparable<Tile> {
 	private boolean isFullyCollidingWithWater(Rectangle mask1,
 			Rectangle mask2) {
 		for(int i=0;i<Level.map_tile.size();i++){
-			if(Level.map_tile.get(i).getType()==95)
+			if(Level.map_tile.get(i).getType()==Tile.ID.Water.value)
 				if(Level.map_tile.get(i).shape.intersects(mask1) && Level.map_tile.get(i).shape.intersects(mask1))
 					return true;
 		}
 		return false;
-	}
-	public void setType(int i) {
-		type=i;
 	}
 	public void update(){}
 	public void updateLocation() {
@@ -353,17 +382,17 @@ public class Tile implements Comparable<Tile> {
 	}
 	private boolean checkArrow(int type) {
 		switch(type){
-		case 11:	//one-way up arrow
+		case 15:	//one-way up arrow
 					if(y<=collision_tile.y)
 						return true;
 					break;
-		case 12:	if(x<=collision_tile.x)
+		case 20:	if(x<=collision_tile.x)
 						return true;
 					break;
-		case 13:	if(x>=collision_tile.x)
+		case 21:	if(x>=collision_tile.x)
 						return true;
 					break;
-		case 14:  	if(y>=collision_tile.y)
+		case 28:  	if(y>=collision_tile.y)
 						return true;
 					break;
 		}
@@ -381,50 +410,5 @@ public class Tile implements Comparable<Tile> {
 		}
 		collision_tile=null;
 		return false;
-	}
-	private void getImage() {
-		switch(type){
-		case 1: 	img=Level.game_tileset[0];//rock
-					break;	
-		case 2: 	img=Level.game_tileset[8];//moveable block
-					depth=2;
-					break;
-		case 3: 	img=Level.game_tileset[2];//heart give ammo
-					break;
-		case 4: 	img=Level.game_tileset[10];//chest closed
-					break;
-		case 5: 	img=Level.game_tileset[11];//chest open bottom
-					break;
-		case 6: 	img=Level.game_tileset[9];//tree
-					break;
-		case 30: 	img=Level.game_tileset[29];//rockwall
-					break;
-		case 89: 	img=Level.game_tileset[42];//Sand
-					isSolid=false;
-					break;
-		case 90: 	img=Level.game_tileset[43];//Grass
-					isSolid=false;
-					break;			
-		case 91: 	img=Level.game_tileset[41];//up-down ladder
-					depth=-1;
-					isSolid=false;
-					break;
-		case 92: 	img=Level.game_tileset[40];//right ladder
-					depth=-1;
-					isSolid=false;
-					break;
-		case 93: 	img=Level.game_tileset[33];//left ladder
-					depth=-1;
-					isSolid=false;
-					break;
-		case 94: 	img=Level.game_tileset[2];//heart give no ammo
-					break;
-		case 96: 	img=Level.game_tileset[1];//door closed
-					break;
-		case 97: 	img=Level.game_tileset[17];//chest bottom empty
-					break;
-		case 98: 	img=Level.game_tileset[16];//chest open top
-					break;			
-		}
 	}
 }

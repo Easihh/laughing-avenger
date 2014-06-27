@@ -1,6 +1,7 @@
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Stack;
 
 
 public abstract class Monster extends Tile {
@@ -11,13 +12,16 @@ public abstract class Monster extends Tile {
 	public boolean isDrowning=false;
 	public Image previousState;
 	protected long time_since_water;
+	public Stack<Node> Path;
+	public ArrayList<Node> Open;
+	public ArrayList<Node> Closed;
 	public Monster(int x, int y, int type) {
 		super(x, y, type);
 	}
 	public abstract void transform();
 	public abstract void render(Graphics g);
-	public void moveInWater() {
-		
+	
+	public void moveInWater() {	
 		if(!isDrowning){
 			switch(Character.dir){
 			case Left:	Character.targetX=-2*Character.step;
@@ -35,12 +39,27 @@ public abstract class Monster extends Tile {
 		Character.isPushing=true;
 		isDrowning=true;
 	}
-	public boolean checkCollision(Rectangle mask1,Rectangle mask2) {
-		for(int i=0;i<Level.map_tile.size();i++){
-			if(Level.map_tile.get(i).shape.intersects(mask1)|| Level.map_tile.get(i).shape.intersects(mask2)){
-				if(Level.map_tile.get(i).isSolid)return true;
+	
+	public void addNeighbor(Node neighbor, Node current) {
+		if(!Closed.contains(neighbor)){
+			if(!Open.contains(neighbor)){
+				Open.add(neighbor);
+				neighbor.parent=current;
+				neighbor.Gscore=current.Gscore+1;
+				neighbor.updateScore(x, y);
+			}
+			if(Open.contains(neighbor) && (current.Gscore+1<neighbor.Gscore)){
+				neighbor.parent=current;
+				neighbor.Gscore=current.Gscore+1;
+				neighbor.updateScore(x, y);
 			}
 		}
-		return false;
+	}
+	public void buildPath(){
+		Node temp=Closed.get(Closed.size()-1);
+		while(temp!=null){
+			Path.add(temp);
+			temp=temp.parent;
+		}
 	}
 }

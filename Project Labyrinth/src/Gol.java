@@ -31,7 +31,7 @@ public class Gol extends Monster {
 		previousState=img;
 		oldtype=type;
 		type=2;
-		img=Level.monsterState[0];
+		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;
 	}
@@ -39,7 +39,7 @@ public class Gol extends Monster {
 	private void checkState() {
 		if((System.nanoTime()-time_since_transform)/nano>7 && TransformedState==1){
 			TransformedState=2;
-			img=Level.monsterState[1];
+			img=Game.monsterState.get(1);
 		}
 		if((System.nanoTime()-time_since_transform)/nano>10 && TransformedState==2){
 			TransformedState=0;
@@ -48,11 +48,11 @@ public class Gol extends Monster {
 		}	
 		if((System.nanoTime()-time_since_water)/nano>2000 && TransformedState==1 && isDrowning){
 			TransformedState=3;
-			img=Level.monsterState[2];
+			img=Game.monsterState.get(2);
 		}
 		if((System.nanoTime()-time_since_water)/nano>3000 && TransformedState==3 && isDrowning){
 			TransformedState=4;
-			img=Level.monsterState[3];
+			img=Game.monsterState.get(3);
 		}
 		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
 			Kill_Respawn();
@@ -72,7 +72,6 @@ public class Gol extends Monster {
 		if(canShoot){
 				if(LineofSight()){
 					projectile=new Projectile(x,y,projectile_img,projectile_dir);
-					Sound.DragonSound.stop();
 					Sound.DragonSound.setFramePosition(0);
 					Sound.DragonSound.start();
 					canShoot=false;
@@ -85,18 +84,14 @@ public class Gol extends Monster {
 	}
 	private void getImg() throws IOException {
 		switch(type){
-		case 7:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_up.png"));
-				super.img=Level.game_tileset[24];
-				break;
-		case 8:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_down.png"));
-				super.img=Level.game_tileset[25];
-				break;
-		case 9:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_left.png"));
-				super.img=Level.game_tileset[26];
-				break;
-		case 10:projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_right.png"));
-				super.img=Level.game_tileset[27];
-				break;
+		case 24:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_up.png"));
+					break;
+		case 25:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_down.png"));
+					break;
+		case 26:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_left.png"));
+					break;
+		case 27:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_right.png"));
+					break;
 		}
 		
 	}
@@ -110,22 +105,22 @@ public class Gol extends Monster {
 	private boolean LineofSight() {
 		switch(type){
 		
-		case 7: if((Character.x+Character.step==x || Character.x==x || Character.x-Character.step==x) && Character.y<y){
+		case 24: if((Character.x+Character.step==x || Character.x==x || Character.x-Character.step==x) && Character.y<y){
 						projectile_dir=Game.Direction.Up;
 						return true;
 					}
 					break;
-		case 8:	if((x-Character.step==Character.x || x==Character.x|| x+Character.step==Character.x) && Character.y>y){
+		case 25:	if((x-Character.step==Character.x || x==Character.x|| x+Character.step==Character.x) && Character.y>y){
 						projectile_dir=Game.Direction.Down;
 						return true;
 					}
 					break;
-		case 9:	if((Character.y-Character.step==y || Character.y+Character.step==y ||y==Character.y) && x>Character.x){
+		case 26:	if((Character.y-Character.step==y || Character.y+Character.step==y ||y==Character.y) && x>Character.x){
 						projectile_dir=Game.Direction.Left;
 						return true;
 					}
 					break;
-		case 10:	if((Character.y-Character.step==y || Character.y+Character.step==y || y==Character.y) && x<Character.x){
+		case 27:	if((Character.y-Character.step==y || Character.y+Character.step==y || y==Character.y) && x<Character.x){
 						projectile_dir=Game.Direction.Right;
 						return true;
 					}

@@ -1,3 +1,10 @@
+Version 0.38B:
+
+-Fixed a bug that caused monster in ball form to no longer be able to be pushed.
+-Fixed Sound issue with Gol projectile.
+-Map Tileset,Background and Character projectile image are now only loaded once.
+-Some in Progress Code restructuring/deleting.
+
 Version 0.38A:
 
 -Added temporary Tray Icon to the program.

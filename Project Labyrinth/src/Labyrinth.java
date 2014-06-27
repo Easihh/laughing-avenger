@@ -30,6 +30,7 @@ public class Labyrinth extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(new Dimension(672,540));
 		setResizable(false);
+		new Game();
 		mainPane = new MainPanel();
 		setContentPane(mainPane);
 		addKeyListener(new Input());

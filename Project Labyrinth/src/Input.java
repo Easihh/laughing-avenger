@@ -34,11 +34,7 @@ public class Input implements KeyListener {
 				}
 		}
 		if(keycode==KeyEvent.VK_SPACE){
-			boolean check=false;
-			if(Character.powerActivated_ladder || Character.powerActivated_hammer || Character.powerActivated_arrow)
-				check=Character.checkPower();
-			if(!check)
-				Character.fireProjectile();
+			Character.canShoot=true;
 		}
 		if(keycode==KeyEvent.VK_Q){
 			Labyrinth.GameState=Game.GameState.Death;
@@ -46,7 +42,7 @@ public class Input implements KeyListener {
 			Sound.Death.start();
 		}
 		if(keycode==KeyEvent.VK_ESCAPE){
-			//Level.nextLevel();
+			Level.nextLevel();
 		}
 	}
 	@Override

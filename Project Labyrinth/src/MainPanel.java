@@ -14,21 +14,22 @@ public class MainPanel extends JPanel {
 	private BufferedImage hammer_icon=null;
 	private Font font;
 	public static Character hero;
-	public static Level theLevel=new Level();
+	public static Level theLevel;
 	
 	public MainPanel(){
 		setBackground(Color.black);	
 		loadSound();
 		font=new Font("Serif", Font.BOLD, 18);
 		loadPower();
+		theLevel=new Level();
 	}
 	public void paintComponent(Graphics g){
 			super.paintComponent(g);
 			theLevel.render(g);
 			g.setColor(Color.white);
 			flash_icon.setImage();
-			g.drawImage(Character.projectile_img[0],528,160,null);
-			if(Character.powerActivated_hammer || Character.powerActivated_ladder || Character.powerActivated_arrow){
+			g.drawImage(Game.projectile_img.get(0),528,160,null);
+			if(hero.aPower.powerActivated_hammer || hero.aPower.powerActivated_ladder || hero.aPower.powerActivated_arrow){
 				g.drawImage(flash_icon.getImage(), 528, 256,null);
 				g.drawImage(flash_icon.getImage(), 528, 289,null);
 				g.drawImage(flash_icon.getImage(), 528, 321,null);			
@@ -42,9 +43,9 @@ public class MainPanel extends JPanel {
 				if(Level.Power[i]==1)
 					g.drawImage(hammer_icon, 529, 257+(32*i),null);
 				else if(Level.Power[i]==2)
-					g.drawImage(Level.game_tileset[41], 529, 257+(32*i),null);
+					g.drawImage(Game.game_tileset.get(41), 529, 257+(32*i),null);
 				else if(Level.Power[i]==3)
-					g.drawImage(Level.game_tileset[15], 529, 257+(32*i),null);
+					g.drawImage(Game.game_tileset.get(15), 529, 257+(32*i),null);
 			}
 			g.setFont(font);
 			g.drawString("LVL",528,54);

@@ -13,33 +13,33 @@ public class OneWayArrow  extends Tile{
 	}
 	private void getImage(){
 		switch(type){
-		case 11:	super.img=Level.game_tileset[15]; //up
+		case 15:	img=Game.game_tileset.get(Tile.ID.OneWayUp.value);
 					break;
-		case 12:	super.img=Level.game_tileset[20];//left
+		case 20:	img=Game.game_tileset.get(Tile.ID.OneWayLeft.value);
 					break;
-		case 13:	super.img=Level.game_tileset[21];//right
+		case 21:	img=Game.game_tileset.get(Tile.ID.OneWayRight.value);
 					break;
-		case 14:	super.img=Level.game_tileset[28];//down
+		case 28:	img=Game.game_tileset.get(Tile.ID.OneWayDown.value);
 					break;
 		}
 	}
 	public boolean checkArrow() {
-			if(Character.dir==Game.Direction.Down && getType()==11){
+			if(Character.dir==Game.Direction.Down && getType()==Tile.ID.OneWayUp.value){
 				if(shape.contains(Character.x,Character.y+height-1) || shape.contains(Character.x+width,Character.y+height-1))
 					return false;//allow pass
 				return true; 
 			}
-			if(Character.dir==Game.Direction.Up && getType()==14){
+			if(Character.dir==Game.Direction.Up && getType()==Tile.ID.OneWayDown.value){
 				if(shape.contains(Character.x,Character.y) || shape.contains(Character.x+width,Character.y))
 					return false;
 				return true;
 			}
-			if(Character.dir==Game.Direction.Left && getType()==13){
+			if(Character.dir==Game.Direction.Left && getType()==Tile.ID.OneWayRight.value){
 				if(shape.contains(Character.x,Character.y) || shape.contains(Character.x,Character.y+height))
 					return false;
 				return true;
 			}
-			if(Character.dir==Game.Direction.Right && getType()==12){
+			if(Character.dir==Game.Direction.Right && getType()==Tile.ID.OneWayLeft.value){
 				if(shape.contains(Character.x+width-1,Character.y) ||shape.contains(Character.x+width-1,Character.y+height-1))
 					return false;
 				return true;

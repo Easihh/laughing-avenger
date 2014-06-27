@@ -40,13 +40,13 @@ public class Medusa extends Monster {
 		boolean inRange=false;
 		/*Case Down*/
 		if((Math.abs(Character.x-x) <=Character.step) && y<Character.y){
-			img=Game.game_tileset.get(14);
+			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 		}
 		if(Character.x==x  && y<Character.y){
 				//hero found in line of sight
 			// Check if there is an object inbetween
-			img=Game.game_tileset.get(14);//change to awaken medusa;
+			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);//change to awaken medusa;
 			inRange=true;
 			if(!Object_inBetween("Down")){
 				shoot=true;
@@ -56,12 +56,12 @@ public class Medusa extends Monster {
 		}
 		/*Case Up*/
 		if((Math.abs(Character.x-x)<=Character.step|| Character.x-Character.step==x) && y>Character.y){
-			img=Game.game_tileset.get(14);
+			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 		}
 		if( x==Character.x && y>Character.y){
 			inRange=true;
-			img=Game.game_tileset.get(14);//change to awaken medusa;
+			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);//change to awaken medusa;
 			if(!Object_inBetween("Up")){
 				shoot=true;
 				projectile_img=bullet_type[3];
@@ -70,12 +70,12 @@ public class Medusa extends Monster {
 		}
 		/*Case Left*/
 		if((Math.abs(Character.y-y) <=Character.step)&& x>Character.x){
-			img=Game.game_tileset.get(14);
+			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 		}
 		if((y==Character.y) && x>Character.x){
 			inRange=true;
-			img=Game.game_tileset.get(14);//change to awaken medusa;
+			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);//change to awaken medusa;
 			if(!Object_inBetween("Left")){
 				shoot=true;
 				projectile_img=bullet_type[1];
@@ -84,12 +84,12 @@ public class Medusa extends Monster {
 		}
 		/*Case Right*/
 		if((Math.abs(Character.y-y) <=Character.step) && x<Character.x){
-			img=Game.game_tileset.get(14);
+			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 		}
 		if(y==Character.y && x<Character.x){
 			inRange=true;
-			img=Game.game_tileset.get(14);//change to awaken medusa;
+			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);//change to awaken medusa;
 			if(!Object_inBetween("Right")){
 				shoot=true;
 				projectile_img=bullet_type[0];
@@ -105,6 +105,6 @@ public class Medusa extends Monster {
 			Labyrinth.GameState=Game.GameState.Paused;
 		}
 		if(!inRange)
-			img=Game.game_tileset.get(7);
+			img=Game.game_tileset.get(Tile.ID.SleepMedusa.value);
 	}
 }

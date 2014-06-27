@@ -4,17 +4,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import java.util.Stack;
 import javax.imageio.ImageIO;
 
 public class Alma extends Monster{
-	private final long nano=1000000L;
-	private long time_since_transform;
-	private Animation walk_down;
-	private Animation walk_up;
-	private Animation walk_left;
-	private Animation walk_right;
+	private Movement move;
 	private Animation roll;
 	private boolean path_exist=false;
 	private int step_to_move;
@@ -24,10 +18,7 @@ public class Alma extends Monster{
 		super(x, y, type);
 		depth=2;
 		dir=Game.Direction.Down;
-		walk_down=new Animation();
-		walk_up=new Animation();
-		walk_left=new Animation();
-		walk_right=new Animation();
+		move=new Movement("alma_movement", 150);
 		roll=new Animation();
 		setupImage();
 	}
@@ -36,46 +27,6 @@ public class Alma extends Monster{
 		BufferedImage img=null;
 		BufferedImage[] images=new BufferedImage[3];
 		try {
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/alma_down.png"));
-			//walk down
-			for(int i=0;i<1;i++){//all animation on same row
-				 for(int j=0;j<3;j++){
-					images[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-				 }
-			}
-			walk_down.AddScene(images[0], 150);
-			walk_down.AddScene(images[1], 150);
-			walk_down.AddScene(images[2], 150);
-			//walk up
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/alma_up.png"));
-			for(int i=0;i<1;i++){//all animation on same row
-				for(int j=0;j<3;j++){
-					images[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-				}
-			 }
-			walk_up.AddScene(images[0], 150);
-			walk_up.AddScene(images[1], 150);
-			walk_up.AddScene(images[2], 150);
-			//walk left
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/alma_left.png"));
-			for(int i=0;i<1;i++){//all animation on same row
-				for(int j=0;j<3;j++){
-					images[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-				}
-			 }
-			walk_left.AddScene(images[0], 150);
-			walk_left.AddScene(images[1], 150);
-			walk_left.AddScene(images[2], 150);	
-			//walk right
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/alma_right.png"));
-			for(int i=0;i<1;i++){//all animation on same row
-				for(int j=0;j<3;j++){
-					images[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-				}
-			 }
-			walk_right.AddScene(images[0], 150);
-			walk_right.AddScene(images[1], 150);
-			walk_right.AddScene(images[2], 150);
 			//roll
 			img=ImageIO.read(getClass().getResourceAsStream("/tileset/alma_roll.png"));
 			for(int i=0;i<1;i++){//all animation on same row
@@ -91,7 +42,7 @@ public class Alma extends Monster{
 	@Override
 	public void transform() {
 		previousState=img;
-		type=2;
+		type=Tile.ID.MoveableBlock.value;
 		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;	
@@ -103,6 +54,7 @@ public class Alma extends Monster{
 	@Override
 	public void render(Graphics g) {
 		checkState();
+		checkIfDrown();
 			if(TransformedState==0 && !isMovingAcrossScreen)
 				g.drawImage(getAnimation().getImage(), x, y, null);
 			else{
@@ -112,40 +64,25 @@ public class Alma extends Monster{
 					g.drawImage(img,x,y,width,height,null); 
 				}	
 		}
-	private Animation getAnimation() {
-		switch(dir){
-		case Left: if(!Object_inBetween("Left"))
-						return roll;
-					return walk_left;
-		case Right: if(!Object_inBetween("Right"))
-						return roll;
-					return walk_right;
-		case Up: return walk_up;
-		case Down: return walk_down;
-		}
-		return null;
-	}
-	private void checkState() {
-		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1){
-			TransformedState=2;
-			img=Game.monsterState.get(1);
-		}
-		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2){
-			TransformedState=0;
-			type=0;
-			img=previousState;
-		}
-		if((System.nanoTime()-time_since_water)/nano>2000 && TransformedState==1 && isDrowning){
-			TransformedState=3;
-			img=Game.monsterState.get(2);
-		}
-		if((System.nanoTime()-time_since_water)/nano>3000 && TransformedState==3 && isDrowning){
-			TransformedState=4;
-			img=Game.monsterState.get(3);
-		}
+	
+	private void checkIfDrown() {
 		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
 			Kill_Respawn();
 		}	
+	}
+
+	private Animation getAnimation() {
+		switch(dir){
+		case Left: 	if(!Object_inBetween("Left"))
+						return roll;
+					return move.walk_left;
+		case Right: if(!Object_inBetween("Right"))
+						return roll;
+					return move.walk_right;
+		case Up: 	return move.walk_up;
+		case Down: 	return move.walk_down;
+		}
+		return null;
 	}
 	private void Kill_Respawn() {
 		Alma me=copy();
@@ -263,35 +200,11 @@ public class Alma extends Monster{
 			}
 			buildPath();
 		}
-	private void getnewDirection() {
-		int direction=0;
-		int new_direction=0;
-		if(dir==Game.Direction.Down)
-			direction=1;
-		if(dir==Game.Direction.Left)
-			direction=2;
-		if(dir==Game.Direction.Right)
-			direction=3;
-		if(dir==Game.Direction.Up)
-			direction=4;
-		Random random=new Random();
-		do
-			new_direction=random.nextInt(5);
-		while (new_direction==0 || new_direction==direction);
-		if(new_direction==1)
-			dir=Game.Direction.Down;
-		if(new_direction==2)
-			dir=Game.Direction.Left;
-		if(new_direction==3)
-			dir=Game.Direction.Right;
-		if(new_direction==4)
-			dir=Game.Direction.Up;
-	}
 	public boolean checkCollison(Rectangle mask1,Rectangle mask2) {
 		for(int i=0;i<Level.map_tile.size();i++){
 			if(Level.map_tile.get(i).shape.intersects(mask1)|| Level.map_tile.get(i).shape.intersects(mask2)){
 				if(Level.map_tile.get(i).isSolid)return true;
-				if(Level.map_tile.get(i).getType()==Tile.ID.Grass.value)// cant  walk on grass
+				if(Level.map_tile.get(i).type==Tile.ID.Grass.value)// cant  walk on grass
 					return true;				
 			}
 		}

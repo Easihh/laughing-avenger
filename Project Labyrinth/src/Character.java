@@ -31,21 +31,21 @@ public class Character {
 		Character.x=x;
 		Character.y=y;
 		Character.ammo=0;
-		move= new Movement();
+		move= new Movement("lolo_movement",100);
 		aPower=new Power();
 		Death=new Death();
 		isShooting=false;
 		isMoving=false;
 		isPushing=false;
-		 dir=Game.Direction.Down;
+		 dir=Game.Direction.Up;
 		 lastKey=Game.button.None;
 		 keypressed=new ArrayList<Game.button>();
 		 targetX=0;
 	}
 	public void render(Graphics g){
 		if(keypressed.size()==0)					
-			move.getWalkAnimation().reset();
-		g.drawImage(move.getWalkAnimation().getImage(),x,y,width,height,null);
+			move.getWalkAnimation(Character.dir).reset();
+		g.drawImage(move.getWalkAnimation(dir).getImage(),x,y,width,height,null);
 		if(Character.isShooting)
 			weapon.render(g);		
 	}
@@ -55,11 +55,13 @@ public class Character {
 				movement=1;
 			else movement=2;
 			if(canShoot){
-				fireProjectile();
 				checkPower();
+				if(canShoot)
+					fireProjectile();
 				canShoot=false;
 			}
 			movement();
+			CollisionWithWater();
 			MonsterBulletCollision();
 			CollisionWithBullet();
 			CollisionWithMonster();
@@ -71,10 +73,32 @@ public class Character {
 		if(Character.isShooting && weapon!=null)
 			bullet_Collision();
 	}
+	private void CollisionWithWater() {
+		boolean isCollidingWater=false;
+		boolean death=false;
+		for(int i=0;i<Level.map_tile.size();i++){
+			if(Level.map_tile.get(i).type==Tile.ID.Water.value)
+				if(Level.map_tile.get(i).shape.intersects(x, y, width, height)){
+					isCollidingWater=true;
+					death=true;
+					}
+				}
+		if(isCollidingWater){
+			for(int i=0;i<Level.map_tile.size();i++){
+				if(Level.map_tile.get(i).type==Tile.ID.boat.value)
+					if(Level.map_tile.get(i).shape.intersects(x, y, width, height)){
+						death=false;
+						}
+					}
+				}
+		if(death){
+			Death.play();
+		}
+	}
 	private boolean isWalkingSand() {
-		for(Tile aTile:Level.map_tile){
-			if(aTile.getType()==89)
-				if(aTile.shape.intersects(x, y, width, height)){
+		for(int i=0;i<Level.map_tile.size();i++){
+			if(Level.map_tile.get(i).type==Tile.ID.Sand.value)
+				if(Level.map_tile.get(i).shape.intersects(x, y, width, height)){
 					return true;
 					}
 				}
@@ -85,18 +109,14 @@ public class Character {
 			if(aTile instanceof Skull)
 				if(aTile.shape.intersects(x, y, width, height)){
 					if(((Skull) aTile).isActive && ((Skull)aTile).TransformedState==0){
-					Sound.StageMusic.stop();
-					Sound.Death.start();
-					Labyrinth.GameState=Game.GameState.Death;
+						Death.play();
 					break;
 					}
 				}
 			if(aTile instanceof Alma)
 				if(aTile.shape.intersects(x, y, width, height)){
 					if(((Alma) aTile).TransformedState==0){
-						Sound.StageMusic.stop();
-						Sound.Death.start();
-						Labyrinth.GameState=Game.GameState.Death;
+						Death.play();
 						break;
 					}
 				}
@@ -104,88 +124,36 @@ public class Character {
 		
 	}
 	private void CollisionWithBullet(){
-		for(Tile aTile:Level.map_tile){
-			if(aTile instanceof Monster){
-				Monster aMonster=(Monster)aTile;
+		for(int i=0;i<Level.map_tile.size();i++){
+			if(Level.map_tile.get(i) instanceof Monster){
+				Monster aMonster=(Monster)Level.map_tile.get(i);
 				Projectile projectile=aMonster.projectile;
 				if(projectile!=null)
-					switch(projectile.dir){
-						case Right:	if(projectile.shape.contains(x+width-1,y) || 
-								projectile.shape.contains(x+width-1,y+height)){
-								projectile.projectile_speed=0;
-								Sound.StageMusic.stop();
-								Sound.Death.start();
-								Labyrinth.GameState=Game.GameState.Death;
-								}
-								break;
-						case Left:	if(projectile.shape.contains(x,y) || 
-								projectile.shape.contains(x,y+height-1)){
-								projectile.projectile_speed=0;
-								Sound.StageMusic.stop();
-								Sound.Death.start();
-								Labyrinth.GameState=Game.GameState.Death;
-								}
-								break;
-						case Down:	if(projectile.shape.contains(x+width,y+height-1) || 
-								projectile.shape.contains(x,y+height-1)){
-								projectile.projectile_speed=0;
-								Sound.StageMusic.stop();
-								Sound.Death.start();
-								Labyrinth.GameState=Game.GameState.Death;
-								}
-								break;
-						case Up:	if(projectile.shape.contains(x+width-1,y) || 
-								projectile.shape.contains(x,y)){
-								projectile.projectile_speed=0;
-								Sound.StageMusic.stop();
-								Sound.Death.start();
-								Labyrinth.GameState=Game.GameState.Death;
-								}
-								break;
-				}
-			}
-		}
-	}
-	private void MonsterBulletCollision() {
-		/** Search if there is a  tile touching the bullet 
-		 *  Destroy the bullet if it touch anything solid like a rock but not tree.
-		 * */
-		
-		for(Tile theTile:Level.map_tile){
-			if(theTile instanceof Monster){
-				Monster aMonster=(Monster)theTile;
-				if(aMonster.projectile!=null)
-					for(Tile aTile:Level.map_tile){
-							switch(aMonster.projectile.dir){
-							case Down:	if(aTile.shape.contains(aMonster.projectile.x+width-1,aMonster.projectile.y+height) || 
-											aTile.shape.contains(aMonster.projectile.x,aMonster.projectile.y+height))
-										if(aTile.getType()!=6 && aTile.getType()!=95)//if its a tree the shot traverse it
-											if(aMonster instanceof Gol)
-												aMonster.canShoot=true;
-										break;
-							case Right:	if(aTile.shape.contains(aMonster.projectile.x+width,aMonster.projectile.y) || 
-											aTile.shape.contains(aMonster.projectile.x+width,aMonster.projectile.y+height-1))
-										if(aTile.getType()!=6 && aTile.getType()!=95)//if its a tree the shot traverse it
-											if(aMonster instanceof Gol)
-												aMonster.canShoot=true;
-									break;
-							case Left: 	if(aTile.shape.contains(aMonster.projectile.x-movement,aMonster.projectile.y) || 
-											aTile.shape.contains(aMonster.projectile.x-movement,aMonster.projectile.y+height-1))
-										if(aTile.getType()!=6 && aTile.getType()!=95)//if its a tree the shot traverse it
-											if(aMonster instanceof Gol)
-												aMonster.canShoot=true;
-										break;
-							case Up: 	if(aTile.shape.contains(aMonster.projectile.x+width-1,aMonster.projectile.y-1) || 
-											aTile.shape.contains(aMonster.projectile.x,aMonster.projectile.y-1))
-										if(aTile.getType()!=6 && aTile.getType()!=95){//if its a tree the shot traverse it
-											if(aMonster instanceof Gol)
-												aMonster.canShoot=true;
-									}
-								break;
+					if(projectile.shape.intersects(new Rectangle(x,y,32,32))){
+						projectile.projectile_speed=0;
+						Death.play();
 					}
 				}
 			}
 		}
+	private void MonsterBulletCollision() {
+		for(int i=0;i<Level.map_tile.size();i++){
+			if(Level.map_tile.get(i) instanceof Monster){
+				Monster aMonster=(Monster)Level.map_tile.get(i);
+				if(aMonster.projectile!=null)
+					for(int j=0;j<Level.map_tile.size();j++){
+							if(Level.map_tile.get(j)!=aMonster){//dont collide with yourself.
+								if(Level.map_tile.get(j).shape.intersects(new Rectangle(aMonster.projectile.x,aMonster.projectile.y,32,32))){
+									if(Level.map_tile.get(j).type!=Tile.ID.Water.value && Level.map_tile.get(j).type!=Tile.ID.Tree.value)
+										if(aMonster instanceof Gol){
+											aMonster.canShoot=true;
+											aMonster.projectile.shape.reset();
+										}
+									}
+								}
+							}
+				}
+			}
 	}
 	private void bullet_Collision() {
 		for(Tile aTile:Level.map_tile){
@@ -287,9 +255,10 @@ public class Character {
 				Level.takeGoal();
 		//Full Collision on same tile
 		if(intersect1!=null && intersect2!=null){
-			if(intersect1 instanceof Monster && ((Monster)intersect1).type!=Tile.ID.MoveableBlock.value) return true;
+			if(intersect1 instanceof Monster && (((Monster)intersect1).type!=Tile.ID.MoveableBlock.value) && 
+					((Monster)intersect1).type!=Tile.ID.boat.value)	return true;
 			if(intersect1==intersect2){
-				switch(intersect1.getType()){
+				switch(intersect1.type){
 				case 0	:	return true; //rock
 				case 1	:	return true; //closed door
 				case 2:		if(Math.abs(intersect1.x-Character.x)<=16 && Math.abs(intersect1.y-Character.y)<=16){
@@ -328,7 +297,7 @@ public class Character {
 		//One of the 2 collision mask is empty
 		else if(intersect1==null && intersect2!=null){
 				if(intersect2.isSolid){
-					if(intersect2.getType()!=Tile.ID.AmmoHeart.value && intersect2.getType()!=Tile.ID.NoAmmoHeart.value) //hearth considered solid  for enemy projectile 
+					if(intersect2.type!=Tile.ID.AmmoHeart.value && intersect2.type!=Tile.ID.NoAmmoHeart.value) //hearth considered solid  for enemy projectile 
 						return true;
 				}
 				//not not solid object; look if its One-way Arrow
@@ -339,7 +308,7 @@ public class Character {
 		}
 		else if(intersect2==null && intersect1!=null){
 			if(intersect1.isSolid){
-				if(intersect1.getType()!=Tile.ID.AmmoHeart.value && intersect1.getType()!=Tile.ID.NoAmmoHeart.value) //hearth considered solid  for enemy projectile 
+				if(intersect1.type!=Tile.ID.AmmoHeart.value && intersect1.type!=Tile.ID.NoAmmoHeart.value) //hearth considered solid  for enemy projectile 
 					return true;
 			}
 			//not not solid object; look if its One-way Arrow
@@ -357,19 +326,24 @@ public class Character {
 		Sound.HeartSound.stop();
 		Sound.HeartSound.setFramePosition(0);
 		Sound.HeartSound.start();
-		if(Level.heart_amount==0)
+		if(Level.heart_amount==0){
 			Level.openChest();
+			if(Level.room==6){
+				aPower.powerActivated_ladder=true;
+			Sound.resetSound();
+			Sound.PowerEnabled.start();
+			}
+		}
 		if(aTile.type==Tile.ID.AmmoHeart.value)
 			Character.ammo+=2;
 	}
 	private void movement() {
-		checkMovementState();
 		if(!keypressed.isEmpty()&& !isMoving){//if a button direction is held down
 			if(keypressed.size()==1)
 				lastKey=keypressed.get(0);//get last pressed button
 			else
 				lastKey=keypressed.get(keypressed.size()-1);//get last pressed button
-			if(lastKey==Game.button.W && !beingPushed){
+			if(lastKey==Game.button.W){
 				dir=Game.Direction.Up;
 				move.walk_up.setImage();
 				if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))){
@@ -377,7 +351,7 @@ public class Character {
 						isMoving=true;
 				}
 			}
-			if(lastKey==Game.button.S && !beingPushed){
+			if(lastKey==Game.button.S){
 				dir=Game.Direction.Down;			
 				move.walk_down.setImage();
 				if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))){
@@ -435,6 +409,7 @@ public class Character {
 			}
 		}
 	}
+	checkMovementState();	
 }
 	private void checkMovementState() {
 		if(targetX<0){
@@ -507,9 +482,7 @@ public class Character {
 		case KeyEvent.VK_W:		removeKey(Game.button.W);
 								break;
 		case KeyEvent.VK_D:		removeKey(Game.button.D);
-								break;
-		case KeyEvent.VK_SPACE:	removeKey(Game.button.Space);
-								break;					
+								break;				
 		}
 	}
 	private static void removeKey(Game.button d) {
@@ -528,6 +501,7 @@ public class Character {
 				Sound.ShotSound.stop();
 				Sound.ShotSound.setFramePosition(0);
 				Sound.ShotSound.start();
+				ammo--;
 			}	
 	}
 	private void checkPower() {

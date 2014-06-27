@@ -17,7 +17,7 @@ public class DonMedusa extends Monster {
 		DonMedusaAnimation=new Animation();
 		canShoot=true;
 		try {getImg();} catch (IOException e) {e.printStackTrace();}
-		if(type==1)//left to right
+		if(type==Tile.ID.LeftRightDonMedusa.value)//left to right
 			dir=Game.Direction.Left;
 		else dir=Game.Direction.Down;
 	}

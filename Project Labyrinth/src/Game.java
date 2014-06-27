@@ -13,7 +13,7 @@ public class Game {
 	private int sheet_cols;
 	private final int assetSize=32;
 	enum Direction{Up,Down,Left,Right,None};
-	enum button{W,A,S,D,None,Space};
+	enum button{W,A,S,D,None};
 	enum GameState{NotStarted,Normal,Paused,Death}
 	public Game(){
 		try {loadAssets();

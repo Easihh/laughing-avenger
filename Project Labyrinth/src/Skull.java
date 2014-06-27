@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import java.util.Stack;
 import javax.imageio.ImageIO;
 
@@ -14,7 +13,6 @@ public class Skull extends Monster{
 	private boolean path_exist=false;
 	private BufferedImage[] skull_img;
 	private int step_to_move;
-	private long time_since_transform;
 	private Node nextMovement;
 	private int update_counter;
 	public Skull(int x,int y, int type) {
@@ -27,6 +25,7 @@ public class Skull extends Monster{
 	}
 	public void render(Graphics g){
 		checkState();
+		checkifdrown();
 		if(TransformedState==0 && !isMovingAcrossScreen){
 			if(isActive){
 				Skull.setImage();
@@ -40,10 +39,15 @@ public class Skull extends Monster{
 					g.drawImage(img,x,y,width,height,null);
 		}
 	}
+	private void checkifdrown() {
+		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
+			Kill_Respawn();
+		}
+	}
 	@Override
 	public void transform() {
 		previousState=img;
-		type=2;
+		type=Tile.ID.MoveableBlock.value;
 		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;		
@@ -51,28 +55,6 @@ public class Skull extends Monster{
 	public void update(){
 		if(isActive && Labyrinth.GameState==Game.GameState.Normal)
 			move();
-	}
-	private void checkState() {
-		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1){
-			TransformedState=2;
-			img=Game.monsterState.get(1);
-		}
-		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2){
-			TransformedState=0;
-			type=15;
-			img=previousState;
-		}
-		if((System.nanoTime()-time_since_water)/nano>2000 && TransformedState==1 && isDrowning){
-			TransformedState=3;
-			img=Game.monsterState.get(2);
-		}
-		if((System.nanoTime()-time_since_water)/nano>3000 && TransformedState==3 && isDrowning){
-			TransformedState=4;
-			img=Game.monsterState.get(3);
-		}
-		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
-			Kill_Respawn();
-		}	
 	}
 	private void Kill_Respawn() {
 		Skull me=copy();
@@ -161,30 +143,6 @@ public class Skull extends Monster{
 			}
 		}
 		updateMask();
-	}
-	private void getnewDirection() {
-		int direction=0;
-		int new_direction=0;
-		if(dir==Game.Direction.Down)
-			direction=1;
-		if(dir==Game.Direction.Left)
-			direction=2;
-		if(dir==Game.Direction.Right)
-			direction=3;
-		if(dir==Game.Direction.Up)
-			direction=4;
-		Random random=new Random();
-		do
-			new_direction=random.nextInt(5);
-		while (new_direction==0 || new_direction==direction);
-		if(new_direction==1)
-			dir=Game.Direction.Down;
-		if(new_direction==2)
-			dir=Game.Direction.Left;
-		if(new_direction==3)
-			dir=Game.Direction.Right;
-		if(new_direction==4)
-			dir=Game.Direction.Up;
 	}
 	private void shortestPath(){
 		Node goal=new Node(Character.x,Character.y);

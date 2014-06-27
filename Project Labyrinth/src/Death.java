@@ -53,4 +53,10 @@ public class Death {
 			}
 		}
 	}
+	
+	public void play(){
+		Sound.StageMusic.stop();
+		Sound.Death.start();
+		Labyrinth.GameState=Game.GameState.Death;
+	}
 }

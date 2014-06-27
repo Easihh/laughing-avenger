@@ -18,6 +18,7 @@ public class Sound {
 	public static Clip 	Sleeper;
 	public static Clip	ShotSound;
 	public static Clip 	StageMusic;
+	public static Clip 	Water;
     public Sound(String Filename) {
     	InputStream source=this.getClass().getResourceAsStream("/Sound/"+Filename+".wav");
         InputStream Sound=new BufferedInputStream(source);
@@ -39,6 +40,7 @@ public class Sound {
 	        else if(Filename.equalsIgnoreCase("Sleeper"))Sleeper=clip;
 	        else if(Filename.equalsIgnoreCase("HammerPowerUsed"))HammerPowerUsed=clip;
 	        else if(Filename.equalsIgnoreCase("PowerEnabled"))PowerEnabled=clip;
+	        else if(Filename.equalsIgnoreCase("Water"))Water=clip;
 		} catch (LineUnavailableException e){ e.printStackTrace();}
 		catch (IOException io){io.printStackTrace();}
 		catch (UnsupportedAudioFileException uafe){uafe.printStackTrace();}
@@ -56,5 +58,6 @@ public class Sound {
 		Sound.PowerEnabled.setFramePosition(0);
 		Sound.ShotSound.setFramePosition(0);
 		Sound.Sleeper.setFramePosition(0);
+		Sound.Water.setFramePosition(0);
     }
 }

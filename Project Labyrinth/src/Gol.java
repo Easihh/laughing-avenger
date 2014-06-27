@@ -1,15 +1,12 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
-
 public class Gol extends Monster {
+	
 	private final long nano=1000000000L;
 	private BufferedImage projectile_img;
 	private Game.Direction projectile_dir;
-	private long time_since_transform;
 	
 	public Gol(int x, int y, int type) {
 		super(x, y, type);
@@ -19,6 +16,7 @@ public class Gol extends Monster {
 	@Override
 	public void render(Graphics g) {
 		checkState();
+		checkIfDrown();
 		if(isMovingAcrossScreen)
 			super.updateLocation();
 		if(!isOffScreen()){
@@ -26,38 +24,22 @@ public class Gol extends Monster {
 			g.drawImage(img,x,y,width,height,null);
 		}
 	}
+	private void checkIfDrown() {
+		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
+			Kill_Respawn();
+		}	
+	}
+
 	@Override
 	public void transform() {
 		previousState=img;
 		oldtype=type;
-		type=2;
+		type=Tile.ID.MoveableBlock.value;
 		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;
 	}
 
-	private void checkState() {
-		if((System.nanoTime()-time_since_transform)/nano>7 && TransformedState==1){
-			TransformedState=2;
-			img=Game.monsterState.get(1);
-		}
-		if((System.nanoTime()-time_since_transform)/nano>10 && TransformedState==2){
-			TransformedState=0;
-			type=oldtype;
-			img=previousState;
-		}	
-		if((System.nanoTime()-time_since_water)/nano>2000 && TransformedState==1 && isDrowning){
-			TransformedState=3;
-			img=Game.monsterState.get(2);
-		}
-		if((System.nanoTime()-time_since_water)/nano>3000 && TransformedState==3 && isDrowning){
-			TransformedState=4;
-			img=Game.monsterState.get(3);
-		}
-		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
-			Kill_Respawn();
-		}	
-	}
 	private void Kill_Respawn() {
 		Gol me=copy();
 		Level.addRespawn(me);

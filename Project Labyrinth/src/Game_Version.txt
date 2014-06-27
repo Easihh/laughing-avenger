@@ -1,3 +1,22 @@
+Version 0.39:
+
+-Fixed bug that allow use of multiple of same power at once.
+-Fixed bug from previous build that made Gol projectile not shoot properly.
+-Fixed bug where only one type of Don Medusa would be used.
+-Fixed bug prevent Monster from respawning if drown.
+-Fixed bug where certain monster would not transform into correct type when shot with new code.
+-Fixed an issue with Sand counting as solid when not aligned with character.
+-Leeper no longer try to find a path once asleep.
+-Leeper now should no longer cause itself alignment issues when going to sleep.
+-Level 5,6 has been added.
+-Being pushed by Phantom no longer prevent you from moving up and down.
+-Collision with enemies projectiles should now work properly.
+-DonMedusa and Medusa projectile should once again traverse tree and water.
+-Can now use monster as a bridge on water by throwing them in the water.
+-Player can now die once the monster vanish and they are still touching the water.
+-Merged Monster Animation in single sprite Sheet.
+-More code Cleanup.
+
 Version 0.38B:
 
 -Fixed a bug that caused monster in ball form to no longer be able to be pushed.

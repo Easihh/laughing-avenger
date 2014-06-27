@@ -81,11 +81,11 @@ public class Level {
 		
 	}
 	private void verifyPowerAllowed() {
-		/*if(room==1){
-			Power[0]=1;
+		if(room==6){
+			Power[0]=2;
 			Power[1]=2;
-			Power[2]=3;
-		}*/
+			//Power[2]=3;
+		}
 		
 	}
 	private void createTile(String attributeValue) throws IOException {
@@ -231,7 +231,7 @@ public class Level {
 	}
 	private void getCorrectType(Monster Monster) {
 		
-		switch(Monster.getType()){
+		switch(Monster.type){
 		case 24: //awake dragon up
 				Monster.canShoot=true;
 				break;
@@ -268,7 +268,7 @@ public class Level {
 		for(Tile aTile:map_tile){
 			if(aTile instanceof Monster){
 				Monster Monster=(Monster)aTile;
-				switch(aTile.getType()){
+				switch(aTile.type){
 					case 2: //Monster is in ball form; awake them
 							AwakeBall(aTile);
 					case 24: //awake dragon up

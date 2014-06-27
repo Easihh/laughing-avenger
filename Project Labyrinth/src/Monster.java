@@ -1,10 +1,13 @@
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Stack;
 
 
 public abstract class Monster extends Tile {
+	protected final long nano=1000000L;
+	protected long time_since_transform;
 	protected int TransformedState=0;
 	protected Projectile projectile;
 	protected boolean canShoot=false;
@@ -34,6 +37,10 @@ public abstract class Monster extends Tile {
 						break;
 			}
 			time_since_water=System.nanoTime();
+			type=Tile.ID.boat.value;
+			isSolid=false;
+			Sound.resetSound();
+			Sound.Water.start();
 		}
 		Character.isMoving=true;
 		Character.isPushing=true;
@@ -61,5 +68,49 @@ public abstract class Monster extends Tile {
 			Path.add(temp);
 			temp=temp.parent;
 		}
+	}
+	
+	public void checkState() {
+		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1){
+			TransformedState=2;
+			img=Game.monsterState.get(1);
+		}
+		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2){
+			TransformedState=0;
+			type=0;
+			img=previousState;
+		}
+		if((System.nanoTime()-time_since_water)/nano>3000 && TransformedState==1 && isDrowning){
+			TransformedState=3;
+			img=Game.monsterState.get(2);
+		}
+		if((System.nanoTime()-time_since_water)/nano>6000 && TransformedState==3 && isDrowning){
+			TransformedState=4;
+			img=Game.monsterState.get(3);
+		}
+	}
+	public void getnewDirection() {
+		int direction=0;
+		int new_direction=0;
+		if(dir==Game.Direction.Down)
+			direction=1;
+		if(dir==Game.Direction.Left)
+			direction=2;
+		if(dir==Game.Direction.Right)
+			direction=3;
+		if(dir==Game.Direction.Up)
+			direction=4;
+		Random random=new Random();
+		do
+			new_direction=random.nextInt(5);
+		while (new_direction==0 || new_direction==direction);
+		if(new_direction==1)
+			dir=Game.Direction.Down;
+		if(new_direction==2)
+			dir=Game.Direction.Left;
+		if(new_direction==3)
+			dir=Game.Direction.Right;
+		if(new_direction==4)
+			dir=Game.Direction.Up;
 	}
 }

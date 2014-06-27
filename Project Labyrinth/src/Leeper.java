@@ -1,53 +1,35 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import java.util.Stack;
-import javax.imageio.ImageIO;
 
 public class Leeper extends Monster{
 	private final long nano=1000000L;
-	private Animation walk_left;
-	private Animation walk_right;
-	private Animation walk_up;
-	private Animation walk_down;
-	private Animation sleep_left;
-	private Animation sleep_right;
-	private Animation sleep_up;
-	private Animation sleep_down;
-	private BufferedImage[] spriteSheet;
+	private Movement move;
+	private Movement sleep;
 	private boolean path_exist=false;
 	private int step_to_move;
-	private long time_since_transform;
 	private Node nextMovement;
 	private int last_update=0;
 	public boolean isSleeping;
 	
 	public Leeper(int x, int y, int type) {
 		super(x, y, type);
+		move=new Movement("leeper_movement", 150);
+		sleep=new Movement("leeper_sleep",500);
 		depth=2;
 		isSleeping=false;
 		dir=Game.Direction.Left;
 		Path=new Stack<Node>();
-		walk_left=new Animation();
-		walk_right=new Animation();
-		walk_up=new Animation();
-		walk_down=new Animation();
-		sleep_right=new Animation();
-		sleep_left=new Animation();
-		sleep_up=new Animation();
-		sleep_down=new Animation();
-		getImage();
 	}
 	@Override
 	public void render(Graphics g) {
 		checkState();
+		checkIfDrown();
 		if(!isSleeping){
 			if(TransformedState==0 && !isMovingAcrossScreen)
-				g.drawImage(getAnimation().getImage(), x, y, null);
+				g.drawImage(move.getWalkAnimation(dir).getImage(), x, y, null);
 			else{
 				if(isMovingAcrossScreen)
 					super.updateLocation();
@@ -55,13 +37,18 @@ public class Leeper extends Monster{
 					g.drawImage(img,x,y,width,height,null); 
 				}	
 		}
-		else g.drawImage(getSleepAnimation().getImage(),x,y,null);
+		else g.drawImage(sleep.getWalkAnimation(dir).getImage(),x,y,null);
+	}
+	private void checkIfDrown() {
+		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
+			Kill_Respawn();
+		}
 	}
 	@Override
 	public void transform() {
 		if(!isSleeping){
 		previousState=img;
-		type=2;
+		type=Tile.ID.MoveableBlock.value;
 		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;
@@ -69,32 +56,10 @@ public class Leeper extends Monster{
 	}
 	public void update(){
 		if(!isSleeping){
-			getAnimation().setImage();
+			move.getWalkAnimation(dir).setImage();
 			if(Labyrinth.GameState==Game.GameState.Normal)move();
 		}
-		else getSleepAnimation().setImage();
-	}
-	private void checkState() {
-		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1){
-			TransformedState=2;
-			img=Game.monsterState.get(1);
-		}
-		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2){
-			TransformedState=0;
-			type=16;
-			img=previousState;
-		}	
-		if((System.nanoTime()-time_since_water)/nano>2000 && TransformedState==1 && isDrowning){
-			TransformedState=3;
-			img=Game.monsterState.get(2);
-		}
-		if((System.nanoTime()-time_since_water)/nano>3000 && TransformedState==3 && isDrowning){
-			TransformedState=4;
-			img=Game.monsterState.get(3);
-		}
-		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
-			Kill_Respawn();
-		}	
+		else sleep.getWalkAnimation(dir).setImage();
 	}
 	private void Kill_Respawn() {
 		Leeper me=copy();
@@ -105,94 +70,6 @@ public class Leeper extends Monster{
 		Leeper clone=new Leeper(oldX,oldY,oldtype);
 		return clone;
 	}
-	private void getImage(){
-		BufferedImage img=null;
-		spriteSheet = new BufferedImage[2];
-		try {//left movement
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_left.png"));
-			for(int i=0;i<1;i++){//all animation on same row
-				 for(int j=0;j<2;j++){
-					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-				 }
-			 }
-			walk_left.AddScene(spriteSheet[0], 150);
-			walk_left.AddScene(spriteSheet[1], 150);
-			//left Sleep
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_sleep_left.png"));
-			for(int i=0;i<1;i++){//all animation on same row
-				 for(int j=0;j<2;j++){
-					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-				 }
-			 }
-			sleep_left.AddScene(spriteSheet[0], 500);
-			sleep_left.AddScene(spriteSheet[1], 500);
-			///Right movement
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_right.png"));
-			for(int i=0;i<1;i++){//all animation on same row
-				 for(int j=0;j<2;j++){
-					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-				 }
-			 }
-			walk_right.AddScene(spriteSheet[0], 150);
-			walk_right.AddScene(spriteSheet[1], 150);
-			//right Sleep
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_sleep_right.png"));
-			for(int i=0;i<1;i++){//all animation on same row
-				 for(int j=0;j<2;j++){
-					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-				 }
-			 }
-			sleep_right.AddScene(spriteSheet[0], 500);
-			sleep_right.AddScene(spriteSheet[1], 500);
-			//Up movement
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_up.png"));
-			for(int i=0;i<1;i++){//all animation on same row
-				 for(int j=0;j<2;j++){
-					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-				 }
-			 }
-			walk_up.AddScene(spriteSheet[0], 150);
-			walk_up.AddScene(spriteSheet[1], 150);
-			sleep_up.AddScene(spriteSheet[0], 500);
-			sleep_up.AddScene(spriteSheet[1], 500);
-			//Down movement
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_down.png"));
-			for(int i=0;i<1;i++){//all animation on same row
-				 for(int j=0;j<2;j++){
-					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-				 }
-			 }
-			walk_down.AddScene(spriteSheet[0], 150);
-			walk_down.AddScene(spriteSheet[1], 150);
-			//Down sleep
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/leeper_sleep_down.png"));
-			for(int i=0;i<1;i++){//all animation on same row
-				 for(int j=0;j<2;j++){
-					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
-				 }
-			 }
-			sleep_down.AddScene(spriteSheet[0], 500);
-			sleep_down.AddScene(spriteSheet[1], 500);
-			} catch (IOException e) {e.printStackTrace();}
-	}
-	private Animation getAnimation() {
-		switch(dir){
-		case Left: return walk_left;
-		case Right: return walk_right;
-		case Up: return walk_up;
-		case Down: return walk_down;
-		}
-		return null;
-	}
-	private Animation getSleepAnimation() {
-		switch(dir){
-		case Left: return sleep_left;
-		case Right: return sleep_right;
-		case Up: return sleep_up;
-		case Down: return sleep_down;
-		}
-		return null;
-	}
 	private boolean isOffScreen(){
 		if(x>Level.map_width || x<0 || y<0 || y>Level.map_height){
 			Kill_Respawn();
@@ -202,7 +79,7 @@ public class Leeper extends Monster{
 	}
 	private void move() {
 		last_update++;
-		if(step_to_move==0 && Character.x%16==0 && x%16==0 && y%16==0 && Character.y%16==0 && last_update>=8 && TransformedState==0){
+		if(step_to_move==0 && Character.x%16==0 && x%16==0 && y%16==0 && Character.y%16==0 && last_update>=8 && TransformedState==0 && !isSleeping){
 					last_update=0;
 					shortestPath();
 					if(path_exist){
@@ -222,41 +99,18 @@ public class Leeper extends Monster{
 							}
 							else dir=Game.Direction.Left;
 						}
+						willSleep();
 					}
 			}
-		if(step_to_move>0){	
+		if(step_to_move>0 && !isSleeping){	
 				switch(dir){
-				case Left:	if(shape.intersects(Character.x+Character.targetX+2, Character.y, 32, 32)){
-								if(Character.targetX!=0)
-									x-=Character.targetX-Character.step;
-									Sound.Sleeper.setFramePosition(0);
-									Sound.Sleeper.start();
-									isSleeping=true;
-							}else	x-=2;
+				case Left:	x-=2;
 							break;
-				case Right:	if(shape.intersects(Character.x-2-Character.targetX, Character.y, 32, 32)){
-								if(Character.targetX!=0)
-									x-=Character.targetX+Character.step;
-									Sound.Sleeper.setFramePosition(0);
-									Sound.Sleeper.start();
-									isSleeping=true;
-							}else x+=2;
+				case Right:	x+=2;
 							break;
-				case Up:	if(shape.intersects(Character.x, Character.y+Character.targetX+2, 32, 32)){
-								if(Character.targetX!=0)
-									y+=Character.targetX+Character.step;
-								Sound.Sleeper.setFramePosition(0);
-								Sound.Sleeper.start();
-								isSleeping=true;
-							}else y-=2;
+				case Up:	y-=2;
 							break;
-				case Down:	if(shape.intersects(Character.x, Character.y-Character.targetX-2, 32, 32)){
-								if(Character.targetX!=0)
-									y-=Character.targetX+Character.step;;
-								Sound.Sleeper.setFramePosition(0);
-								Sound.Sleeper.start();
-								isSleeping=true;
-							}else y+=2;
+				case Down:	y+=2;
 							break;
 						}
 				step_to_move-=2;
@@ -283,29 +137,38 @@ public class Leeper extends Monster{
 		}
 		updateMask();
 	}
-	private void getnewDirection() {
-		int direction=0;
-		int new_direction=0;
-		if(dir==Game.Direction.Down)
-			direction=1;
-		if(dir==Game.Direction.Left)
-			direction=2;
-		if(dir==Game.Direction.Right)
-			direction=3;
-		if(dir==Game.Direction.Up)
-			direction=4;
-		Random random=new Random();
-		do
-			new_direction=random.nextInt(5);
-		while (new_direction==0 || new_direction==direction);
-		if(new_direction==1)
-			dir=Game.Direction.Down;
-		if(new_direction==2)
-			dir=Game.Direction.Left;
-		if(new_direction==3)
-			dir=Game.Direction.Right;
-		if(new_direction==4)
-			dir=Game.Direction.Up;
+	
+	private void willSleep() {
+		int deltaX=Character.x-x;
+		int deltaY=Character.y-y;
+		switch(dir){
+		case Left:	
+					if((deltaY>=-16 && deltaY<=16) && deltaX==-32){
+						Sound.resetSound();
+						Sound.Sleeper.start();
+						isSleeping=true;
+					}break;
+		case Right:	
+					if((deltaY>=-16 && deltaY<=16) && deltaX==32){
+						Sound.resetSound();
+						Sound.Sleeper.start();
+						isSleeping=true;
+					}break;
+		case Up:	if((deltaX>=-16 && deltaX<=16) && deltaY==-32){
+						Sound.resetSound();
+						Sound.Sleeper.start();
+						isSleeping=true;
+					}
+					break;
+		case Down:	
+					if((deltaX>=-16 && deltaX<=16) && deltaY==32){
+						Sound.resetSound();
+						Sound.Sleeper.start();
+						isSleeping=true;
+					}
+					break;
+			
+		}
 	}
 	private void shortestPath(){
 		Node goal=new Node(Character.x,Character.y);

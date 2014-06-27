@@ -96,6 +96,7 @@ public class MainPanel extends JPanel {
 		aSound=new Sound("ArrowBridgePowerUsed");
 		aSound=new Sound("Sleeper");
 		aSound=new Sound("PowerEnabled");
+		aSound=new Sound("Water");
 		Sound.StageMusic.loop(Clip.LOOP_CONTINUOUSLY);	
 	}
 }

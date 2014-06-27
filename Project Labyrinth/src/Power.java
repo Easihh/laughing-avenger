@@ -36,8 +36,8 @@ public class Power {
 						Level.toDelete.add(aTile);
 						Level.toAdd.add(new Tile(aTile.x,aTile.y,type));
 						Sound.ArrowBridgePowerUsed.start();
-						//powerActivated_ladder=false;
 						deletePower(2);
+						disablePower(2);					
 					}
 				}
 			}
@@ -71,8 +71,8 @@ public class Power {
 						if(aTile==colliding_tile1){
 							Level.toDelete.add(aTile);
 							Sound.HammerPowerUsed.start();
-							//powerActivated_hammer=false;
 							deletePower(1);
+							disablePower(1);
 						}
 					}
 				}
@@ -107,16 +107,16 @@ public class Power {
 						int type=getNewArrow(aTile);
 						Level.toAdd.add((new OneWayArrow(aTile.x,aTile.y,type)));
 						Sound.ArrowBridgePowerUsed.start();
-						//powerActivated_arrow=false;
 						deletePower(3);
+						disablePower(3);
 					}
 				}
 	}
 	private int getNewArrow(Tile aTile) {
-		if(aTile.getType()==Tile.ID.OneWayUp.value)return Tile.ID.OneWayRight.value;
-		if(aTile.getType()==Tile.ID.OneWayLeft.value)return Tile.ID.OneWayUp.value;
-		if(aTile.getType()==Tile.ID.OneWayRight.value)return Tile.ID.OneWayDown.value;
-		if(aTile.getType()==Tile.ID.OneWayDown.value)return Tile.ID.OneWayLeft.value;
+		if(aTile.type==Tile.ID.OneWayUp.value)return Tile.ID.OneWayRight.value;
+		if(aTile.type==Tile.ID.OneWayLeft.value)return Tile.ID.OneWayUp.value;
+		if(aTile.type==Tile.ID.OneWayRight.value)return Tile.ID.OneWayDown.value;
+		if(aTile.type==Tile.ID.OneWayDown.value)return Tile.ID.OneWayLeft.value;
 		return 0;
 	}
 	private Tile getCollidingTile(Rectangle mask) {
@@ -127,10 +127,25 @@ public class Power {
 			}
 		return null;
 	}
+	private void disablePower(int type){
+		boolean powerExist=false;
+		for(int i=0;i<3;i++){//power array
+			if(Level.Power[i]==type){
+				powerExist=true;
+				break;
+			}
+		}
+		if(!powerExist && type==1)powerActivated_hammer=false;
+		if(!powerExist && type==2)powerActivated_ladder=false;
+		if(!powerExist && type==3)powerActivated_arrow=false;
+	}
 	private void deletePower(int type){
 		for(int i=0;i<3;i++){//power array
-			if(Level.Power[i]==type)
+			if(Level.Power[i]==type){
 				Level.Power[i]=0;
+				Character.canShoot=false;
+				break;
+			}
 		}
 	}
 }

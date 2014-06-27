@@ -7,7 +7,6 @@ public class Snakey  extends Monster{
 	private final long nano=1000000L;
 	private Animation SnakeyAnimation;
 	private BufferedImage spriteSheet[];
-	private long time_since_transform;
 	public Snakey(int x, int y, int type) {
 		super(x, y, type);
 		SnakeyAnimation=new Animation();
@@ -17,6 +16,7 @@ public class Snakey  extends Monster{
 	public void render(Graphics g){
 		updateAnimation();
 		checkState();
+		checkifDrown();
 		if(TransformedState==0 && !isMovingAcrossScreen){
 			g.drawImage(SnakeyAnimation.getImage(), x,y,width,height,null);
 		}
@@ -26,6 +26,12 @@ public class Snakey  extends Monster{
 					g.drawImage(img,x,y,width,height,null);
 		}
 	}
+	private void checkifDrown() {
+		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
+			type=oldtype;
+			Kill_Respawn();
+		}
+	}
 	@Override
 	public void transform() {
 		previousState=img;
@@ -33,28 +39,6 @@ public class Snakey  extends Monster{
 		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;
-	}
-	private void checkState() {
-		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1 && !isDrowning){
-			TransformedState=2;
-			img=Game.monsterState.get(1);
-		}
-		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2 && !isDrowning){
-			TransformedState=0;
-			type=19;
-			img=previousState;
-		}
-		if((System.nanoTime()-time_since_water)/nano>2000 && TransformedState==1 && isDrowning){
-			TransformedState=3;
-			img=Game.monsterState.get(2);
-		}
-		if((System.nanoTime()-time_since_water)/nano>3000 && TransformedState==3 && isDrowning){
-			TransformedState=4;
-			img=Game.monsterState.get(3);
-		}
-		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
-			Kill_Respawn();
-		}	
 	}
 	private void Kill_Respawn() {
 		Snakey me=copy();

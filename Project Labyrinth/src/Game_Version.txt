@@ -1,3 +1,8 @@
+Version 0.39B:
+
+-Fixed a bug where if you restarted Level after being stuck by phantom that
+the hero would be unaligned with the tile if he moved.
+
 Version 0.39A:
 
 -Fixed a bug where enemy of the next level would not respawn.

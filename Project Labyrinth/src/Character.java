@@ -21,10 +21,10 @@ public class Character {
 	public static Game.Direction dir;
 	public static int ammo;
 	public static int targetX;
-	public static boolean beingPushed=false;
+	public static boolean beingPushed;
 	public static Projectile weapon=null;
 	public static Death Death;
-	public static boolean canShoot=false;
+	public static boolean canShot;
 	private Movement move;
 	public Power aPower;
 	public Character(int x, int y){
@@ -37,8 +37,10 @@ public class Character {
 		isShooting=false;
 		isMoving=false;
 		isPushing=false;
+		canShot=false;
 		 dir=Game.Direction.Up;
 		 lastKey=Game.button.None;
+		 beingPushed=false;
 		 keypressed=new ArrayList<Game.button>();
 		 targetX=0;
 	}
@@ -46,7 +48,7 @@ public class Character {
 		if(keypressed.size()==0)					
 			move.getWalkAnimation(Character.dir).reset();
 		g.drawImage(move.getWalkAnimation(dir).getImage(),x,y,width,height,null);
-		if(Character.isShooting)
+		if(Character.isShooting && weapon!=null)
 			weapon.render(g);		
 	}
 	public void update(){
@@ -54,12 +56,9 @@ public class Character {
 			if(isWalkingSand())
 				movement=1;
 			else movement=2;
-			if(canShoot){
-				checkPower();
-				if(canShoot)
-					fireProjectile();
-				canShoot=false;
-			}
+			checkPower();
+			if(canShot)
+				fireProjectile();
 			movement();
 			CollisionWithWater();
 			MonsterBulletCollision();
@@ -497,6 +496,7 @@ public class Character {
 		if(!Character.isShooting)
 			if(ammo>=1){
 				Character.isShooting=true;
+				canShot=false;
 				createProjectile();
 				Sound.ShotSound.stop();
 				Sound.ShotSound.setFramePosition(0);

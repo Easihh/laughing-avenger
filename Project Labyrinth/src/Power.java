@@ -143,7 +143,7 @@ public class Power {
 		for(int i=0;i<3;i++){//power array
 			if(Level.Power[i]==type){
 				Level.Power[i]=0;
-				Character.canShoot=false;
+				Character.canShot=false;
 				break;
 			}
 		}

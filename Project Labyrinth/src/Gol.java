@@ -25,7 +25,7 @@ public class Gol extends Monster {
 		}
 	}
 	private void checkIfDrown() {
-		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>6000 && TransformedState==4 && isDrowning){
 			Kill_Respawn();
 		}	
 	}

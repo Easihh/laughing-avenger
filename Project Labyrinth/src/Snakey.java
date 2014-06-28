@@ -27,8 +27,7 @@ public class Snakey  extends Monster{
 		}
 	}
 	private void checkifDrown() {
-		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==4 && isDrowning){
-			type=oldtype;
+		if((System.nanoTime()-time_since_water)/nano>6000 && TransformedState==4 && isDrowning){
 			Kill_Respawn();
 		}
 	}

@@ -80,11 +80,11 @@ public abstract class Monster extends Tile {
 			type=0;
 			img=previousState;
 		}
-		if((System.nanoTime()-time_since_water)/nano>3000 && TransformedState==1 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>3500 && TransformedState==1 && isDrowning){
 			TransformedState=3;
 			img=Game.monsterState.get(2);
 		}
-		if((System.nanoTime()-time_since_water)/nano>6000 && TransformedState==3 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>5000 && TransformedState==3 && isDrowning){
 			TransformedState=4;
 			img=Game.monsterState.get(3);
 		}

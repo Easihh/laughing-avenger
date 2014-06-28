@@ -19,8 +19,8 @@ public class Level {
 	private static ArrayList<Tile> toRespawn;
 	private static Vector<Long> Respawn_Timer;
 	private static Tile goal_top;
-	private static boolean canRespawn=true;
-	private static boolean chestIsOpen=false;
+	private static boolean canRespawn;
+	private static boolean chestIsOpen;;
 	
 	public static int room=1;
 	public static int remake=0;
@@ -48,6 +48,8 @@ public class Level {
 			Power=new int[3];
 			verifyPowerAllowed();
 			map_background=new Tile(Game.background);
+			canRespawn=true;
+			chestIsOpen=false;
 			try{readMap();}
 			catch (IOException | XMLStreamException e){
 				e.printStackTrace();

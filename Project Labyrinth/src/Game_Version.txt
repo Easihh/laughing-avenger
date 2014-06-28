@@ -1,3 +1,7 @@
+Version 0.39A:
+
+-Fixed a bug where enemy of the next level would not respawn.
+
 Version 0.39:
 
 -Fixed bug that allow use of multiple of same power at once.

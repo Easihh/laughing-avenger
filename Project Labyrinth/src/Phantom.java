@@ -16,18 +16,19 @@ public class Phantom extends Monster {
 	@Override
 	public void transform() {}//this monster is immune
 	public void update(){
+		Character hero=Character.getInstance();
 		if(Labyrinth.GameState==Game.GameState.Normal)
 			move();
 		if(Character.beingPushed){
 			if(dir==Game.Direction.Down){
-				if(!checkCollision(new Rectangle(Character.x, Character.y+32,16,4),new Rectangle(Character.x+16, Character.y+32,16,4))){
-					Character.y+=4;
+				if(!checkCollision(new Rectangle(hero.getX(), hero.getY()+32,16,4),new Rectangle(hero.getX()+16, hero.getY()+32,16,4))){
+					hero.setY(hero.getY()+4);
 					Character.beingPushed=false;
 				}
 			}
 			if(dir==Game.Direction.Up){
-				if(!checkCollision(new Rectangle(Character.x, Character.y-4,16,4),new Rectangle(Character.x+16, Character.y-4,16,4))){
-					Character.y-=4;
+				if(!checkCollision(new Rectangle(hero.getX(), hero.getY()-4,16,4),new Rectangle(hero.getX()+16, hero.getY()-4,16,4))){
+					hero.setY(hero.getY()-4);
 					Character.beingPushed=false;
 				}	
 			}
@@ -55,8 +56,8 @@ public class Phantom extends Monster {
 						getnewDirection();
 					}else y-=1;
 				}else//within distance
-					if(!shape.intersects(new Rectangle(Character.x,Character.y+32,16,4)) && !shape.intersects(
-							new Rectangle(Character.x+16,Character.y+32,16,4)))
+					if(!shape.intersects(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY()+32,16,4)) && !shape.intersects(
+							new Rectangle(Character.getInstance().getX()+16,Character.getInstance().getY()+32,16,4)))
 						y-=4;
 				else	
 							if(!Character.beingPushed)
@@ -67,8 +68,8 @@ public class Phantom extends Monster {
 							getnewDirection();
 						}else y+=1;
 					}else
-						if(!shape.intersects(new Rectangle(Character.x,Character.y-4,16,4)) && !shape.intersects(
-								new Rectangle(Character.x+16,Character.y-4,16,4)))
+						if(!shape.intersects(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY()-4,16,4)) && !shape.intersects(
+								new Rectangle(Character.getInstance().getX()+16,Character.getInstance().getY()-4,16,4)))
 							y+=4;
 						else	
 									if(!Character.beingPushed)
@@ -78,19 +79,20 @@ public class Phantom extends Monster {
 		updateMask();
 	}
 	private boolean withinHeroDistance() {
+		Character hero=Character.getInstance();
 		switch(dir){
-		case Left:	if(x-Character.x<=64 && (Math.abs(y-Character.y)<=Character.step))
-						if(x>Character.x)
+		case Left:	if(x-hero.getX()<=64 && (Math.abs(y-hero.getY())<=hero.step))
+						if(x>hero.getX())
 							return true;
 					break;
-		case Right:if(x-Character.x>=-64 && (Math.abs(y-Character.y)<=Character.step))
-						if(x<Character.x)
+		case Right:if(x-hero.getX()>=-64 && (Math.abs(y-hero.getY())<=hero.step))
+						if(x<hero.getX())
 							return true;
 					break;
-		case Down:	if(y<Character.y && (Math.abs(x-Character.x)<=Character.step))
+		case Down:	if(y<hero.getY() && (Math.abs(x-hero.getX())<=hero.step))
 							return true;
 					break;
-		case Up:	if(y>Character.y && (Math.abs(x-Character.x)<=Character.step))
+		case Up:	if(y>hero.getY() && (Math.abs(x-hero.getX())<=hero.step))
 						return true;
 					break;
 		}

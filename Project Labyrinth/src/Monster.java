@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
-
 public abstract class Monster extends Tile {
 	protected final long nano=1000000L;
 	protected long time_since_transform;
@@ -26,14 +25,14 @@ public abstract class Monster extends Tile {
 	
 	public void moveInWater() {	
 		if(!isDrowning){
-			switch(Character.dir){
-			case Left:	Character.targetX=-2*Character.step;
+			switch(Character.getInstance().dir){
+			case Left:	Character.targetX=-2*Character.getInstance().step;
 						break;
-			case Right:	Character.targetX=2*Character.step;
+			case Right:	Character.targetX=2*Character.getInstance().step;
 						break;
-			case Up:	Character.targetX=-2*Character.step;
+			case Up:	Character.targetX=-2*Character.getInstance().step;
 						break;
-			case Down:	Character.targetX=2*Character.step;
+			case Down:	Character.targetX=2*Character.getInstance().step;
 						break;
 			}
 			time_since_water=System.nanoTime();

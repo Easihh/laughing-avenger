@@ -24,23 +24,24 @@ public class OneWayArrow  extends Tile{
 		}
 	}
 	public boolean checkArrow() {
-			if(Character.dir==Game.Direction.Down && type==Tile.ID.OneWayUp.value){
-				if(shape.contains(Character.x,Character.y+height-1) || shape.contains(Character.x+width,Character.y+height-1))
+		Character hero=Character.getInstance();
+			if(Character.getInstance().dir==Game.Direction.Down && type==Tile.ID.OneWayUp.value){
+				if(shape.contains(hero.getX(),hero.getY()+height-1) || shape.contains(hero.getX()+width,hero.getY()+height-1))
 					return false;//allow pass
 				return true; 
 			}
-			if(Character.dir==Game.Direction.Up && type==Tile.ID.OneWayDown.value){
-				if(shape.contains(Character.x,Character.y) || shape.contains(Character.x+width,Character.y))
+			if(Character.getInstance().dir==Game.Direction.Up && type==Tile.ID.OneWayDown.value){
+				if(shape.contains(hero.getX(),hero.getY()) || shape.contains(hero.getX()+width,hero.getY()))
 					return false;
 				return true;
 			}
-			if(Character.dir==Game.Direction.Left && type==Tile.ID.OneWayRight.value){
-				if(shape.contains(Character.x,Character.y) || shape.contains(Character.x,Character.y+height))
+			if(Character.getInstance().dir==Game.Direction.Left && type==Tile.ID.OneWayRight.value){
+				if(shape.contains(hero.getX(),hero.getY()) || shape.contains(hero.getX(),hero.getY()+height))
 					return false;
 				return true;
 			}
-			if(Character.dir==Game.Direction.Right && type==Tile.ID.OneWayLeft.value){
-				if(shape.contains(Character.x+width-1,Character.y) ||shape.contains(Character.x+width-1,Character.y+height-1))
+			if(Character.getInstance().dir==Game.Direction.Right && type==Tile.ID.OneWayLeft.value){
+				if(shape.contains(hero.getX()+width-1,hero.getY()) ||shape.contains(hero.getX()+width-1,hero.getY()+height-1))
 					return false;
 				return true;
 			}

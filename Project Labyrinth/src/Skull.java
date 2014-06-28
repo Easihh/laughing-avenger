@@ -87,7 +87,8 @@ public class Skull extends Monster{
 	}
 	private void move() {
 		update_counter++;
-		if(step_to_move==0 && Character.x%16==0 && Character.y%16==0 && x%16==0 && y%16==0 && update_counter>=8 && TransformedState==0){
+		if(step_to_move==0 && Character.getInstance().getX()%16==0 && Character.getInstance().getY()%16==0 && x%16==0 && y%16==0 
+				&& update_counter>=8 && TransformedState==0){
 			update_counter=0;
 					shortestPath();
 					if(path_exist){
@@ -145,7 +146,7 @@ public class Skull extends Monster{
 		updateMask();
 	}
 	private void shortestPath(){
-		Node goal=new Node(Character.x,Character.y);
+		Node goal=new Node(Character.getInstance().getX(),Character.getInstance().getY());
 		Open=new ArrayList<Node>();
 		Closed=new ArrayList<Node>();
 		Path=new Stack<Node>();

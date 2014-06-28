@@ -13,9 +13,8 @@ public class MainPanel extends JPanel {
 	private BufferedImage power_icon=null;
 	private BufferedImage hammer_icon=null;
 	private Font font;
-	public static Character hero;
+	private  Character hero;
 	public static Level theLevel;
-	
 	public MainPanel(){
 		setBackground(Color.black);	
 		loadSound();
@@ -24,6 +23,7 @@ public class MainPanel extends JPanel {
 		theLevel=new Level();
 	}
 	public void paintComponent(Graphics g){
+		hero=Character.getInstance();
 			super.paintComponent(g);
 			theLevel.render(g);
 			g.setColor(Color.white);
@@ -53,11 +53,11 @@ public class MainPanel extends JPanel {
 			g.drawString("RM#",528,118);
 			g.drawString(""+Level.remake,544,150);
 			g.drawString("PW",528,240);
-			g.drawString(""+Character.ammo,544,212);
-			g.drawString("x:"+Character.x, 544, 400);
-			g.drawString("y:"+Character.y, 544, 432);
-			if(Labyrinth.GameState==Game.GameState.Death && !Character.Death.isDone)
-				Character.Death.render(g);
+			g.drawString(""+hero.ammo,544,212);
+			g.drawString("x:"+hero.getX(), 544, 400);
+			g.drawString("y:"+hero.getY(), 544, 432);
+			if(Labyrinth.GameState==Game.GameState.Death && !hero.Death.isDone)
+				hero.Death.render(g);
 			if(Labyrinth.GameState!=Game.GameState.Death)
 				hero.render(g);
 	}

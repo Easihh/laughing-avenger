@@ -38,12 +38,13 @@ public class Medusa extends Monster {
 	private void MultiDirectionSight(){
 		boolean shoot=false;
 		boolean inRange=false;
+		Character hero=Character.getInstance();
 		/*Case Down*/
-		if((Math.abs(Character.x-x) <=Character.step) && y<Character.y){
+		if((Math.abs(hero.getX()-x) <=hero.step) && y<hero.getY()){
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 		}
-		if(Character.x==x  && y<Character.y){
+		if(hero.getX()==x  && y<hero.getY()){
 				//hero found in line of sight
 			// Check if there is an object inbetween
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);//change to awaken medusa;
@@ -55,11 +56,11 @@ public class Medusa extends Monster {
 			}
 		}
 		/*Case Up*/
-		if((Math.abs(Character.x-x)<=Character.step|| Character.x-Character.step==x) && y>Character.y){
+		if((Math.abs(hero.getX()-x)<=hero.step|| hero.getX()-hero.step==x) && y>hero.getY()){
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 		}
-		if( x==Character.x && y>Character.y){
+		if( x==hero.getX() && y>hero.getY()){
 			inRange=true;
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);//change to awaken medusa;
 			if(!Object_inBetween("Up")){
@@ -69,11 +70,11 @@ public class Medusa extends Monster {
 			}
 		}
 		/*Case Left*/
-		if((Math.abs(Character.y-y) <=Character.step)&& x>Character.x){
+		if((Math.abs(hero.getY()-y) <=hero.step)&& x>hero.getX()){
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 		}
-		if((y==Character.y) && x>Character.x){
+		if((y==hero.getY()) && x>hero.getX()){
 			inRange=true;
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);//change to awaken medusa;
 			if(!Object_inBetween("Left")){
@@ -83,11 +84,11 @@ public class Medusa extends Monster {
 			}
 		}
 		/*Case Right*/
-		if((Math.abs(Character.y-y) <=Character.step) && x<Character.x){
+		if((Math.abs(hero.getY()-y) <=hero.step) && x<hero.getX()){
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 		}
-		if(y==Character.y && x<Character.x){
+		if(y==hero.getY() && x<hero.getX()){
 			inRange=true;
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);//change to awaken medusa;
 			if(!Object_inBetween("Right")){

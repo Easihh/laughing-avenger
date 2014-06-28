@@ -85,24 +85,24 @@ public class Gol extends Monster {
 		return false;
 	}
 	private boolean LineofSight() {
+		Character hero=Character.getInstance();
 		switch(type){
-		
-		case 24: if((Character.x+Character.step==x || Character.x==x || Character.x-Character.step==x) && Character.y<y){
+		case 24: if((hero.getX()+hero.step==x || hero.getX()==x || hero.getX()-hero.step==x) && hero.getY()<y){
 						projectile_dir=Game.Direction.Up;
 						return true;
 					}
 					break;
-		case 25:	if((x-Character.step==Character.x || x==Character.x|| x+Character.step==Character.x) && Character.y>y){
+		case 25:	if((x-hero.step==hero.getX() || x==hero.getX()|| x+hero.step==hero.getX()) && hero.getY()>y){
 						projectile_dir=Game.Direction.Down;
 						return true;
 					}
 					break;
-		case 26:	if((Character.y-Character.step==y || Character.y+Character.step==y ||y==Character.y) && x>Character.x){
+		case 26:	if((hero.getY()-hero.step==y || hero.getY()+hero.step==y ||y==hero.getY()) && x>hero.getX()){
 						projectile_dir=Game.Direction.Left;
 						return true;
 					}
 					break;
-		case 27:	if((Character.y-Character.step==y || Character.y+Character.step==y || y==Character.y) && x<Character.x){
+		case 27:	if((hero.getY()-hero.step==y || hero.getY()+hero.step==y || y==hero.getY()) && x<hero.getX()){
 						projectile_dir=Game.Direction.Right;
 						return true;
 					}

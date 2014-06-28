@@ -5,32 +5,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Character {
+	private static Character instance=null; 
 	private final int width=32;
 	private final int height=32;
+	private Game.button lastKey;
 	private int movement=2;
+	private int x;
+	private int y;
+	private Movement move;
+	private Projectile weapon=null;
+	private Tile select_Tile;
 	
-	public static int x;
-	public static int y;
-	public static Tile select_Tile;
-	public final static int step=16;
-	public static ArrayList<Game.button> keypressed;
+	public final int step=16;
+	public ArrayList<Game.button> keypressed;
 	public static boolean isShooting;
 	public static boolean isPushing;
 	public static boolean isMoving;
-	public static Game.button lastKey;
-	public static Game.Direction dir;
-	public static int ammo;
-	public static int targetX;
 	public static boolean beingPushed;
-	public static Projectile weapon=null;
-	public static Death Death;
-	public static boolean canShot;
-	private Movement move;
+	public boolean canShot;
+	public Death Death;
+	public Game.Direction dir;
+	public int ammo;
+	public static int targetX;
 	public Power aPower;
-	public Character(int x, int y){
-		Character.x=x;
-		Character.y=y;
-		Character.ammo=0;
+	
+	public Character(){
+		ammo=0;
 		move= new Movement("lolo_movement",100);
 		aPower=new Power();
 		Death=new Death();
@@ -44,21 +44,41 @@ public class Character {
 		 keypressed=new ArrayList<Game.button>();
 		 targetX=0;
 	}
+	  public static Character getInstance() {
+		    if(instance == null) {
+		        instance = new Character();}
+		     return instance;}
+	  public static void destroyInstance() {
+		  		instance =null;}
+	  
+	  public int getX(){
+		  return x;}
+	  public int getY(){
+		  return y;}
+	  public void setX(int x){
+		  this.x=x;}
+	  public void setY(int y){
+		  this.y=y;}
+	  
 	public void render(Graphics g){
 		if(keypressed.size()==0)					
-			move.getWalkAnimation(Character.dir).reset();
+			move.getWalkAnimation(dir).reset();
 		g.drawImage(move.getWalkAnimation(dir).getImage(),x,y,width,height,null);
 		if(Character.isShooting && weapon!=null)
 			weapon.render(g);		
 	}
+	
 	public void update(){
 		if(Labyrinth.GameState==Game.GameState.Normal){
 			if(isWalkingSand())
 				movement=1;
 			else movement=2;
-			checkPower();
-			if(canShot)
-				fireProjectile();
+			if(canShot){
+				checkPower();
+				if(canShot)
+					fireProjectile();
+				canShot=false;
+			}
 			movement();
 			CollisionWithWater();
 			MonsterBulletCollision();
@@ -69,8 +89,10 @@ public class Character {
 			MonsterBulletCollision();
 			CollisionWithBullet();
 		}
-		if(Character.isShooting && weapon!=null)
-			bullet_Collision();
+		if(Character.isShooting && weapon!=null){
+			bullet_state();
+			weapon.update();
+		}
 	}
 	private void CollisionWithWater() {
 		boolean isCollidingWater=false;
@@ -128,7 +150,7 @@ public class Character {
 				Monster aMonster=(Monster)Level.map_tile.get(i);
 				Projectile projectile=aMonster.projectile;
 				if(projectile!=null)
-					if(projectile.shape.intersects(new Rectangle(x,y,32,32))){
+					if(new Rectangle(projectile.x,projectile.y,32,32).intersects(new Rectangle(x,y,32,32))){
 						projectile.projectile_speed=0;
 						Death.play();
 					}
@@ -146,7 +168,6 @@ public class Character {
 									if(Level.map_tile.get(j).type!=Tile.ID.Water.value && Level.map_tile.get(j).type!=Tile.ID.Tree.value)
 										if(aMonster instanceof Gol){
 											aMonster.canShoot=true;
-											aMonster.projectile.shape.reset();
 										}
 									}
 								}
@@ -154,83 +175,55 @@ public class Character {
 				}
 			}
 	}
-	private void bullet_Collision() {
-		for(Tile aTile:Level.map_tile){
-			if(weapon.dir==Game.Direction.Right){
-				if(aTile.shape.contains(weapon.x+width,weapon.y) && aTile.shape.contains(weapon.x+width,weapon.y+height-1)){
-					if(aTile.isSolid && (!(aTile instanceof Water)))
-						Character.isShooting=false;
-					if(aTile instanceof Monster)
-						checkMonsterState((Monster)aTile);
-				}
+	private void bullet_state() {
+		Tile colliding_tile1;
+		Tile colliding_tile2;
+			switch(weapon.dir){
+			case Left:	colliding_tile1=getCollidingTile(weapon.lefttop);
+						colliding_tile2=getCollidingTile(weapon.leftbottom);
+						bulletCollision(colliding_tile1,colliding_tile2);
+						break;
+			case Right:	colliding_tile1=getCollidingTile(weapon.righttop);
+						colliding_tile2=getCollidingTile(weapon.rightbottom);
+						bulletCollision(colliding_tile1,colliding_tile2);
+						break;
+			case Up:	colliding_tile1=getCollidingTile(weapon.topleft);
+						colliding_tile2=getCollidingTile(weapon.topright);
+						bulletCollision(colliding_tile1,colliding_tile2);
+						break;
+			case Down:	colliding_tile1=getCollidingTile(weapon.bottomleft);
+						colliding_tile2=getCollidingTile(weapon.bottomright);
+						bulletCollision(colliding_tile1,colliding_tile2);			
+						}
 			}
-			if(weapon.dir==Game.Direction.Left){
-				if(aTile.shape.contains(weapon.x-movement,weapon.y) && aTile.shape.contains(weapon.x-movement,weapon.y+height-1)){
-					if(aTile.isSolid && (!(aTile instanceof Water)))
-						Character.isShooting=false;
-					if(aTile instanceof Monster)
-						checkMonsterState((Monster)aTile);
-				}
-			}
-			if(weapon.dir==Game.Direction.Up){
-				if(aTile.shape.contains(weapon.x+width-1,weapon.y-1) && aTile.shape.contains(weapon.x,weapon.y-1)){
-					if(aTile.isSolid && (!(aTile instanceof Water)))
-						Character.isShooting=false;
-					if(aTile instanceof Monster)
-						checkMonsterState((Monster)aTile);
-				}
-			}
-			if(weapon.dir==Game.Direction.Down){
-				if(aTile.shape.contains(weapon.x+width-1,weapon.y+height) && aTile.shape.contains(weapon.x,weapon.y+height)){
-					if(aTile.isSolid && (!(aTile instanceof Water)))
-						Character.isShooting=false;
-					if(aTile instanceof Monster)
-						checkMonsterState((Monster)aTile);
-			}
-		}
-	}
-		//if still no full collision check if bullet is colliding with two tile instead of 1
-		if(Character.isShooting){
-			for(Tile aTile:Level.map_tile){
-				if(weapon.dir==Game.Direction.Right && aTile.shape.contains(weapon.x+width,weapon.y)){//check top part collision
-					for(Tile theTile:Level.map_tile){
-					 if(theTile.shape.contains(weapon.x+width,weapon.y+height-1))//check bottom part collision
-						 if(!(aTile instanceof Water) && !(theTile instanceof Water)){
-							 if(aTile.isSolid || theTile.isSolid)
-								 Character.isShooting=false;
-						 }
-				}
-			}
-				if(weapon.dir==Game.Direction.Left && aTile.shape.contains(weapon.x-movement,weapon.y)){//check top part collision
-					for(Tile theTile:Level.map_tile){
-					 if(theTile.shape.contains(weapon.x-movement,weapon.y+height-1))//check bottom part collision
-						 if(!(aTile instanceof Water) && !(theTile instanceof Water)){
-							 if(aTile.isSolid || theTile.isSolid)
-								 Character.isShooting=false;
-						 }
-				}
-			}
-				if(weapon.dir==Game.Direction.Up && aTile.shape.contains(weapon.x,weapon.y-1)){//check left part collision
-					for(Tile theTile:Level.map_tile){
-					 if(theTile.shape.contains(weapon.x+width-1,weapon.y-1))//check right part collision
-						 if(!(aTile instanceof Water) && !(theTile instanceof Water)){
-							 if(aTile.isSolid || theTile.isSolid)
-								 Character.isShooting=false;
-						 }
-				}
-			}
-				if(weapon.dir==Game.Direction.Down && aTile.shape.contains(weapon.x,weapon.y+height)){//check left part collision
-					for(Tile theTile:Level.map_tile){
-					 if(theTile.shape.contains(weapon.x+width-1,weapon.y+height))//check right part collision
-						 if(!(aTile instanceof Water) && !(theTile instanceof Water)){
-							 if(aTile.isSolid || theTile.isSolid)
-								 Character.isShooting=false;
-						 }
-				}
+	private void bulletCollision(Tile colliding_tile1, Tile colliding_tile2) {
+		if(colliding_tile1!=null && colliding_tile2!=null && colliding_tile1==colliding_tile2){//full collision
+			if(colliding_tile1 instanceof Monster){
+				checkMonsterState((Monster)colliding_tile1);
+				isShooting=false;}
+			else if(colliding_tile1.isSolid && (!(colliding_tile1 instanceof Water)))
+				isShooting=false;}
+		//check partial collision
+		else if(colliding_tile1!=null && colliding_tile2!=null){
+			if(!(colliding_tile1 instanceof Water) && !(colliding_tile2 instanceof Water)){
+				if(colliding_tile1.isSolid || colliding_tile2.isSolid)
+					isShooting=false;
 			}
 		}
+		else if(colliding_tile1!=null && colliding_tile2==null){
+				if(colliding_tile1.isSolid && (!(colliding_tile1 instanceof Water)))
+					isShooting=false;}
+		else if(colliding_tile2!=null && colliding_tile1==null){
+			if(colliding_tile2.isSolid && (!(colliding_tile2 instanceof Water)))
+				isShooting=false;}
+		}
+	private Tile getCollidingTile(Rectangle mask) {
+		for (int i=0;i<Level.map_tile.size();i++){
+			if(Level.map_tile.get(i).shape.intersects(mask))
+				return Level.map_tile.get(i);}
+		return null;
 	}
-}
+	
 	private void checkMonsterState(Monster aTile) {
 		if(aTile.TransformedState==0)
 				aTile.transform();
@@ -240,6 +233,7 @@ public class Character {
 		}
 		
 	}
+	
 	private boolean checkCollision(Rectangle mask1,Rectangle mask2) {
 		Tile intersect1=null;
 		Tile intersect2=null;
@@ -260,16 +254,16 @@ public class Character {
 				switch(intersect1.type){
 				case 0	:	return true; //rock
 				case 1	:	return true; //closed door
-				case 2:		if(Math.abs(intersect1.x-Character.x)<=16 && Math.abs(intersect1.y-Character.y)<=16){
+				case 2:		if(Math.abs(intersect1.x-x)<=16 && Math.abs(intersect1.y-y)<=16){
 								takeHeart(intersect1);
 							}
 							break;
 				case 3:  	//heart give no ammo
-							if(Math.abs(intersect1.x-Character.x)<=16 && Math.abs(intersect1.y-Character.y)<=16){
+							if(Math.abs(intersect1.x-x)<=16 && Math.abs(intersect1.y-y)<=16){
 								takeHeart(intersect1);
 							}
 							break;	
-				case 4:		if(Character.y<2*step){
+				case 4:		if(y<2*step){
 								Level.nextLevel(); //end door
 								return true;}
 							return false;
@@ -334,8 +328,9 @@ public class Character {
 			}
 		}
 		if(aTile.type==Tile.ID.AmmoHeart.value)
-			Character.ammo+=2;
+			ammo+=2;
 	}
+	
 	private void movement() {
 		if(!keypressed.isEmpty()&& !isMoving){//if a button direction is held down
 			if(keypressed.size()==1)
@@ -415,7 +410,7 @@ public class Character {
 			if(dir==Game.Direction.Left){
 				beingPushed=false;
 				targetX+=movement;
-				Character.x-=movement;
+				x-=movement;
 				move.walk_left.setImage();
 				if(isPushing){
 					select_Tile.x-=movement;
@@ -423,7 +418,7 @@ public class Character {
 				}
 			}else{//up
 				targetX+=movement;
-				Character.y-=movement;
+				y-=movement;
 				move.walk_up.setImage();
 				if(isPushing){
 					select_Tile.y-=movement;
@@ -435,7 +430,7 @@ public class Character {
 			if(dir==Game.Direction.Right){
 				beingPushed=false;
 				targetX-=movement;
-				Character.x+=movement;
+				x+=movement;
 				move.walk_right.setImage();
 				if(isPushing){
 					select_Tile.x+=movement;
@@ -443,7 +438,7 @@ public class Character {
 				}
 			}else{//down
 				targetX-=movement;
-				Character.y+=movement;
+				y+=movement;
 				move.walk_down.setImage();
 				if(isPushing){
 					select_Tile.y+=movement;
@@ -456,7 +451,7 @@ public class Character {
 			isPushing=false;
 		}
 	}
-	static boolean checkKeypressed() {
+	public boolean checkKeypressed() {
 		//check if up and down arrow arrow are held down
 		//we dont want to move to right and left if thats true;
 		for(Game.button abutton:keypressed){
@@ -465,14 +460,14 @@ public class Character {
 		}
 		return false;
 	}
-	public static boolean checkIfpressed(Game.button a) {
+	public boolean checkIfpressed(Game.button a) {
 		for(Game.button abutton:keypressed){
 			if(abutton==a)
 				return true;
 		}
 		return false;
 	}
-	public static void releaseButton(int keycode) {
+	public void releaseButton(int keycode) {
 		switch(keycode){
 		case KeyEvent.VK_A:		removeKey(Game.button.A);
 								break;
@@ -484,7 +479,7 @@ public class Character {
 								break;				
 		}
 	}
-	private static void removeKey(Game.button d) {
+	private void removeKey(Game.button d) {
 		Game.button toRemove=Game.button.None;
 		for(Game.button abutton:keypressed){
 			if(abutton==d)
@@ -501,7 +496,7 @@ public class Character {
 				Sound.ShotSound.stop();
 				Sound.ShotSound.setFramePosition(0);
 				Sound.ShotSound.start();
-				ammo--;
+				//ammo--;
 			}	
 	}
 	private void checkPower() {
@@ -510,15 +505,15 @@ public class Character {
 		if(aPower.powerActivated_arrow)aPower.useArrow();
 	}
 	private void createProjectile() {
-		switch(Character.dir){
+		switch(dir){
 		
-		case Right:	Character.weapon=new Projectile(x+targetX,y,Game.projectile_img.get(0),Character.dir);
+		case Right:	weapon=new Projectile(x+targetX,y,Game.projectile_img.get(0),dir);
 					break;
-		case Left:	Character.weapon=new Projectile(x+targetX,y,Game.projectile_img.get(0),Character.dir);
+		case Left:	weapon=new Projectile(x+targetX,y,Game.projectile_img.get(0),dir);
 					break;
-		case Up:	Character.weapon=new Projectile(x,y+targetX,Game.projectile_img.get(1),Character.dir);
+		case Up:	weapon=new Projectile(x,y+targetX,Game.projectile_img.get(1),dir);
 					break;
-		case Down:	Character.weapon=new Projectile(x,y+targetX,Game.projectile_img.get(1),Character.dir);
+		case Down:	weapon=new Projectile(x,y+targetX,Game.projectile_img.get(1),dir);
 					break;
 		}
 		

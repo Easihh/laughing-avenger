@@ -1,27 +1,38 @@
 import java.awt.Graphics;
-import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 public class Projectile {
 	private BufferedImage img=null;	
-	private final int height=32;
-	private final int width=32;
 	public int projectile_speed=6;	
 	public Game.Direction dir;
 	public int x;
 	public int y;
-	public Polygon shape;
-
+	public Rectangle lefttop,leftbottom,righttop,rightbottom,topleft,topright,bottomleft,bottomright;
 	public Projectile(int x,int y,BufferedImage img,Game.Direction dir){
 		this.x=x;
 		this.y=y;
 		this.img=img;
 		this.dir=dir;
-		int[] xpoints={x,x+width,x+width,x};
-		int[] ypoints={y,y,y+height,y+height};
-		shape=new Polygon(xpoints, ypoints, 4);
+		buildMask();
+	}
+	private void buildMask() {
+		lefttop=new Rectangle(x-projectile_speed,y,projectile_speed,16);
+		leftbottom=new Rectangle(x-projectile_speed,y+16,projectile_speed,16);
+		
+		topleft=new Rectangle(x,y-projectile_speed,16,projectile_speed);
+		topright=new Rectangle(x+16,y-projectile_speed,16,projectile_speed);
+		
+		righttop=new Rectangle(x+32,y,projectile_speed,16);
+		rightbottom=new Rectangle(x+32,y+16,projectile_speed,16);
+		
+		bottomleft=new Rectangle(x,y+32,16,projectile_speed);
+		bottomright=new Rectangle(x+16,y+32,16,projectile_speed);
 	}
 	public void render(Graphics g) {
+		g.drawImage(img,x,y,null);
+	}
+	public void update(){
 		switch(dir){
 		case Right:	x+=projectile_speed;
 					break;
@@ -32,9 +43,6 @@ public class Projectile {
 		case Up: 	y-=projectile_speed;
 					break;
 		}
-		int[] xpoints={x,x+width,x+width,x};
-		int[] ypoints={y,y,y+height,y+height};
-		shape=new Polygon(xpoints, ypoints, 4);
-		g.drawImage(img,x,y,null);
+		buildMask();
 	}
 }

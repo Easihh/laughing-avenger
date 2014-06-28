@@ -21,7 +21,7 @@ public class Death {
 		isDone();
 		if(!isDone){
 			Death.setImage();
-			g.drawImage(Death.getImage(),Character.x,Character.y,width,height,null);
+			g.drawImage(Death.getImage(),Character.getInstance().getX(),Character.getInstance().getY(),width,height,null);
 		}
 	}
 	

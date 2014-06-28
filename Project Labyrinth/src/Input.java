@@ -8,33 +8,33 @@ public class Input implements KeyListener {
 		if(keycode==KeyEvent.VK_A){
 			if(Labyrinth.GameState==Game.GameState.NotStarted)
 				Labyrinth.GameState=Game.GameState.Normal;
-			if(!Character.checkIfpressed(Game.button.A)){
-				Character.keypressed.add(Game.button.A);
+			if(!Character.getInstance().checkIfpressed(Game.button.A)){
+				Character.getInstance().keypressed.add(Game.button.A);
 			}
 		}
 		if(keycode==KeyEvent.VK_D){
 			if(Labyrinth.GameState==Game.GameState.NotStarted)
 				Labyrinth.GameState=Game.GameState.Normal;
-				if(!Character.checkIfpressed(Game.button.D)){
-					Character.keypressed.add(Game.button.D);
+				if(!Character.getInstance().checkIfpressed(Game.button.D)){
+					Character.getInstance().keypressed.add(Game.button.D);
 				}
 		}
 		if(keycode==KeyEvent.VK_W){
 			if(Labyrinth.GameState==Game.GameState.NotStarted)
 				Labyrinth.GameState=Game.GameState.Normal;
-			if(!Character.checkIfpressed(Game.button.W)){
-				Character.keypressed.add(Game.button.W);
+			if(!Character.getInstance().checkIfpressed(Game.button.W)){
+				Character.getInstance().keypressed.add(Game.button.W);
 			}
 		}
 		if(keycode==KeyEvent.VK_S){
 			if(Labyrinth.GameState==Game.GameState.NotStarted)
 				Labyrinth.GameState=Game.GameState.Normal;
-				if(!Character.checkIfpressed(Game.button.S)){
-					Character.keypressed.add(Game.button.S);
+				if(!Character.getInstance().checkIfpressed(Game.button.S)){
+					Character.getInstance().keypressed.add(Game.button.S);
 				}
 		}
 		if(keycode==KeyEvent.VK_SPACE){
-			Character.canShot=true;
+			Character.getInstance().canShot=true;
 		}
 		if(keycode==KeyEvent.VK_Q){
 			Labyrinth.GameState=Game.GameState.Death;
@@ -48,7 +48,7 @@ public class Input implements KeyListener {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		int keycode=e.getKeyCode();
-		Character.releaseButton(keycode);
+		Character.getInstance().releaseButton(keycode);
 	}
 
 	@Override

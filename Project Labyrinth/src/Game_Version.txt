@@ -1,3 +1,10 @@
+Version 0.39C:
+
+-Fixed a bug that allowed special power to be used as soon as an available target was possible.
+-Fixed a bug where using Special Power and Shooting could be done at same time.
+-Player will no longer automatically shot upon taking a special heart if they pressed the fire button before.
+-Cleaned a lot of reliance on Static variable for Character Class.
+
 Version 0.39B:
 
 -Fixed a bug where if you restarted Level after being stuck by phantom that

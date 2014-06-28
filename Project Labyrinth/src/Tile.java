@@ -107,10 +107,11 @@ public class Tile implements Comparable<Tile> {
 		Sound.MonsterDestroyed.start();
 	}
 	public boolean Object_inBetween(String direction) {
+		Character hero=Character.getInstance();
 		switch(direction){
 		case "Down":	for(Tile aTile:Level.map_tile){
-						for(int i=y;i<=Character.y;i+=2){
-							if(aTile.x==x || Math.abs(aTile.x-Character.x)<=Character.step)
+						for(int i=y;i<=hero.getY();i+=2){
+							if(aTile.x==x || Math.abs(aTile.x-hero.getX())<=hero.step)
 								if(aTile.y==i && aTile!=this)
 									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && aTile.type!=Tile.ID.Water.value){ //bypass tree
 										return true;
@@ -119,8 +120,8 @@ public class Tile implements Comparable<Tile> {
 						}
 					break;
 		case "Up":	for(Tile aTile:Level.map_tile){
-						for(int i=y;i>=Character.y;i-=2){
-							if(aTile.x==x || Math.abs(aTile.x-Character.x)<=Character.step)
+						for(int i=y;i>=hero.getY();i-=2){
+							if(aTile.x==x || Math.abs(aTile.x-hero.getX())<=hero.step)
 								if(aTile.y==i && aTile!=this)
 									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && aTile.type!=Tile.ID.Water.value)
 										return true;
@@ -128,8 +129,8 @@ public class Tile implements Comparable<Tile> {
 						}		
 					break;
 		case "Left":	for(Tile aTile:Level.map_tile){
-						for(int i=x;i>=Character.x;i-=2){
-							if(aTile.y==y || Math.abs(aTile.y-Character.y)<=Character.step)
+						for(int i=x;i>=hero.getX();i-=2){
+							if(aTile.y==y || Math.abs(aTile.y-hero.getY())<=hero.step)
 								if(aTile.x==i && aTile!=this)
 									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && aTile.type!=Tile.ID.Water.value)
 										return true;
@@ -137,8 +138,8 @@ public class Tile implements Comparable<Tile> {
 						}		
 					break;
 		case "Right":	for(Tile aTile:Level.map_tile){
-						for(int i=x;i<=Character.x;i+=2){
-							if(aTile.y==y || Math.abs(aTile.y-Character.y)<=Character.step)
+						for(int i=x;i<=hero.getX();i+=2){
+							if(aTile.y==y || Math.abs(aTile.y-hero.getY())<=hero.step)
 								if(aTile.x==i && aTile!=this)
 									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && aTile.type!=Tile.ID.Water.value)
 										return true;
@@ -151,9 +152,9 @@ public class Tile implements Comparable<Tile> {
 	public void moveTile(int movement){
 		//We are behind the big 32*32 block or Monster in Block form
 		willMove=true;
-		switch(Character.dir){
+		switch(Character.getInstance().dir){
 		case Right:	if(!checkCollision(new Rectangle(x+32,y,16,16),new Rectangle(x+32,y+16,16,16))){
-							checkBelowBlock(ID.OneWayLeft.value,Character.dir);
+							checkBelowBlock(ID.OneWayLeft.value,Character.getInstance().dir);
 							}
 					else{
 						getCollidingTile(new Rectangle(x+32,y,16,16));//top part collision
@@ -168,7 +169,7 @@ public class Tile implements Comparable<Tile> {
 					break;
 					
 		case Down:	if(!checkCollision(new Rectangle(x,y+32,16,16),new Rectangle(x+16,y+32,16,16))){
-						checkBelowBlock(ID.OneWayUp.value,Character.dir);
+						checkBelowBlock(ID.OneWayUp.value,Character.getInstance().dir);
 					}else{//There is a collision Down.
 						getCollidingTile(new Rectangle(x,y+32,16,16));//bottom left part collision
 						checkPartialCollision(collision_tile,ID.OneWayUp.value);
@@ -183,7 +184,7 @@ public class Tile implements Comparable<Tile> {
 					break;
 		case Up:
 					if(!checkCollision(new Rectangle(x,y-16,16,16),new Rectangle(x+16,y-16,16,16))){
-						checkBelowBlock(Tile.ID.OneWayDown.value,Character.dir);
+						checkBelowBlock(Tile.ID.OneWayDown.value,Character.getInstance().dir);
 						}else{
 						getCollidingTile(new Rectangle(x,y-16,16,16));//top left part collision
 						checkPartialCollision(collision_tile,Tile.ID.OneWayDown.value);
@@ -197,7 +198,7 @@ public class Tile implements Comparable<Tile> {
 					break;
 		case Left:
 					if(!checkCollision(new Rectangle(x-16,y,16,16),new Rectangle(x-16,y+16,16,16))){
-						checkBelowBlock(Tile.ID.OneWayRight.value,Character.dir);
+						checkBelowBlock(Tile.ID.OneWayRight.value,Character.getInstance().dir);
 					}else{
 						getCollidingTile(new Rectangle(x-16,y,16,16));//top left part collision
 						checkPartialCollision(collision_tile,Tile.ID.OneWayRight.value);
@@ -217,18 +218,18 @@ public class Tile implements Comparable<Tile> {
 	}
 	private void moveCondition() {
 		if(this instanceof Monster && !((Monster)this).isDrowning)
-			move(Character.dir);
+			move(Character.getInstance().dir);
 		if(this instanceof Monster && ((Monster)this).isDrowning){
-			move(Character.dir);
+			move(Character.getInstance().dir);
 			Character.isPushing=false;
 		}
 		if(!(this instanceof Monster))
-			move(Character.dir);	
+			move(Character.getInstance().dir);	
 	}
 	private void move(Game.Direction dir){
 		if(dir==Game.Direction.Down || dir==Game.Direction.Right )
-			Character.targetX=Character.step;
-		else Character.targetX=-Character.step;
+			Character.targetX=Character.getInstance().step;
+		else Character.targetX=-Character.getInstance().step;
 			Character.isMoving=true;
 			Character.isPushing=true;
 	}

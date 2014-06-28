@@ -3,27 +3,29 @@ import java.awt.Rectangle;
 public class Power {
 	private Tile colliding_tile1=null;
 	private Tile colliding_tile2=null;
-	public boolean powerActivated_hammer=false;
+	public boolean powerActivated_hammer=true;
 	public boolean powerActivated_ladder=false;
 	public boolean powerActivated_arrow=false;
+	Character hero;
 	public Power(){}
 	public	void useLadder() {
+		hero=Character.getInstance();
 		Sound.ArrowBridgePowerUsed.setFramePosition(0);
-		switch(Character.dir){
-		case Up:	colliding_tile1=getCollidingTile(new Rectangle(Character.x,Character.y-Character.step,16,16));
-					colliding_tile2=getCollidingTile(new Rectangle(Character.x+Character.step,Character.y-Character.step,16,16));
+		switch(Character.getInstance().dir){
+		case Up:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX(),hero.getY()-hero.step,16,16));
+					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()+hero.step,hero.getY()-hero.step,16,16));
 					checkWaterCollision(Tile.ID.UpDownLadder.value);
 					break;
-		case Down:	colliding_tile1=getCollidingTile(new Rectangle(Character.x,Character.y+32,16,16));
-					colliding_tile2=getCollidingTile(new Rectangle(Character.x+Character.step,Character.y+32,16,16));
+		case Down:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX(),hero.getY()+32,16,16));
+					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()+hero.step,hero.getY()+32,16,16));
 					checkWaterCollision(Tile.ID.UpDownLadder.value);
 					break;
-		case Left:	colliding_tile1=getCollidingTile(new Rectangle(Character.x-Character.step,Character.y,16,16));
-					colliding_tile2=getCollidingTile(new Rectangle(Character.x-Character.step,Character.y+Character.step,16,16));
+		case Left:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX()-hero.step,hero.getY(),16,16));
+					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()-hero.step,hero.getY()+hero.step,16,16));
 					checkWaterCollision(Tile.ID.LeftLadder.value);
 					break;
-		case Right:	colliding_tile1=getCollidingTile(new Rectangle(Character.x+32,Character.y,16,16));
-					colliding_tile2=getCollidingTile(new Rectangle(Character.x+32,Character.y+Character.step,16,16));
+		case Right:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX()+32,hero.getY(),16,16));
+					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()+32,hero.getY()+hero.step,16,16));
 					checkWaterCollision(Tile.ID.RightLadder.value);
 					break;
 			}
@@ -43,22 +45,23 @@ public class Power {
 			}
 	
 	public void useHammer() {
+		hero=Character.getInstance();
 		Sound.HammerPowerUsed.setFramePosition(0);
-		switch(Character.dir){
-		case Up:	colliding_tile1=getCollidingTile(new Rectangle(Character.x,Character.y-Character.step,16,16));
-					colliding_tile2=getCollidingTile(new Rectangle(Character.x+Character.step,Character.y-Character.step,16,16));
+		switch(Character.getInstance().dir){
+		case Up:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX(),hero.getY()-hero.step,16,16));
+					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()+hero.step,hero.getY()-hero.step,16,16));
 					checkHammerCollision();
 					break;
-		case Down:	colliding_tile1=getCollidingTile(new Rectangle(Character.x,Character.y+32,16,16));
-					colliding_tile2=getCollidingTile(new Rectangle(Character.x+Character.step,Character.y+32,16,16));
+		case Down:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX(),hero.getY()+32,16,16));
+					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()+hero.step,hero.getY()+32,16,16));
 					checkHammerCollision();
 					break;
-		case Left:	colliding_tile1=getCollidingTile(new Rectangle(Character.x-Character.step,Character.y,16,16));
-					colliding_tile2=getCollidingTile(new Rectangle(Character.x-Character.step,Character.y+Character.step,16,16));
+		case Left:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX()-hero.step,hero.getY(),16,16));
+					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()-hero.step,hero.getY()+hero.step,16,16));
 					checkHammerCollision();
 					break;
-		case Right:	colliding_tile1=getCollidingTile(new Rectangle(Character.x+32,Character.y,16,16));
-					colliding_tile2=getCollidingTile(new Rectangle(Character.x+32,Character.y+Character.step,16,16));
+		case Right:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX()+32,hero.getY(),16,16));
+					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()+32,hero.getY()+hero.step,16,16));
 					checkHammerCollision();
 					break;
 			}
@@ -78,22 +81,23 @@ public class Power {
 				}
 	
 	public void useArrow() {
+		hero=Character.getInstance();
 		Sound.ArrowBridgePowerUsed.setFramePosition(0);
-		switch(Character.dir){
-		case Up:	colliding_tile1=getCollidingTile(new Rectangle(Character.x,Character.y-Character.step,16,16));
-					colliding_tile2=getCollidingTile(new Rectangle(Character.x+Character.step,Character.y-Character.step,16,16));
+		switch(Character.getInstance().dir){
+		case Up:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX(),hero.getY()-hero.step,16,16));
+					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()+hero.step,hero.getY()-hero.step,16,16));
 					checkArrowCollision();
 					break;
-		case Down:	colliding_tile1=getCollidingTile(new Rectangle(Character.x,Character.y+32,16,16));
-					colliding_tile2=getCollidingTile(new Rectangle(Character.x+Character.step,Character.y+32,16,16));
+		case Down:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX(),hero.getY()+32,16,16));
+					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()+hero.step,hero.getY()+32,16,16));
 					checkArrowCollision();
 					break;
-		case Left:	colliding_tile1=getCollidingTile(new Rectangle(Character.x-Character.step,Character.y,16,16));
-					colliding_tile2=getCollidingTile(new Rectangle(Character.x-Character.step,Character.y+Character.step,16,16));
+		case Left:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX()-hero.step,hero.getY(),16,16));
+					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()-hero.step,hero.getY()+hero.step,16,16));
 					checkArrowCollision();
 					break;
-		case Right:	colliding_tile1=getCollidingTile(new Rectangle(Character.x+32,Character.y,16,16));
-					colliding_tile2=getCollidingTile(new Rectangle(Character.x+32,Character.y+Character.step,16,16));
+		case Right:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX()+32,hero.getY(),16,16));
+					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()+32,hero.getY()+hero.step,16,16));
 					checkArrowCollision();
 					break;
 			}
@@ -143,7 +147,7 @@ public class Power {
 		for(int i=0;i<3;i++){//power array
 			if(Level.Power[i]==type){
 				Level.Power[i]=0;
-				Character.canShot=false;
+				Character.getInstance().canShot=false;
 				break;
 			}
 		}

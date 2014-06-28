@@ -86,8 +86,9 @@ public class DonMedusa extends Monster {
 	}
 	private void MultiDirectionSight(){
 		boolean shoot=false;
+		Character hero=Character.getInstance();
 		/*Case Down*/
-		if(Character.x==x  && y<Character.y){
+		if(hero.getX()==x  && y<hero.getY()){
 				//hero found in line of sight
 			// Check if there is an object inbetween
 			if(!Object_inBetween("Down")){
@@ -97,7 +98,7 @@ public class DonMedusa extends Monster {
 			}
 		}
 		/*Case Up*/
-		if( x==Character.x && y>Character.y){
+		if( x==hero.getX() && y>hero.getY()){
 			if(!Object_inBetween("Up")){
 				shoot=true;
 				projectile_img=bullet_type[3];
@@ -105,7 +106,7 @@ public class DonMedusa extends Monster {
 			}
 		}
 		/*Case Left*/
-		if((y==Character.y) && x>Character.x){
+		if((y==hero.getY()) && x>hero.getX()){
 			if(!Object_inBetween("Left")){
 				shoot=true;
 				projectile_img=bullet_type[1];
@@ -113,7 +114,7 @@ public class DonMedusa extends Monster {
 			}
 		}
 		/*Case Right*/
-		if(y==Character.y && x<Character.x){
+		if(y==hero.getY() && x<hero.getX()){
 			if(!Object_inBetween("Right")){
 				shoot=true;
 				projectile_img=bullet_type[0];

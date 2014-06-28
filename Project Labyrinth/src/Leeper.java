@@ -79,7 +79,8 @@ public class Leeper extends Monster{
 	}
 	private void move() {
 		last_update++;
-		if(step_to_move==0 && Character.x%16==0 && x%16==0 && y%16==0 && Character.y%16==0 && last_update>=8 && TransformedState==0 && !isSleeping){
+		if(step_to_move==0 && Character.getInstance().getX()%16==0 && x%16==0 && y%16==0 && Character.getInstance().getY()%16==0 && 
+				last_update>=8 && TransformedState==0 && !isSleeping){
 					last_update=0;
 					shortestPath();
 					if(path_exist){
@@ -139,8 +140,8 @@ public class Leeper extends Monster{
 	}
 	
 	private void willSleep() {
-		int deltaX=Character.x-x;
-		int deltaY=Character.y-y;
+		int deltaX=Character.getInstance().getX()-x;
+		int deltaY=Character.getInstance().getY()-y;
 		switch(dir){
 		case Left:	
 					if((deltaY>=-16 && deltaY<=16) && deltaX==-32){
@@ -171,7 +172,7 @@ public class Leeper extends Monster{
 		}
 	}
 	private void shortestPath(){
-		Node goal=new Node(Character.x,Character.y);
+		Node goal=new Node(Character.getInstance().getX(),Character.getInstance().getY());
 		Open=new ArrayList<Node>();
 		Closed=new ArrayList<Node>();
 		Path=new Stack<Node>();

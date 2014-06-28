@@ -83,10 +83,11 @@ public class Level {
 		
 	}
 	private void verifyPowerAllowed() {
+		if(room==1)
+			Power[0]=1;
 		if(room==6){
 			Power[0]=2;
 			Power[1]=2;
-			//Power[2]=3;
 		}
 		
 	}
@@ -108,7 +109,10 @@ public class Level {
 					heart_amount+=1;
 					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.NoAmmoHeart.value));
 					break;
-		case "6": 	MainPanel.hero=new Character(coordX,coordY);
+		case "6": 	Character.destroyInstance();
+					Character.getInstance();
+					Character.getInstance().setX(coordX);
+					Character.getInstance().setY(coordY);
 					break;
 		case "8": 	
 					Level.map_tile.add(new Medusa(coordX,coordY,Tile.ID.SleepMedusa.value));

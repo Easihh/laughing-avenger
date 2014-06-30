@@ -83,8 +83,6 @@ public class Level {
 		
 	}
 	private void verifyPowerAllowed() {
-		if(room==1)
-			Power[0]=1;
 		if(room==6){
 			Power[0]=2;
 			Power[1]=2;
@@ -197,6 +195,18 @@ public class Level {
 					break;
 		case "50": 	
 					Level.map_tile.add(new Lava(coordX,coordY,Tile.ID.Lava.value));
+					break;
+		case "51": 	
+					Level.map_tile.add(new Water(coordX,coordY,Tile.ID.WaterFlowDown.value));
+					break;
+		case "52": 	
+					Level.map_tile.add(new Water(coordX,coordY,Tile.ID.WaterFlowLeft.value));
+					break;
+		case "59": 	
+					Level.map_tile.add(new Water(coordX,coordY,Tile.ID.WaterFlowRight.value));
+					break;
+		case "60": 	
+					Level.map_tile.add(new Water(coordX,coordY,Tile.ID.WaterFlowUp.value));
 					break;				
 		}
 	}

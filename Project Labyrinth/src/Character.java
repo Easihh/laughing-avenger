@@ -22,6 +22,7 @@ public class Character {
 	public static boolean isPushing;
 	public static boolean isMoving;
 	public static boolean beingPushed;
+	public static boolean isOnBoat;
 	public boolean canShot;
 	public Death Death;
 	public Game.Direction dir;
@@ -37,6 +38,7 @@ public class Character {
 		isShooting=false;
 		isMoving=false;
 		isPushing=false;
+		isOnBoat=false;
 		canShot=false;
 		 dir=Game.Direction.Up;
 		 lastKey=Game.button.None;
@@ -97,8 +99,9 @@ public class Character {
 	private void CollisionWithWater() {
 		boolean isCollidingWater=false;
 		boolean death=false;
+		isOnBoat=false;
 		for(int i=0;i<Level.map_tile.size();i++){
-			if(Level.map_tile.get(i).type==Tile.ID.Water.value)
+			if(Level.map_tile.get(i) instanceof Water)
 				if(Level.map_tile.get(i).shape.intersects(x, y, width, height)){
 					isCollidingWater=true;
 					death=true;
@@ -109,6 +112,7 @@ public class Character {
 				if(Level.map_tile.get(i).type==Tile.ID.boat.value)
 					if(Level.map_tile.get(i).shape.intersects(x, y, width, height)){
 						death=false;
+						isOnBoat=true;
 						}
 					}
 				}
@@ -280,6 +284,15 @@ public class Character {
 							return(OneArrow.checkArrow());
 				case 29:	return true; //rock wall;
 				case 32:	return true;//water
+				case 50:	return true;//water
+				case 51:	return true;//water
+				case 58:	return true;//water
+				case 59:	return true;//water
+				case 65:	if(intersect1.x%16==0 && intersect1.y%16==0){
+								x=intersect1.x;
+								y=intersect1.y;
+							}
+							return true;
 				}
 				
 			}
@@ -340,31 +353,39 @@ public class Character {
 			if(lastKey==Game.button.W){
 				dir=Game.Direction.Up;
 				move.walk_up.setImage();
-				if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))){
-						targetX=-step;
+				if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16)) && x%16==0){
+					if(isOnBoat)
+						targetX=2*-step;
+					else targetX=-step;
 						isMoving=true;
 				}
 			}
 			if(lastKey==Game.button.S){
 				dir=Game.Direction.Down;			
 				move.walk_down.setImage();
-				if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))){
-					targetX=step;
+				if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))&& x%16==0){
+					if(isOnBoat)
+						targetX=2*step;
+					else targetX=step;
 					isMoving=true;
 				}
 			}
 			if(lastKey==Game.button.D){
 				if(checkKeypressed()){
 					switch(dir){
-					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))){
+					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))&& x%16==0){
 									move.walk_down.setImage();
-									targetX=step;
+									if(isOnBoat)
+										targetX=2*step;
+									else targetX=step;
 									isMoving=true;
 								}
 								break;
-					case Up:	if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))){
+					case Up:	if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))&& x%16==0){
 									move.walk_up.setImage();
-									targetX=-step;
+									if(isOnBoat)
+										targetX=2*-step;
+									else targetX=-step;
 									isMoving=true;
 								}
 								break;
@@ -372,8 +393,10 @@ public class Character {
 				}else{
 					dir=Game.Direction.Right;
 					move.walk_right.setImage();
-					if(!checkCollision(new Rectangle(x+width,y,16,16),new Rectangle(x+width,y+step,16,16))){
-						targetX=step;
+					if(!checkCollision(new Rectangle(x+width,y,16,16),new Rectangle(x+width,y+step,16,16))&& y%16==0){
+						if(isOnBoat)
+							targetX=2*step;
+						else targetX=step;
 						isMoving=true;
 					}
 				}
@@ -381,23 +404,29 @@ public class Character {
 			if(lastKey==Game.button.A){
 				if(checkKeypressed()){
 					switch(dir){
-					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))){
+					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))&& x%16==0){
 									move.walk_down.setImage();
-									targetX=step;
+									if(isOnBoat)
+										targetX=2*step;
+									else targetX=step;
 									isMoving=true;
 								}
 								break;
-					case Up:	if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))){
+					case Up:	if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))&& x%16==0){
 									move.walk_up.setImage();
-									targetX=-step;
+									if(isOnBoat)
+										targetX=2*-step;
+									else targetX=-step;
 									isMoving=true;
 								}
 								break;
 					}
 				}else{	dir=Game.Direction.Left;			
 						move.walk_left.setImage();
-						if(!checkCollision(new Rectangle(x-step,y,16,16),new Rectangle(x-step,y+step,16,16))){
-								targetX=-step;
+						if(!checkCollision(new Rectangle(x-step,y,16,16),new Rectangle(x-step,y+step,16,16))&& y%16==0){
+							if(isOnBoat)
+								targetX=2*-step;
+							else targetX=-step;
 								isMoving=true;
 				}
 			}

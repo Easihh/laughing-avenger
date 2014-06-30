@@ -1,3 +1,12 @@
+Version 0.40:
+
+-Main Character can now use monster thrown in water as a boat in certain type of water.
+-Added 4 new type of Water tile that allow monster thrown in water to move in certain direction.
+-Main Character can no longer move if not aligned with the grid as to not become unaligned with the grid.
+-All mechanic of the original adventure of Lolo  Game have now been completed.
+-Bug: Character cannot push a monster in the water and use it as a boat at the same time; Character has to move
+and become realigned with the boat. 
+
 Version 0.39C:
 
 -Fixed a bug that allowed special power to be used as soon as an available target was possible.

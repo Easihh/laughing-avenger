@@ -11,7 +11,7 @@ public class Tile implements Comparable<Tile> {
 		OneWayUp(15),TopChest(16),BottomChestEmpty(17),LeftSnakey(18),RightSnakey(19),OneWayLeft(20),OneWayRight(21),
 		LeftRightDonMedusa(22),UpDownDonMedusa(23),GolUp(24),GolDown(25),GolLeft(26),GolRight(27),OneWayDown(28),RockWall(29),
 		Leeper(31),Water(32),LeftLadder(33),Phantom(34),Skull(35),RightLadder(40),UpDownLadder(41),Sand(42),Grass(43),Alma(48),
-		Lava(49),boat(65);
+		Lava(49),WaterFlowDown(50),WaterFlowLeft(51),WaterFlowRight(58),WaterFlowUp(59),boat(65);
 		int value;
         private ID(int value) {
             this.value = value;
@@ -33,6 +33,7 @@ public class Tile implements Comparable<Tile> {
 	public Image img;
 	public Polygon shape;
 	public Tile collision_tile=null;
+	public Game.Direction WaterDir;
 	public Tile(int x, int y,int type) {
 		this.x=x;
 		this.y=y;
@@ -61,7 +62,11 @@ public class Tile implements Comparable<Tile> {
 		switch(type){
 		case 8: depth=2;
 				break;
-		case 32:depth=-1;
+		case 32:
+		case 50:
+		case 51:
+		case 58:
+		case 59:depth=-1;
 				break;
 		}
 		
@@ -113,7 +118,7 @@ public class Tile implements Comparable<Tile> {
 						for(int i=y;i<=hero.getY();i+=2){
 							if(aTile.x==x || Math.abs(aTile.x-hero.getX())<=hero.step)
 								if(aTile.y==i && aTile!=this)
-									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && aTile.type!=Tile.ID.Water.value){ //bypass tree
+									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && !(aTile instanceof Water)){ //bypass tree
 										return true;
 									}
 							}
@@ -123,7 +128,7 @@ public class Tile implements Comparable<Tile> {
 						for(int i=y;i>=hero.getY();i-=2){
 							if(aTile.x==x || Math.abs(aTile.x-hero.getX())<=hero.step)
 								if(aTile.y==i && aTile!=this)
-									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && aTile.type!=Tile.ID.Water.value)
+									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && !(aTile instanceof Water))
 										return true;
 							}
 						}		
@@ -132,7 +137,7 @@ public class Tile implements Comparable<Tile> {
 						for(int i=x;i>=hero.getX();i-=2){
 							if(aTile.y==y || Math.abs(aTile.y-hero.getY())<=hero.step)
 								if(aTile.x==i && aTile!=this)
-									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && aTile.type!=Tile.ID.Water.value)
+									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && !(aTile instanceof Water))
 										return true;
 							}
 						}		
@@ -141,7 +146,7 @@ public class Tile implements Comparable<Tile> {
 						for(int i=x;i<=hero.getX();i+=2){
 							if(aTile.y==y || Math.abs(aTile.y-hero.getY())<=hero.step)
 								if(aTile.x==i && aTile!=this)
-									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && aTile.type!=Tile.ID.Water.value)
+									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && !(aTile instanceof Water))
 										return true;
 							}
 						}		
@@ -251,9 +256,16 @@ public class Tile implements Comparable<Tile> {
 	private boolean isFullyCollidingWithWater(Rectangle mask1,
 			Rectangle mask2) {
 		for(int i=0;i<Level.map_tile.size();i++){
-			if(Level.map_tile.get(i).type==Tile.ID.Water.value)
-				if(Level.map_tile.get(i).shape.intersects(mask1) && Level.map_tile.get(i).shape.intersects(mask1))
+			if(Level.map_tile.get(i) instanceof Water){
+				if(Level.map_tile.get(i).shape.intersects(mask1) && Level.map_tile.get(i).shape.intersects(mask2)){
+					if(Level.map_tile.get(i).type==Tile.ID.WaterFlowDown.value)WaterDir=Game.Direction.Down;
+					if(Level.map_tile.get(i).type==Tile.ID.WaterFlowUp.value)WaterDir=Game.Direction.Up;
+					if(Level.map_tile.get(i).type==Tile.ID.WaterFlowLeft.value)WaterDir=Game.Direction.Left;
+					if(Level.map_tile.get(i).type==Tile.ID.WaterFlowRight.value)WaterDir=Game.Direction.Right;
+					if(Level.map_tile.get(i).type==Tile.ID.Water.value)WaterDir=Game.Direction.None;
 					return true;
+				}
+			}
 		}
 		return false;
 	}

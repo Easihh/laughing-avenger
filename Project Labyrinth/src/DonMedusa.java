@@ -55,6 +55,8 @@ public class DonMedusa extends Monster {
 			move();
 		fireProjectile();
 		DonMedusaAnimation.setImage();
+		if(projectile!=null && !canShoot)
+			projectile.update();
 	}
 	
 	private void fireProjectile(){

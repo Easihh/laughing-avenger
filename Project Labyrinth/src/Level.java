@@ -345,7 +345,7 @@ public class Level {
 				aTile.img=Game.game_tileset.get(Tile.ID.OpenDoor.value);
 			}
 		//Delete all Monster
-			if(aTile instanceof Monster){
+			if(aTile instanceof Monster && !((Monster) aTile).isDrowning){
 				toRemove.add(aTile);
 			}
 		}

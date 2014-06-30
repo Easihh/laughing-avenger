@@ -3,7 +3,7 @@ import java.awt.Rectangle;
 public class Power {
 	private Tile colliding_tile1=null;
 	private Tile colliding_tile2=null;
-	public boolean powerActivated_hammer=true;
+	public boolean powerActivated_hammer=false;
 	public boolean powerActivated_ladder=false;
 	public boolean powerActivated_arrow=false;
 	Character hero;

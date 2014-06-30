@@ -1,11 +1,13 @@
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
 public abstract class Monster extends Tile {
 	protected final long nano=1000000L;
+	protected boolean boat_movement=false;
 	protected long time_since_transform;
 	protected int TransformedState=0;
 	protected Projectile projectile;
@@ -36,6 +38,9 @@ public abstract class Monster extends Tile {
 						break;
 			}
 			time_since_water=System.nanoTime();
+			img=Game.monsterState.get(0);
+			time_since_transform=0;
+			TransformedState=1;
 			type=Tile.ID.boat.value;
 			isSolid=false;
 			Sound.resetSound();
@@ -45,7 +50,78 @@ public abstract class Monster extends Tile {
 		Character.isPushing=true;
 		isDrowning=true;
 	}
-	
+	public void boatMovement() {
+		Tile findWaterFlow;
+		if(WaterDir==Game.Direction.Right){
+			if(checkWaterCollision(new Rectangle(x+width,y,1,32))){
+				if(Character_is_on_boat())
+					Character.getInstance().setX(Character.getInstance().getX()+1);
+				x+=1;
+			}
+			else{
+				findWaterFlow=getWaterFlow(new Rectangle(x,y+32+1,32,1));
+				if(findWaterFlow.type==Tile.ID.WaterFlowDown.value)
+					WaterDir=Game.Direction.Down;						
+				}
+		}
+		else if(WaterDir==Game.Direction.Down){
+				if(checkWaterCollision(new Rectangle(x,y+32,32,1))){
+					if(Character_is_on_boat())
+						Character.getInstance().setY(Character.getInstance().getY()+1);
+					y+=1;
+				}
+				else{
+					findWaterFlow=getWaterFlow(new Rectangle(x-1,y,1,32));
+					if(findWaterFlow.type==Tile.ID.WaterFlowLeft.value)
+						WaterDir=Game.Direction.Left;
+					}
+		}
+		else if(WaterDir==Game.Direction.Left){
+				if(checkWaterCollision(new Rectangle(x-1,y,1,32))){
+					if(Character_is_on_boat())
+						Character.getInstance().setX(Character.getInstance().getX()-1);
+					x-=1;
+				}
+				else{
+					findWaterFlow=getWaterFlow(new Rectangle(x,y-1,32,1));
+					if(findWaterFlow.type==Tile.ID.WaterFlowUp.value)
+						WaterDir=Game.Direction.Up;
+					}
+		}
+		else if(WaterDir==Game.Direction.Up){
+						if(checkWaterCollision(new Rectangle(x,y-1,32,1))){
+							if(Character_is_on_boat())
+								Character.getInstance().setY(Character.getInstance().getY()-1);
+							y-=1;
+						}
+						else{
+							findWaterFlow=getWaterFlow(new Rectangle(x+32+1,y,32,32));
+							if(findWaterFlow.type==Tile.ID.WaterFlowRight.value)
+								WaterDir=Game.Direction.Right;
+							}
+		}
+	}
+	private boolean Character_is_on_boat() {
+		if(Character.getInstance().getX()==x && Character.getInstance().getY()==y)
+			return true;
+		return false;
+	}
+	private Tile getWaterFlow(Rectangle mask) {
+		for(int i=0;i<Level.map_tile.size();i++){
+			if(Level.map_tile.get(i) instanceof Water)
+				if(Level.map_tile.get(i).shape.intersects(mask))
+					return Level.map_tile.get(i);
+		}
+		return null;
+	}
+	private boolean checkWaterCollision(Rectangle mask) {
+		for(int i=0;i<Level.map_tile.size();i++){
+			if(Level.map_tile.get(i) instanceof Water)
+				if(Level.map_tile.get(i).shape.intersects(mask))
+					return true;
+		}
+		return false;
+	}
 	public void addNeighbor(Node neighbor, Node current) {
 		if(!Closed.contains(neighbor)){
 			if(!Open.contains(neighbor)){
@@ -70,20 +146,19 @@ public abstract class Monster extends Tile {
 	}
 	
 	public void checkState() {
-		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1){
+		if((System.nanoTime()-time_since_transform)/nano>7000 && TransformedState==1 && !isDrowning){
 			TransformedState=2;
 			img=Game.monsterState.get(1);
 		}
-		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2){
+		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2 && !isDrowning){
 			TransformedState=0;
-			type=0;
 			img=previousState;
 		}
-		if((System.nanoTime()-time_since_water)/nano>3500 && TransformedState==1 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>4500 && TransformedState==1 && isDrowning){
 			TransformedState=3;
 			img=Game.monsterState.get(2);
 		}
-		if((System.nanoTime()-time_since_water)/nano>5000 && TransformedState==3 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>6500 && TransformedState==3 && isDrowning){
 			TransformedState=4;
 			img=Game.monsterState.get(3);
 		}

@@ -25,8 +25,6 @@ public class Leeper extends Monster{
 	}
 	@Override
 	public void render(Graphics g) {
-		checkState();
-		checkIfDrown();
 		if(!isSleeping){
 			if(TransformedState==0 && !isMovingAcrossScreen)
 				g.drawImage(move.getWalkAnimation(dir).getImage(), x, y, null);
@@ -40,7 +38,7 @@ public class Leeper extends Monster{
 		else g.drawImage(sleep.getWalkAnimation(dir).getImage(),x,y,null);
 	}
 	private void checkIfDrown() {
-		if((System.nanoTime()-time_since_water)/nano>6000 && TransformedState==4 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>8000 && TransformedState==4 && isDrowning){
 			Kill_Respawn();
 		}
 	}
@@ -55,11 +53,36 @@ public class Leeper extends Monster{
 		}
 	}
 	public void update(){
-		if(!isSleeping){
+		checkState();
+		checkIfDrown();
+		if(!isSleeping && TransformedState==0){
 			move.getWalkAnimation(dir).setImage();
-			if(Labyrinth.GameState==Game.GameState.Normal)move();
+			if(Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat.value && type!=Tile.ID.MoveableBlock.value)move();
 		}
-		else sleep.getWalkAnimation(dir).setImage();
+		if(isSleeping) sleep.getWalkAnimation(dir).setImage();
+		if(type==Tile.ID.boat.value && !Character.isPushing){
+			if(boat_movement)boatMovement();
+			if(!boat_movement)
+				boat_movement=true;
+		}
+		if(TransformedState!=0)
+			stepMove();
+		updateMask();
+	}
+	private void stepMove() {
+		if(step_to_move>0){	
+			switch(dir){
+			case Left:	x-=2;
+						break;
+			case Right:	x+=2;
+						break;
+			case Up:	y-=2;
+						break;
+			case Down:	y+=2;
+						break;
+			}
+			step_to_move-=2;
+		}
 	}
 	private void Kill_Respawn() {
 		Leeper me=copy();
@@ -103,19 +126,7 @@ public class Leeper extends Monster{
 						willSleep();
 					}
 			}
-		if(step_to_move>0 && !isSleeping){	
-				switch(dir){
-				case Left:	x-=2;
-							break;
-				case Right:	x+=2;
-							break;
-				case Up:	y-=2;
-							break;
-				case Down:	y+=2;
-							break;
-						}
-				step_to_move-=2;
-			}
+		stepMove();
 		if(!path_exist){
 			switch(dir){
 			case Left:	if(!checkCollison(new Rectangle(x-2, y,2,16),new Rectangle( x-2,y+16,2,16)))

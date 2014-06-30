@@ -15,19 +15,30 @@ public class Gol extends Monster {
 
 	@Override
 	public void render(Graphics g) {
-		checkState();
-		checkIfDrown();
-		if(isMovingAcrossScreen)
-			super.updateLocation();
 		if(!isOffScreen()){
-			fireProjectile(g);
 			g.drawImage(img,x,y,width,height,null);
 		}
+		if(projectile!=null && !canShoot)
+			projectile.render(g);
 	}
 	private void checkIfDrown() {
 		if((System.nanoTime()-time_since_water)/nano>6000 && TransformedState==4 && isDrowning){
 			Kill_Respawn();
 		}	
+	}
+	public void update(){
+		checkState();
+		checkIfDrown();
+		if(isMovingAcrossScreen)
+			super.updateLocation();
+		fireProjectile();
+		if(projectile!=null && !canShoot)
+			projectile.update();
+		if(type==Tile.ID.boat.value && !Character.isPushing){
+			if(boat_movement)boatMovement();
+			if(!boat_movement)
+				boat_movement=true;
+		}
 	}
 
 	@Override
@@ -50,7 +61,7 @@ public class Gol extends Monster {
 		return clone;
 	}
 
-	private void fireProjectile(Graphics g) {
+	private void fireProjectile() {
 		if(canShoot){
 				if(LineofSight()){
 					projectile=new Projectile(x,y,projectile_img,projectile_dir);
@@ -60,10 +71,7 @@ public class Gol extends Monster {
 					projectile.projectile_speed=3;
 				}
 			}
-		if(projectile!=null && !canShoot){
-			projectile.render(g);
 		}	
-	}
 	private void getImg() throws IOException {
 		switch(type){
 		case 24:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_up.png"));

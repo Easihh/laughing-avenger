@@ -24,8 +24,6 @@ public class Skull extends Monster{
 		getImage();		
 	}
 	public void render(Graphics g){
-		checkState();
-		checkifdrown();
 		if(TransformedState==0 && !isMovingAcrossScreen){
 			if(isActive){
 				Skull.setImage();
@@ -40,7 +38,7 @@ public class Skull extends Monster{
 		}
 	}
 	private void checkifdrown() {
-		if((System.nanoTime()-time_since_water)/nano>6000 && TransformedState==4 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>8000 && TransformedState==4 && isDrowning){
 			Kill_Respawn();
 		}
 	}
@@ -53,8 +51,18 @@ public class Skull extends Monster{
 		TransformedState=1;		
 	}
 	public void update(){
-		if(isActive && Labyrinth.GameState==Game.GameState.Normal)
+		checkState();
+		checkifdrown();
+		if(isActive && Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat.value && type!=Tile.ID.MoveableBlock.value)
 			move();
+		if(type==Tile.ID.boat.value && !Character.isPushing){
+			if(boat_movement)boatMovement();
+			if(!boat_movement)
+				boat_movement=true;
+		}
+		if(TransformedState!=0)
+			stepMove();
+		updateMask();
 	}
 	private void Kill_Respawn() {
 		Skull me=copy();
@@ -110,19 +118,7 @@ public class Skull extends Monster{
 						}
 					}
 			}
-		if(step_to_move>0){	
-				switch(dir){
-				case Left:	x-=2;
-							break;
-				case Right:	x+=2;
-							break;
-				case Up:	y-=2;
-							break;
-				case Down:	y+=2;
-							break;
-				}
-				step_to_move-=2;
-			}
+		stepMove();
 		if(!path_exist){
 			switch(dir){
 			case Left:	if(!checkCollison(new Rectangle(x-2, y,2,16),new Rectangle( x-2,y+16,2,16)))
@@ -143,7 +139,21 @@ public class Skull extends Monster{
 						break;
 			}
 		}
-		updateMask();
+	}
+	private void stepMove() {
+		if(step_to_move>0){	
+			switch(dir){
+			case Left:	x-=2;
+						break;
+			case Right:	x+=2;
+						break;
+			case Up:	y-=2;
+						break;
+			case Down:	y+=2;
+						break;
+			}
+			step_to_move-=2;
+		}
 	}
 	private void shortestPath(){
 		Node goal=new Node(Character.getInstance().getX(),Character.getInstance().getY());

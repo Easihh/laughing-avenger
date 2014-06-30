@@ -1,3 +1,12 @@
+Version 0.41:
+
+-Skull,Leeper,Alma,Gol should now also be able to be used as a boat when thrown in certain type of Water.
+-Fixed bug where Character could not push a monster into water and use it as boat as same time before realigning himself.
+-Taking the Jewel from the chest now no longer destroy your boat/monster thrown in water.
+-Fixed a bug where Gol,Medusa,DonMedusa would not properly shoot.
+-Throwing a monster into the water will now correctly reset its timer and transform state and image.
+-Monster now last 8 seconds in water before vanishing up from 6.
+
 Version 0.40:
 
 -Main Character can now use monster thrown in water as a boat in certain type of water.

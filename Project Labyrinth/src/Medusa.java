@@ -15,17 +15,17 @@ public class Medusa extends Monster {
 	}
 	@Override
 	public void render(Graphics g) {
-		fireProjectile(g);
+		if(projectile!=null && !canShoot)
+			projectile.render(g);
 		g.drawImage(img,x,y,width,height,null);
 	}
 	@Override
 	public void transform() {}//impossible to shot this monster
-	private void fireProjectile(Graphics g){
-		if(canShoot){
+	public void update(){
+		if(canShoot)
 			MultiDirectionSight();
-		}
 		if(projectile!=null && !canShoot)
-			projectile.render(g);
+			projectile.update();
 	}
 	private void getImage() throws IOException{
 		img=Game.game_tileset.get(7);

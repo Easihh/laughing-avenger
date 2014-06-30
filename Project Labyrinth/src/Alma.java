@@ -49,7 +49,30 @@ public class Alma extends Monster{
 	}
 	public void update(){
 		getAnimation().setImage();
-		if(Labyrinth.GameState==Game.GameState.Normal)move();
+		if(Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat.value && type!=Tile.ID.MoveableBlock.value)move();
+		if(type==Tile.ID.boat.value && !Character.isPushing){
+			if(boat_movement)boatMovement();
+			if(!boat_movement)
+				boat_movement=true;
+		}
+		if(TransformedState!=0)
+			stepMove();
+		updateMask();
+	}
+	private void stepMove() {
+		if(step_to_move>0){	
+			switch(dir){
+			case Left:	x-=2;
+						break;
+			case Right:	x+=2;
+						break;
+			case Up:	y-=2;
+						break;
+			case Down:	y+=2;
+						break;
+			}
+			step_to_move-=2;
+		}
 	}
 	@Override
 	public void render(Graphics g) {
@@ -66,7 +89,7 @@ public class Alma extends Monster{
 		}
 	
 	private void checkIfDrown() {
-		if((System.nanoTime()-time_since_water)/nano>6000 && TransformedState==4 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>8000 && TransformedState==4 && isDrowning){
 			Kill_Respawn();
 		}	
 	}

@@ -5,12 +5,13 @@ import java.awt.Toolkit;
 
 
 public class Labyrinth extends JFrame{
-
 	private static final long serialVersionUID = 1L;
 	private MainPanel mainPane;
-	static long prev;
 	static boolean level_is_loaded=false;
 	static Game.GameState GameState;
+	static long prev;
+	private final int ScreenWidth=672;
+	private final int ScreenHeight=540;
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -28,7 +29,7 @@ public class Labyrinth extends JFrame{
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Labyrinth.class.getResource("/tileset/Game_Icon.png")));
 		GameState=Game.GameState.NotStarted;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(new Dimension(672,540));
+		setSize(new Dimension(ScreenWidth,ScreenHeight));
 		setResizable(false);
 		new Game();
 		mainPane = new MainPanel();

@@ -10,7 +10,7 @@ public class Medusa extends Monster {
 
 	public Medusa(int x, int y, ID type) {
 		super(x, y, type);
-		try {getImage();} catch (IOException e) {e.printStackTrace();}
+		try {getProjectileImage();} catch (IOException e) {e.printStackTrace();}
 		canShoot=true;
 	}
 	@Override
@@ -27,13 +27,17 @@ public class Medusa extends Monster {
 		if(projectile!=null && !canShoot)
 			projectile.update();
 	}
-	private void getImage() throws IOException{
-		img=Game.game_tileset.get(7);
-		bullet_type=new BufferedImage[4];
-		bullet_type[0]=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/medusa_shot_right.png"));
-		bullet_type[1]=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/medusa_shot_left.png"));
-		bullet_type[2]=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/medusa_shot_down.png"));
-		bullet_type[3]=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/medusa_shot_up.png"));
+	private void getProjectileImage() throws IOException{
+		int row=2;
+		int col=2;
+		bullet_type=new BufferedImage[row*col];
+		BufferedImage img=null;
+		img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/Medusa_Projectile.png"));
+		for(int i=0;i<row;i++){
+			 for(int j=0;j<col;j++){
+				bullet_type[(i*col)+j]=img.getSubimage(j*width, i*height, width, height);
+			 }
+		 }
 	}
 	private void MultiDirectionSight(){
 		boolean shoot=false;
@@ -46,12 +50,11 @@ public class Medusa extends Monster {
 		}
 		if(hero.getX()==x  && y<hero.getY()){
 				//hero found in line of sight
-			// Check if there is an object inbetween
-			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);//change to awaken medusa;
+			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 			if(!Object_inBetween("Down")){
 				shoot=true;
-				projectile_img=bullet_type[2];
+				projectile_img=bullet_type[0];
 				projectile_dir=Game.Direction.Down;
 			}
 		}
@@ -62,7 +65,7 @@ public class Medusa extends Monster {
 		}
 		if( x==hero.getX() && y>hero.getY()){
 			inRange=true;
-			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);//change to awaken medusa;
+			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			if(!Object_inBetween("Up")){
 				shoot=true;
 				projectile_img=bullet_type[3];
@@ -76,7 +79,7 @@ public class Medusa extends Monster {
 		}
 		if((y==hero.getY()) && x>hero.getX()){
 			inRange=true;
-			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);//change to awaken medusa;
+			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			if(!Object_inBetween("Left")){
 				shoot=true;
 				projectile_img=bullet_type[1];
@@ -90,10 +93,10 @@ public class Medusa extends Monster {
 		}
 		if(y==hero.getY() && x<hero.getX()){
 			inRange=true;
-			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);//change to awaken medusa;
+			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			if(!Object_inBetween("Right")){
 				shoot=true;
-				projectile_img=bullet_type[0];
+				projectile_img=bullet_type[2];
 				projectile_dir=Game.Direction.Right;
 			}
 		}

@@ -10,7 +10,6 @@ public class Snakey  extends Monster{
 	public Snakey(int x, int y, ID type) {
 		super(x, y, type);
 		SnakeyAnimation=new Animation();
-		spriteSheet=new BufferedImage[2];
 		try {getImage();} catch (IOException e) {e.printStackTrace();}
 	}
 	public void update(){
@@ -35,7 +34,7 @@ public class Snakey  extends Monster{
 		}
 	}
 	private void checkifDrown() {
-		if((System.nanoTime()-time_since_water)/nano>8000 && TransformedState==4 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>duration_in_water && TransformedState==4 && isDrowning){
 			Kill_Respawn();
 		}
 	}
@@ -57,14 +56,17 @@ public class Snakey  extends Monster{
 		return clone;
 	}
 	private void getImage() throws IOException {
+		int row=1;
+		int col=2;
 		BufferedImage img=null;
+		spriteSheet=new BufferedImage[row*col];
 		if(type==Tile.ID.RightSnakey)
 			img=ImageIO.read(getClass().getResourceAsStream("/tileset/worm_right.png"));
 		if(type==Tile.ID.LeftSnakey)
 			img=ImageIO.read(getClass().getResourceAsStream("/tileset/worm_left.png"));
-		for(int i=0;i<1;i++){//all animation on same row
-				 for(int j=0;j<2;j++){
-					spriteSheet[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
+		for(int i=0;i<row;i++){
+				 for(int j=0;j<col;j++){
+					spriteSheet[(i*col)+j]=img.getSubimage(j*width, i*height, width, height);
 				 }
 			 }
 			SnakeyAnimation.AddScene(spriteSheet[0], 1000);

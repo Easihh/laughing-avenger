@@ -15,12 +15,13 @@ public class Level {
 	private final int tileSize=32; 
 	private int coordX;
 	private int coordY;
+	private final int maxPower=3;
 	private Tile map_background;
 	private static ArrayList<Tile> toRespawn;
 	private static Vector<Long> Respawn_Timer;
 	private static Tile goal_top;
 	private static boolean canRespawn;
-	private static boolean chestIsOpen;;
+	private static boolean chestIsOpen;
 	
 	public static int room=1;
 	public static int remake=0;
@@ -31,7 +32,7 @@ public class Level {
 	public static ArrayList<Tile> toRemove;//Monster to be removed and then respawned
 	public static ArrayList<Tile> toDelete;//tile to be deleted
 	public static ArrayList<Tile> toAdd;
-	public static int[] Power;/// 1=Hammer, 2=Ladder, 3=Arrow Changer
+	public static Game.SpecialPower[] Power;
 	public static Tile goal;
 	
 	public Level(){
@@ -45,7 +46,7 @@ public class Level {
 			toDelete=new ArrayList<Tile>();
 			toRespawn=new ArrayList<Tile>();
 			Respawn_Timer=new Vector<Long>();
-			Power=new int[3];
+			Power=new Game.SpecialPower[maxPower];
 			verifyPowerAllowed();
 			map_background=new Tile(Game.background);
 			canRespawn=true;
@@ -84,8 +85,8 @@ public class Level {
 	}
 	private void verifyPowerAllowed() {
 		if(room==6){
-			Power[0]=2;
-			Power[1]=2;
+			Power[0]=Game.SpecialPower.Hammer;
+			Power[1]=Game.SpecialPower.Ladder;
 		}
 		
 	}

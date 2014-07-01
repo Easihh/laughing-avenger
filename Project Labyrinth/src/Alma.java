@@ -8,12 +8,16 @@ import java.util.Stack;
 import javax.imageio.ImageIO;
 
 public class Alma extends Monster{
-	private Movement move;
 	private Animation roll;
 	private boolean path_exist=false;
-	private int step_to_move;
-	private Node nextMovement;
 	private int last_update=0;
+	private final int step=2;
+	private final int movement=16;
+	private final int roll_animation_duration=150;
+	private int step_to_move;
+	private Movement move;
+	private Node nextMovement;
+	
 	public Alma(int x, int y, ID type) {
 		super(x, y, type);
 		depth=2;
@@ -24,18 +28,18 @@ public class Alma extends Monster{
 	}
 
 	private void setupImage() {
+		int rows=1;
+		int cols=2;
 		BufferedImage img=null;
-		BufferedImage[] images=new BufferedImage[3];
-		try {
-			//roll
-			img=ImageIO.read(getClass().getResourceAsStream("/tileset/alma_roll.png"));
-			for(int i=0;i<1;i++){//all animation on same row
-				for(int j=0;j<2;j++){
-					images[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
+		BufferedImage[] images=new BufferedImage[cols*rows];
+		try {img=ImageIO.read(getClass().getResourceAsStream("/tileset/alma_roll.png"));
+			for(int i=0;i<rows;i++){
+				for(int j=0;j<cols;j++){
+					images[(i*cols)+j]=img.getSubimage(j*width, i*height, width, height);
 				}
 			 }
-			roll.AddScene(images[0], 150);
-			roll.AddScene(images[1], 150);
+			roll.AddScene(images[0], roll_animation_duration);
+			roll.AddScene(images[1], roll_animation_duration);
 			} catch (IOException e) {e.printStackTrace();}
 	}
 
@@ -59,19 +63,32 @@ public class Alma extends Monster{
 			stepMove();
 		updateMask();
 	}
+	private Animation getAnimation(){
+		switch(dir){
+		case Left: 	if(!Object_inBetween("Left"))
+						return roll;
+					return move.walk_left;
+		case Right: if(!Object_inBetween("Right"))
+						return roll;
+					return move.walk_right;
+		case Up: 	return move.walk_up;
+		case Down: 	return move.walk_down;
+		}
+		return null;
+	}
 	private void stepMove() {
 		if(step_to_move>0){	
 			switch(dir){
-			case Left:	x-=2;
+			case Left:	x-=step;
 						break;
-			case Right:	x+=2;
+			case Right:	x+=step;
 						break;
-			case Up:	y-=2;
+			case Up:	y-=step;
 						break;
-			case Down:	y+=2;
+			case Down:	y+=step;
 						break;
 			}
-			step_to_move-=2;
+			step_to_move-=step;
 		}
 	}
 	@Override
@@ -89,23 +106,9 @@ public class Alma extends Monster{
 		}
 	
 	private void checkIfDrown() {
-		if((System.nanoTime()-time_since_water)/nano>8000 && TransformedState==4 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>duration_in_water && TransformedState==4 && isDrowning){
 			Kill_Respawn();
 		}	
-	}
-
-	private Animation getAnimation() {
-		switch(dir){
-		case Left: 	if(!Object_inBetween("Left"))
-						return roll;
-					return move.walk_left;
-		case Right: if(!Object_inBetween("Right"))
-						return roll;
-					return move.walk_right;
-		case Up: 	return move.walk_up;
-		case Down: 	return move.walk_down;
-		}
-		return null;
 	}
 	private void Kill_Respawn() {
 		Alma me=copy();
@@ -125,15 +128,16 @@ public class Alma extends Monster{
 	}
 	private void move() {
 		last_update++;
-		if(step_to_move==0 && Character.getInstance().getX()%16==0 && Character.getInstance().getY()%16==0 && 
-				x%16==0 && y%16==0 && last_update>=8 && TransformedState==0){
+		Character hero=Character.getInstance();
+		if(step_to_move==0 && hero.getX()%16==0 && hero.getY()%hero.step==0 && 
+				x%hero.step==0 && y%hero.step==0 && last_update>=(movement/step) && TransformedState==0){
 					last_update=0;
 					shortestPath();
 					if(path_exist){
-						if(Path.size()>1)//since current position was top stack;//
-							Path.pop();
+						if(Path.size()>1)
+							Path.pop();//since current position was top stack;//
 						if(!Path.isEmpty())nextMovement=Path.pop();
-						step_to_move=16;
+						step_to_move=movement;
 						if(nextMovement.data.x==x){//prepare to move along Y axis
 							if(nextMovement.data.y>y){//target is down
 								dir=Game.Direction.Down;
@@ -148,40 +152,27 @@ public class Alma extends Monster{
 						}
 					}
 			}
-		if(step_to_move>0){	
-			switch(dir){
-			case Left:	x-=2;
-						break;
-			case Right:	x+=2;
-						break;
-			case Up:	y-=2;
-						break;
-			case Down:	y+=2;
-						break;
-			}
-			step_to_move-=2;
-			}
+		stepMove();
 		if(!path_exist){
 			switch(dir){
-			case Left:	if(!checkCollison(new Rectangle(x-2, y,2,16),new Rectangle( x-2,y+16,2,16)))
-							x-=2;
+			case Left:	if(!checkCollison(new Rectangle(x-step, y,step,half_height),new Rectangle( x-step,y+half_height,step,half_height)))
+							x-=step;
 						else getnewDirection();
 						break;
-			case Right:	if(!checkCollison(new Rectangle(x+32, y,2,16),new Rectangle( x+32,y+16,2,16)))
-							x+=2;
+			case Right:	if(!checkCollison(new Rectangle(x+width, y,step,half_height),new Rectangle( x+width,y+half_height,step,half_height)))
+							x+=step;
 						else getnewDirection();
 						break;
-			case Up:	if(!checkCollison(new Rectangle(x, y-2,16,2),new Rectangle( x+16,y-2,16,2)))
-							y-=2;
+			case Up:	if(!checkCollison(new Rectangle(x, y-step,half_width,step),new Rectangle( x+half_width,y-step,half_height,step)))
+							y-=step;
 						else getnewDirection();
 						break;
-			case Down:	if(!checkCollison(new Rectangle(x, y+32,16,2),new Rectangle( x+16,y+32,16,2)))
-							y+=2;
+			case Down:	if(!checkCollison(new Rectangle(x, y+height,half_width,step),new Rectangle( x+half_width,y+height,half_width,step)))
+							y+=step;
 						else getnewDirection();
 						break;
 			}
 		}
-		updateMask();
 	}
 	private void shortestPath(){
 		Node goal=new Node(Character.getInstance().getX(),Character.getInstance().getY());
@@ -201,24 +192,24 @@ public class Alma extends Monster{
 			}
 			Open.remove(current);
 			Closed.add(current);
-				if(!checkCollison(new Rectangle(current.data.x-16,current.data.y,16,16),
-						new Rectangle(current.data.x-16,current.data.y+16,16,16))){//left
-						neighbor=new Node(current.data.x-16,current.data.y);
+				if(!checkCollison(new Rectangle(current.data.x-movement,current.data.y,half_width,half_height),
+						new Rectangle(current.data.x-movement,current.data.y+half_height,half_width,half_height))){//left
+						neighbor=new Node(current.data.x-movement,current.data.y);
 						addNeighbor(neighbor,current);
 				}				
-				if(!checkCollison(new Rectangle(current.data.x,current.data.y+32,16,16),
-						new Rectangle(current.data.x+16,current.data.y+32,16,16))){//down
-						neighbor=new Node(current.data.x,current.data.y+16);
+				if(!checkCollison(new Rectangle(current.data.x,current.data.y+height,half_width,half_height),
+						new Rectangle(current.data.x+movement,current.data.y+height,half_width,half_height))){//down
+						neighbor=new Node(current.data.x,current.data.y+movement);
 						addNeighbor(neighbor,current);
 				}
-				if(!checkCollison(new Rectangle(current.data.x,current.data.y-16,16,16),
-						new Rectangle(current.data.x+16,current.data.y-16,16,16))){//up
-						neighbor=new Node(current.data.x,current.data.y-16);
+				if(!checkCollison(new Rectangle(current.data.x,current.data.y-movement,half_width,half_height),
+						new Rectangle(current.data.x+movement,current.data.y-movement,half_width,half_height))){//up
+						neighbor=new Node(current.data.x,current.data.y-movement);
 						addNeighbor(neighbor,current);
 				}
-				if(!checkCollison(new Rectangle(current.data.x+32,current.data.y,16,16),
-						new Rectangle(current.data.x+32,current.data.y+16,16,16))){//right
-						neighbor=new Node(current.data.x+16,current.data.y);
+				if(!checkCollison(new Rectangle(current.data.x+height,current.data.y,half_width,half_height),
+						new Rectangle(current.data.x+width,current.data.y+movement,half_width,half_height))){//right
+						neighbor=new Node(current.data.x+movement,current.data.y);
 						addNeighbor(neighbor,current);
 				}
 			}
@@ -228,7 +219,7 @@ public class Alma extends Monster{
 		for(int i=0;i<Level.map_tile.size();i++){
 			if(Level.map_tile.get(i).shape.intersects(mask1)|| Level.map_tile.get(i).shape.intersects(mask2)){
 				if(Level.map_tile.get(i).isSolid)return true;
-				if(Level.map_tile.get(i).type==Tile.ID.Grass)// cant  walk on grass
+				if(Level.map_tile.get(i).type==Tile.ID.Grass)//this Monster cant  walk on grass
 					return true;				
 			}
 		}

@@ -26,14 +26,16 @@ public class Death {
 	}
 	
 	private void getSpriteFromSheet() {
-		int maxFrame=4;
-		animation=new BufferedImage[50];
+		int maxRow=1;
+		int maxCol=4;
+		animation=new BufferedImage[maxRow*maxCol];
 		try {img=ImageIO.read(getClass().getResourceAsStream("/tileset/lolo_death.png"));} catch (IOException e) {e.printStackTrace();}
-		 for(int i=0;i<1;i++){//all animation on same row
-			 for(int j=0;j<maxFrame;j++){
-				animation[(i*maxFrame)+j]=img.getSubimage(j*width, i*height, width, height);
+		 for(int i=0;i<maxRow;i++){
+			 for(int j=0;j<maxCol;j++){
+				animation[(i*maxCol)+j]=img.getSubimage(j*width, i*height, width, height);
 			 }
 		 }
+		 //Build the Death Sequence Animation.
 		 Death.AddScene(animation[0], 500);
 		 Death.AddScene(animation[1], 100);
 		 Death.AddScene(animation[2], 100);
@@ -46,7 +48,7 @@ public class Death {
 		 Death.AddScene(animation[3], 500);
 	}
 	private void isDone(){
-		if(Death.index==9){
+		if(Death.index==Death.getLastIndex()){
 			if(Death.getSceneCurrentDuration(9)+(System.nanoTime()-Death.last_update)/nano >Death.getSceneMaxDuration(9)){
 				isDone=true;
 				Level.restart();

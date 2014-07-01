@@ -8,6 +8,7 @@ import java.util.Stack;
 public abstract class Monster extends Tile {
 	protected final long nano=1000000L;
 	protected boolean boat_movement=false;
+	protected final int duration_in_water=8000;
 	protected long time_since_transform;
 	protected int TransformedState=0;
 	protected Projectile projectile;

@@ -12,13 +12,12 @@ public class MainPanel extends JPanel {
 	private Animation flash_icon=null;
 	private BufferedImage power_icon=null;
 	private BufferedImage hammer_icon=null;
-	private Font font;
+	private final Font font=new Font("Serif", Font.BOLD, 18);
 	private  Character hero;
 	public static Level theLevel;
 	public MainPanel(){
 		setBackground(Color.black);	
 		loadSound();
-		font=new Font("Serif", Font.BOLD, 18);
 		loadPower();
 		theLevel=new Level();
 	}
@@ -29,37 +28,50 @@ public class MainPanel extends JPanel {
 			g.setColor(Color.white);
 			flash_icon.setImage();
 			g.drawImage(Game.projectile_img.get(0),528,160,null);
-			if(hero.aPower.powerActivated_hammer || hero.aPower.powerActivated_ladder || hero.aPower.powerActivated_arrow){
-				g.drawImage(flash_icon.getImage(), 528, 256,null);
-				g.drawImage(flash_icon.getImage(), 528, 289,null);
-				g.drawImage(flash_icon.getImage(), 528, 321,null);			
-			}else
-			{
-				g.drawImage(power_icon, 528, 256,null);
-				g.drawImage(power_icon, 528, 288,null);
-				g.drawImage(power_icon, 528, 320,null);
-			}
-			for(int i=0;i<3;i++){
-				if(Level.Power[i]==1)
-					g.drawImage(hammer_icon, 529, 257+(32*i),null);
-				else if(Level.Power[i]==2)
-					g.drawImage(Game.game_tileset.get(41), 529, 257+(32*i),null);
-				else if(Level.Power[i]==3)
-					g.drawImage(Game.game_tileset.get(15), 529, 257+(32*i),null);
-			}
+			drawFlashIcon(g);		
+			drawPowerIcon(g);
+			drawSpecialPower(g);
 			g.setFont(font);
-			g.drawString("LVL",528,54);
-			g.drawString(""+Level.room,544,86);
-			g.drawString("RM#",528,118);
-			g.drawString(""+Level.remake,544,150);
-			g.drawString("PW",528,240);
-			g.drawString(""+hero.ammo,544,212);
-			g.drawString("x:"+hero.getX(), 544, 400);
-			g.drawString("y:"+hero.getY(), 544, 432);
+			drawText(g);
 			if(Labyrinth.GameState==Game.GameState.Death && !hero.Death.isDone)
 				hero.Death.render(g);
 			if(Labyrinth.GameState!=Game.GameState.Death)
 				hero.render(g);
+	}
+	private void drawText(Graphics g) {
+		g.drawString("LVL",528,54);
+		g.drawString(""+Level.room,544,86);
+		g.drawString("RM#",528,118);
+		g.drawString(""+Level.remake,544,150);
+		g.drawString("PW",528,240);
+		g.drawString(""+hero.ammo,544,212);
+		g.drawString("x:"+hero.getX(), 544, 400);
+		g.drawString("y:"+hero.getY(), 544, 432);
+	}
+	private void drawSpecialPower(Graphics g) {
+		int tileSize=32;
+		for(int i=0;i<3;i++){
+			if(Level.Power[i]==Game.SpecialPower.Hammer)
+				g.drawImage(hammer_icon, 529, 257+(tileSize*i),null);
+			else if(Level.Power[i]==Game.SpecialPower.Ladder)
+				g.drawImage(Game.game_tileset.get(Tile.ID.UpDownLadder.value), 529, 257+(tileSize*i),null);
+			else if(Level.Power[i]==Game.SpecialPower.ArrowChange)
+				g.drawImage(Game.game_tileset.get(Tile.ID.OneWayUp.value), 529, 257+(tileSize*i),null);
+		}
+	}
+	private void drawPowerIcon(Graphics g) {
+		if(!hero.aPower.powerActivated_hammer && !hero.aPower.powerActivated_ladder && !hero.aPower.powerActivated_arrow){
+			g.drawImage(power_icon, 528, 256,null);
+			g.drawImage(power_icon, 528, 288,null);
+			g.drawImage(power_icon, 528, 320,null);
+		}
+	}
+	private void drawFlashIcon(Graphics g) {
+		if(hero.aPower.powerActivated_hammer || hero.aPower.powerActivated_ladder || hero.aPower.powerActivated_arrow){
+			g.drawImage(flash_icon.getImage(), 528, 256,null);
+			g.drawImage(flash_icon.getImage(), 528, 289,null);
+			g.drawImage(flash_icon.getImage(), 528, 321,null);
+		}
 	}
 	private void loadPower() {
 		flash_icon=new Animation();

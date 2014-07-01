@@ -3,7 +3,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-
 public class Lava extends Tile {
 	Animation Lava;
 	BufferedImage[] single_img;
@@ -17,12 +16,14 @@ public class Lava extends Tile {
 		g.drawImage(Lava.getImage(),x,y,null);
 	}
 	private void getImage(){
-		single_img=new BufferedImage[6];
+		int row=1;
+		int col=6;
+		single_img=new BufferedImage[row*col];
 		BufferedImage img=null;
 		try {img=ImageIO.read(getClass().getResourceAsStream("/tileset/lava.png"));} catch (IOException e) {e.printStackTrace();}
-		for(int i=0;i<1;i++){//all animation on same row
-			 for(int j=0;j<6;j++){
-				single_img[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
+		for(int i=0;i<row;i++){
+			 for(int j=0;j<col;j++){
+				single_img[(i*col)+j]=img.getSubimage(j*width, i*height, width, height);
 			 }
 		 }
 		Lava.AddScene(single_img[0], 600);

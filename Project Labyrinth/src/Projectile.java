@@ -4,6 +4,10 @@ import java.awt.image.BufferedImage;
 
 public class Projectile {
 	private BufferedImage img=null;	
+	private final int half_width=16;
+	private final int half_height=16;
+	private final int width=32;
+	private final int height=32;
 	public int projectile_speed=6;	
 	public Game.Direction dir;
 	public int x;
@@ -17,17 +21,17 @@ public class Projectile {
 		buildMask();
 	}
 	private void buildMask() {
-		lefttop=new Rectangle(x-projectile_speed,y,projectile_speed,16);
-		leftbottom=new Rectangle(x-projectile_speed,y+16,projectile_speed,16);
+		lefttop=new Rectangle(x-projectile_speed,y,projectile_speed,half_height);
+		leftbottom=new Rectangle(x-projectile_speed,y+half_height,projectile_speed,half_height);
 		
-		topleft=new Rectangle(x,y-projectile_speed,16,projectile_speed);
-		topright=new Rectangle(x+16,y-projectile_speed,16,projectile_speed);
+		topleft=new Rectangle(x,y-projectile_speed,half_width,projectile_speed);
+		topright=new Rectangle(x+half_width,y-projectile_speed,half_width,projectile_speed);
 		
-		righttop=new Rectangle(x+32,y,projectile_speed,16);
-		rightbottom=new Rectangle(x+32,y+16,projectile_speed,16);
+		righttop=new Rectangle(x+width,y,projectile_speed,half_height);
+		rightbottom=new Rectangle(x+width,y+half_height,projectile_speed,half_height);
 		
-		bottomleft=new Rectangle(x,y+32,16,projectile_speed);
-		bottomright=new Rectangle(x+16,y+32,16,projectile_speed);
+		bottomleft=new Rectangle(x,y+height,half_width,projectile_speed);
+		bottomright=new Rectangle(x+half_width,y+height,half_width,projectile_speed);
 	}
 	public void render(Graphics g) {
 		g.drawImage(img,x,y,null);

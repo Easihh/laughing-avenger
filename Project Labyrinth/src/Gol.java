@@ -3,14 +3,15 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 public class Gol extends Monster {
-	
 	private final long nano=1000000000L;
 	private BufferedImage projectile_img;
+	private BufferedImage[] bullet_type;
 	private Game.Direction projectile_dir;
 	
 	public Gol(int x, int y, ID type) {
 		super(x, y, type);
-		try {getImg();} catch (IOException e) {e.printStackTrace();}
+		try {getProjectileImg();} catch (IOException e) {e.printStackTrace();}
+		setupProjectileImage();	
 	}
 
 	@Override
@@ -22,7 +23,7 @@ public class Gol extends Monster {
 			projectile.render(g);
 	}
 	private void checkIfDrown() {
-		if((System.nanoTime()-time_since_water)/nano>6000 && TransformedState==4 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>duration_in_water && TransformedState==4 && isDrowning){
 			Kill_Respawn();
 		}	
 	}
@@ -72,19 +73,31 @@ public class Gol extends Monster {
 				}
 			}
 		}	
-	private void getImg() throws IOException {
+	private void getProjectileImg() throws IOException {
+		int row=2;
+		int col=2;
+		bullet_type = new BufferedImage[row*col];
+		BufferedImage img=null;
+		img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/Gol_Projectile.png"));
+		for(int i=0;i<row;i++){
+			 for(int j=0;j<col;j++){
+				bullet_type[(i*col)+j]=img.getSubimage(j*width, i*height, width, height);
+			 }
+		 }	
+	}
+	private void setupProjectileImage() {
 		switch(type){
-		case GolUp:		projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_up.png"));
+		case GolUp:		projectile_img=bullet_type[3];
 						break;
-		case GolDown:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_down.png"));
+		case GolDown:	projectile_img=bullet_type[0];
 						break;
-		case GolLeft:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_left.png"));
+		case GolLeft:	projectile_img=bullet_type[1];
 						break;
-		case GolRight:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_right.png"));
+		case GolRight:	projectile_img=bullet_type[2];
 						break;
 		}
-		
 	}
+
 	private boolean isOffScreen(){
 		if(x>Level.map_width || x<0 || y<0 || y>Level.map_height){
 			Kill_Respawn();

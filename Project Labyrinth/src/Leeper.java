@@ -5,13 +5,15 @@ import java.util.Collections;
 import java.util.Stack;
 
 public class Leeper extends Monster{
-	private final long nano=1000000L;
-	private Movement move;
-	private Movement sleep;
 	private boolean path_exist=false;
 	private int step_to_move;
-	private Node nextMovement;
+	private final int step=2;
+	private final int movement=16;
+	private final long nano=1000000L;
 	private int last_update=0;
+	private Movement move;
+	private Movement sleep;
+	private Node nextMovement;
 	public boolean isSleeping;
 	
 	public Leeper(int x, int y, ID type) {
@@ -38,7 +40,7 @@ public class Leeper extends Monster{
 		else g.drawImage(sleep.getWalkAnimation(dir).getImage(),x,y,null);
 	}
 	private void checkIfDrown() {
-		if((System.nanoTime()-time_since_water)/nano>8000 && TransformedState==4 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>duration_in_water && TransformedState==4 && isDrowning){
 			Kill_Respawn();
 		}
 	}
@@ -72,16 +74,16 @@ public class Leeper extends Monster{
 	private void stepMove() {
 		if(step_to_move>0){	
 			switch(dir){
-			case Left:	x-=2;
+			case Left:	x-=step;
 						break;
-			case Right:	x+=2;
+			case Right:	x+=step;
 						break;
-			case Up:	y-=2;
+			case Up:	y-=step;
 						break;
-			case Down:	y+=2;
+			case Down:	y+=step;
 						break;
 			}
-			step_to_move-=2;
+			step_to_move-=step;
 		}
 	}
 	private void Kill_Respawn() {
@@ -102,15 +104,15 @@ public class Leeper extends Monster{
 	}
 	private void move() {
 		last_update++;
-		if(step_to_move==0 && Character.getInstance().getX()%16==0 && x%16==0 && y%16==0 && Character.getInstance().getY()%16==0 && 
-				last_update>=8 && TransformedState==0 && !isSleeping){
+		if(step_to_move==0 && Character.getInstance().getX()%movement==0 && x%movement==0 && y%movement==0 && Character.getInstance().getY()%movement==0 && 
+				last_update>=(movement/step) && TransformedState==0 && !isSleeping){
 					last_update=0;
 					shortestPath();
 					if(path_exist){
 						if(Path.size()>1)//since current position was top stack;//
 							Path.pop();
 						if(!Path.isEmpty())nextMovement=Path.pop();
-						step_to_move=16;
+						step_to_move=movement;
 						if(nextMovement.data.x==x){//prepare to move along Y axis
 							if(nextMovement.data.y>y){//target is down
 								dir=Game.Direction.Down;
@@ -129,20 +131,20 @@ public class Leeper extends Monster{
 		stepMove();
 		if(!path_exist){
 			switch(dir){
-			case Left:	if(!checkCollison(new Rectangle(x-2, y,2,16),new Rectangle( x-2,y+16,2,16)))
-							x-=2;
+			case Left:	if(!checkCollison(new Rectangle(x-step, y,step,half_height),new Rectangle( x-step,y+half_height,step,half_height)))
+							x-=step;
 						else getnewDirection();
 						break;
-			case Right:	if(!checkCollison(new Rectangle(x+32, y,2,16),new Rectangle( x+32,y+16,2,16)))
-							x+=2;
+			case Right:	if(!checkCollison(new Rectangle(x+width, y,step,half_height),new Rectangle( x+width,y+half_height,step,half_height)))
+							x+=step;
 						else getnewDirection();
 						break;
-			case Up:	if(!checkCollison(new Rectangle(x, y-2,16,2),new Rectangle( x+16,y-2,16,2)))
-							y-=2;
+			case Up:	if(!checkCollison(new Rectangle(x, y-step,half_width,step),new Rectangle( x+half_width,y-step,half_height,step)))
+							y-=step;
 						else getnewDirection();
 						break;
-			case Down:	if(!checkCollison(new Rectangle(x, y+32,16,2),new Rectangle( x+16,y+32,16,2)))
-							y+=2;
+			case Down:	if(!checkCollison(new Rectangle(x, y+height,half_width,step),new Rectangle( x+half_width,y+height,half_width,step)))
+							y+=step;
 						else getnewDirection();
 						break;
 			}
@@ -155,25 +157,25 @@ public class Leeper extends Monster{
 		int deltaY=Character.getInstance().getY()-y;
 		switch(dir){
 		case Left:	
-					if((deltaY>=-16 && deltaY<=16) && deltaX==-32){
+					if((deltaY>=-movement && deltaY<=movement) && deltaX==-width){
 						Sound.resetSound();
 						Sound.Sleeper.start();
 						isSleeping=true;
 					}break;
 		case Right:	
-					if((deltaY>=-16 && deltaY<=16) && deltaX==32){
+					if((deltaY>=-movement && deltaY<=movement) && deltaX==width){
 						Sound.resetSound();
 						Sound.Sleeper.start();
 						isSleeping=true;
 					}break;
-		case Up:	if((deltaX>=-16 && deltaX<=16) && deltaY==-32){
+		case Up:	if((deltaX>=-movement && deltaX<=movement) && deltaY==-height){
 						Sound.resetSound();
 						Sound.Sleeper.start();
 						isSleeping=true;
 					}
 					break;
 		case Down:	
-					if((deltaX>=-16 && deltaX<=16) && deltaY==32){
+					if((deltaX>=-movement && deltaX<=movement) && deltaY==height){
 						Sound.resetSound();
 						Sound.Sleeper.start();
 						isSleeping=true;
@@ -200,24 +202,24 @@ public class Leeper extends Monster{
 			}
 			Open.remove(current);
 			Closed.add(current);
-				if(!checkCollison(new Rectangle(current.data.x-16,current.data.y,16,16),
-						new Rectangle(current.data.x-16,current.data.y+16,16,16))){//left
-						neighbor=new Node(current.data.x-16,current.data.y);
+				if(!checkCollison(new Rectangle(current.data.x-movement,current.data.y,half_width,half_height),
+						new Rectangle(current.data.x-movement,current.data.y+half_height,half_width,half_height))){//left
+						neighbor=new Node(current.data.x-movement,current.data.y);
 						addNeighbor(neighbor,current);
 				}				
-				if(!checkCollison(new Rectangle(current.data.x,current.data.y+32,16,16),
-						new Rectangle(current.data.x+16,current.data.y+32,16,16))){//down
-						neighbor=new Node(current.data.x,current.data.y+16);
+				if(!checkCollison(new Rectangle(current.data.x,current.data.y+height,half_width,half_height),
+						new Rectangle(current.data.x+movement,current.data.y+height,half_width,half_height))){//down
+						neighbor=new Node(current.data.x,current.data.y+movement);
 						addNeighbor(neighbor,current);
 				}
-				if(!checkCollison(new Rectangle(current.data.x,current.data.y-16,16,16),
-						new Rectangle(current.data.x+16,current.data.y-16,16,16))){//up
-						neighbor=new Node(current.data.x,current.data.y-16);
+				if(!checkCollison(new Rectangle(current.data.x,current.data.y-movement,half_width,half_height),
+						new Rectangle(current.data.x+movement,current.data.y-movement,half_width,half_height))){//up
+						neighbor=new Node(current.data.x,current.data.y-movement);
 						addNeighbor(neighbor,current);
 				}
-				if(!checkCollison(new Rectangle(current.data.x+32,current.data.y,16,16),
-						new Rectangle(current.data.x+32,current.data.y+16,16,16))){//right
-						neighbor=new Node(current.data.x+16,current.data.y);
+				if(!checkCollison(new Rectangle(current.data.x+height,current.data.y,half_width,half_height),
+						new Rectangle(current.data.x+width,current.data.y+movement,half_width,half_height))){//right
+						neighbor=new Node(current.data.x+movement,current.data.y);
 						addNeighbor(neighbor,current);
 				}
 			}

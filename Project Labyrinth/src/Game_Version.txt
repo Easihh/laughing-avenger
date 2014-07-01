@@ -1,3 +1,11 @@
+Version 0.41B:
+
+-Fixed Gol to now also last 8 second in water like other monster in ball form.
+-Fixed Bug allowing Character to move on Lava Tile.
+-Gol's Projectile are now less blurry;
+-Merged Monster Projectile Sheet.
+-Cleaned magic numbers from the code.
+
 Version 0.41A:
 
 -Removed reliance on ID number and instead use ID name everywhere.

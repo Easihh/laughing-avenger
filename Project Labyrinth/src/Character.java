@@ -158,7 +158,7 @@ public class Character {
 				Monster aMonster=(Monster)Level.map_tile.get(i);
 				Projectile projectile=aMonster.projectile;
 				if(projectile!=null)
-					if(new Rectangle(projectile.x,projectile.y,32,32).intersects(new Rectangle(x,y,32,32))){
+					if(new Rectangle(projectile.x,projectile.y,width,height).intersects(new Rectangle(x,y,width,height))){
 						projectile.projectile_speed=0;
 						Death.play();
 					}
@@ -176,7 +176,7 @@ public class Character {
 	private void searchifBulletCollide(Monster aMonster) {
 		for(int i=0;i<Level.map_tile.size();i++){
 			if(Level.map_tile.get(i)!=aMonster && aMonster.projectile!=null){//dont collide with yourself.
-				if(Level.map_tile.get(i).shape.intersects(new Rectangle(aMonster.projectile.x,aMonster.projectile.y,32,32))){
+				if(Level.map_tile.get(i).shape.intersects(new Rectangle(aMonster.projectile.x,aMonster.projectile.y,width,height))){
 					if(Level.map_tile.get(i).type!=Tile.ID.Water && Level.map_tile.get(i).type!=Tile.ID.Tree)
 						if(aMonster instanceof Gol){
 							aMonster.canShoot=true;
@@ -264,10 +264,10 @@ public class Character {
 				switch(intersect1.type){
 				case Rock:			return true;
 				case ClosedDoor:	return true;
-				case AmmoHeart:		if(Math.abs(intersect1.x-x)<=16 && Math.abs(intersect1.y-y)<=16)
+				case AmmoHeart:		if(Math.abs(intersect1.x-x)<=step && Math.abs(intersect1.y-y)<=step)
 										takeHeart(intersect1);
 									break;
-				case NoAmmoHeart:  	if(Math.abs(intersect1.x-x)<=16 && Math.abs(intersect1.y-y)<=16)
+				case NoAmmoHeart:  	if(Math.abs(intersect1.x-x)<=step && Math.abs(intersect1.y-y)<=step)
 										takeHeart(intersect1);
 									break;	
 				case OpenDoor:		if(y<2*step){
@@ -289,7 +289,8 @@ public class Character {
 				case WaterFlowLeft:	return true;
 				case WaterFlowRight:return true;
 				case WaterFlowUp:	return true;
-				case boat:			if(intersect1.x%16==0 && intersect1.y%16==0){
+				case Lava:			return true;
+				case boat:			if(intersect1.x%step==0 && intersect1.y%step==0){
 										x=intersect1.x;
 										y=intersect1.y;
 									}
@@ -354,7 +355,7 @@ public class Character {
 			if(lastKey==Game.button.W){
 				dir=Game.Direction.Up;
 				move.walk_up.setImage();
-				if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16)) && isAligned()){
+				if(!checkCollision(new Rectangle(x,y-step,step,step),new Rectangle(x+16,y-step,step,step)) && isAligned()){
 					if(isOnBoat)
 						targetX=2*-step;
 					else targetX=-step;
@@ -364,7 +365,7 @@ public class Character {
 			if(lastKey==Game.button.S){
 				dir=Game.Direction.Down;			
 				move.walk_down.setImage();
-				if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))&& isAligned()){
+				if(!checkCollision(new Rectangle(x,y+height,step,step),new Rectangle(x+step,y+height,step,step))&& isAligned()){
 					if(isOnBoat)
 						targetX=2*step;
 					else targetX=step;
@@ -374,7 +375,7 @@ public class Character {
 			if(lastKey==Game.button.D){
 				if(checkKeypressed()){
 					switch(dir){
-					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))&& isAligned()){
+					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,step,step))&& isAligned()){
 									move.walk_down.setImage();
 									if(isOnBoat)
 										targetX=2*step;
@@ -382,7 +383,7 @@ public class Character {
 									isMoving=true;
 								}
 								break;
-					case Up:	if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))&& isAligned()){
+					case Up:	if(!checkCollision(new Rectangle(x,y-step,step,step),new Rectangle(x+16,y-step,step,step))&& isAligned()){
 									move.walk_up.setImage();
 									if(isOnBoat)
 										targetX=2*-step;
@@ -394,7 +395,7 @@ public class Character {
 				}else{
 					dir=Game.Direction.Right;
 					move.walk_right.setImage();
-					if(!checkCollision(new Rectangle(x+width,y,16,16),new Rectangle(x+width,y+step,16,16))&& isAligned()){
+					if(!checkCollision(new Rectangle(x+width,y,step,step),new Rectangle(x+width,y+step,step,step))&& isAligned()){
 						if(isOnBoat)
 							targetX=2*step;
 						else targetX=step;
@@ -405,7 +406,7 @@ public class Character {
 			if(lastKey==Game.button.A){
 				if(checkKeypressed()){
 					switch(dir){
-					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,16,16))&& isAligned()){
+					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,step,step))&& isAligned()){
 									move.walk_down.setImage();
 									if(isOnBoat)
 										targetX=2*step;
@@ -413,7 +414,7 @@ public class Character {
 									isMoving=true;
 								}
 								break;
-					case Up:	if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+16,y-step,16,16))&& isAligned()){
+					case Up:	if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+step,y-step,step,step))&& isAligned()){
 									move.walk_up.setImage();
 									if(isOnBoat)
 										targetX=2*-step;
@@ -424,7 +425,7 @@ public class Character {
 					}
 				}else{	dir=Game.Direction.Left;			
 						move.walk_left.setImage();
-						if(!checkCollision(new Rectangle(x-step,y,16,16),new Rectangle(x-step,y+step,16,16))&& isAligned()){
+						if(!checkCollision(new Rectangle(x-step,y,step,step),new Rectangle(x-step,y+step,step,step))&& isAligned()){
 							if(isOnBoat)
 								targetX=2*-step;
 							else targetX=-step;
@@ -436,7 +437,7 @@ public class Character {
 	checkMovementState();	
 }
 	private boolean isAligned(){
-		return(x%16==0 && y%16==0);
+		return(x%step==0 && y%step==0);
 	}
 	private void checkMovementState() {
 		if(targetX<0){

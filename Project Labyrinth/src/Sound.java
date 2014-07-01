@@ -43,7 +43,6 @@ public class Sound {
 		} catch (LineUnavailableException e){ e.printStackTrace();}
 		catch (IOException io){io.printStackTrace();}
 		catch (UnsupportedAudioFileException uafe){uafe.printStackTrace();}
-        // getAudioInputStream() also accepts a File or InputStream
     }
     public static void resetSound(){
 		Sound.ArrowBridgePowerUsed.setFramePosition(0);

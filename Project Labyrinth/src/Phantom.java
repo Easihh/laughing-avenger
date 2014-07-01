@@ -1,8 +1,10 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
 public class Phantom extends Monster {
-	
 	private Movement move;
+	private final int step=1;
+	private final int pushStep=4;
+	private final int detectDistance=64;	
 	public Phantom(int x, int y, ID type) {
 		super(x, y, type);
 		dir=Game.Direction.Down;
@@ -21,14 +23,16 @@ public class Phantom extends Monster {
 			move();
 		if(Character.beingPushed){
 			if(dir==Game.Direction.Down){
-				if(!checkCollision(new Rectangle(hero.getX(), hero.getY()+32,16,4),new Rectangle(hero.getX()+16, hero.getY()+32,16,4))){
-					hero.setY(hero.getY()+4);
+				if(!checkCollision(new Rectangle(hero.getX(), hero.getY()+height,half_width,pushStep),
+						new Rectangle(hero.getX()+half_width, hero.getY()+height,half_width,pushStep))){
+					hero.setY(hero.getY()+pushStep);
 					Character.beingPushed=false;
 				}
 			}
 			if(dir==Game.Direction.Up){
-				if(!checkCollision(new Rectangle(hero.getX(), hero.getY()-4,16,4),new Rectangle(hero.getX()+16, hero.getY()-4,16,4))){
-					hero.setY(hero.getY()-4);
+				if(!checkCollision(new Rectangle(hero.getX(), hero.getY()-pushStep,half_width,pushStep),
+						new Rectangle(hero.getX()+half_width, hero.getY()-pushStep,half_width,pushStep))){
+					hero.setY(hero.getY()-pushStep);
 					Character.beingPushed=false;
 				}	
 			}
@@ -37,40 +41,44 @@ public class Phantom extends Monster {
 	private void move() {
 		switch(dir){
 		case Left: 	if(!withinHeroDistance()){
-						if(checkCollision(new Rectangle(x-1, y,1,16),new Rectangle(x-1, y+16,1,16))){
+						if(checkCollision(new Rectangle(x-step, y,step,half_height),
+								new Rectangle(x-step, y+half_height,step,half_height))){
 							getnewDirection();
 						}
-						else x-=1;
+						else x-=step;
 					}else
 						move.walk_left.reset();
 					break;
 		case Right: if(!withinHeroDistance()){
-						if(checkCollision(new Rectangle(x+32, y,1,16),new Rectangle(x+32, y+16,1,16))){
+						if(checkCollision(new Rectangle(x+width, y,step,half_height),
+								new Rectangle(x+width, y+half_height,step,half_width))){
 							getnewDirection();
-						}else x+=1;
+						}else x+=step;
 					}else
 							move.walk_right.reset();
 					break;
 		case Up: if(!withinHeroDistance()){
-					if(checkCollision(new Rectangle(x, y-1,16,1),new Rectangle(x+16, y-1,16,1))){
+					if(checkCollision(new Rectangle(x, y-step,half_width,step),
+							new Rectangle(x+half_width, y-step,half_width,step))){
 						getnewDirection();
-					}else y-=1;
-				}else//within distance
-					if(!shape.intersects(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY()+32,16,4)) && !shape.intersects(
-							new Rectangle(Character.getInstance().getX()+16,Character.getInstance().getY()+32,16,4)))
-						y-=4;
+					}else y-=step;
+				}else
+					if(!shape.intersects(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY()+height,half_width,pushStep)) 
+							&& !shape.intersects(new Rectangle(Character.getInstance().getX()+half_width,Character.getInstance().getY()+height,half_width,pushStep)))
+						y-=pushStep;
 				else	
 							if(!Character.beingPushed)
 								Character.beingPushed=true;
 					break;
 		case Down: if(!withinHeroDistance()){
-						if(checkCollision(new Rectangle(x, y+32,16,1),new Rectangle(x+16, y+32,16,1))){
+						if(checkCollision(new Rectangle(x, y+height,half_width,step),
+								new Rectangle(x+half_width, y+height,half_width,step))){
 							getnewDirection();
-						}else y+=1;
+						}else y+=step;
 					}else
-						if(!shape.intersects(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY()-4,16,4)) && !shape.intersects(
-								new Rectangle(Character.getInstance().getX()+16,Character.getInstance().getY()-4,16,4)))
-							y+=4;
+						if(!shape.intersects(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY()-pushStep,half_width,pushStep)) 
+								&& !shape.intersects(new Rectangle(Character.getInstance().getX()+half_width,Character.getInstance().getY()-pushStep,half_width,pushStep)))
+							y+=pushStep;
 						else	
 									if(!Character.beingPushed)
 										Character.beingPushed=true;							
@@ -81,11 +89,11 @@ public class Phantom extends Monster {
 	private boolean withinHeroDistance() {
 		Character hero=Character.getInstance();
 		switch(dir){
-		case Left:	if(x-hero.getX()<=64 && (Math.abs(y-hero.getY())<=hero.step))
+		case Left:	if(x-hero.getX()<=detectDistance && (Math.abs(y-hero.getY())<=hero.step))
 						if(x>hero.getX())
 							return true;
 					break;
-		case Right:if(x-hero.getX()>=-64 && (Math.abs(y-hero.getY())<=hero.step))
+		case Right:if(x-hero.getX()>=-detectDistance && (Math.abs(y-hero.getY())<=hero.step))
 						if(x<hero.getX())
 							return true;
 					break;

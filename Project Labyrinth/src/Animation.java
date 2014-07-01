@@ -18,6 +18,9 @@ public class Animation {
 	public Image getImage(){
 		return myScene.get(index).img;
 	}
+	public int getLastIndex(){
+		return myScene.size()-1;
+	}
 	public void setImage() {
 		myScene.get(index).current_duration+= (System.nanoTime()-last_update)/nano;
 		if(myScene.get(index).current_duration>myScene.get(index).max_duration){

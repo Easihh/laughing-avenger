@@ -12,9 +12,11 @@ public class Skull extends Monster{
 	private Animation Skull;
 	private boolean path_exist=false;
 	private BufferedImage[] skull_img;
+	private final int step=2;
+	private final int movement=16;
 	private int step_to_move;
-	private Node nextMovement;
 	private int update_counter;
+	private Node nextMovement;
 	public Skull(int x,int y, ID type) {
 		super(x, y, type);
 		depth=2;
@@ -29,7 +31,7 @@ public class Skull extends Monster{
 				Skull.setImage();
 				g.drawImage(Skull.getImage(), x,y,width,height,null);
 			}
-			else g.drawImage(Game.game_tileset.get(35),x,y,width,height,null);
+			else g.drawImage(Game.game_tileset.get(Tile.ID.Skull.value),x,y,width,height,null);
 		}
 		else{	if(isMovingAcrossScreen)
 					super.updateLocation();
@@ -38,7 +40,7 @@ public class Skull extends Monster{
 		}
 	}
 	private void checkifdrown() {
-		if((System.nanoTime()-time_since_water)/nano>8000 && TransformedState==4 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>duration_in_water && TransformedState==4 && isDrowning){
 			Kill_Respawn();
 		}
 	}
@@ -74,13 +76,15 @@ public class Skull extends Monster{
 		return clone;
 	}
 	private void getImage(){
+		int row=1;
+		int col=2;
 		BufferedImage img=null;
 		skull_img=new BufferedImage[2];
 		try {img=ImageIO.read(getClass().getResourceAsStream("/tileset/skull.png"));
 			} catch (IOException e) {e.printStackTrace();}
-		for(int i=0;i<1;i++){//all animation on same row
-			 for(int j=0;j<2;j++){
-				skull_img[(i*2)+j]=img.getSubimage(j*width, i*height, width, height);
+		for(int i=0;i<row;i++){
+			 for(int j=0;j<col;j++){
+				skull_img[(i*col)+j]=img.getSubimage(j*width, i*height, width, height);
 			 }
 		 }
 		Skull.AddScene(skull_img[0], 500);
@@ -95,15 +99,15 @@ public class Skull extends Monster{
 	}
 	private void move() {
 		update_counter++;
-		if(step_to_move==0 && Character.getInstance().getX()%16==0 && Character.getInstance().getY()%16==0 && x%16==0 && y%16==0 
-				&& update_counter>=8 && TransformedState==0){
+		if(step_to_move==0 && Character.getInstance().getX()%movement==0 && Character.getInstance().getY()%movement==0 
+				&& x%movement==0 && y%movement==0 && update_counter>=(movement/step) && TransformedState==0){
 			update_counter=0;
 					shortestPath();
 					if(path_exist){
 						if(Path.size()>1)//since current position was top stack;//
 							Path.pop();
 						if(!Path.isEmpty())nextMovement=Path.pop();
-						step_to_move=16;
+						step_to_move=movement;
 						if(nextMovement.data.x==x){//prepare to move along Y axis
 							if(nextMovement.data.y>y){//target is down
 								dir=Game.Direction.Down;
@@ -121,20 +125,20 @@ public class Skull extends Monster{
 		stepMove();
 		if(!path_exist){
 			switch(dir){
-			case Left:	if(!checkCollison(new Rectangle(x-2, y,2,16),new Rectangle( x-2,y+16,2,16)))
-							x-=2;
+			case Left:	if(!checkCollison(new Rectangle(x-step, y,step,half_height),new Rectangle( x-step,y+half_height,step,half_height)))
+							x-=step;
 						else getnewDirection();
 						break;
-			case Right:	if(!checkCollison(new Rectangle(x+32, y,2,16),new Rectangle( x+32,y+16,2,16)))
-							x+=2;
+			case Right:	if(!checkCollison(new Rectangle(x+width, y,step,half_height),new Rectangle( x+width,y+half_height,step,half_height)))
+							x+=step;
 						else getnewDirection();
 						break;
-			case Up:	if(!checkCollison(new Rectangle(x, y-2,16,2),new Rectangle( x+16,y-2,16,2)))
-							y-=2;
+			case Up:	if(!checkCollison(new Rectangle(x, y-step,half_width,step),new Rectangle( x+half_width,y-step,half_height,step)))
+							y-=step;
 						else getnewDirection();
 						break;
-			case Down:	if(!checkCollison(new Rectangle(x, y+32,16,2),new Rectangle( x+16,y+32,16,2)))
-							y+=2;
+			case Down:	if(!checkCollison(new Rectangle(x, y+height,half_width,step),new Rectangle( x+half_width,y+height,half_width,step)))
+							y+=step;
 						else getnewDirection();
 						break;
 			}
@@ -143,16 +147,16 @@ public class Skull extends Monster{
 	private void stepMove() {
 		if(step_to_move>0){	
 			switch(dir){
-			case Left:	x-=2;
+			case Left:	x-=step;
 						break;
-			case Right:	x+=2;
+			case Right:	x+=step;
 						break;
-			case Up:	y-=2;
+			case Up:	y-=step;
 						break;
-			case Down:	y+=2;
+			case Down:	y+=step;
 						break;
 			}
-			step_to_move-=2;
+			step_to_move-=step;
 		}
 	}
 	private void shortestPath(){
@@ -173,24 +177,24 @@ public class Skull extends Monster{
 			}
 			Open.remove(current);
 			Closed.add(current);
-				if(!checkCollison(new Rectangle(current.data.x-16,current.data.y,16,16),
-						new Rectangle(current.data.x-16,current.data.y+16,16,16))){//left
-						neighbor=new Node(current.data.x-16,current.data.y);
+				if(!checkCollison(new Rectangle(current.data.x-movement,current.data.y,half_width,half_height),
+						new Rectangle(current.data.x-movement,current.data.y+half_height,half_width,half_height))){//left
+						neighbor=new Node(current.data.x-movement,current.data.y);
 						addNeighbor(neighbor,current);
 				}				
-				if(!checkCollison(new Rectangle(current.data.x,current.data.y+32,16,16),
-						new Rectangle(current.data.x+16,current.data.y+32,16,16))){//down
-						neighbor=new Node(current.data.x,current.data.y+16);
+				if(!checkCollison(new Rectangle(current.data.x,current.data.y+height,half_width,half_height),
+						new Rectangle(current.data.x+movement,current.data.y+height,half_width,half_height))){//down
+						neighbor=new Node(current.data.x,current.data.y+movement);
 						addNeighbor(neighbor,current);
 				}
-				if(!checkCollison(new Rectangle(current.data.x,current.data.y-16,16,16),
-						new Rectangle(current.data.x+16,current.data.y-16,16,16))){//up
-						neighbor=new Node(current.data.x,current.data.y-16);
+				if(!checkCollison(new Rectangle(current.data.x,current.data.y-movement,half_width,half_height),
+						new Rectangle(current.data.x+movement,current.data.y-movement,half_width,half_height))){//up
+						neighbor=new Node(current.data.x,current.data.y-movement);
 						addNeighbor(neighbor,current);
 				}
-				if(!checkCollison(new Rectangle(current.data.x+32,current.data.y,16,16),
-						new Rectangle(current.data.x+32,current.data.y+16,16,16))){//right
-						neighbor=new Node(current.data.x+16,current.data.y);
+				if(!checkCollison(new Rectangle(current.data.x+height,current.data.y,half_width,half_height),
+						new Rectangle(current.data.x+width,current.data.y+movement,half_width,half_height))){//right
+						neighbor=new Node(current.data.x+movement,current.data.y);
 						addNeighbor(neighbor,current);
 				}
 			}

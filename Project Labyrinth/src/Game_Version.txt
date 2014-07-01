@@ -1,3 +1,7 @@
+Version 0.41A:
+
+-Removed reliance on ID number and instead use ID name everywhere.
+
 Version 0.41:
 
 -Skull,Leeper,Alma,Gol should now also be able to be used as a boat when thrown in certain type of Water.

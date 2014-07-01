@@ -14,7 +14,7 @@ public class Leeper extends Monster{
 	private int last_update=0;
 	public boolean isSleeping;
 	
-	public Leeper(int x, int y, int type) {
+	public Leeper(int x, int y, ID type) {
 		super(x, y, type);
 		move=new Movement("leeper_movement", 150);
 		sleep=new Movement("leeper_sleep",500);
@@ -46,7 +46,7 @@ public class Leeper extends Monster{
 	public void transform() {
 		if(!isSleeping){
 		previousState=img;
-		type=Tile.ID.MoveableBlock.value;
+		type=Tile.ID.MoveableBlock;
 		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;
@@ -57,10 +57,10 @@ public class Leeper extends Monster{
 		checkIfDrown();
 		if(!isSleeping && TransformedState==0){
 			move.getWalkAnimation(dir).setImage();
-			if(Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat.value && type!=Tile.ID.MoveableBlock.value)move();
+			if(Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat && type!=Tile.ID.MoveableBlock)move();
 		}
 		if(isSleeping) sleep.getWalkAnimation(dir).setImage();
-		if(type==Tile.ID.boat.value && !Character.isPushing){
+		if(type==Tile.ID.boat && !Character.isPushing){
 			if(boat_movement)boatMovement();
 			if(!boat_movement)
 				boat_movement=true;

@@ -109,7 +109,7 @@ public class Character {
 				}
 		if(isCollidingWater){
 			for(int i=0;i<Level.map_tile.size();i++){
-				if(Level.map_tile.get(i).type==Tile.ID.boat.value){
+				if(Level.map_tile.get(i).type==Tile.ID.boat){
 					if(Level.map_tile.get(i).shape.intersects(x, y, width, height)){
 						death=false;
 						isOnBoat=true;
@@ -126,7 +126,7 @@ public class Character {
 	}
 	private boolean isWalkingSand() {
 		for(int i=0;i<Level.map_tile.size();i++){
-			if(Level.map_tile.get(i).type==Tile.ID.Sand.value)
+			if(Level.map_tile.get(i).type==Tile.ID.Sand)
 				if(Level.map_tile.get(i).shape.intersects(x, y, width, height)){
 					return true;
 					}
@@ -177,7 +177,7 @@ public class Character {
 		for(int i=0;i<Level.map_tile.size();i++){
 			if(Level.map_tile.get(i)!=aMonster && aMonster.projectile!=null){//dont collide with yourself.
 				if(Level.map_tile.get(i).shape.intersects(new Rectangle(aMonster.projectile.x,aMonster.projectile.y,32,32))){
-					if(Level.map_tile.get(i).type!=Tile.ID.Water.value && Level.map_tile.get(i).type!=Tile.ID.Tree.value)
+					if(Level.map_tile.get(i).type!=Tile.ID.Water && Level.map_tile.get(i).type!=Tile.ID.Tree)
 						if(aMonster instanceof Gol){
 							aMonster.canShoot=true;
 							aMonster.projectile=null;
@@ -254,50 +254,45 @@ public class Character {
 					intersect2=aTile;
 		}
 		if(Level.goal.shape.intersects(mask1) && Level.goal.shape.intersects(mask2))
-			if(Level.goal.type==Tile.ID.BottomChestOpen.value)
+			if(Level.goal.type==Tile.ID.BottomChestOpen)
 				Level.takeGoal();
 		//Full Collision on same tile
 		if(intersect1!=null && intersect2!=null){
-			if(intersect1 instanceof Monster && (((Monster)intersect1).type!=Tile.ID.MoveableBlock.value) && 
-					((Monster)intersect1).type!=Tile.ID.boat.value)	return true;
+			if(intersect1 instanceof Monster && (((Monster)intersect1).type!=Tile.ID.MoveableBlock) && 
+					((Monster)intersect1).type!=Tile.ID.boat)	return true;
 			if(intersect1==intersect2){
 				switch(intersect1.type){
-				case 0	:	return true; //rock
-				case 1	:	return true; //closed door
-				case 2:		if(Math.abs(intersect1.x-x)<=16 && Math.abs(intersect1.y-y)<=16){
-								takeHeart(intersect1);
-							}
-							break;
-				case 3:  	//heart give no ammo
-							if(Math.abs(intersect1.x-x)<=16 && Math.abs(intersect1.y-y)<=16){
-								takeHeart(intersect1);
-							}
-							break;	
-				case 4:		if(y<2*step){
-								Level.nextLevel(); //end door
-								return true;}
-							return false;
-				case 8	:	//moveable block
-							select_Tile=intersect1;
-							intersect1.moveTile(step);
-							return true;
-				case 9: 	return true;//Tree
-				case 15:	//One-way Arrow
-				case 20:	//left one-way Arrow
-				case 21:	//right one-way Arrow
-				case 28:	//down one-way Arrow
-							OneWayArrow OneArrow=(OneWayArrow)intersect1;
-							return(OneArrow.checkArrow());
-				case 29:	return true; //rock wall;
-				case 32:	return true;//water
-				case 50:	return true;//water
-				case 51:	return true;//water
-				case 58:	return true;//water
-				case 59:	return true;//water
-				case 65:	if(intersect1.x%16==0 && intersect1.y%16==0){
-								x=intersect1.x;
-								y=intersect1.y;
-							}
+				case Rock:			return true;
+				case ClosedDoor:	return true;
+				case AmmoHeart:		if(Math.abs(intersect1.x-x)<=16 && Math.abs(intersect1.y-y)<=16)
+										takeHeart(intersect1);
+									break;
+				case NoAmmoHeart:  	if(Math.abs(intersect1.x-x)<=16 && Math.abs(intersect1.y-y)<=16)
+										takeHeart(intersect1);
+									break;	
+				case OpenDoor:		if(y<2*step){
+										Level.nextLevel();
+										return true;}
+									return false;
+				case MoveableBlock:	select_Tile=intersect1;
+									intersect1.moveTile(step);
+									return true;
+				case Tree: 			return true;
+				case OneWayUp:	
+				case OneWayLeft:	
+				case OneWayRight:	
+				case OneWayDown:	OneWayArrow OneArrow=(OneWayArrow)intersect1;
+									return(OneArrow.checkArrow());
+				case RockWall:		return true;
+				case Water:			return true;
+				case WaterFlowDown:	return true;
+				case WaterFlowLeft:	return true;
+				case WaterFlowRight:return true;
+				case WaterFlowUp:	return true;
+				case boat:			if(intersect1.x%16==0 && intersect1.y%16==0){
+										x=intersect1.x;
+										y=intersect1.y;
+									}
 							return true;
 				}
 				
@@ -309,7 +304,7 @@ public class Character {
 		//One of the 2 collision mask is empty
 		else if(intersect1==null && intersect2!=null){
 				if(intersect2.isSolid){
-					if(intersect2.type!=Tile.ID.AmmoHeart.value && intersect2.type!=Tile.ID.NoAmmoHeart.value) //hearth considered solid  for enemy projectile 
+					if(intersect2.type!=Tile.ID.AmmoHeart && intersect2.type!=Tile.ID.NoAmmoHeart) //hearth considered solid  for enemy projectile 
 						return true;
 				}
 				//not not solid object; look if its One-way Arrow
@@ -320,7 +315,7 @@ public class Character {
 		}
 		else if(intersect2==null && intersect1!=null){
 			if(intersect1.isSolid){
-				if(intersect1.type!=Tile.ID.AmmoHeart.value && intersect1.type!=Tile.ID.NoAmmoHeart.value) //hearth considered solid  for enemy projectile 
+				if(intersect1.type!=Tile.ID.AmmoHeart && intersect1.type!=Tile.ID.NoAmmoHeart) //hearth considered solid  for enemy projectile 
 					return true;
 			}
 			//not not solid object; look if its One-way Arrow
@@ -346,7 +341,7 @@ public class Character {
 			Sound.PowerEnabled.start();
 			}
 		}
-		if(aTile.type==Tile.ID.AmmoHeart.value)
+		if(aTile.type==Tile.ID.AmmoHeart)
 			ammo+=2;
 	}
 	

@@ -14,23 +14,23 @@ public class Power {
 		switch(Character.getInstance().dir){
 		case Up:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX(),hero.getY()-hero.step,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()+hero.step,hero.getY()-hero.step,16,16));
-					checkWaterCollision(Tile.ID.UpDownLadder.value);
+					checkWaterCollision(Tile.ID.UpDownLadder);
 					break;
 		case Down:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX(),hero.getY()+32,16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()+hero.step,hero.getY()+32,16,16));
-					checkWaterCollision(Tile.ID.UpDownLadder.value);
+					checkWaterCollision(Tile.ID.UpDownLadder);
 					break;
 		case Left:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX()-hero.step,hero.getY(),16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()-hero.step,hero.getY()+hero.step,16,16));
-					checkWaterCollision(Tile.ID.LeftLadder.value);
+					checkWaterCollision(Tile.ID.LeftLadder);
 					break;
 		case Right:	colliding_tile1=getCollidingTile(new Rectangle(hero.getX()+32,hero.getY(),16,16));
 					colliding_tile2=getCollidingTile(new Rectangle(hero.getX()+32,hero.getY()+hero.step,16,16));
-					checkWaterCollision(Tile.ID.RightLadder.value);
+					checkWaterCollision(Tile.ID.RightLadder);
 					break;
 			}
 	}
-	private void checkWaterCollision(int type) {
+	private void checkWaterCollision(Tile.ID type) {
 		if(colliding_tile1 instanceof Water && colliding_tile2 instanceof Water)
 			if(colliding_tile1==colliding_tile2)
 				for(Tile aTile:Level.map_tile){
@@ -68,7 +68,7 @@ public class Power {
 	}
 	private void checkHammerCollision() {
 		if(colliding_tile1!=null && colliding_tile2!=null)
-			if(colliding_tile1.type==Tile.ID.Rock.value  && colliding_tile2.type==Tile.ID.Rock.value )//rock
+			if(colliding_tile1.type==Tile.ID.Rock  && colliding_tile2.type==Tile.ID.Rock )//rock
 				if(colliding_tile1==colliding_tile2)
 					for(Tile aTile:Level.map_tile){
 						if(aTile==colliding_tile1){
@@ -108,7 +108,7 @@ public class Power {
 				for(Tile aTile:Level.map_tile){
 					if(aTile==colliding_tile1){
 						Level.toDelete.add(aTile);
-						int type=getNewArrow(aTile);
+						Tile.ID type=getNewArrow(aTile);
 						Level.toAdd.add((new OneWayArrow(aTile.x,aTile.y,type)));
 						Sound.ArrowBridgePowerUsed.start();
 						deletePower(3);
@@ -116,12 +116,12 @@ public class Power {
 					}
 				}
 	}
-	private int getNewArrow(Tile aTile) {
-		if(aTile.type==Tile.ID.OneWayUp.value)return Tile.ID.OneWayRight.value;
-		if(aTile.type==Tile.ID.OneWayLeft.value)return Tile.ID.OneWayUp.value;
-		if(aTile.type==Tile.ID.OneWayRight.value)return Tile.ID.OneWayDown.value;
-		if(aTile.type==Tile.ID.OneWayDown.value)return Tile.ID.OneWayLeft.value;
-		return 0;
+	private Tile.ID getNewArrow(Tile aTile) {
+		if(aTile.type==Tile.ID.OneWayUp)return Tile.ID.OneWayRight;
+		if(aTile.type==Tile.ID.OneWayLeft)return Tile.ID.OneWayUp;
+		if(aTile.type==Tile.ID.OneWayRight)return Tile.ID.OneWayDown;
+		if(aTile.type==Tile.ID.OneWayDown)return Tile.ID.OneWayLeft;
+		return null;
 	}
 	private Tile getCollidingTile(Rectangle mask) {
 		for(Tile aTile:Level.map_tile){

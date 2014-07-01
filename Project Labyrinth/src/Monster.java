@@ -19,7 +19,7 @@ public abstract class Monster extends Tile {
 	public Stack<Node> Path;
 	public ArrayList<Node> Open;
 	public ArrayList<Node> Closed;
-	public Monster(int x, int y, int type) {
+	public Monster(int x, int y, ID type) {
 		super(x, y, type);
 	}
 	public abstract void transform();
@@ -41,7 +41,7 @@ public abstract class Monster extends Tile {
 			img=Game.monsterState.get(0);
 			time_since_transform=0;
 			TransformedState=1;
-			type=Tile.ID.boat.value;
+			type=Tile.ID.boat;
 			isSolid=false;
 			Sound.resetSound();
 			Sound.Water.start();
@@ -60,7 +60,7 @@ public abstract class Monster extends Tile {
 			}
 			else{
 				findWaterFlow=getWaterFlow(new Rectangle(x,y+32+1,32,1));
-				if(findWaterFlow.type==Tile.ID.WaterFlowDown.value)
+				if(findWaterFlow.type==Tile.ID.WaterFlowDown)
 					WaterDir=Game.Direction.Down;						
 				}
 		}
@@ -72,7 +72,7 @@ public abstract class Monster extends Tile {
 				}
 				else{
 					findWaterFlow=getWaterFlow(new Rectangle(x-1,y,1,32));
-					if(findWaterFlow.type==Tile.ID.WaterFlowLeft.value)
+					if(findWaterFlow.type==Tile.ID.WaterFlowLeft)
 						WaterDir=Game.Direction.Left;
 					}
 		}
@@ -84,7 +84,7 @@ public abstract class Monster extends Tile {
 				}
 				else{
 					findWaterFlow=getWaterFlow(new Rectangle(x,y-1,32,1));
-					if(findWaterFlow.type==Tile.ID.WaterFlowUp.value)
+					if(findWaterFlow.type==Tile.ID.WaterFlowUp)
 						WaterDir=Game.Direction.Up;
 					}
 		}
@@ -96,7 +96,7 @@ public abstract class Monster extends Tile {
 						}
 						else{
 							findWaterFlow=getWaterFlow(new Rectangle(x+32+1,y,32,32));
-							if(findWaterFlow.type==Tile.ID.WaterFlowRight.value)
+							if(findWaterFlow.type==Tile.ID.WaterFlowRight)
 								WaterDir=Game.Direction.Right;
 							}
 		}

@@ -12,12 +12,12 @@ public class DonMedusa extends Monster {
 	private BufferedImage[] spriteSheet;
 	private Game.Direction projectile_dir;
 	
-	public DonMedusa(int x, int y, int type) {
+	public DonMedusa(int x, int y, ID type) {
 		super(x, y, type);
 		DonMedusaAnimation=new Animation();
 		canShoot=true;
 		try {getImg();} catch (IOException e) {e.printStackTrace();}
-		if(type==Tile.ID.LeftRightDonMedusa.value)//left to right
+		if(type==Tile.ID.LeftRightDonMedusa)//left to right
 			dir=Game.Direction.Left;
 		else dir=Game.Direction.Down;
 	}

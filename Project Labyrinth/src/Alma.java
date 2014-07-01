@@ -14,7 +14,7 @@ public class Alma extends Monster{
 	private int step_to_move;
 	private Node nextMovement;
 	private int last_update=0;
-	public Alma(int x, int y, int type) {
+	public Alma(int x, int y, ID type) {
 		super(x, y, type);
 		depth=2;
 		dir=Game.Direction.Down;
@@ -42,15 +42,15 @@ public class Alma extends Monster{
 	@Override
 	public void transform() {
 		previousState=img;
-		type=Tile.ID.MoveableBlock.value;
+		type=Tile.ID.MoveableBlock;
 		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;	
 	}
 	public void update(){
 		getAnimation().setImage();
-		if(Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat.value && type!=Tile.ID.MoveableBlock.value)move();
-		if(type==Tile.ID.boat.value && !Character.isPushing){
+		if(Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat && type!=Tile.ID.MoveableBlock)move();
+		if(type==Tile.ID.boat && !Character.isPushing){
 			if(boat_movement)boatMovement();
 			if(!boat_movement)
 				boat_movement=true;
@@ -228,7 +228,7 @@ public class Alma extends Monster{
 		for(int i=0;i<Level.map_tile.size();i++){
 			if(Level.map_tile.get(i).shape.intersects(mask1)|| Level.map_tile.get(i).shape.intersects(mask2)){
 				if(Level.map_tile.get(i).isSolid)return true;
-				if(Level.map_tile.get(i).type==Tile.ID.Grass.value)// cant  walk on grass
+				if(Level.map_tile.get(i).type==Tile.ID.Grass)// cant  walk on grass
 					return true;				
 			}
 		}

@@ -3,7 +3,7 @@ import java.awt.Rectangle;
 public class Phantom extends Monster {
 	
 	private Movement move;
-	public Phantom(int x, int y, int type) {
+	public Phantom(int x, int y, ID type) {
 		super(x, y, type);
 		dir=Game.Direction.Down;
 		move=new Movement("phantom_walk",250);

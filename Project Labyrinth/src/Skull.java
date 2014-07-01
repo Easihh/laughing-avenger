@@ -15,7 +15,7 @@ public class Skull extends Monster{
 	private int step_to_move;
 	private Node nextMovement;
 	private int update_counter;
-	public Skull(int x,int y, int type) {
+	public Skull(int x,int y, ID type) {
 		super(x, y, type);
 		depth=2;
 		dir=Game.Direction.Left;
@@ -45,7 +45,7 @@ public class Skull extends Monster{
 	@Override
 	public void transform() {
 		previousState=img;
-		type=Tile.ID.MoveableBlock.value;
+		type=Tile.ID.MoveableBlock;
 		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;		
@@ -53,9 +53,9 @@ public class Skull extends Monster{
 	public void update(){
 		checkState();
 		checkifdrown();
-		if(isActive && Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat.value && type!=Tile.ID.MoveableBlock.value)
+		if(isActive && Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat && type!=Tile.ID.MoveableBlock)
 			move();
-		if(type==Tile.ID.boat.value && !Character.isPushing){
+		if(type==Tile.ID.boat && !Character.isPushing){
 			if(boat_movement)boatMovement();
 			if(!boat_movement)
 				boat_movement=true;

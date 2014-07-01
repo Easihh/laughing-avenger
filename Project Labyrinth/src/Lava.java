@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 public class Lava extends Tile {
 	Animation Lava;
 	BufferedImage[] single_img;
-	public Lava(int x, int y, int type) {
+	public Lava(int x, int y, ID type) {
 		super(x, y, type);
 		Lava=new Animation();
 		getImage();

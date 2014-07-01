@@ -11,73 +11,74 @@ public class Tile implements Comparable<Tile> {
 		OneWayUp(15),TopChest(16),BottomChestEmpty(17),LeftSnakey(18),RightSnakey(19),OneWayLeft(20),OneWayRight(21),
 		LeftRightDonMedusa(22),UpDownDonMedusa(23),GolUp(24),GolDown(25),GolLeft(26),GolRight(27),OneWayDown(28),RockWall(29),
 		Leeper(31),Water(32),LeftLadder(33),Phantom(34),Skull(35),RightLadder(40),UpDownLadder(41),Sand(42),Grass(43),Alma(48),
-		Lava(49),WaterFlowDown(50),WaterFlowLeft(51),WaterFlowRight(58),WaterFlowUp(59),boat(65);
+		Lava(49),WaterFlowDown(50),WaterFlowLeft(51),WaterFlowRight(58),WaterFlowUp(59),boat(65),background(99);
 		int value;
         private ID(int value) {
             this.value = value;
         }
 	}
+	private boolean willMove;
+	private Tile collision_tile=null;
 	protected final int height=32;
 	protected final int width=32;
+	protected final int half_height=16;
+	protected final int half_width=16;
 	public int depth=1;
 	public int oldX;
 	public int oldY;
-	public int oldtype;
-	public int type;
+	public ID oldtype;
+	public ID type;
 	public boolean isSolid=true;;
 	public boolean isMovingAcrossScreen = false;
 	public Game.Direction dir;
 	protected int x;
 	protected int y;
-	private boolean willMove;
 	public Image img;
 	public Polygon shape;
-	public Tile collision_tile=null;
 	public Game.Direction WaterDir;
-	public Tile(int x, int y,int type) {
+	
+	public Tile(int x, int y,ID type) {
 		this.x=x;
 		this.y=y;
 		oldX=x;
 		oldY=y;
 		this.type=type;
 		oldtype=type;
-		img=Game.game_tileset.get(type);
+		img=Game.game_tileset.get(type.value);
 		setSolidState();
 		setDepth();
-		int[] xpoints={x,x+width,x+width,x};
-		int[] ypoints={y,y,y+height,y+height};
-		shape=new Polygon(xpoints, ypoints, 4);
+		updateMask();
 	}
 	private void setSolidState() {
 		switch(type){
-		case 33:
-		case 40:
-		case 41:
-		case 42:isSolid=false;
-				break;
+		case LeftLadder:
+		case RightLadder:
+		case UpDownLadder:
+		case Sand:			isSolid=false;
+							break;
 		}
 		
 	}
 	private void setDepth() {
 		switch(type){
-		case 8: depth=2;
-				break;
-		case 32:
-		case 50:
-		case 51:
-		case 58:
-		case 59:depth=-1;
-				break;
+		case MoveableBlock: depth=2;
+							break;
+		case Water:
+		case WaterFlowDown:
+		case WaterFlowLeft:
+		case WaterFlowRight:
+		case WaterFlowUp:	depth=-1;
+							break;
 		}
 		
 	}
 	public Tile(Image image) {
 		img=image;
-		type=99;// we have a background
+		type=ID.background;// we have a background
 	}
 	public void render(Graphics g) {
 		g.setColor(Color.BLUE);
-		if(type==99){//draw background
+		if(type==ID.background){//draw background
 			for(int y=0;y<Level.map_height;y+=height){
 				for(int x=0;x<Level.map_width;x+=width){
 					g.drawImage(img,x,y,width,height,null);
@@ -118,7 +119,7 @@ public class Tile implements Comparable<Tile> {
 						for(int i=y;i<=hero.getY();i+=2){
 							if(aTile.x==x || Math.abs(aTile.x-hero.getX())<=hero.step)
 								if(aTile.y==i && aTile!=this)
-									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && !(aTile instanceof Water)){ //bypass tree
+									if(aTile.isSolid && aTile.type!=Tile.ID.Tree && !(aTile instanceof Water)){ //bypass tree
 										return true;
 									}
 							}
@@ -128,7 +129,7 @@ public class Tile implements Comparable<Tile> {
 						for(int i=y;i>=hero.getY();i-=2){
 							if(aTile.x==x || Math.abs(aTile.x-hero.getX())<=hero.step)
 								if(aTile.y==i && aTile!=this)
-									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && !(aTile instanceof Water))
+									if(aTile.isSolid && aTile.type!=Tile.ID.Tree && !(aTile instanceof Water))
 										return true;
 							}
 						}		
@@ -137,7 +138,7 @@ public class Tile implements Comparable<Tile> {
 						for(int i=x;i>=hero.getX();i-=2){
 							if(aTile.y==y || Math.abs(aTile.y-hero.getY())<=hero.step)
 								if(aTile.x==i && aTile!=this)
-									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && !(aTile instanceof Water))
+									if(aTile.isSolid && aTile.type!=Tile.ID.Tree && !(aTile instanceof Water))
 										return true;
 							}
 						}		
@@ -146,7 +147,7 @@ public class Tile implements Comparable<Tile> {
 						for(int i=x;i<=hero.getX();i+=2){
 							if(aTile.y==y || Math.abs(aTile.y-hero.getY())<=hero.step)
 								if(aTile.x==i && aTile!=this)
-									if(aTile.isSolid && aTile.type!=Tile.ID.Tree.value && !(aTile instanceof Water))
+									if(aTile.isSolid && aTile.type!=Tile.ID.Tree && !(aTile instanceof Water))
 										return true;
 							}
 						}		
@@ -158,58 +159,57 @@ public class Tile implements Comparable<Tile> {
 		//We are behind the big 32*32 block or Monster in Block form
 		willMove=true;
 		switch(Character.getInstance().dir){
-		case Right:	if(!checkCollision(new Rectangle(x+32,y,16,16),new Rectangle(x+32,y+16,16,16))){
-							checkBelowBlock(ID.OneWayLeft.value,Character.getInstance().dir);
+		case Right:	if(!checkCollision(new Rectangle(x+width,y,half_width,half_height),new Rectangle(x+width,y+half_height,half_width,half_height))){
+							checkBelowBlock(ID.OneWayLeft,Character.getInstance().dir);
 							}
 					else{
-						getCollidingTile(new Rectangle(x+32,y,16,16));//top part collision
-						checkPartialCollision(collision_tile,ID.OneWayLeft.value);
-						getCollidingTile(new Rectangle(x+32,y+16,16,16));//bottom part collision
-						checkPartialCollision(collision_tile,ID.OneWayLeft.value);
-						if(isFullyCollidingWithWater(new Rectangle(x+32,y+16,16,16),new Rectangle(x+32,y,16,16))){
+						getCollidingTile(new Rectangle(x+width,y,half_width,half_height));//top part collision
+						checkPartialCollision(collision_tile,ID.OneWayLeft);
+						getCollidingTile(new Rectangle(x+width,y+half_height,half_width,half_height));//bottom part collision
+						checkPartialCollision(collision_tile,ID.OneWayLeft);
+						if(isFullyCollidingWithWater(new Rectangle(x+width,y+half_height,half_width,half_height),new Rectangle(x+width,y,half_width,half_height))){
 							if(this instanceof Monster)
 								((Monster)this).moveInWater();
 						}
 					}
 					break;
 					
-		case Down:	if(!checkCollision(new Rectangle(x,y+32,16,16),new Rectangle(x+16,y+32,16,16))){
-						checkBelowBlock(ID.OneWayUp.value,Character.getInstance().dir);
+		case Down:	if(!checkCollision(new Rectangle(x,y+height,half_width,half_height),new Rectangle(x+half_width,y+height,half_width,half_height))){
+						checkBelowBlock(ID.OneWayUp,Character.getInstance().dir);
 					}else{//There is a collision Down.
-						getCollidingTile(new Rectangle(x,y+32,16,16));//bottom left part collision
-						checkPartialCollision(collision_tile,ID.OneWayUp.value);
-						getCollidingTile(new Rectangle(x+16,y+32,16,16));//bottom right part collision
-						checkPartialCollision(collision_tile,ID.OneWayUp.value);
-						if(isFullyCollidingWithWater(new Rectangle(x+16,y+32,16,16),new Rectangle(x,y+32,16,16))){
+						getCollidingTile(new Rectangle(x,y+height,half_width,half_height));//bottom left part collision
+						checkPartialCollision(collision_tile,ID.OneWayUp);
+						getCollidingTile(new Rectangle(x+half_width,y+height,half_width,half_height));//bottom right part collision
+						checkPartialCollision(collision_tile,ID.OneWayUp);
+						if(isFullyCollidingWithWater(new Rectangle(x+half_width,y+height,half_width,half_height),new Rectangle(x,y+height,half_width,half_height))){
 							if(this instanceof Monster)
 								((Monster)this).moveInWater();
 						}
-					}
-						
+					}				
 					break;
 		case Up:
-					if(!checkCollision(new Rectangle(x,y-16,16,16),new Rectangle(x+16,y-16,16,16))){
-						checkBelowBlock(Tile.ID.OneWayDown.value,Character.getInstance().dir);
-						}else{
-						getCollidingTile(new Rectangle(x,y-16,16,16));//top left part collision
-						checkPartialCollision(collision_tile,Tile.ID.OneWayDown.value);
-						getCollidingTile(new Rectangle(x+16,y-16,16,16));//top right part collision
-						checkPartialCollision(collision_tile,Tile.ID.OneWayDown.value);
-						if(isFullyCollidingWithWater(new Rectangle(x,y-16,16,16),new Rectangle(x+16,y-16,16,16))){
+					if(!checkCollision(new Rectangle(x,y-half_height,half_width,half_height),new Rectangle(x+half_width,y-half_height,half_width,half_height))){
+						checkBelowBlock(Tile.ID.OneWayDown,Character.getInstance().dir);
+					}else{
+						getCollidingTile(new Rectangle(x,y-half_height,half_width,half_height));//top left part collision
+						checkPartialCollision(collision_tile,Tile.ID.OneWayDown);
+						getCollidingTile(new Rectangle(x+half_width,y-half_height,half_width,half_height));//top right part collision
+						checkPartialCollision(collision_tile,Tile.ID.OneWayDown);
+						if(isFullyCollidingWithWater(new Rectangle(x,y-half_height,half_width,half_height),new Rectangle(x+half_width,y-half_height,half_width,half_height))){
 							if(this instanceof Monster)
 								((Monster)this).moveInWater();
 						}
 					}
 					break;
 		case Left:
-					if(!checkCollision(new Rectangle(x-16,y,16,16),new Rectangle(x-16,y+16,16,16))){
-						checkBelowBlock(Tile.ID.OneWayRight.value,Character.getInstance().dir);
+					if(!checkCollision(new Rectangle(x-half_width,y,half_width,half_height),new Rectangle(x-half_width,y+half_height,half_width,half_height))){
+						checkBelowBlock(Tile.ID.OneWayRight,Character.getInstance().dir);
 					}else{
-						getCollidingTile(new Rectangle(x-16,y,16,16));//top left part collision
-						checkPartialCollision(collision_tile,Tile.ID.OneWayRight.value);
-						getCollidingTile(new Rectangle(x-16,y+16,16,16));//bottom left part collision	
-						checkPartialCollision(collision_tile,Tile.ID.OneWayRight.value);
-						if(isFullyCollidingWithWater(new Rectangle(x-16,y+16,16,16),new Rectangle(x-16,y,16,16))){
+						getCollidingTile(new Rectangle(x-half_width,y,half_width,half_height));//top left part collision
+						checkPartialCollision(collision_tile,Tile.ID.OneWayRight);
+						getCollidingTile(new Rectangle(x-half_width,y+half_height,half_width,half_height));//bottom left part collision	
+						checkPartialCollision(collision_tile,Tile.ID.OneWayRight);
+						if(isFullyCollidingWithWater(new Rectangle(x-half_width,y+half_height,half_width,half_height),new Rectangle(x-half_width,y,half_width,half_height))){
 							if(this instanceof Monster)
 								((Monster)this).moveInWater();
 						}
@@ -238,7 +238,7 @@ public class Tile implements Comparable<Tile> {
 			Character.isMoving=true;
 			Character.isPushing=true;
 	}
-	private void checkPartialCollision(Tile collision_tile, int value) {
+	private void checkPartialCollision(Tile collision_tile, ID value) {
 		if(collision_tile!=null && collision_tile.type==value){
 			if(checkArrow(value))
 				willMove=false;
@@ -246,7 +246,7 @@ public class Tile implements Comparable<Tile> {
 		if(collision_tile!=null && collision_tile.isSolid)
 			willMove=false;
 	}
-	private void checkBelowBlock(int value, Game.Direction dir) {
+	private void checkBelowBlock(ID value, Game.Direction dir) {
 		getCollidingTile(new Rectangle(x,y,32,32));
 		if(collision_tile!=null && collision_tile.type==value){
 			if(checkArrow(value))
@@ -258,11 +258,11 @@ public class Tile implements Comparable<Tile> {
 		for(int i=0;i<Level.map_tile.size();i++){
 			if(Level.map_tile.get(i) instanceof Water){
 				if(Level.map_tile.get(i).shape.intersects(mask1) && Level.map_tile.get(i).shape.intersects(mask2)){
-					if(Level.map_tile.get(i).type==Tile.ID.WaterFlowDown.value)WaterDir=Game.Direction.Down;
-					if(Level.map_tile.get(i).type==Tile.ID.WaterFlowUp.value)WaterDir=Game.Direction.Up;
-					if(Level.map_tile.get(i).type==Tile.ID.WaterFlowLeft.value)WaterDir=Game.Direction.Left;
-					if(Level.map_tile.get(i).type==Tile.ID.WaterFlowRight.value)WaterDir=Game.Direction.Right;
-					if(Level.map_tile.get(i).type==Tile.ID.Water.value)WaterDir=Game.Direction.None;
+					if(Level.map_tile.get(i).type==Tile.ID.WaterFlowDown)WaterDir=Game.Direction.Down;
+					if(Level.map_tile.get(i).type==Tile.ID.WaterFlowUp)WaterDir=Game.Direction.Up;
+					if(Level.map_tile.get(i).type==Tile.ID.WaterFlowLeft)WaterDir=Game.Direction.Left;
+					if(Level.map_tile.get(i).type==Tile.ID.WaterFlowRight)WaterDir=Game.Direction.Right;
+					if(Level.map_tile.get(i).type==Tile.ID.Water)WaterDir=Game.Direction.None;
 					return true;
 				}
 			}
@@ -287,21 +287,20 @@ public class Tile implements Comparable<Tile> {
 		int[] ypoints={y,y,y+height,y+height};
 		shape=new Polygon(xpoints, ypoints, 4);
 	}
-	private boolean checkArrow(int type) {
+	private boolean checkArrow(ID type) {
 		switch(type){
-		case 15:	//one-way up arrow
-					if(y<=collision_tile.y)
-						return true;
-					break;
-		case 20:	if(x<=collision_tile.x)
-						return true;
-					break;
-		case 21:	if(x>=collision_tile.x)
-						return true;
-					break;
-		case 28:  	if(y>=collision_tile.y)
-						return true;
-					break;
+		case OneWayUp:		if(y<=collision_tile.y)
+								return true;
+							break;
+		case OneWayLeft:	if(x<=collision_tile.x)
+								return true;
+							break;
+		case OneWayRight:	if(x>=collision_tile.x)
+								return true;
+							break;
+		case OneWayDown:	if(y>=collision_tile.y)
+								return true;
+							break;
 		}
 		return false;
 	}

@@ -7,7 +7,7 @@ public class Snakey  extends Monster{
 	private final long nano=1000000L;
 	private Animation SnakeyAnimation;
 	private BufferedImage spriteSheet[];
-	public Snakey(int x, int y, int type) {
+	public Snakey(int x, int y, ID type) {
 		super(x, y, type);
 		SnakeyAnimation=new Animation();
 		spriteSheet=new BufferedImage[2];
@@ -17,7 +17,7 @@ public class Snakey  extends Monster{
 		updateAnimation();
 		checkState();
 		checkifDrown();
-		if(type==Tile.ID.boat.value && !Character.isPushing){
+		if(type==Tile.ID.boat && !Character.isPushing){
 			if(boat_movement)boatMovement();
 			if(!boat_movement)
 				boat_movement=true;
@@ -42,7 +42,7 @@ public class Snakey  extends Monster{
 	@Override
 	public void transform() {
 		previousState=img;
-		type=Tile.ID.MoveableBlock.value;
+		type=Tile.ID.MoveableBlock;
 		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;
@@ -58,9 +58,9 @@ public class Snakey  extends Monster{
 	}
 	private void getImage() throws IOException {
 		BufferedImage img=null;
-		if(type==Tile.ID.RightSnakey.value)
+		if(type==Tile.ID.RightSnakey)
 			img=ImageIO.read(getClass().getResourceAsStream("/tileset/worm_right.png"));
-		if(type==Tile.ID.LeftSnakey.value)
+		if(type==Tile.ID.LeftSnakey)
 			img=ImageIO.read(getClass().getResourceAsStream("/tileset/worm_left.png"));
 		for(int i=0;i<1;i++){//all animation on same row
 				 for(int j=0;j<2;j++){

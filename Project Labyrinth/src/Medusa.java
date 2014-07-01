@@ -8,7 +8,7 @@ public class Medusa extends Monster {
 	private BufferedImage projectile_img;
 	private Game.Direction projectile_dir;
 
-	public Medusa(int x, int y, int type) {
+	public Medusa(int x, int y, ID type) {
 		super(x, y, type);
 		try {getImage();} catch (IOException e) {e.printStackTrace();}
 		canShoot=true;

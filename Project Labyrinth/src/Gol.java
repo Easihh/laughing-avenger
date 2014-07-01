@@ -8,7 +8,7 @@ public class Gol extends Monster {
 	private BufferedImage projectile_img;
 	private Game.Direction projectile_dir;
 	
-	public Gol(int x, int y, int type) {
+	public Gol(int x, int y, ID type) {
 		super(x, y, type);
 		try {getImg();} catch (IOException e) {e.printStackTrace();}
 	}
@@ -34,7 +34,7 @@ public class Gol extends Monster {
 		fireProjectile();
 		if(projectile!=null && !canShoot)
 			projectile.update();
-		if(type==Tile.ID.boat.value && !Character.isPushing){
+		if(type==Tile.ID.boat && !Character.isPushing){
 			if(boat_movement)boatMovement();
 			if(!boat_movement)
 				boat_movement=true;
@@ -45,7 +45,7 @@ public class Gol extends Monster {
 	public void transform() {
 		previousState=img;
 		oldtype=type;
-		type=Tile.ID.MoveableBlock.value;
+		type=Tile.ID.MoveableBlock;
 		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;
@@ -74,14 +74,14 @@ public class Gol extends Monster {
 		}	
 	private void getImg() throws IOException {
 		switch(type){
-		case 24:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_up.png"));
-					break;
-		case 25:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_down.png"));
-					break;
-		case 26:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_left.png"));
-					break;
-		case 27:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_right.png"));
-					break;
+		case GolUp:		projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_up.png"));
+						break;
+		case GolDown:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_down.png"));
+						break;
+		case GolLeft:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_left.png"));
+						break;
+		case GolRight:	projectile_img=ImageIO.read(getClass().getResourceAsStream("/tileset/projectile/dragon_shot_right.png"));
+						break;
 		}
 		
 	}
@@ -95,26 +95,26 @@ public class Gol extends Monster {
 	private boolean LineofSight() {
 		Character hero=Character.getInstance();
 		switch(type){
-		case 24: if((hero.getX()+hero.step==x || hero.getX()==x || hero.getX()-hero.step==x) && hero.getY()<y){
-						projectile_dir=Game.Direction.Up;
-						return true;
-					}
-					break;
-		case 25:	if((x-hero.step==hero.getX() || x==hero.getX()|| x+hero.step==hero.getX()) && hero.getY()>y){
-						projectile_dir=Game.Direction.Down;
-						return true;
-					}
-					break;
-		case 26:	if((hero.getY()-hero.step==y || hero.getY()+hero.step==y ||y==hero.getY()) && x>hero.getX()){
-						projectile_dir=Game.Direction.Left;
-						return true;
-					}
-					break;
-		case 27:	if((hero.getY()-hero.step==y || hero.getY()+hero.step==y || y==hero.getY()) && x<hero.getX()){
-						projectile_dir=Game.Direction.Right;
-						return true;
-					}
-					break;
+		case GolUp: 	if((hero.getX()+hero.step==x || hero.getX()==x || hero.getX()-hero.step==x) && hero.getY()<y){
+							projectile_dir=Game.Direction.Up;
+							return true;
+						}
+						break;
+		case GolDown:	if((x-hero.step==hero.getX() || x==hero.getX()|| x+hero.step==hero.getX()) && hero.getY()>y){
+							projectile_dir=Game.Direction.Down;
+							return true;
+						}
+						break;
+		case GolLeft:	if((hero.getY()-hero.step==y || hero.getY()+hero.step==y ||y==hero.getY()) && x>hero.getX()){
+							projectile_dir=Game.Direction.Left;
+							return true;
+						}
+						break;
+		case GolRight:	if((hero.getY()-hero.step==y || hero.getY()+hero.step==y || y==hero.getY()) && x<hero.getX()){
+							projectile_dir=Game.Direction.Right;
+							return true;
+						}
+						break;
 		}
 		return false;
 	}

@@ -17,7 +17,7 @@ public class Lava extends Tile {
 	}
 	private void getImage(){
 		int row=1;
-		int col=6;
+		int col=4;
 		single_img=new BufferedImage[row*col];
 		BufferedImage img=null;
 		try {img=ImageIO.read(getClass().getResourceAsStream("/tileset/lava.png"));} catch (IOException e) {e.printStackTrace();}
@@ -26,11 +26,9 @@ public class Lava extends Tile {
 				single_img[(i*col)+j]=img.getSubimage(j*width, i*height, width, height);
 			 }
 		 }
-		Lava.AddScene(single_img[0], 600);
-		Lava.AddScene(single_img[1], 300);
-		Lava.AddScene(single_img[2], 300);
-		Lava.AddScene(single_img[3], 600);
-		Lava.AddScene(single_img[4], 300);
-		Lava.AddScene(single_img[5], 300);
+		Lava.AddScene(single_img[0], 1000);
+		Lava.AddScene(single_img[1], 1500);
+		Lava.AddScene(single_img[2], 1500);
+		Lava.AddScene(single_img[3], 1000);
 	}
 }

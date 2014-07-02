@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 public class Gol extends Monster {
-	private final long nano=1000000000L;
+	private final long nano=1000000L;
 	private BufferedImage projectile_img;
 	private BufferedImage[] bullet_type;
 	private Game.Direction projectile_dir;

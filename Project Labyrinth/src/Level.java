@@ -84,7 +84,10 @@ public class Level {
 		
 	}
 	private void verifyPowerAllowed() {
-		if(room==10){
+		if(room==9){
+			Power[0]=Game.SpecialPower.Hammer;
+		}
+		if(room==6){
 			Power[0]=Game.SpecialPower.Ladder;
 			Power[1]=Game.SpecialPower.Ladder;
 		}

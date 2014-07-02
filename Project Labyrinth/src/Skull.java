@@ -1,4 +1,5 @@
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -50,7 +51,13 @@ public class Skull extends Monster{
 		type=Tile.ID.MoveableBlock;
 		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
-		TransformedState=1;		
+		TransformedState=1;	
+		System.out.println("targetX:"+Character.targetX);
+		System.out.println("step:"+step_to_move);
+		System.out.println("X:"+x%16);
+		System.out.println("Y:"+y%16);
+		System.out.println("DistanceX:"+(Character.getInstance().getX()-x));
+		System.out.println("DistanceY:"+(Character.getInstance().getY()-y));
 	}
 	public void update(){
 		checkState();
@@ -62,9 +69,35 @@ public class Skull extends Monster{
 			if(!boat_movement)
 				boat_movement=true;
 		}
-		if(TransformedState!=0)
-			stepMove();
+		if(TransformedState!=0){
+				if(isCollidingHero())
+					reverseMove();
+				else stepMove();
+		}
 		updateMask();
+	}
+	private void reverseMove() {
+		if(step_to_move>0){	
+			switch(dir){
+			case Left:	step_to_move=x%movement;
+						x+=step;
+						break;
+			case Right:	step_to_move=x%movement;
+						x-=step;
+						break;
+			case Up:	step_to_move=y%movement;
+						y+=step;
+						break;
+			case Down:	step_to_move=y%movement;
+						y-=step;
+						break;
+			}
+			step_to_move-=step;
+		}	
+	}
+	private boolean isCollidingHero() {
+
+		return(shape.intersects(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY(),width,height)));
 	}
 	private void Kill_Respawn() {
 		Skull me=copy();
@@ -99,8 +132,7 @@ public class Skull extends Monster{
 	}
 	private void move() {
 		update_counter++;
-		if(step_to_move==0 && Character.getInstance().getX()%movement==0 && Character.getInstance().getY()%movement==0 
-				&& x%movement==0 && y%movement==0 && update_counter>=(movement/step) && TransformedState==0){
+		if(step_to_move==0 && x%movement==0 && y%movement==0 && update_counter>=(movement/step) && TransformedState==0){
 			update_counter=0;
 					shortestPath();
 					if(path_exist){
@@ -133,7 +165,7 @@ public class Skull extends Monster{
 							x+=step;
 						else getnewDirection();
 						break;
-			case Up:	if(!checkCollison(new Rectangle(x, y-step,half_width,step),new Rectangle( x+half_width,y-step,half_height,step)))
+			case Up:	if(!checkCollison(new Rectangle(x, y-step,half_width,step),new Rectangle( x+half_width,y-step,half_width,step)))
 							y-=step;
 						else getnewDirection();
 						break;
@@ -160,7 +192,7 @@ public class Skull extends Monster{
 		}
 	}
 	private void shortestPath(){
-		Node goal=new Node(Character.getInstance().getX(),Character.getInstance().getY());
+		Node goal=new Node(getHeroPosition());
 		Open=new ArrayList<Node>();
 		Closed=new ArrayList<Node>();
 		Path=new Stack<Node>();
@@ -192,7 +224,7 @@ public class Skull extends Monster{
 						neighbor=new Node(current.data.x,current.data.y-movement);
 						addNeighbor(neighbor,current);
 				}
-				if(!checkCollison(new Rectangle(current.data.x+height,current.data.y,half_width,half_height),
+				if(!checkCollison(new Rectangle(current.data.x+width,current.data.y,half_width,half_height),
 						new Rectangle(current.data.x+width,current.data.y+movement,half_width,half_height))){//right
 						neighbor=new Node(current.data.x+movement,current.data.y);
 						addNeighbor(neighbor,current);
@@ -200,6 +232,23 @@ public class Skull extends Monster{
 			}
 			buildPath();
 		}
+	private Point getHeroPosition() {
+		//get hero position including future position if he is moving
+		Point position=null;
+		Character hero=Character.getInstance();
+		switch(hero.dir){
+		case Right:	position=new Point(hero.getX()+Character.targetX,hero.getY());
+					break;
+		case Left:	position=new Point(hero.getX()+Character.targetX,hero.getY());
+					break;
+		case Up:	position=new Point(hero.getX(),hero.getY()+Character.targetX);
+					break;
+		case Down:	position=new Point(hero.getX(),hero.getY()+Character.targetX);
+					break;
+		}
+		if(position.x%16!=0 || position.y%16!=0)System.out.println("ERROR PATH WONT BE AlIGNED");
+		return position;
+	}
 	private boolean checkCollison(Rectangle mask1,Rectangle mask2) {
 		for(int i=0;i<Level.map_tile.size();i++){
 			if(Level.map_tile.get(i).shape.intersects(mask1)|| Level.map_tile.get(i).shape.intersects(mask2)){

@@ -33,8 +33,9 @@ public class MainPanel extends JPanel {
 			drawSpecialPower(g);
 			g.setFont(font);
 			drawText(g);
-			if(Labyrinth.GameState==Game.GameState.Death && !hero.Death.isDone)
+			if(Labyrinth.GameState==Game.GameState.Death && !hero.Death.isDone){
 				hero.Death.render(g);
+			}
 			if(Labyrinth.GameState!=Game.GameState.Death)
 				hero.render(g);
 	}

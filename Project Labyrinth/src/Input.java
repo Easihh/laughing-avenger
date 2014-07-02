@@ -42,7 +42,7 @@ public class Input implements KeyListener {
 			Sound.Death.start();
 		}
 		if(keycode==KeyEvent.VK_ESCAPE){
-			Level.nextLevel();
+			//Level.nextLevel();
 		}
 	}
 	@Override

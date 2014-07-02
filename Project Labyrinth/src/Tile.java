@@ -54,6 +54,7 @@ public class Tile implements Comparable<Tile> {
 		case LeftLadder:
 		case RightLadder:
 		case UpDownLadder:
+		case Grass:
 		case Sand:			isSolid=false;
 							break;
 		}
@@ -62,7 +63,7 @@ public class Tile implements Comparable<Tile> {
 	private void setDepth() {
 		switch(type){
 		case MoveableBlock: depth=2;
-							break;
+							break;			
 		case Water:
 		case WaterFlowDown:
 		case WaterFlowLeft:

@@ -8,6 +8,9 @@ import java.awt.Point;
 	public Node(int x,int y){
 		data=new Point(x,y);
 		}
+	public Node(Point point){
+		data=point;
+	}
 	public void updateScore(int TargetX,int TargetY){
 			Hscore=Math.abs(TargetX-data.x)+Math.abs(TargetY-data.y);
 			Hscore=Hscore/16;

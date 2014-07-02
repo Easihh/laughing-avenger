@@ -10,9 +10,10 @@ public class Death {
 	private Animation Death;
 	private BufferedImage img;
 	private BufferedImage[] animation;
-	public boolean isDone=false;
+	public boolean isDone;
 	
 	public Death(){
+		isDone=false;
 		Death=new Animation();
 		getSpriteFromSheet();
 	}
@@ -49,7 +50,8 @@ public class Death {
 	}
 	private void isDone(){
 		if(Death.index==Death.getLastIndex()){
-			if(Death.getSceneCurrentDuration(9)+(System.nanoTime()-Death.last_update)/nano >Death.getSceneMaxDuration(9)){
+			if(Death.getSceneCurrentDuration(Death.getLastIndex())+(System.nanoTime()
+					-Death.last_update)/nano >Death.getSceneMaxDuration(Death.getLastIndex())){
 				isDone=true;
 				Level.restart();
 			}

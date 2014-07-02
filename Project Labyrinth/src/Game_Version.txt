@@ -1,3 +1,12 @@
+Version 0.42B:
+
+-Fixed a bug where Leeper would be unaligned if perfectly aligned before changing state.
+-Leeper should no longer become unaligned when going to sleep.
+-Fixed a bug where Gol could stay in water much longer than intended.
+-Fixed a bug where Grass tile were counting as Solid.
+-Fixed a bug where Skull,Leeper,Alma could become unaligned if shot close during movement of main character.
+-Fixed a bug where monster would not return to their previous type once reverted back from ball form after being shot.
+
 Version 0.42A:
 
 -Moved Special Power use from old level 6 to level 10 due to last change.

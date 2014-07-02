@@ -334,9 +334,16 @@ public class Character {
 		Sound.HeartSound.stop();
 		Sound.HeartSound.setFramePosition(0);
 		Sound.HeartSound.start();
+		if(Level.heart_amount==2){
+			if(Level.room==9){
+				aPower.powerActivated_hammer=true;
+			Sound.resetSound();
+			Sound.PowerEnabled.start();
+			}
+		}
 		if(Level.heart_amount==0){
 			Level.openChest();
-			if(Level.room==10){
+			if(Level.room==6){
 				aPower.powerActivated_ladder=true;
 			Sound.resetSound();
 			Sound.PowerEnabled.start();
@@ -530,7 +537,7 @@ public class Character {
 				Sound.ShotSound.stop();
 				Sound.ShotSound.setFramePosition(0);
 				Sound.ShotSound.start();
-				//ammo--;
+				ammo--;
 			}	
 	}
 	private void checkPower() {

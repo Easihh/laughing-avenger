@@ -54,52 +54,52 @@ public abstract class Monster extends Tile {
 	public void boatMovement() {
 		Tile findWaterFlow;
 		if(WaterDir==Game.Direction.Right){
-			if(checkWaterCollision(new Rectangle(x+width,y,1,32))){
+			if(checkWaterCollision(new Rectangle(x,y,1,32),Tile.ID.WaterFlowRight)){
 				if(Character_is_on_boat())
 					Character.getInstance().setX(Character.getInstance().getX()+1);
 				x+=1;
 			}
 			else{
-				findWaterFlow=getWaterFlow(new Rectangle(x,y+32+1,32,1));
-				if(findWaterFlow.type==Tile.ID.WaterFlowDown)
-					WaterDir=Game.Direction.Down;						
-				}
+				findWaterFlow=getWaterFlow(new Rectangle(x,y,1,32));
+				if(findWaterFlow!=null && findWaterFlow.type==Tile.ID.WaterFlowDown)
+					WaterDir=Game.Direction.Down;
+			}
 		}
 		else if(WaterDir==Game.Direction.Down){
-				if(checkWaterCollision(new Rectangle(x,y+32,32,1))){
+				if(checkWaterCollision(new Rectangle(x,y,32,1),ID.WaterFlowDown)){
 					if(Character_is_on_boat())
 						Character.getInstance().setY(Character.getInstance().getY()+1);
 					y+=1;
 				}
 				else{
-					findWaterFlow=getWaterFlow(new Rectangle(x-1,y,1,32));
-					if(findWaterFlow.type==Tile.ID.WaterFlowLeft)
+					findWaterFlow=getWaterFlow(new Rectangle(x,y,32,1));
+					if(findWaterFlow!=null && findWaterFlow.type==Tile.ID.WaterFlowLeft)
 						WaterDir=Game.Direction.Left;
 					}
 		}
 		else if(WaterDir==Game.Direction.Left){
-				if(checkWaterCollision(new Rectangle(x-1,y,1,32))){
+				if(checkWaterCollision(new Rectangle(x,y,32,1),Tile.ID.WaterFlowLeft)){
 					if(Character_is_on_boat())
 						Character.getInstance().setX(Character.getInstance().getX()-1);
 					x-=1;
 				}
 				else{
-					findWaterFlow=getWaterFlow(new Rectangle(x,y-1,32,1));
-					if(findWaterFlow.type==Tile.ID.WaterFlowUp)
+					findWaterFlow=getWaterFlow(new Rectangle(x,y,32,1));
+					if(findWaterFlow!=null && findWaterFlow.type==Tile.ID.WaterFlowUp)
 						WaterDir=Game.Direction.Up;
 					}
 		}
 		else if(WaterDir==Game.Direction.Up){
-						if(checkWaterCollision(new Rectangle(x,y-1,32,1))){
+						if(checkWaterCollision(new Rectangle(x,y-1,32,1),Tile.ID.WaterFlowUp)){
 							if(Character_is_on_boat())
 								Character.getInstance().setY(Character.getInstance().getY()-1);
 							y-=1;
 						}
 						else{
-							findWaterFlow=getWaterFlow(new Rectangle(x+32+1,y,32,32));
-							if(findWaterFlow.type==Tile.ID.WaterFlowRight)
+							findWaterFlow=getWaterFlow(new Rectangle(x,y-1,32,1));
+							if(findWaterFlow!=null && findWaterFlow.type==Tile.ID.WaterFlowRight)
 								WaterDir=Game.Direction.Right;
-							}
+						}
 		}
 	}
 	private boolean Character_is_on_boat() {
@@ -115,9 +115,9 @@ public abstract class Monster extends Tile {
 		}
 		return null;
 	}
-	private boolean checkWaterCollision(Rectangle mask) {
+	private boolean checkWaterCollision(Rectangle mask, ID Water) {
 		for(int i=0;i<Level.map_tile.size();i++){
-			if(Level.map_tile.get(i) instanceof Water)
+			if(Level.map_tile.get(i).type==Water)
 				if(Level.map_tile.get(i).shape.intersects(mask))
 					return true;
 		}
@@ -154,6 +154,7 @@ public abstract class Monster extends Tile {
 		if((System.nanoTime()-time_since_transform)/nano>10000 && TransformedState==2 && !isDrowning){
 			TransformedState=0;
 			img=previousState;
+			type=oldtype;
 		}
 		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==1 && isDrowning){
 			TransformedState=3;

@@ -46,6 +46,7 @@ public class Sound {
     }
     public static void resetSound(){
 		Sound.ArrowBridgePowerUsed.setFramePosition(0);
+		Sound.ChestOpen.setFramePosition(0);
 		Sound.Death.setFramePosition(0);
 		Sound.DoorOpen.setFramePosition(0);
 		Sound.DragonSound.setFramePosition(0);

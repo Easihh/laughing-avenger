@@ -1,3 +1,8 @@
+Version 0.41C:
+
+-Fixed bug where Level 6 would give hammer special power instead of Ladder.
+-Chest Open Sound now correctly reset each time the chest is open.
+
 Version 0.41B:
 
 -Fixed Gol to now also last 8 second in water like other monster in ball form.

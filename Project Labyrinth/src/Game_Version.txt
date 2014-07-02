@@ -1,3 +1,7 @@
+Version 0.42A:
+
+-Moved Special Power use from old level 6 to level 10 due to last change.
+
 Version 0.42:
 
 -Old level 6 is now level 10.

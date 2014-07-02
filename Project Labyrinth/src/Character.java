@@ -336,7 +336,7 @@ public class Character {
 		Sound.HeartSound.start();
 		if(Level.heart_amount==0){
 			Level.openChest();
-			if(Level.room==6){
+			if(Level.room==10){
 				aPower.powerActivated_ladder=true;
 			Sound.resetSound();
 			Sound.PowerEnabled.start();

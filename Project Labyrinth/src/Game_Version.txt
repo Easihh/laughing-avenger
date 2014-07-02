@@ -1,3 +1,7 @@
+Version 0.41D:
+
+-Monster now last 7 second in water in ball form down from 8.
+
 Version 0.41C:
 
 -Fixed bug where Level 6 would give hammer special power instead of Ladder.

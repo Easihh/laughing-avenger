@@ -8,7 +8,7 @@ import java.util.Stack;
 public abstract class Monster extends Tile {
 	protected final long nano=1000000L;
 	protected boolean boat_movement=false;
-	protected final int duration_in_water=8000;
+	protected final int duration_in_water=7000;
 	protected long time_since_transform;
 	protected int TransformedState=0;
 	protected Projectile projectile;
@@ -155,11 +155,11 @@ public abstract class Monster extends Tile {
 			TransformedState=0;
 			img=previousState;
 		}
-		if((System.nanoTime()-time_since_water)/nano>4500 && TransformedState==1 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>4000 && TransformedState==1 && isDrowning){
 			TransformedState=3;
 			img=Game.monsterState.get(2);
 		}
-		if((System.nanoTime()-time_since_water)/nano>6500 && TransformedState==3 && isDrowning){
+		if((System.nanoTime()-time_since_water)/nano>6000 && TransformedState==3 && isDrowning){
 			TransformedState=4;
 			img=Game.monsterState.get(3);
 		}

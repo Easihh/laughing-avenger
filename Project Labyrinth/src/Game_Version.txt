@@ -1,3 +1,8 @@
+Version 0.42:
+
+-Old level 6 is now level 10.
+-A new Map for Level 6 has been added.
+
 Version 0.41D:
 
 -Monster now last 7 second in water in ball form down from 8.

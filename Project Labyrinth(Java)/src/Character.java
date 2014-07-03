@@ -335,7 +335,7 @@ public class Character {
 		Sound.HeartSound.setFramePosition(0);
 		Sound.HeartSound.start();
 		if(Level.heart_amount==2){
-			if(Level.room==9){
+			if(Level.room==7){
 				aPower.powerActivated_hammer=true;
 			Sound.resetSound();
 			Sound.PowerEnabled.start();

@@ -1,3 +1,7 @@
+Version 0.42C Final
+
+-Fixed bug where hammer special power were given at level 9 instead of 7.
+
 Version 0.42B:
 
 -Fixed a bug where Leeper would be unaligned if perfectly aligned before changing state.

@@ -28,6 +28,7 @@ public class Main extends Activity {
 	protected void onDestroy(){
 		super.onDestroy();
 		System.out.println("Destroyed");
+		Input.mPlayer.release();
 	}
 	protected void onStop(){
 		super.onStop();

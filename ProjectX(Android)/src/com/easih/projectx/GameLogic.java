@@ -18,19 +18,12 @@ public class GameLogic extends Thread{
 				try {Thread.sleep(1);
 				} catch (InterruptedException e1) {e1.printStackTrace();}
 			timer=System.currentTimeMillis();
-			movement();
+			Character.getInstance().update();
 			if((System.currentTimeMillis()-elapsed)>=1000){
 				GameView.fps=fps;
 				fps=0;
 				elapsed=System.currentTimeMillis();
 			}
 		}
-	}
-	private void movement() {
-		Character hero=Character.getInstance();
-		if(hero.isMovingLeft)hero.x-=1;
-		if(hero.isMovingRight)hero.x+=1;
-		if(hero.isMovingDown)hero.y+=1;
-		if(hero.isMovingUp)hero.y-=1;
 	}
 }

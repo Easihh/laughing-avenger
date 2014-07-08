@@ -1,20 +1,34 @@
 package com.easih.projectx;
 
+import java.io.IOException;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.view.MotionEvent;
 
 public class Input {
 	public Bitmap leftArrow,rightArrow,upArrow,downArrow;
 	public GameView gameView;
 	private Character hero;
+	static MediaPlayer mPlayer;
 	Rect leftButton,downButton,rightButton,upButton;
 	public final int inputWidth=64,inputHeight=64;
 	public final int leftInputX=50,leftInputY=300,downInputX=114,downInputY=300;
 	public final int rightInputX=178,rightInputY=300,upInputX=114,upInputY=236;
 	public Input(GameView View){
 		this.gameView=View;
+		mPlayer=MediaPlayer.create(View.getContext(),R.raw.stagemusic);
+		mPlayer.setOnCompletionListener(new OnCompletionListener(){
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				System.out.println("START");
+			}					
+		});
+		mPlayer.setLooping(true);
+		mPlayer.start();
 		leftArrow=BitmapFactory.decodeResource(View.getResources(), R.drawable.arrow_left);
 		rightArrow=BitmapFactory.decodeResource(View.getResources(), R.drawable.arrow_right);
 		downArrow=BitmapFactory.decodeResource(View.getResources(), R.drawable.arrow_down);

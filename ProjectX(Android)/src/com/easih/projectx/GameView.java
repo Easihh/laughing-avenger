@@ -28,13 +28,15 @@ public class GameView extends SurfaceView implements Runnable,View.OnTouchListen
 	Bitmap picture=BitmapFactory.decodeResource(getResources(), R.drawable.blank);
 	Bitmap wall=BitmapFactory.decodeResource(getResources(), R.drawable.rocktile);
 	Character hero;
+	GameAssets assets;
 	public GameView(Context context) {
 		super(context);	
 		holder=getHolder();
+		assets=new GameAssets(context);
 		input=new Input(this);
 		setOnTouchListener(this);
 		gameView=this;
-		hero=new Character(gameView);
+		hero=new Character();
 	}
 	static GameView getinstance(){
 		return gameView;
@@ -49,12 +51,11 @@ public class GameView extends SurfaceView implements Runnable,View.OnTouchListen
 			if(!holder.getSurface().isValid())
 				continue;
 			myCanvas=holder.lockCanvas();
-			myCanvas.drawARGB(255,255, 255, 255);//backgorund
+			myCanvas.drawARGB(255,0, 0, 0);//backgorund
 			myCanvas.drawText("FPS:"+fps, 25, 25, paint);
 			myCanvas.drawText("X:"+hero.x, 25, 50, paint);
 			myCanvas.drawText("Y:"+hero.y, 25, 75, paint);
 			myCanvas.drawRect(new Rect(256,0,768,352), paint);//PlayScreen
-			myCanvas.drawBitmap(hero.myImage, hero.x, hero.y,null);
 			myCanvas.drawBitmap(wall, 256, 0,null);
 			myCanvas.drawBitmap(wall, 288, 0,null);
 			myCanvas.drawBitmap(wall, 320, 0,null);
@@ -67,6 +68,7 @@ public class GameView extends SurfaceView implements Runnable,View.OnTouchListen
 			myCanvas.drawBitmap(input.downArrow,input.downInputX,input.downInputY,null);
 			myCanvas.drawBitmap(input.rightArrow,input.rightInputX,input.rightInputY,null);
 			myCanvas.drawBitmap(input.upArrow,input.upInputX,input.upInputY,null);
+			hero.render(myCanvas);
 			holder.unlockCanvasAndPost(myCanvas);
 		}
 	}

@@ -14,7 +14,7 @@ namespace ProjectLabyrinth
         readonly int tileSize = 32;
         public GameAsset()
         {
-           loadTilesetImage();
+            loadTilesetImage();
         }
 
         private void loadTilesetImage()

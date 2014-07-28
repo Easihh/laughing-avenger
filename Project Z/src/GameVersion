@@ -1,0 +1,14 @@
+
+Version 0.01:
+
+-Player can move around the map.
+-Player animation complete except Death and Character being hit.
+-Player Full and Partial Collision with tile complete.
+-Player transition from one map to another.
+-Player can now obtain item that are added to inventory and can be used.
+-Candle item can make fire appear infront of player.
+-Enemy Red Octorok has been added.
+-Enemies can be slain if hit.
+-Map are Tiled/Drawn with two layers(Tiles & object/monster).
+-Enemies are pushed back when hit by sword attack.
+-Player Main weapon/offhand weapon are displayed on the main bar aswell as Rupee,bomb,key amounts.

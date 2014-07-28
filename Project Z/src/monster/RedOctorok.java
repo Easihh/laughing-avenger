@@ -1,0 +1,160 @@
+package monster;
+
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.util.Random;
+
+import main.Hero.Direction;
+import main.Map;
+import main.Movement;
+
+
+public class RedOctorok extends Monster{
+	Movement Octorok,OctorokHit1,OctorokHit2;
+	public RedOctorok(int x, int y, ID type) {
+		super(x,y,type);
+		Octorok=new Movement("RedOctorok", 250);
+		OctorokHit1=new Movement("RedOctorok_Hit1",250);
+		OctorokHit2=new Movement("RedOctorok_Hit2",250);
+		dir=Direction.Down;
+		hitpoint=2;
+		moveSpeed=1;
+	}
+
+	@Override
+	public void render(Graphics g) {
+		if(death==null && invincible_timer==null)
+			g.drawImage(Octorok.getWalkAnimation(dir).getImage(),x,y,null);
+		if(death==null && invincible_timer!=null && invincible_timer.elapsedMillis()<250)
+			g.drawImage(OctorokHit1.getWalkAnimation(dir).getImage(),x,y,null);
+		if(death==null && invincible_timer!=null && invincible_timer.elapsedMillis()>250)
+			g.drawImage(OctorokHit2.getWalkAnimation(dir).getImage(),x,y,null);
+		if(death!=null)
+			g.drawImage(killEffect,x,y,null);
+	}
+	@Override
+	public void update() {
+		if(death!=null && death.elapsedMillis()>200){
+			destroy(myID);
+			death=null;
+		}
+		if(death==null){
+			updateMask();
+			checkHeroSwordCollision();
+			if(stepToMove==0){
+				if(x%16!=0 || y%16!=0){
+					System.out.println("x:"+x%16);
+					System.out.println("y:"+y%16);
+					System.out.println("ERROR UNALIGNED");
+				}
+				if(!collisionTile() && !outOfBound())
+					rdymove();
+				else getNewDirection();
+			}
+			if(stepToMove>0 && pushbackdir==Direction.None)
+				move();
+			if(stepToMove>0 && pushbackdir!=Direction.None)
+				pushbackMove();
+			if(invincible_timer!=null && invincible_timer.elapsedMillis()>invincible_duration)
+				invincible_timer=null;
+		}
+	}
+
+	private void pushbackMove() {
+		switch(pushbackdir){
+		case Down:	y+=pushbackSpeed;
+					Octorok.walk_down.setImage();
+					break;
+		case Up:	y-=pushbackSpeed;
+					Octorok.walk_up.setImage();
+					break;
+		case Left: 	x-=pushbackSpeed;
+					Octorok.walk_left.setImage();
+					break;
+		case Right: x+=pushbackSpeed;
+					Octorok.walk_right.setImage();
+					break;
+		}
+		stepToPush-=pushbackSpeed;
+		if(stepToPush==0)pushbackdir=Direction.None;
+	}
+
+	private boolean outOfBound() {
+		Map map=Map.getInstance();
+		switch(dir){
+		case Down: 	return(y+step>=(map.worldY*map.roomHeight)+map.roomHeight);
+		case Up: 	return(y-step<=(map.worldY*map.roomHeight));
+		case Right: return(x+step>=(map.worldX*map.roomWidth)+map.roomWidth);
+		case Left: 	return(x-step<=(map.worldX*map.roomWidth));
+		}
+		return false;
+	}
+
+	private boolean collisionTile() {
+		if(dir==Direction.Down)
+			return(checkCollision(new Rectangle(x,y+height,width,step)));
+		if(dir==Direction.Left)
+			return(checkCollision(new Rectangle(x-step,y,step,height)));
+		if(dir==Direction.Right)
+			return(checkCollision(new Rectangle(x+width,y,step,height)));
+		if(dir==Direction.Up)
+			return(checkCollision(new Rectangle(x,y-step,width,step)));
+		return false;
+	}
+
+	private boolean checkCollision(Rectangle nextMask) {
+		Map map=Map.getInstance();
+		for(int i=map.worldX*map.tilePerRow;i<map.worldX*map.tilePerRow+map.tilePerRow;i++){
+			for(int j=map.worldY*map.tilePerCol;j<map.worldY*map.tilePerCol+map.tilePerCol;j++){
+				if(Map.allObject[i][j]!=null){
+					if(Map.allObject[i][j].mask.intersects(nextMask) && Map.allObject[i][j]!=this) 
+						if(Map.allObject[i][j].isSolid)
+							return true;					
+				}
+			}
+		}
+		return false;
+	}
+
+	private void move() {
+		switch(dir){
+		case Down:	y+=moveSpeed;
+					Octorok.walk_down.setImage();
+					break;
+		case Up:	y-=moveSpeed;
+					Octorok.walk_up.setImage();
+					break;
+		case Left: 	x-=moveSpeed;
+					Octorok.walk_left.setImage();
+					break;
+		case Right: x+=moveSpeed;
+					Octorok.walk_right.setImage();
+					break;
+		}
+		stepToMove-=moveSpeed;
+	}
+
+	private void rdymove() {
+		Random random=new Random();
+		int result=random.nextInt(6);
+		if(result>4)getNewDirection();
+		else stepToMove=step;
+	}
+
+	private void getNewDirection() {
+		int mydir=0,result;
+		if(dir==Direction.Up)mydir=0;
+		if(dir==Direction.Right)mydir=1;
+		if(dir==Direction.Down)mydir=2;
+		if(dir==Direction.Left)mydir=3;
+		Random myRandom=new Random();
+		do
+			result=myRandom.nextInt(4);
+		while(result==mydir);
+		if(result==0)dir=Direction.Up;
+		if(result==1)dir=Direction.Right;
+		if(result==2)dir=Direction.Down;
+		if(result==3)dir=Direction.Left;
+	}
+
+}

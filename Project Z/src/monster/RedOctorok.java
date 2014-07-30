@@ -17,7 +17,7 @@ public class RedOctorok extends Monster{
 		OctorokHit1=new Movement("RedOctorok_Hit1",250);
 		OctorokHit2=new Movement("RedOctorok_Hit2",250);
 		dir=Direction.Down;
-		hitpoint=2;
+		hitpoint=20;
 		moveSpeed=1;
 	}
 
@@ -42,12 +42,12 @@ public class RedOctorok extends Monster{
 			updateMask();
 			checkHeroSwordCollision();
 			if(stepToMove==0){
-				if(x%16!=0 || y%16!=0){
-					System.out.println("x:"+x%16);
-					System.out.println("y:"+y%16);
+				if(x%step!=0 || y%step!=0){
+					System.out.println("x:"+x%step);
+					System.out.println("y:"+y%step);
 					System.out.println("ERROR UNALIGNED");
 				}
-				if(!collisionTile() && !outOfBound())
+				if(!collisionTile() && !outOfBound(step,dir))
 					rdymove();
 				else getNewDirection();
 			}
@@ -62,30 +62,65 @@ public class RedOctorok extends Monster{
 
 	private void pushbackMove() {
 		switch(pushbackdir){
-		case Down:	y+=pushbackSpeed;
+		case Down:	if(stepToPush%step==0){
+						if(!checkCollision(new Rectangle(x,y+height,width,step)) && !outOfBound(step, pushbackdir)){
+							stepToPush-=pushbackSpeed;
+							y+=pushbackSpeed;}
+						else pushbackdir=Direction.None; 
+					}
+					else{
+							y+=pushbackSpeed;
+							stepToPush-=pushbackSpeed;
+						}
 					Octorok.walk_down.setImage();
 					break;
-		case Up:	y-=pushbackSpeed;
+		case Up:	if(stepToPush%step==0){
+						if(!checkCollision(new Rectangle(x,y-step,width,step)) && !outOfBound(step, pushbackdir)){
+							stepToPush-=pushbackSpeed;
+							y-=pushbackSpeed;}
+						else pushbackdir=Direction.None; 
+					}
+					else{
+							y-=pushbackSpeed;
+							stepToPush-=pushbackSpeed;
+						}
 					Octorok.walk_up.setImage();
 					break;
-		case Left: 	x-=pushbackSpeed;
+		case Left: 	if(stepToPush%step==0){
+						if(!checkCollision(new Rectangle(x-step,y,step,height)) && !outOfBound(step, pushbackdir)){
+							stepToPush-=pushbackSpeed;
+							x-=pushbackSpeed;}
+						else pushbackdir=Direction.None; 
+					}
+					else{
+							x-=pushbackSpeed;
+							stepToPush-=pushbackSpeed;
+						}
 					Octorok.walk_left.setImage();
 					break;
-		case Right: x+=pushbackSpeed;
+		case Right: 	if(stepToPush%step==0){
+							if(!checkCollision(new Rectangle(x+width,y,step,height)) && !outOfBound(step, pushbackdir)){
+								stepToPush-=pushbackSpeed;
+								x+=pushbackSpeed;}
+							else pushbackdir=Direction.None; 
+						}
+						else{
+								x+=pushbackSpeed;
+								stepToPush-=pushbackSpeed;
+							}
 					Octorok.walk_right.setImage();
 					break;
 		}
-		stepToPush-=pushbackSpeed;
-		if(stepToPush==0)pushbackdir=Direction.None;
+		if(stepToPush<=0)pushbackdir=Direction.None;
 	}
 
-	private boolean outOfBound() {
+	private boolean outOfBound(int nextStep,Direction dir) {
 		Map map=Map.getInstance();
 		switch(dir){
-		case Down: 	return(y+step>=(map.worldY*map.roomHeight)+map.roomHeight);
-		case Up: 	return(y-step<=(map.worldY*map.roomHeight));
-		case Right: return(x+step>=(map.worldX*map.roomWidth)+map.roomWidth);
-		case Left: 	return(x-step<=(map.worldX*map.roomWidth));
+		case Down: 	return(y+nextStep>=(map.worldY*map.roomHeight)+map.roomHeight);
+		case Up: 	return(y-nextStep<=(map.worldY*map.roomHeight));
+		case Right: return(x+nextStep>=(map.worldX*map.roomWidth)+map.roomWidth);
+		case Left: 	return(x-nextStep<=(map.worldX*map.roomWidth));
 		}
 		return false;
 	}

@@ -82,7 +82,7 @@ public abstract class Monster extends Tile{
 	}
 	private void pushback() {
 		pushbackdir=Hero.getInstance().dir;
-		stepToPush+=96;
+		stepToPush=96;
 		//System.out.println(dir);
 		//System.out.println("StepTomove:"+stepToMove);
 	}

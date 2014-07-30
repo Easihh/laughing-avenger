@@ -1,3 +1,8 @@
+Version 0.02:
+
+-Enemies that are pushed back by sword attack can no longer become unaligned with Tile.
+-Enemies that are pushed back by the sword attack can no longer be pushed outside the room bound.
+
 Version 0.01:
 
 -Player can move around the map.
@@ -10,4 +15,4 @@ Version 0.01:
 -Enemies can be slain if hit.
 -Map are Tiled/Drawn with two layers(Tiles & object/monster).
 -Enemies are pushed back when hit by sword attack.
--Player Main weapon/offhand weapon are displayed on the main bar aswell as Rupee,bomb,key amounts.
+-Player Main weapon/offhand weapon are displayed on the main bar aswell as rupee,bomb,key amounts.

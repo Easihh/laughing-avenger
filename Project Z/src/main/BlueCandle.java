@@ -12,13 +12,14 @@ import main.Hero.Direction;
 
 public class BlueCandle extends Item {
 	Animation fire;
-	Stopwatch timer;
+	public Stopwatch timer;
 	int stepToMove;
 	Direction fireDir=Direction.None;
-	public BlueCandle(){
+	public BlueCandle(int x,int y,Item.ID type){
+		super(x, y, type);
 		name="Blue Candle";
-		x=241;
-		y=98;
+		this.x=x;
+		this.y=y;
 		mask=new Rectangle(x,y,width,height);
 		loadImage();
 	}

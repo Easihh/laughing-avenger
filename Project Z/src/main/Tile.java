@@ -42,6 +42,11 @@ public class Tile {
 		this.y=y;
 		mask=new Rectangle(x,y,width,height);
 	}
+	public Tile(int x,int y,Item.ID type){
+		this.x=x;
+		this.y=y;
+		mask=new Rectangle(x,y,width,height);
+	}
 	private ID getType(int type) {
 		switch(type){
 		case 0: return ID.Background;

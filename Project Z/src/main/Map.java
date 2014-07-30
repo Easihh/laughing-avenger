@@ -62,12 +62,7 @@ public class Map {
 				reader.next();
 		}
 		reader.close();
-		Sound.overWorldMusic.start();
-		int length_In_Seconds=(int)Math.ceil(Sound.overWorldMusic.getMicrosecondLength()/1000000.0);
-		int framePerSeconds=Sound.overWorldMusic.getFrameLength()/length_In_Seconds;
-		int loopStart=framePerSeconds*44;// loop at the 44th seconds.
-		Sound.overWorldMusic.setLoopPoints(loopStart, -1);
-		Sound.overWorldMusic.loop(Clip.LOOP_CONTINUOUSLY);
+		Sound.setOverWorldMusic();
 	}
 	private void loadObjectLayer(XMLStreamReader reader) throws XMLStreamException {
 		coordX=coordY=0;
@@ -98,7 +93,7 @@ public class Map {
 		case "5":	//teleport marker
 					allObject[coordX][coordY]=new TeleportMarker(coordX*tileSize,coordY*tileSize,Tile.ID.TeleportMarker);
 					break;			
-		case "6": 	allObject[coordX][coordY]=new BlueCandlePickUp(coordX*tileSize,coordY*tileSize,Monster.ID.BlueCandle);
+		case "6": 	allObject[coordX][coordY]=new BlueCandlePickUp(coordX*tileSize,coordY*tileSize,Item.ID.BlueCandle);
 					break;
 		
 		case "7":	allObject[coordX][coordY]=new RedOctorok(coordX*tileSize,coordY*tileSize,Monster.ID.RedOctorok);

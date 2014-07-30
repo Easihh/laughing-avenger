@@ -3,9 +3,7 @@ package drawing;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -19,7 +17,6 @@ public class Mainbar extends JPanel{
 	private Hero hero;
 	private BufferedImage itemslot,keyicon,rupeesicon,bombicon;
 	public Mainbar(){
-		//setBackground(Color.black);
 		setPreferredSize(new Dimension(512,96));
 		hero=Hero.getInstance();
 		loadImage();

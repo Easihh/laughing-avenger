@@ -18,7 +18,7 @@ public class Hero {
 	public Movement movement;
 	public Image obtainItem;
 	public Attack attack=new Attack();
-	public boolean canAttack,isAttacking;
+	public boolean canAttack,isAttacking,isInsideShop;
 	Image attack_img=null;
 	public Inventory inventory;
 	public Item[][] inventory_items;
@@ -33,7 +33,7 @@ public class Hero {
 		mainWeapon=0;//no weapon
 		inventory_items=new Item[inventoryRow][inventoryCol];
 		canAttack=true;
-		isAttacking=false;
+		isAttacking=isInsideShop=false;
 		dir=Direction.Down;
 		movement=new Movement("Link_Movement",100);
 	}

@@ -1,3 +1,11 @@
+Version 0.03:
+
+-All Shop item are destroyed once player choose an Item.
+-"Shop" Item can now respawn once player leave the room.
+-All Effects such as Candle Flame are now destroyed upon leaving shop.
+-Item are no longer considered Monster.
+-Corrected an issue with Player current room vision being incorrect upon leaving a shop.
+
 Version 0.02:
 
 -Enemies that are pushed back by sword attack can no longer become unaligned with Tile.
@@ -14,5 +22,5 @@ Version 0.01:
 -Enemy Red Octorok has been added.
 -Enemies can be slain if hit.
 -Map are Tiled/Drawn with two layers(Tiles & object/monster).
--Enemies are pushed back when hit by sword attack.
+-Enemies are pushed/change color when hit by sword attack.
 -Player Main weapon/offhand weapon are displayed on the main bar aswell as rupee,bomb,key amounts.

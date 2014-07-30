@@ -67,7 +67,7 @@ public class Selector {
 				if(hero.inventory_items[i][j]!=null)
 					if(hero.inventory_items[i][j].hasOwnership)
 						if(hero.inventory_items[i][j].mask.intersects(mask)){
-							hero.specialItem=new BlueCandle();
+							hero.specialItem=new BlueCandle(241,98,Item.ID.BlueCandle);
 							break;
 						}
 							//System.out.println(hero.inventory_items[i][j].name+" has been selected.");

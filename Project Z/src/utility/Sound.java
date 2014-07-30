@@ -39,4 +39,13 @@ public class Sound {
 		} catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
 			e.printStackTrace();}
 	}
+	public static void setOverWorldMusic() {
+		Sound.overWorldMusic.setFramePosition(0);
+		Sound.overWorldMusic.start();
+		int length_In_Seconds=(int)Math.ceil(Sound.overWorldMusic.getMicrosecondLength()/1000000.0);
+		int framePerSeconds=Sound.overWorldMusic.getFrameLength()/length_In_Seconds;
+		int loopStart=framePerSeconds*44;// loop at the 44th seconds.
+		Sound.overWorldMusic.setLoopPoints(loopStart, -1);
+		Sound.overWorldMusic.loop(Clip.LOOP_CONTINUOUSLY);
+	}
 }

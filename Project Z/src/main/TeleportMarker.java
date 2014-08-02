@@ -44,10 +44,8 @@ public class TeleportMarker extends Tile{
 	private void destroyEffects(Hero hero) {
 		if(hero.specialItem!=null && hero.specialItem.type==Item.ID.BlueCandle)
 			((BlueCandle)hero.specialItem).timer=null;
-		if(hero.attack.theSword==null){
-			hero.attack.theSword=null;
-			hero.attack.sEffect=null;
-		}
+		hero.attack.theSword=null;
+		hero.attack.sEffect=null;
 	}
 	private void destroyAllShopItem() {
 		Map map=Map.getInstance();

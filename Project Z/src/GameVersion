@@ -1,3 +1,8 @@
+Version 0.04A:
+
+-Fixed an issue where sword effect were not removed upon leaving shop.
+-Main class has been redesigned.
+
 Version 0.04:
 
 -Hero is now pushed back once hit by enemies.

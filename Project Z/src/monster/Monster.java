@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import main.Attack;
 import main.Hero;
 import main.Hero.Direction;
 import main.Map;
@@ -31,7 +30,6 @@ public abstract class Monster extends Tile{
 			this.value=value;
 		}
 	}
-	//public enum Direction{None,Left,Right,Up,Down};
 	public Direction dir,pushbackdir;
 	public Monster(int x,int y,Monster.ID type){
 		super(x,y,type);
@@ -94,8 +92,6 @@ public abstract class Monster extends Tile{
 	private void pushback() {
 		pushbackdir=Hero.getInstance().dir;
 		stepToPush=96;
-		//System.out.println(dir);
-		//System.out.println("StepTomove:"+stepToMove);
 	}
 	public void destroy(int destroyID) {
 		mask=new Rectangle(x,y,0,0);

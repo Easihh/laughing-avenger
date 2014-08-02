@@ -1,5 +1,6 @@
 package main;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -47,20 +48,21 @@ public class Hero {
 	}
 	
 	public void render(Graphics g){
+		Graphics2D s=(Graphics2D) g;
 		if(specialItem!=null)
 			specialItem.render(g);
 		if(!isAttacking && obtainItem==null){
 			if(invincible_timer==null)
-				g.drawImage(movement.getWalkAnimation(dir).getImage(),x,y,null);
+				s.drawImage(movement.getWalkAnimation(dir).getImage(),x,y,null);
 			else if(invincible_timer!=null && invincible_timer.elapsedMillis()<invincible_duration/2)
-				g.drawImage(movementHit1.getWalkAnimation(dir).getImage(),x,y,null);
+				s.drawImage(movementHit1.getWalkAnimation(dir).getImage(),x,y,null);
 			else if(invincible_timer!=null && invincible_timer.elapsedMillis()>=invincible_duration/2)
-				g.drawImage(movementHit2.getWalkAnimation(dir).getImage(),x,y,null);
+				s.drawImage(movementHit2.getWalkAnimation(dir).getImage(),x,y,null);
 		}
 		if(isAttacking && obtainItem==null)
-			g.drawImage(attack_img,x,y,null);
+			s.drawImage(attack_img,x,y,null);
 		if(obtainItem!=null)
-			g.drawImage(obtainItem,x,y,null);
+			s.drawImage(obtainItem,x,y,null);
 		attack.render(g);
 	}
 	

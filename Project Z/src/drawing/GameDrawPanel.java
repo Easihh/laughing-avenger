@@ -3,6 +3,7 @@ package drawing;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
@@ -34,18 +35,19 @@ public class GameDrawPanel extends JPanel {
 	}
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
+		Graphics2D x=(Graphics2D) g;
 		checkBoundary();
 		tryTranslate();
 		if(worldTranslateX!=0 || worldTranslateY!=0)
-			g.translate(worldTranslateX, worldTranslateY);
-		map.render(g);
+			x.translate(worldTranslateX, worldTranslateY);
+		map.render(x);
 		if(hero.isInsideShop==Shop.ID.CandleShop.value){
 			rupee.setImage();
-			g.setColor(Color.white);
-			g.drawString("X",map.worldX*map.roomWidth+160,map.worldY*map.roomHeight+340);
-			g.drawImage(rupee.getImage(),map.worldX*map.roomWidth+128,map.worldY*map.roomHeight+320,null);
+			x.setColor(Color.white);
+			x.drawString("X",map.worldX*map.roomWidth+160,map.worldY*map.roomHeight+340);
+			x.drawImage(rupee.getImage(),map.worldX*map.roomWidth+128,map.worldY*map.roomHeight+320,null);
 		}
-		hero.render(g);
+		hero.render(x);
 	}
 	private void checkBoundary() {
 		switch(hero.isOutsideRoomBoundary()){

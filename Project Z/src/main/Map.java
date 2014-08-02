@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.io.InputStream;
 import java.util.Vector;
 
@@ -36,59 +37,9 @@ public class Map {
 		try {loadOverworld();
 		allShop.add(new Shop(Shop.ID.CandleShop,0,0));
 		allShop.add(new Shop(Shop.ID.WoodSwordShop,0,0));
-			//loadShop(Shop.ID.CandleShop);
-			//loadShop(Shop.ID.WoodSwordShop);
 		} catch (XMLStreamException e) {
 			e.printStackTrace();}
 	}
-/*	private void loadShop(ID shopID) throws XMLStreamException {
-		coordX=coordY=0;
-		Shop aShop=new Shop(shopID);
-		XMLInputFactory inputFactory= XMLInputFactory.newFactory();
-		InputStream fileReader= this.getClass().getResourceAsStream("/Map/Shop"+shopID.value+".tmx");
-		XMLStreamReader reader;
-		reader = inputFactory.createXMLStreamReader(fileReader);
-		while(reader.hasNext()){
-			int eventType=reader.getEventType();
-			switch (eventType){
-			case XMLStreamConstants.START_ELEMENT:
-				String elementName= reader.getLocalName();
-				if(elementName.equals("tile")){
-						createShop(reader.getAttributeValue(0),aShop);
-						if(coordX==tilePerRow-1){
-							coordX=0;
-							coordY += 1;
-						}
-						else coordX+=1;
-				}
-			}
-			reader.next();
-		}
-		reader.close();
-		allShop.add(aShop);
-	}
-	private void createShop(String attributeValue, Shop aShop) {
-		switch(attributeValue){
-		case "0":   aShop.theRoom[coordX][coordY]=new Tile(coordX*tileSize,coordY*tileSize,Tile.ID.Background);
-					break;
-		case "4": 	aShop.theRoom[coordX][coordY]=new Tile(coordX*tileSize, coordY*tileSize, Tile.ID.Type1BrownBlock);
-					break;
-		case "5":	//teleport marker
-					aShop.theRoom[coordX][coordY]=new TeleportMarker(coordX*tileSize,coordY*tileSize,Tile.ID.TeleportMarker);
-					break;	
-		case "6": 	aShop.theRoom[coordX][coordY]=new BlueCandlePickUp(coordX*tileSize,coordY*tileSize,Item.ID.BlueCandle);
-					break;
-		case "8":	aShop.theRoom[coordX][coordY]=new Fire(coordX*tileSize,coordY*tileSize,Monster.ID.Fire);
-					break;
-		case "9":	aShop.theRoom[coordX][coordY]=new WoodSwordPickUp(coordX*tileSize,coordY*tileSize,Item.ID.WoodSword);
-					break;
-		case "10":	aShop.theRoom[coordX][coordY]=new Merchant(coordX*tileSize,coordY*tileSize,Monster.ID.Merchant);
-					break;				
-		}
-		aShop.theRoom[coordX][coordY].x+=worldX*roomWidth;
-		aShop.theRoom[coordX][coordY].y+=worldY*roomHeight;
-	}
-	*/
 	private void loadOverworld() throws XMLStreamException {
 		XMLInputFactory inputFactory= XMLInputFactory.newFactory();
 		InputStream fileReader= this.getClass().getResourceAsStream("/Map/Overworld.tmx");
@@ -188,36 +139,39 @@ public class Map {
 		return worldY*(roomWidth);
 	}
 	public void render(Graphics g){
+		Graphics2D x=(Graphics2D) g;
 		if(Hero.getInstance().isInsideShop!=Shop.ID.None.value)
-			allShop.get(Hero.getInstance().isInsideShop-1).render(g);
+			allShop.get(Hero.getInstance().isInsideShop-1).render(x);
 		if(Hero.getInstance().isInsideShop==Shop.ID.None.value)
-			drawCurrentRoom(g);
+			drawCurrentRoom(x);
 		if(Hero.getInstance().isInsideShop==Shop.ID.None.value)
-			drawOneRoomAhead(g);
+			drawOneRoomAhead(x);
 	}
 	private void drawCurrentRoom(Graphics g) {
+		Graphics2D x=(Graphics2D) g;
 		for(int i=worldX*tilePerRow;i<worldX*tilePerRow+tilePerRow;i++){
 			for(int j=worldY*tilePerCol;j<worldY*tilePerCol+tilePerCol;j++){
 				if(map[i][j]!=null)
-					map[i][j].render(g);
+					map[i][j].render(x);
 			}
 		}
 		//Render Monster/Object Layer
 		for(int i=worldX*tilePerRow;i<worldX*tilePerRow+tilePerRow;i++){
 			for(int j=worldY*tilePerCol;j<worldY*tilePerCol+tilePerCol;j++){
 				if(allObject[i][j]!=null)
-					allObject[i][j].render(g);
+					allObject[i][j].render(x);
 			}
 		}	
 	}
 	private void drawOneRoomAhead(Graphics g) {
+		Graphics2D x=(Graphics2D) g;
 		//Render Right,Left,Up,Down room(if possible) from current room so that room is already drawn during transition to next room.
 		//Render Right Tile Layer
 		if((worldX+1)*tilePerRow<worldWidth){
 				for(int i=(worldX+1)*tilePerRow;i<(worldX+1)*tilePerRow+tilePerRow;i++)
 					for(int j=worldY*tilePerCol;j<worldY*tilePerCol+tilePerCol;j++){
 						if(map[i][j]!=null)
-							map[i][j].render(g);
+							map[i][j].render(x);
 					}
 		}
 		//Render Right Object Layer
@@ -225,7 +179,7 @@ public class Map {
 			for(int i=(worldX+1)*tilePerRow;i<(worldX+1)*tilePerRow+tilePerRow;i++)
 				for(int j=worldY*tilePerCol;j<worldY*tilePerCol+tilePerCol;j++){
 					if(allObject[i][j]!=null)
-						allObject[i][j].render(g);
+						allObject[i][j].render(x);
 				}
 		}
 		//Render Left Tile Layer
@@ -233,7 +187,7 @@ public class Map {
 				for(int i=(worldX-1)*tilePerRow;i<(worldX-1)*tilePerRow+tilePerRow;i++){
 					for(int j=worldY*tilePerCol;j<worldY*tilePerCol+tilePerCol;j++){
 						if(map[i][j]!=null)
-							map[i][j].render(g);
+							map[i][j].render(x);
 					}
 				}
 			}
@@ -242,7 +196,7 @@ public class Map {
 			for(int i=(worldX-1)*tilePerRow;i<(worldX-1)*tilePerRow+tilePerRow;i++){
 				for(int j=worldY*tilePerCol;j<worldY*tilePerCol+tilePerCol;j++){
 					if(allObject[i][j]!=null)
-						allObject[i][j].render(g);
+						allObject[i][j].render(x);
 				}
 			}
 		}
@@ -251,7 +205,7 @@ public class Map {
 				for(int i=worldX*tilePerRow;i<worldX*tilePerRow+tilePerRow;i++){
 					for(int j=(worldY+1)*tilePerCol;j<(worldY+1)*tilePerCol+tilePerCol;j++){
 						if(map[i][j]!=null)
-							map[i][j].render(g);
+							map[i][j].render(x);
 					}
 				}
 			}
@@ -260,7 +214,7 @@ public class Map {
 			for(int i=worldX*tilePerRow;i<worldX*tilePerRow+tilePerRow;i++){
 				for(int j=(worldY+1)*tilePerCol;j<(worldY+1)*tilePerCol+tilePerCol;j++){
 					if(Map.allObject[i][j]!=null)
-						Map.allObject[i][j].render(g);
+						Map.allObject[i][j].render(x);
 				}
 			}
 		}
@@ -269,7 +223,7 @@ public class Map {
 				for(int i=worldX*tilePerRow;i<worldX*tilePerRow+tilePerRow;i++){
 					for(int j=(worldY-1)*tilePerCol;j<(worldY-1)*tilePerCol+tilePerCol;j++){
 						if(map[i][j]!=null)
-							map[i][j].render(g);
+							map[i][j].render(x);
 					}
 				}
 			}
@@ -278,7 +232,7 @@ public class Map {
 			for(int i=worldX*tilePerRow;i<worldX*tilePerRow+tilePerRow;i++){
 				for(int j=(worldY-1)*tilePerCol;j<(worldY-1)*tilePerCol+tilePerCol;j++){
 					if(Map.allObject[i][j]!=null)
-						Map.allObject[i][j].render(g);
+						Map.allObject[i][j].render(x);
 				}
 			}
 		}

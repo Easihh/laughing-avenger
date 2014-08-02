@@ -1,7 +1,6 @@
 package main;
 import java.awt.Dimension;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import utility.Input;
 import utility.Ressource;
@@ -10,66 +9,57 @@ import drawing.DrawPanel;
 
 import java.awt.Color;
 
-public class Main extends JFrame{
-	private static final long serialVersionUID = 4648172894076113183L;
-	private final int screenWidth=512;
-	private final int screenHeight=608;
+public class Main implements Runnable{
+	private final int screenWidth=512,screenHeight=608;
 	public static DrawPanel drawPane;
-	public static Main frame;
 	public enum GameState{Normal,Paused,Menu};
 	public static GameState gameStatus=GameState.Normal;
+	private Thread thread;
+	public static JFrame frame;
+	private Stopwatch watch,fpsWatcher;
+	private int fps_wanted=60,fps=0;
+	private long refresh_delay=1000/fps_wanted;
+	
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frame = new Main();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		new Main().start();
 	}
-	public Main(){
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(false);
+	private void start() {
+		watch=new Stopwatch();
+		fpsWatcher=new Stopwatch();
+		frame=new JFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
 		new Ressource();
 		drawPane = new DrawPanel();
 		drawPane.setBackground(Color.BLACK);
 		drawPane.setPreferredSize(new Dimension(screenWidth,screenHeight));
-		setContentPane(drawPane);
-		setJMenuBar(new Menu());
-		pack();
+		frame.setContentPane(drawPane);
+		frame.setJMenuBar(new Menu());
+		frame.pack();
+		frame.setVisible(true);
 		drawPane.addKeyListener(new Input());
-		start();
+		thread=new Thread(this);
+		thread.start();
 	}
-	private void start() {
-		new Thread(){
-			Stopwatch watch=new Stopwatch();
-			Stopwatch fpsWatcher=new Stopwatch();
-			int fps_wanted=60;
-			long refresh_delay=1000/fps_wanted;
-			int fps=0;
-			public void run(){
-				watch.start();
-				fpsWatcher.start();
-				while(true){
-				if((watch.elapsedMillis())>=refresh_delay){
-					fps++;
-						if(gameStatus==GameState.Normal){
-							Hero.getInstance().update();
-							Map.getInstance().update();
-						}
-						repaint();
-						watch.reset();
+	@Override
+	public void run() {
+		watch.start();
+		fpsWatcher.start();
+		while(true){
+		if((watch.elapsedMillis())>=refresh_delay){
+			fps++;
+				if(gameStatus==GameState.Normal){
+					Hero.getInstance().update();
+					Map.getInstance().update();
 				}
-				if((fpsWatcher.elapsedMillis())>=1000){
-					setTitle("Project:Z FPS:"+fps);
-					fps=0;
-					fpsWatcher.reset();
-				}
-			}
+				frame.repaint();
+				watch.reset();
 		}
-	}.start();
+		if((fpsWatcher.elapsedMillis())>=1000){
+			frame.setTitle("Project:Z FPS:"+fps);
+			fps=0;
+			fpsWatcher.reset();
+		}
+	}
 	}
 }

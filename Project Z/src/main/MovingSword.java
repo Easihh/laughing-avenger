@@ -92,29 +92,29 @@ public class MovingSword {
 		switch(dir){
 		case Left:	if(!checkCollision(new Rectangle(x,y,32,16)))
 						x-=speed;
-					else{	Attack.theSword=null;
-							Attack.createSwordEffect(collision_point);
+					else{	Hero.getInstance().attack.theSword=null;
+							Hero.getInstance().attack.createSwordEffect(collision_point);
 						}
 					sword_left.setImage();
 					break;
 		case Right:	if(!checkCollision(new Rectangle(x,y,32,16)))
 						x+=speed;
-					else{	Attack.theSword=null;
-							Attack.createSwordEffect(collision_point);
+					else{	Hero.getInstance().attack.theSword=null;
+							Hero.getInstance().attack.createSwordEffect(collision_point);
 						}
 					sword_right.setImage();
 					break;
 		case Up:	if(!checkCollision(new Rectangle(x,y,16,32)))
 						y-=speed;
-					else{	Attack.theSword=null;
-							Attack.createSwordEffect(collision_point);
+					else{	Hero.getInstance().attack.theSword=null;
+							Hero.getInstance().attack.createSwordEffect(collision_point);
 						}
 					sword_up.setImage();
 					break;
 		case Down:	if(!checkCollision(new Rectangle(x,y,16,32)))
 						y+=speed;
-					else{	Attack.theSword=null;
-							Attack.createSwordEffect(collision_point);
+					else{	Hero.getInstance().attack.theSword=null;
+							Hero.getInstance().attack.createSwordEffect(collision_point);
 						}
 					sword_down.setImage();
 					break;
@@ -125,35 +125,51 @@ public class MovingSword {
 	private void checkBound() {
 		Map map=Map.getInstance();
 		if(dir==Direction.Right && x>(map.getWorldXcoord()+map.roomWidth)){
-			Attack.theSword=null;
-			Attack.createSwordEffect(new Point(x,y));
+			Hero.getInstance().attack.theSword=null;
+			Hero.getInstance().attack.createSwordEffect(new Point(x,y));
 		}
 		if(dir==Direction.Left && x<(map.getWorldXcoord())){
-			Attack.theSword=null;
-			Attack.createSwordEffect(new Point(x,y));
+			Hero.getInstance().attack.theSword=null;
+			Hero.getInstance().attack.createSwordEffect(new Point(x,y));
 		}
 		if(dir==Direction.Up && y<(map.getWorldYcoord())){
-			Attack.theSword=null;
-			Attack.createSwordEffect(new Point(x,y));
+			Hero.getInstance().attack.theSword=null;
+			Hero.getInstance().attack.createSwordEffect(new Point(x,y));
 		}
 		if(dir==Direction.Down && y>(map.getWorldYcoord()+map.roomHeight)){
-			Attack.theSword=null;
-			Attack.createSwordEffect(new Point(x,y));
+			Hero.getInstance().attack.theSword=null;
+			Hero.getInstance().attack.createSwordEffect(new Point(x,y));
 		}
 	}
 	private boolean checkCollision(Rectangle mask){
 		Map map=Map.getInstance();
 		for(int i=map.worldX*map.tilePerRow;i<map.worldX*map.tilePerRow+map.tilePerRow;i++){
 			for(int j=map.worldY*map.tilePerCol;j<map.worldY*map.tilePerCol+map.tilePerCol;j++){
-				if(Map.allObject[i][j]!=null){
-					if(Map.allObject[i][j].mask.intersects(mask))				
-						if(Map.allObject[i][j].isSolid){
-							collision_point=new Point(x,y);
-							return true;
-						}
+				if(Hero.getInstance().isInsideShop==Shop.ID.None.value){
+					if(Map.allObject[i][j]!=null){
+						if(Map.allObject[i][j].mask.intersects(mask))				
+							if(Map.allObject[i][j].isSolid){
+								collision_point=new Point(x,y);
+								return true;
+							}
 					}
 				}
 			}
+		}
+		if(Hero.getInstance().isInsideShop!=Shop.ID.None.value){
+			Tile[][] theRoom=Map.allShop.get(Hero.getInstance().isInsideShop-1).theRoom;
+			for(int i=0;i<16;i++){
+				for(int j=0;j<16;j++){
+					if(theRoom[i][j]!=null){
+						if(theRoom[i][j].mask.intersects(mask))				
+							if(theRoom[i][j].isSolid){
+								collision_point=new Point(x,y);
+								return true;
+							}
+						}
+				}
+			}
+		}
 		return false;
 	}
 }

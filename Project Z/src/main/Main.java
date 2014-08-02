@@ -33,11 +33,12 @@ public class Main extends JFrame{
 	public Main(){
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
-		new Ressource();		
+		new Ressource();
 		drawPane = new DrawPanel();
 		drawPane.setBackground(Color.BLACK);
 		drawPane.setPreferredSize(new Dimension(screenWidth,screenHeight));
 		setContentPane(drawPane);
+		setJMenuBar(new Menu());
 		pack();
 		drawPane.addKeyListener(new Input());
 		start();

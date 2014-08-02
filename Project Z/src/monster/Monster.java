@@ -25,7 +25,7 @@ public abstract class Monster extends Tile{
 	public Stopwatch invincible_timer,death;
 	protected static int id=0;
 	public final int invincible_duration=500,width=32,height=32,step=16,pushbackSpeed=4;
-	public enum ID{ BlueCandle(0),RedOctorok(1),Fire(2),WoodSword(3);
+	public enum ID{ RedOctorok(1),Fire(2),WoodSword(3),Merchant(4);
 		public int value;
 		private ID(int value){
 			this.value=value;
@@ -52,7 +52,6 @@ public abstract class Monster extends Tile{
 	}
 	private boolean setSolidState() {
 		switch(type){
-		case BlueCandle:
 		case RedOctorok:
 		case WoodSword:
 			return false;
@@ -64,7 +63,7 @@ public abstract class Monster extends Tile{
 	public void checkHeroSwordCollision() {
 		Hero hero=Hero.getInstance();
 		if((hero.attack.mySword!=null && invincible_timer==null && hero.attack.mySword.mask.intersects(mask)) ||
-				Attack.theSword!=null && invincible_timer==null && Attack.theSword.mask.intersects(mask)){	
+				hero.attack.theSword!=null && invincible_timer==null && hero.attack.theSword.mask.intersects(mask)){	
 			invincible_timer=new Stopwatch();
 			invincible_timer.start();
 			Sound.enemyHit.setFramePosition(0);
@@ -79,6 +78,18 @@ public abstract class Monster extends Tile{
 				death.start();
 			}
 		}
+	}
+	public void checkHeroCollision(){
+		Hero hero=Hero.getInstance();
+		int pushDistance=64;
+		if(mask.intersects(new Rectangle(hero.x,hero.y,32,32)) && hero.invincible_timer==null){
+			hero.invincible_timer=new Stopwatch();
+			hero.invincible_timer.start();
+			Sound.linkHurt.setFramePosition(0);
+			Sound.linkHurt.start();
+			hero.beingPushed(pushDistance);
+		}
+			
 	}
 	private void pushback() {
 		pushbackdir=Hero.getInstance().dir;

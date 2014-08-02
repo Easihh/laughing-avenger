@@ -1,3 +1,14 @@
+Version 0.04:
+
+-Hero is now pushed back once hit by enemies.
+-Hero now cannot be pushed back outside of screen boundary or become unaligned with tile when getting pushed.
+-Hero change color temporarely when hit.
+-Shop/Secret room are now separated from the world map and have their own files.
+-Shop/Secret room are now dynamic and can have their content changed easily.
+-Player no longer teleport to somewhere else on the world map when entering shop; instead 
+the tiles around the player change.
+-Shop item now have a price.
+
 Version 0.03:
 
 -All Shop item are destroyed once player choose an Item.

@@ -40,12 +40,12 @@ public class Mainbar extends JPanel{
 		g.drawString("Y:"+hero.y,100,72);
 		drawWeaponSlots(g);
 		g.setColor(Color.white);
-		g.drawImage(rupeesicon,194,18,null);
-		g.drawImage(keyicon,192,38,null);
-		g.drawImage(bombicon,192,58,null);
-		g.drawString("X"+hero.key_amount,216,52);
-		g.drawString("X"+hero.bomb_amount,216,72);
-		g.drawString("X"+hero.rupee_amount,216,32);
+		g.drawImage(rupeesicon,186,18,null);
+		g.drawImage(keyicon,186,38,null);
+		g.drawImage(bombicon,186,58,null);
+		g.drawString("X"+hero.key_amount,208,52);
+		g.drawString("X"+hero.bomb_amount,208,72);
+		g.drawString("X"+hero.rupee_amount,208,32);
 	}
 	private void drawWeaponSlots(Graphics g) {
 		if(hero.mainWeapon>0)

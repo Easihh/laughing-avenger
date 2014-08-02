@@ -6,13 +6,18 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+import utility.Ressource;
+
+import main.Animation;
 import main.Hero;
 import main.Map;
+import main.Shop;
 
 public class GameDrawPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private Hero hero;
 	private Map map;
+	private Animation rupee;
 	public static int worldTranslateX,worldTranslateY;
 	public GameDrawPanel(){
 		setPreferredSize(new Dimension(512,512));
@@ -20,6 +25,12 @@ public class GameDrawPanel extends JPanel {
 		setBackground(Color.CYAN);
 		map=Map.getInstance();
 		hero=Hero.getInstance();
+		setRupeeAnimation();
+	}
+	private void setRupeeAnimation() {
+		rupee=new Animation();
+		rupee.AddScene(Ressource.rupee.elementAt(0), 200);
+		rupee.AddScene(Ressource.rupee.elementAt(1), 200);
 	}
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
@@ -28,6 +39,12 @@ public class GameDrawPanel extends JPanel {
 		if(worldTranslateX!=0 || worldTranslateY!=0)
 			g.translate(worldTranslateX, worldTranslateY);
 		map.render(g);
+		if(hero.isInsideShop==Shop.ID.CandleShop.value){
+			rupee.setImage();
+			g.setColor(Color.white);
+			g.drawString("X",map.worldX*map.roomWidth+160,map.worldY*map.roomHeight+340);
+			g.drawImage(rupee.getImage(),map.worldX*map.roomWidth+128,map.worldY*map.roomHeight+320,null);
+		}
 		hero.render(g);
 	}
 	private void checkBoundary() {

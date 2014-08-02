@@ -1,14 +1,16 @@
 package main;
+
 import java.awt.Graphics;
 import java.io.InputStream;
+import java.util.Vector;
 
-import javax.sound.sampled.Clip;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import monster.BlueCandlePickUp;
+import monster.Merchant;
 import monster.Monster;
 import monster.RedOctorok;
 import monster.WoodSwordPickUp;
@@ -17,7 +19,7 @@ import utility.Sound;
 
 
 public class Map {
-	public final int worldWidth=48,worldHeight=32; //in term of 32x32 tile
+	public final int worldWidth=32,worldHeight=32; //in term of 32x32 tile
 	Tile[][] map;
 	int room,coordX,coordY;
 	private static Map themap;
@@ -25,13 +27,68 @@ public class Map {
 	public final int roomWidth=512,roomHeight=512,tilePerRow=16,tilePerCol=16;
 	public int worldX,worldY;
 	public static Tile[][] allObject;
+	public static Vector<Shop> allShop;
 	public Map(){
 		allObject=new Tile[worldWidth][worldHeight];
+		allShop=new Vector<Shop>();
 		room=coordX=coordY=0;
 		map=new Tile[worldWidth][worldHeight];
-		try {loadOverworld();} catch (XMLStreamException e) {
+		try {loadOverworld();
+		allShop.add(new Shop(Shop.ID.CandleShop,0,0));
+		allShop.add(new Shop(Shop.ID.WoodSwordShop,0,0));
+			//loadShop(Shop.ID.CandleShop);
+			//loadShop(Shop.ID.WoodSwordShop);
+		} catch (XMLStreamException e) {
 			e.printStackTrace();}
 	}
+/*	private void loadShop(ID shopID) throws XMLStreamException {
+		coordX=coordY=0;
+		Shop aShop=new Shop(shopID);
+		XMLInputFactory inputFactory= XMLInputFactory.newFactory();
+		InputStream fileReader= this.getClass().getResourceAsStream("/Map/Shop"+shopID.value+".tmx");
+		XMLStreamReader reader;
+		reader = inputFactory.createXMLStreamReader(fileReader);
+		while(reader.hasNext()){
+			int eventType=reader.getEventType();
+			switch (eventType){
+			case XMLStreamConstants.START_ELEMENT:
+				String elementName= reader.getLocalName();
+				if(elementName.equals("tile")){
+						createShop(reader.getAttributeValue(0),aShop);
+						if(coordX==tilePerRow-1){
+							coordX=0;
+							coordY += 1;
+						}
+						else coordX+=1;
+				}
+			}
+			reader.next();
+		}
+		reader.close();
+		allShop.add(aShop);
+	}
+	private void createShop(String attributeValue, Shop aShop) {
+		switch(attributeValue){
+		case "0":   aShop.theRoom[coordX][coordY]=new Tile(coordX*tileSize,coordY*tileSize,Tile.ID.Background);
+					break;
+		case "4": 	aShop.theRoom[coordX][coordY]=new Tile(coordX*tileSize, coordY*tileSize, Tile.ID.Type1BrownBlock);
+					break;
+		case "5":	//teleport marker
+					aShop.theRoom[coordX][coordY]=new TeleportMarker(coordX*tileSize,coordY*tileSize,Tile.ID.TeleportMarker);
+					break;	
+		case "6": 	aShop.theRoom[coordX][coordY]=new BlueCandlePickUp(coordX*tileSize,coordY*tileSize,Item.ID.BlueCandle);
+					break;
+		case "8":	aShop.theRoom[coordX][coordY]=new Fire(coordX*tileSize,coordY*tileSize,Monster.ID.Fire);
+					break;
+		case "9":	aShop.theRoom[coordX][coordY]=new WoodSwordPickUp(coordX*tileSize,coordY*tileSize,Item.ID.WoodSword);
+					break;
+		case "10":	aShop.theRoom[coordX][coordY]=new Merchant(coordX*tileSize,coordY*tileSize,Monster.ID.Merchant);
+					break;				
+		}
+		aShop.theRoom[coordX][coordY].x+=worldX*roomWidth;
+		aShop.theRoom[coordX][coordY].y+=worldY*roomHeight;
+	}
+	*/
 	private void loadOverworld() throws XMLStreamException {
 		XMLInputFactory inputFactory= XMLInputFactory.newFactory();
 		InputStream fileReader= this.getClass().getResourceAsStream("/Map/Overworld.tmx");
@@ -100,8 +157,10 @@ public class Map {
 					break;
 		case "8":	allObject[coordX][coordY]=new Fire(coordX*tileSize,coordY*tileSize,Monster.ID.Fire);
 					break;
-		case "9":	allObject[coordX][coordY]=new WoodSwordPickUp(coordX*tileSize,coordY*tileSize,Monster.ID.WoodSword);
-					break;			
+		case "9":	allObject[coordX][coordY]=new WoodSwordPickUp(coordX*tileSize,coordY*tileSize,Item.ID.WoodSword);
+					break;
+		case "10":	allObject[coordX][coordY]=new Merchant(coordX*tileSize,coordY*tileSize,Monster.ID.Merchant);
+					break;				
 		}
 		
 	}
@@ -129,7 +188,14 @@ public class Map {
 		return worldY*(roomWidth);
 	}
 	public void render(Graphics g){
-		//Render Current Room
+		if(Hero.getInstance().isInsideShop!=Shop.ID.None.value)
+			allShop.get(Hero.getInstance().isInsideShop-1).render(g);
+		if(Hero.getInstance().isInsideShop==Shop.ID.None.value)
+			drawCurrentRoom(g);
+		if(Hero.getInstance().isInsideShop==Shop.ID.None.value)
+			drawOneRoomAhead(g);
+	}
+	private void drawCurrentRoom(Graphics g) {
 		for(int i=worldX*tilePerRow;i<worldX*tilePerRow+tilePerRow;i++){
 			for(int j=worldY*tilePerCol;j<worldY*tilePerCol+tilePerCol;j++){
 				if(map[i][j]!=null)
@@ -142,8 +208,7 @@ public class Map {
 				if(allObject[i][j]!=null)
 					allObject[i][j].render(g);
 			}
-		}
-		drawOneRoomAhead(g);
+		}	
 	}
 	private void drawOneRoomAhead(Graphics g) {
 		//Render Right,Left,Up,Down room(if possible) from current room so that room is already drawn during transition to next room.
@@ -220,11 +285,21 @@ public class Map {
 	}
 	public void update() {
 		//update all monster/object action within current map only.
-		for(int i=worldX*tilePerRow;i<worldX*tilePerRow+tilePerRow;i++){
-			for(int j=worldY*tilePerCol;j<worldY*tilePerCol+tilePerCol;j++){
-				if(allObject[i][j]!=null)
-					allObject[i][j].update();
-			}
+			if(Hero.getInstance().isInsideShop==Shop.ID.None.value){
+				for(int i=worldX*tilePerRow;i<worldX*tilePerRow+tilePerRow;i++){
+					for(int j=worldY*tilePerCol;j<worldY*tilePerCol+tilePerCol;j++){
+						if(allObject[i][j]!=null)
+							allObject[i][j].update();
+					}
+				}
+			}	
+				for(int i=0;i<tilePerRow;i++){
+					for(int j=0;j<tilePerCol;j++){
+						if(Hero.getInstance().isInsideShop!=Shop.ID.None.value){
+							if(allShop.get(Hero.getInstance().isInsideShop-1).theRoom[i][j]!=null)
+								allShop.get(Hero.getInstance().isInsideShop-1).theRoom[i][j].update();
+						}
+					}
+				}	
 		}
 	}
-}

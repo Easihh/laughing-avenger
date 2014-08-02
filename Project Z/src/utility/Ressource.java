@@ -11,6 +11,7 @@ public class Ressource {
 	public static Vector<BufferedImage> weaponType;
 	public static BufferedImage obtainItem;
 	public static BufferedImage flashSwordDown,flashSwordUp,flashSwordLeft,flashSwordRight;
+	public static Vector<BufferedImage> rupee;
 	private final int tileSize=32;
 	public Ressource(){
 		try {loadTileset();
@@ -19,8 +20,21 @@ public class Ressource {
 			loadFlashSword();
 			loadSound();
 			loadObtainItemSpriteSheet();
+			loadRupee();
 		} catch (IOException e) {
 		e.printStackTrace();}
+	}
+
+	private void loadRupee() throws IOException {
+		rupee=new Vector<BufferedImage>();
+		BufferedImage img=ImageIO.read(getClass().getResourceAsStream("/Map/rupee.png"));
+		int row=img.getHeight()/tileSize;
+		int col=img.getWidth()/16;
+		for(int i=0;i<row;i++){
+			for(int j=0;j<col;j++){
+				rupee.add(img.getSubimage(j*16, i*tileSize, 16, tileSize));
+			}
+		}
 	}
 
 	private void loadObtainItemSpriteSheet() throws IOException {
@@ -56,6 +70,8 @@ public class Ressource {
 		new Sound("enemyKill");
 		new Sound("newItem");
 		new Sound("newInventItem");
+		new Sound("linkHurt");
+		new Sound("enterShop");
 	}
 
 	private void loadWeaponType() throws IOException {

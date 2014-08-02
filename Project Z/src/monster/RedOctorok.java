@@ -41,6 +41,7 @@ public class RedOctorok extends Monster{
 		if(death==null){
 			updateMask();
 			checkHeroSwordCollision();
+			checkHeroCollision();
 			if(stepToMove==0){
 				if(x%step!=0 || y%step!=0){
 					System.out.println("x:"+x%step);

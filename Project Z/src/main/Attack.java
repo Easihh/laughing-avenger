@@ -10,8 +10,8 @@ import utility.Sound;
 import utility.Stopwatch;
 
 public class Attack {
-	public static MovingSword theSword;
-	private static SwordEffect sEffect;
+	public MovingSword theSword;
+	public SwordEffect sEffect;
 	private static Stopwatch sEffectTimer;
 	public Sword mySword;
 	Stopwatch last_sword,last_moving_sword;
@@ -66,7 +66,7 @@ public class Attack {
 		}
 		
 	}
-	static void createSwordEffect(Point collision_point){
+	public void createSwordEffect(Point collision_point){
 		sEffect=new SwordEffect(collision_point);
 		sEffectTimer=new Stopwatch();
 		sEffectTimer.start();

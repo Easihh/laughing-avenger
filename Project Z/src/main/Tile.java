@@ -9,7 +9,7 @@ import utility.Ressource;
 
 public class Tile {
 	public int x,y;
-	Image img;
+	public Image img;
 	public Rectangle mask;
 	private final int height=32,width=32;
 	enum ID{ Background(0),Sand(1),Tree(2), Type1BrownBlock(3), TeleportMarker(4);
@@ -46,18 +46,7 @@ public class Tile {
 		this.x=x;
 		this.y=y;
 		mask=new Rectangle(x,y,width,height);
-	}
-	private ID getType(int type) {
-		switch(type){
-		case 0: return ID.Background;
-		case 1: return ID.Sand;
-		case 2: return ID.Tree;
-		case 3: return ID.Type1BrownBlock;
-		case 4: return ID.TeleportMarker;
-		}
-		return ID.Background;
-	}
-	
+	}	
 	public void render(Graphics g){
 		g.drawImage(img,x,y,null);
 	}

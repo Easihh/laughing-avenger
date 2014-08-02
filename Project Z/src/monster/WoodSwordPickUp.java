@@ -3,15 +3,19 @@ package monster;
 import java.awt.Graphics;
 
 import main.Hero;
+import main.Item;
 import utility.Ressource;
 import utility.Sound;
 import utility.Stopwatch;
 
-public class WoodSwordPickUp extends Monster{
+public class WoodSwordPickUp extends Item{
 	public Stopwatch pickUpItemTimer;
-	public WoodSwordPickUp(int x, int y, ID type) {
+	public WoodSwordPickUp(int x, int y, Item.ID type) {
 		super(x,y,type);
-		img=Ressource.monster_type.get(type.value);
+		this.x=x;
+		this.y=y;
+		this.type=type;
+		img=Ressource.monster_type.get(3);
 	}
 	public void render(Graphics g) {
 		g.drawImage(img,x,y,null);
@@ -32,8 +36,11 @@ public class WoodSwordPickUp extends Monster{
 		if(pickUpItemTimer!=null)
 			y=Hero.getInstance().y-height;
 		if(pickUpItemTimer!=null && pickUpItemTimer.elapsedMillis()>1000){
-			destroy(myID);
+			removeItemFromShop();
+			removeMerchant();
 			Hero.getInstance().obtainItem=null;
 		}
 	}
+	@Override
+	public void use() {}
 }

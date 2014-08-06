@@ -1,3 +1,9 @@
+Version 0.05:
+
+-Hero health bar is now drawn.
+-Hero health bar is now reduced when hit by enemies.
+-Basic Save/Loading system(player position only) is working.
+
 Version 0.04A:
 
 -Fixed an issue where sword effect were not removed upon leaving shop.

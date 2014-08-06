@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.Clip;
 
 import main.Hero;
 import main.Hero.Direction;
@@ -86,6 +87,12 @@ public abstract class Monster extends Tile{
 			Sound.linkHurt.setFramePosition(0);
 			Sound.linkHurt.start();
 			hero.beingPushed(pushDistance);
+			if(hero.currentHealth>0)
+				hero.currentHealth-=1;
+			if(hero.currentHealth<=2){
+				Sound.lowHealth.setFramePosition(0);
+				Sound.lowHealth.loop(Clip.LOOP_CONTINUOUSLY);
+			}
 		}
 			
 	}

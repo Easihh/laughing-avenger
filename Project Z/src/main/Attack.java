@@ -44,7 +44,7 @@ public class Attack {
 			mySword=new Sword(hero);
 			hero.isAttacking=true;
 			getAttackPose(hero);
-			if(theSword==null && last_moving_sword.elapsedMillis()>1000){
+			if(theSword==null && last_moving_sword.elapsedMillis()>1000 && hero.currentHealth==hero.maxHealth){
 				Sound.swordCombine.setFramePosition(0);
 				Sound.swordCombine.start();
 				last_moving_sword.reset();

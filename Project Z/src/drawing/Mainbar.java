@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import utility.Ressource;
 
 import main.Hero;
+import main.Map;
 
 public class Mainbar extends JPanel{
 	private static final long serialVersionUID = 1L;
@@ -41,7 +42,7 @@ public class Mainbar extends JPanel{
 		x.drawImage(itemslot, 240, 18,null);
 		x.drawImage(itemslot, 300, 18,null);
 		x.drawString("- L I F E -",408,24);
-		drawLife(g);
+		drawLife(x);
 		x.drawString("X:"+hero.x,100,48);
 		x.drawString("Y:"+hero.y,100,72);
 		drawWeaponSlots(x);
@@ -52,9 +53,23 @@ public class Mainbar extends JPanel{
 		x.drawString("X"+hero.key_amount,208,52);
 		x.drawString("X"+hero.bomb_amount,208,72);
 		x.drawString("X"+hero.rupee_amount,208,32);
+		drawMinimap(x);
 	}
-	private void drawLife(Graphics g){
-		Graphics2D x=(Graphics2D) g;
+	private void drawMinimap(Graphics2D x) {
+		Map map=Map.getInstance();
+		x.setColor(Color.GRAY);
+		x.fillRect(32, 16, 128, 64);
+		for(int i=0;i<map.worldWidth/map.tilePerRow;i++)
+			for(int j=0;j<map.worldHeight/map.tilePerCol;j++){
+				x.setColor(new Color(185,122,87));
+				x.drawRect(32+(8*j), 16+(4*i), 8, 4);
+				if(map.worldX==j && map.worldY==i){
+					x.setColor(Color.green);
+					x.fillRect(32+(8*j), 16+(4*i), 8, 4);
+				}
+			}
+	}
+	private void drawLife(Graphics2D x){
 		int maxHeartPerRow=8,currentHeartInRow=0;
 		int startX=368,startY=52,currentX=368,currentY=52;
 			int fullHeartAmt=hero.currentHealth/2;

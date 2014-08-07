@@ -1,3 +1,9 @@
+Version 0.06:
+
+-OverWorld map and how big it is(brown rectangle) , is now shown.
+-Hero position on Overworld map is now shown with a green dot.
+-Hero can no longer shoot his sword if he is below max health.
+
 Version 0.05:
 
 -Hero health bar is now drawn.

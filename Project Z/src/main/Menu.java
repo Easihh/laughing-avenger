@@ -21,7 +21,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.KeyStroke;
 
-import drawing.DrawPanel;
 import drawing.GameDrawPanel;
 
 import java.awt.event.KeyEvent;

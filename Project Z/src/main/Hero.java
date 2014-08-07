@@ -30,8 +30,8 @@ public class Hero {
 	public int key_amount,bomb_amount,rupee_amount,currentHealth,maxHealth;
 	public Hero(){
 		x=y=128;
-		currentHealth=17;
-		maxHealth=28;
+		currentHealth=32;
+		maxHealth=32;
 		key_amount=bomb_amount=rupee_amount=999;
 		mainWeapon=0;//no weapon
 		inventory_items=new Item[inventoryRow][inventoryCol];

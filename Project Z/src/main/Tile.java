@@ -1,4 +1,6 @@
 package main;
+import item.Item;
+
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;

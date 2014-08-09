@@ -1,5 +1,8 @@
 package main;
 
+import item.BlueCandle;
+import item.Item;
+
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.io.IOException;
@@ -67,7 +70,7 @@ public class Selector {
 				if(hero.inventory_items[i][j]!=null)
 					if(hero.inventory_items[i][j].hasOwnership)
 						if(hero.inventory_items[i][j].mask.intersects(mask)){
-							hero.specialItem=new BlueCandle(241,98,Item.ID.BlueCandle);
+							hero.specialItem=hero.inventory_items[i][j];
 							break;
 						}
 							//System.out.println(hero.inventory_items[i][j].name+" has been selected.");

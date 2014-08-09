@@ -1,3 +1,12 @@
+Version 0.07:
+
+-Fixed Inventory Size to match Game Screen when pressing Inventory Button.
+-BlueCandle and BlueCandlePickUp are no longer separate class.
+-Fire from BlueCandle use is now considered an entity and no longer just an animation.
+-Added support future different items selection and uses from inventory selection.
+-Hero can now buy arrow and use arrow.
+-Added Arrows sound.
+
 Version 0.06:
 
 -OverWorld map and how big it is(brown rectangle) , is now shown.

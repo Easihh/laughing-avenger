@@ -3,6 +3,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Vector;
 import javax.imageio.ImageIO;
+
+import utility.Animation;
 import main.Hero.Direction;
 
 public class Movement {

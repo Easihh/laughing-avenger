@@ -1,9 +1,9 @@
-package monster;
+package item;
+
 
 import java.awt.Graphics;
 
 import main.Hero;
-import main.Item;
 import utility.Ressource;
 import utility.Sound;
 import utility.Stopwatch;

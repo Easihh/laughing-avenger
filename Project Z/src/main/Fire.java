@@ -6,10 +6,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import utility.Animation;
+
+import main.Hero.Direction;
 import monster.Monster;
 
 public class Fire extends Monster{
-	Animation fireAnimation;
+	public Animation fireAnimation;
+	Direction fireDir=Direction.None;
 	public Fire(int x, int y, Monster.ID type) {
 		super(x, y, type);
 		buildAnimation();

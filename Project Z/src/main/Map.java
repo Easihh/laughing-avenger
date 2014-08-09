@@ -1,5 +1,9 @@
 package main;
 
+import item.Arrow;
+import item.Item;
+import item.WoodSwordPickUp;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.InputStream;
@@ -10,11 +14,9 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import monster.BlueCandlePickUp;
 import monster.Merchant;
 import monster.Monster;
 import monster.RedOctorok;
-import monster.WoodSwordPickUp;
 
 import utility.Sound;
 
@@ -101,17 +103,17 @@ public class Map {
 		case "5":	//teleport marker
 					allObject[coordX][coordY]=new TeleportMarker(coordX*tileSize,coordY*tileSize,Tile.ID.TeleportMarker);
 					break;			
-		case "6": 	allObject[coordX][coordY]=new BlueCandlePickUp(coordX*tileSize,coordY*tileSize,Item.ID.BlueCandle);
-					break;
+		//case "6": 	allObject[coordX][coordY]=new BlueCandlePickUp(coordX*tileSize,coordY*tileSize,Item.ID.BlueCandle);
+			//		break;
 		
 		case "7":	allObject[coordX][coordY]=new RedOctorok(coordX*tileSize,coordY*tileSize,Monster.ID.RedOctorok);
 					break;
 		case "8":	allObject[coordX][coordY]=new Fire(coordX*tileSize,coordY*tileSize,Monster.ID.Fire);
 					break;
-		case "9":	allObject[coordX][coordY]=new WoodSwordPickUp(coordX*tileSize,coordY*tileSize,Item.ID.WoodSword);
-					break;
-		case "10":	allObject[coordX][coordY]=new Merchant(coordX*tileSize,coordY*tileSize,Monster.ID.Merchant);
-					break;				
+		//case "9":	allObject[coordX][coordY]=new WoodSwordPickUp(coordX*tileSize,coordY*tileSize,Item.ID.WoodSword);
+			//		break;
+		//case "10":	allObject[coordX][coordY]=new Merchant(coordX*tileSize,coordY*tileSize,Monster.ID.Merchant);
+			//		break;			
 		}
 		
 	}

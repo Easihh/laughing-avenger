@@ -73,6 +73,7 @@ public class Ressource {
 		new Sound("linkHurt");
 		new Sound("enterShop");
 		new Sound("lowHealth");
+		new Sound("arrow");
 	}
 
 	private void loadWeaponType() throws IOException {

@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import main.Hero.Direction;
+import utility.Animation;
 import utility.Ressource;
 
 public class MovingSword {

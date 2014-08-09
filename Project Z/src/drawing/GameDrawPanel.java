@@ -7,9 +7,9 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import utility.Animation;
 import utility.Ressource;
 
-import main.Animation;
 import main.Hero;
 import main.Map;
 import main.Shop;

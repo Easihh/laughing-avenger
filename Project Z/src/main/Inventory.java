@@ -17,8 +17,8 @@ public class Inventory extends JPanel{
 		public Inventory(){
 			selector=new Selector();
 			setForeground(Color.WHITE);		
-			setPreferredSize(new Dimension(512,608));
-			setSize(new Dimension(512,608));
+			setPreferredSize(new Dimension(512,640));
+			setSize(new Dimension(512,640));
 			setBackground(Color.BLACK);
 			setLayout(new BorderLayout(0, 0));
 			mainBar=new Mainbar();

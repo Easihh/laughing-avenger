@@ -1,4 +1,4 @@
-package main;
+package utility;
 import java.awt.Image;
 import java.util.Vector;
 

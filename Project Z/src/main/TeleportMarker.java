@@ -1,5 +1,8 @@
 package main;
 
+import item.BlueCandle;
+import item.Item;
+
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -42,8 +45,10 @@ public class TeleportMarker extends Tile{
 		}
 	}
 	private void destroyEffects(Hero hero) {
-		if(hero.specialItem!=null && hero.specialItem.type==Item.ID.BlueCandle)
+		if(hero.specialItem!=null && hero.specialItem.type==Item.ID.BlueCandle){
 			((BlueCandle)hero.specialItem).timer=null;
+			((BlueCandle)hero.specialItem).fire=null;
+		}
 		hero.attack.theSword=null;
 		hero.attack.sEffect=null;
 	}

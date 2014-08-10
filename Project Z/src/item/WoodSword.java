@@ -8,9 +8,9 @@ import utility.Ressource;
 import utility.Sound;
 import utility.Stopwatch;
 
-public class WoodSwordPickUp extends Item{
+public class WoodSword extends Item{
 	public Stopwatch pickUpItemTimer;
-	public WoodSwordPickUp(int x, int y, Item.ID type) {
+	public WoodSword(int x, int y, Item.ID type) {
 		super(x,y,type);
 		this.x=x;
 		this.y=y;

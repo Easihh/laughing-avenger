@@ -1,8 +1,5 @@
 package main;
 
-import item.Arrow;
-import item.Item;
-import item.WoodSwordPickUp;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,7 +11,6 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import monster.Merchant;
 import monster.Monster;
 import monster.RedOctorok;
 
@@ -39,6 +35,7 @@ public class Map {
 		try {loadOverworld();
 		allShop.add(new Shop(Shop.ID.CandleShop,0,0));
 		allShop.add(new Shop(Shop.ID.WoodSwordShop,0,0));
+		allShop.add(new Shop(Shop.ID.HeartSecretShop,0,0));		
 		} catch (XMLStreamException e) {
 			e.printStackTrace();}
 	}
@@ -103,12 +100,19 @@ public class Map {
 		case "5":	//teleport marker
 					allObject[coordX][coordY]=new TeleportMarker(coordX*tileSize,coordY*tileSize,Tile.ID.TeleportMarker);
 					break;			
-		//case "6": 	allObject[coordX][coordY]=new BlueCandlePickUp(coordX*tileSize,coordY*tileSize,Item.ID.BlueCandle);
-			//		break;
-		
-		case "7":	allObject[coordX][coordY]=new RedOctorok(coordX*tileSize,coordY*tileSize,Monster.ID.RedOctorok);
+		case "7": 	allObject[coordX][coordY]=new Tile(coordX*tileSize,coordY*tileSize,Tile.ID.Type1GreenBlock);
 					break;
-		case "8":	allObject[coordX][coordY]=new Fire(coordX*tileSize,coordY*tileSize,Monster.ID.Fire);
+		case "8": 	allObject[coordX][coordY]=new Tile(coordX*tileSize,coordY*tileSize,Tile.ID.Type2GreenBlock);
+					break;
+		case "9": 	allObject[coordX][coordY]=new Tile(coordX*tileSize,coordY*tileSize,Tile.ID.Type3GreenBlock);
+					break;
+		case "10": 	allObject[coordX][coordY]=new Tile(coordX*tileSize,coordY*tileSize,Tile.ID.Type4GreenBlock);
+					break;
+		case "11": 	allObject[coordX][coordY]=new Tile(coordX*tileSize,coordY*tileSize,Tile.ID.Type5GreenBlock);
+					break;	
+		case "13":	allObject[coordX][coordY]=new RedOctorok(coordX*tileSize,coordY*tileSize,Monster.ID.RedOctorok);
+					break;
+		case "14":	allObject[coordX][coordY]=new Fire(coordX*tileSize,coordY*tileSize,Monster.ID.Fire);
 					break;
 		//case "9":	allObject[coordX][coordY]=new WoodSwordPickUp(coordX*tileSize,coordY*tileSize,Item.ID.WoodSword);
 			//		break;
@@ -134,12 +138,12 @@ public class Map {
 			themap=new Map();
 		return themap;
 	}
-	public int getWorldXcoord(){
+	/*public int getWorldXcoord(){
 		return worldX*roomWidth;
 	}
 	public int getWorldYcoord(){
 		return worldY*(roomWidth);
-	}
+	}*/
 	public void render(Graphics g){
 		Graphics2D x=(Graphics2D) g;
 		if(Hero.getInstance().isInsideShop!=Shop.ID.None.value)

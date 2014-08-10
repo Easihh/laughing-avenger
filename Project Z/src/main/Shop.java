@@ -1,9 +1,11 @@
 package main;
 
-import item.Arrow;
-import item.BlueCandle;
+import item.ArrowSold;
+import item.BlueCandleSold;
+import item.BombSold;
+import item.HeartContainer;
 import item.Item;
-import item.WoodSwordPickUp;
+import item.WoodSword;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -23,7 +25,7 @@ public class Shop {
 	private final int tilePerRow=16,tilePerCol=16,tileSize=32;
 	public Tile[][] theRoom;
 	boolean hasUpdatedCoordinate;
-	public enum ID{ None(0),CandleShop(1),WoodSwordShop(2);
+	public enum ID{ None(0),CandleShop(1),WoodSwordShop(2), HeartSecretShop(3);
 		public int value;
 		private ID(int value){
 			this.value=value;
@@ -73,15 +75,19 @@ public class Shop {
 		case "5":	//teleport marker
 					theRoom[coordX][coordY]=new TeleportMarker(coordX*tileSize,coordY*tileSize,Tile.ID.TeleportMarker);
 					break;	
-		case "6": 	theRoom[coordX][coordY]=new BlueCandle(coordX*tileSize,coordY*tileSize,Item.ID.BlueCandle);
+		case "12": 	theRoom[coordX][coordY]=new BlueCandleSold(coordX*tileSize,coordY*tileSize,Item.ID.BlueCandle);
 					break;
-		case "8":	theRoom[coordX][coordY]=new Fire(coordX*tileSize,coordY*tileSize,Monster.ID.Fire);
+		case "14":	theRoom[coordX][coordY]=new Fire(coordX*tileSize,coordY*tileSize,Monster.ID.Fire);
 					break;
-		case "9":	theRoom[coordX][coordY]=new WoodSwordPickUp(coordX*tileSize,coordY*tileSize,Item.ID.WoodSword);
+		case "15":	theRoom[coordX][coordY]=new WoodSword(coordX*tileSize,coordY*tileSize,Item.ID.WoodSword);
 					break;
-		case "10":	theRoom[coordX][coordY]=new Merchant(coordX*tileSize,coordY*tileSize,Monster.ID.Merchant);
+		case "16":	theRoom[coordX][coordY]=new Merchant(coordX*tileSize,coordY*tileSize,Monster.ID.Merchant);
 					break;
-		case "11":	theRoom[coordX][coordY]=new Arrow(coordX*tileSize,coordY*tileSize,Item.ID.Arrow);
+		case "17":	theRoom[coordX][coordY]=new ArrowSold(coordX*tileSize,coordY*tileSize,Item.ID.Arrow);
+					break;
+		case "18":	theRoom[coordX][coordY]=new HeartContainer(coordX*tileSize,coordY*tileSize,Item.ID.HeartContainer);
+					break;
+		case "19":	theRoom[coordX][coordY]=new BombSold(coordX*tileSize,coordY*tileSize,Item.ID.Bomb);
 					break;				
 		}
 	}

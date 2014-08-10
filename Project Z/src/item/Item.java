@@ -2,22 +2,26 @@ package item;
 
 import java.awt.Graphics;
 
+import utility.Stopwatch;
+
 import main.Hero;
 import main.Map;
 import main.Tile;
 import monster.Merchant;
 
 public abstract class Item extends Tile{
+	public Stopwatch pickUpItemTimer;
 	public Item(int x, int y, Item.ID type) {
 		super(x, y, type);
 		this.type=type;
 	}
-	public boolean hasOwnership=false,hasBeenPickedUp=false;
+	public boolean hasOwnership=false;
+	public int inventoryX,InventoryY;
 	public int cost;
 	public final int width=32,height=32;
 	public String name;
 	public ID type;
-	public enum ID{ BlueCandle(0),WoodSword(1),Arrow(2);
+	public enum ID{ BlueCandle(0),WoodSword(1),Arrow(2),HeartContainer(3),Bomb(4);
 		public int value;
 		private ID(int value){
 		this.value=value;

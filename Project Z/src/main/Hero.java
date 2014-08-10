@@ -31,9 +31,10 @@ public class Hero {
 	public Point lastTeleport;
 	public int key_amount,bomb_amount,rupee_amount,currentHealth,maxHealth;
 	public Hero(){
-		x=y=128;
-		currentHealth=32;
-		maxHealth=32;
+		x=224;
+		y=256;
+		currentHealth=30;
+		maxHealth=30;
 		key_amount=bomb_amount=rupee_amount=999;
 		mainWeapon=0;//no weapon
 		inventory_items=new Item[inventoryRow][inventoryCol];

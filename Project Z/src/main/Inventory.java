@@ -48,7 +48,7 @@ public class Inventory extends JPanel{
 				for(int j=0;j<hero.inventoryCol;j++){
 					if(hero.inventory_items[i][j]!=null)
 						if(hero.inventory_items[i][j].hasOwnership)
-							g.drawImage(hero.inventory_items[i][j].img, hero.inventory_items[i][j].x, hero.inventory_items[i][j].y,null);
+							g.drawImage(hero.inventory_items[i][j].img, hero.inventory_items[i][j].inventoryX, hero.inventory_items[i][j].InventoryY,null);
 				}
 			}
 		}

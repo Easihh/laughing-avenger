@@ -1,8 +1,5 @@
 package main;
 
-import item.BlueCandle;
-import item.Item;
-
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.io.IOException;
@@ -73,7 +70,6 @@ public class Selector {
 							hero.specialItem=hero.inventory_items[i][j];
 							break;
 						}
-							//System.out.println(hero.inventory_items[i][j].name+" has been selected.");
 			}
 		}
 	}

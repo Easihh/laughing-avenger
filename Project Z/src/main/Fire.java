@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -13,10 +14,12 @@ import monster.Monster;
 
 public class Fire extends Monster{
 	public Animation fireAnimation;
-	Direction fireDir=Direction.None;
+	public Direction fireDir=Direction.None;
+	public Rectangle mask;
 	public Fire(int x, int y, Monster.ID type) {
 		super(x, y, type);
 		buildAnimation();
+		mask=new Rectangle(x,y,32,32);
 	}
 	private void buildAnimation() {
 		fireAnimation=new Animation();

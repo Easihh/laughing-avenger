@@ -1,5 +1,8 @@
 package monster;
 
+import item.Arrow;
+import item.Item;
+
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -62,20 +65,32 @@ public abstract class Monster extends Tile{
 	public void checkHeroSwordCollision() {
 		Hero hero=Hero.getInstance();
 		if((hero.attack.mySword!=null && invincible_timer==null && hero.attack.mySword.mask.intersects(mask)) ||
-				hero.attack.theSword!=null && invincible_timer==null && hero.attack.theSword.mask.intersects(mask)){	
-			invincible_timer=new Stopwatch();
-			invincible_timer.start();
-			Sound.enemyHit.setFramePosition(0);
-			Sound.enemyHit.start();
-			hitpoint--;
+				hero.attack.theSword!=null && invincible_timer==null && hero.attack.theSword.mask.intersects(mask)){
+			monsterHit();
 			if(hitpoint>0)
 				pushback();
-			if(hitpoint==0){
-				Sound.enemyKill.setFramePosition(0);
-				Sound.enemyKill.start();
-				death=new Stopwatch();
-				death.start();
-			}
+			checkIfDead();
+		}
+		if(hero.specialItem!=null && hero.specialItem.type==Item.ID.Arrow && ((Arrow)hero.specialItem).myArrow!=null)
+			if(((Arrow)hero.specialItem).myArrow.mask.intersects(mask)){
+				monsterHit();
+				checkIfDead();
+				((Arrow)hero.specialItem).myArrow=null;
+		}
+	}
+	private void monsterHit() {
+		invincible_timer=new Stopwatch();
+		invincible_timer.start();
+		Sound.enemyHit.setFramePosition(0);
+		Sound.enemyHit.start();
+		hitpoint--;	
+	}
+	private void checkIfDead() {
+		if(hitpoint==0){
+			Sound.enemyKill.setFramePosition(0);
+			Sound.enemyKill.start();
+			death=new Stopwatch();
+			death.start();
 		}
 	}
 	public void checkHeroCollision(){

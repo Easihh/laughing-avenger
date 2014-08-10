@@ -17,7 +17,7 @@ public class TeleportMarker extends Tile{
 	public void update(){
 		Hero hero=Hero.getInstance();
 		Map map=Map.getInstance();
-		if(x==32 && hero.x==32 && y==32 && hero.y==32 && hero.lastTeleport==null){
+		if(x==224 && hero.x==224 && y==224 && hero.y==224 && hero.lastTeleport==null){
 			Map.allShop.get(1).updateCoordinate(map.roomWidth*map.worldX, map.roomHeight*map.worldY);
 			hero.isInsideShop=Shop.ID.WoodSwordShop.value;
 			hero.lastTeleport=new Point(hero.x,hero.y+32);

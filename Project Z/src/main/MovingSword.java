@@ -125,19 +125,19 @@ public class MovingSword {
 	}
 	private void checkBound() {
 		Map map=Map.getInstance();
-		if(dir==Direction.Right && x>(map.getWorldXcoord()+map.roomWidth)){
+		if(dir==Direction.Right && x>(map.worldX*map.roomWidth)+map.roomWidth){
 			Hero.getInstance().attack.theSword=null;
 			Hero.getInstance().attack.createSwordEffect(new Point(x,y));
 		}
-		if(dir==Direction.Left && x<(map.getWorldXcoord())){
+		if(dir==Direction.Left && x<(map.worldX*map.roomWidth)){
 			Hero.getInstance().attack.theSword=null;
 			Hero.getInstance().attack.createSwordEffect(new Point(x,y));
 		}
-		if(dir==Direction.Up && y<(map.getWorldYcoord())){
+		if(dir==Direction.Up && y<(map.worldY*map.roomHeight)){
 			Hero.getInstance().attack.theSword=null;
 			Hero.getInstance().attack.createSwordEffect(new Point(x,y));
 		}
-		if(dir==Direction.Down && y>(map.getWorldYcoord()+map.roomHeight)){
+		if(dir==Direction.Down && y>(map.worldY*map.roomHeight)+map.roomHeight){
 			Hero.getInstance().attack.theSword=null;
 			Hero.getInstance().attack.createSwordEffect(new Point(x,y));
 		}

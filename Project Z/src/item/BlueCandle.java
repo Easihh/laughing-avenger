@@ -14,19 +14,20 @@ import main.Fire;
 import main.Hero;
 import main.Hero.Direction;
 import main.Map;
-import main.Shop;
+import main.SecretRoomMarker;
 import main.Tile;
 import monster.Monster;
 
 public class BlueCandle extends Item {
 	public Fire fire;
-	public Stopwatch timer,pickUpItemTimer;
+	public Stopwatch timer;
 	private int stepToMove;
-	private BlueCandle myCandle;
 	public BlueCandle(int x,int y,Item.ID type){
 		super(x, y, type);
 		name="Blue Candle";
 		cost=60;
+		inventoryX=x;
+		InventoryY=y;
 		this.x=x;
 		this.y=y;
 		mask=new Rectangle(x,y,width,height);
@@ -57,54 +58,29 @@ public class BlueCandle extends Item {
 		fire.dir=hero.dir;
 	}
 	public void update(){
-		if(fire!=null) updateFireMovement();
-		else checkCollisionWithHero();
+		if(fire!=null) {
+			updateFireMovement();
+			checkSecretRoom();
+		}
 		if(fire!=null && timer!=null && timer.elapsedMillis()>3000){
 			timer=null;
 			fire=null;
 		}
 	}
-	private void checkCollisionWithHero() {
-		if(x==Hero.getInstance().x && y==Hero.getInstance().y && pickUpItemTimer==null){
-			if(Hero.getInstance().rupee_amount>=cost){
-				Hero.getInstance().rupee_amount-=cost;
-				Hero.getInstance().obtainItem=Ressource.obtainItem;
-				pickUpItemTimer=new Stopwatch();
-				pickUpItemTimer.start();
-				Sound.newItem.setFramePosition(0);
-				Sound.newInventItem.setFramePosition(0);
-				Sound.newItem.start();
-				Sound.newInventItem.start();
-				myCandle=new BlueCandle(241,98,Item.ID.BlueCandle);
-				Hero.getInstance().inventory_items[0][0]=myCandle;
-				myCandle.hasOwnership=true;
-				//Hero.getInstance().inventory_items[0][0].hasOwnership=true;
-			}
-		}
-		if(pickUpItemTimer!=null){
-			y=Hero.getInstance().y-height;
-			if(Hero.getInstance().isInsideShop!=Shop.ID.None.value)
-				destroyOtherItems();
-		}
-		if(pickUpItemTimer!=null && pickUpItemTimer.elapsedMillis()>1000){
-			removeItemFromShop();
-			removeMerchant();
-			Hero.getInstance().obtainItem=null;
-			myCandle.hasBeenPickedUp=true;
-		}
-	}
-
-	private void destroyOtherItems() {
+	private void checkSecretRoom() {
 		Map map=Map.getInstance();
-		Tile[][] theRoom=Map.allShop.get(Hero.getInstance().isInsideShop-1).theRoom;
-		for(int i=0;i<map.tilePerRow;i++){
-			for(int j=0;j<map.tilePerCol;j++){
-				if(theRoom[i][j]!=null && theRoom[i][j] instanceof Item && theRoom[i][j]!=this)	
-					theRoom[i][j]=null;
+		for(int i=map.worldX*map.tilePerRow;i<map.worldX*map.tilePerRow+map.tilePerRow;i++){
+			for(int j=map.worldY*map.tilePerCol;j<map.worldY*map.tilePerCol+map.tilePerCol;j++){
+				if(Map.allObject[i][j]!=null && Map.allObject[i][j].x==192 && Map.allObject[i][j].y==736)
+					if(Map.allObject[i][j].mask.intersects(fire.mask) && Map.allObject[i][j].type==Tile.ID.Tree){
+						Sound.secret.setFramePosition(0);
+						Sound.secret.start();
+						Map.allObject[i][j]=new SecretRoomMarker(Map.allObject[i][j].x, Map.allObject[i][j].y, Tile.ID.SecretRoom);
+						Map.allObject[i][j].img=Ressource.game_tileset.get(5);
+					}
 			}
 		}
 	}
-
 	private void updateFireMovement() {
 		if(fire.dir==Direction.Down && stepToMove!=0){
 			fire.y++;
@@ -122,18 +98,13 @@ public class BlueCandle extends Item {
 			fire.x++;
 			stepToMove--;
 		}
+		fire.mask=new Rectangle(fire.x,fire.y,32,32);
 	}
 
 	public void render(Graphics g){
 		if(fire!=null){
 			fire.fireAnimation.setImage();
 			g.drawImage(fire.fireAnimation.getImage(),fire.x,fire.y,null);
-		}
-		if(fire==null && hasBeenPickedUp==false){
-			g.drawImage(img,x,y,null);
-			g.setColor(Color.WHITE);
-			if(pickUpItemTimer==null)
-				g.drawString(""+cost, x+8, y+64);
 		}
 	}
 }

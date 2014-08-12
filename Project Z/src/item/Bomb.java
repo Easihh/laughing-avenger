@@ -4,16 +4,20 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
+import main.BombEffect;
 import main.Hero;
 import main.Projectile;
+import utility.Sound;
 import utility.Stopwatch;
 
 public class Bomb extends Item{
 	private Projectile myBomb;
 	private Stopwatch timer;
+	private Vector<BombEffect> bombEffect;
 	public Bomb(int x, int y, ID type) {
 		super(x, y, type);
 		inventoryX=x;
@@ -31,11 +35,16 @@ public class Bomb extends Item{
 	public void render(Graphics g) {
 		if(myBomb!=null)
 			myBomb.render(g);
+		if(myBomb==null && bombEffect!=null){
+			for(int i=0;i<bombEffect.size();i++)
+				bombEffect.get(i).render(g);
+		}
 	}
 
 	@Override
 	public void use() {
-		System.out.println("using bomb");
+		Sound.bombDrop.setFramePosition(0);
+		Sound.bombDrop.start();
 		timer=new Stopwatch();
 		timer.start();
 		setBombPosition();
@@ -57,14 +66,33 @@ public class Bomb extends Item{
 					y=hero.y-32;
 					break;
 		}
-		myBomb=new Projectile(new Rectangle(x,y,32,32),(BufferedImage)img, hero.dir);
+		if(hero.bomb_amount>0){
+			myBomb=new Projectile(new Rectangle(x,y,32,32),(BufferedImage)img, hero.dir);
+			hero.bomb_amount--;
+		}
 	}
 
 	@Override
 	public void update() {
-		if(timer!=null && timer.elapsedMillis()>3000){
+		if(timer!=null && timer.elapsedMillis()>1000){
 			timer=null;
 			myBomb=null;
+			bombEffect=new Vector<BombEffect>();
+			bombEffect.add(new BombEffect(x, y));
+			bombEffect.add(new BombEffect(x+32, y));
+			bombEffect.add(new BombEffect(x-32, y));
+			bombEffect.add(new BombEffect(x, y+32));
+			bombEffect.add(new BombEffect(x, y-32));
+			Sound.bombBlow.setFramePosition(0);
+			Sound.bombBlow.start();
 		}
+		if(bombEffect!=null){
+			for(int i=0;i<bombEffect.size();i++)
+				if(bombEffect.get(i).timer!=null)
+					bombEffect.get(i).update();
+		}
+		if(bombEffect!=null && bombEffect.get(0).timer==null)
+			bombEffect=null;
+		
 	}
 }

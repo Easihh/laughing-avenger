@@ -2,6 +2,7 @@ package monster;
 
 import item.Arrow;
 import item.Item;
+import item.MagicalRod;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -43,7 +44,7 @@ public abstract class Monster extends Tile{
 		this.x=x;
 		this.y=y;
 		this.type=type;
-		isSolid=setSolidState();
+		//isSolid=setSolidState();
 		img=Ressource.monster_type.get(type.value);
 		loadDeathEffect();
 		pushbackdir=Direction.None;
@@ -52,14 +53,14 @@ public abstract class Monster extends Tile{
 		try {killEffect=ImageIO.read(getClass().getResourceAsStream("/map/kill_effect.png"));
 		} catch (IOException e) {e.printStackTrace();}		
 	}
-	private boolean setSolidState() {
+	/*private boolean setSolidState() {
 		switch(type){
 		case RedOctorok:
 		case WoodSword:
 			return false;
 		}
 		return true;
-	}
+	}*/
 	public abstract void update();
 	public abstract void render(Graphics g);
 	public void checkHeroSwordCollision() {
@@ -68,7 +69,7 @@ public abstract class Monster extends Tile{
 				hero.attack.theSword!=null && invincible_timer==null && hero.attack.theSword.mask.intersects(mask)){
 			monsterHit();
 			if(hitpoint>0)
-				pushback();
+				pushback(96);
 			checkIfDead();
 		}
 		if(hero.specialItem!=null && hero.specialItem.type==Item.ID.Arrow && ((Arrow)hero.specialItem).myArrow!=null)
@@ -76,6 +77,15 @@ public abstract class Monster extends Tile{
 				monsterHit();
 				checkIfDead();
 				((Arrow)hero.specialItem).myArrow=null;
+		}
+		if(hero.specialItem!=null && hero.specialItem.type==Item.ID.MagicalRod && ((MagicalRod)hero.specialItem).projectile!=null)
+			if(((MagicalRod)hero.specialItem).projectile.mask.intersects(mask)){
+				monsterHit();
+				checkIfDead();
+				if(hitpoint>0)
+					pushback(64);
+				((MagicalRod)hero.specialItem).projectile=null;
+				hero.isAttacking=false;
 		}
 	}
 	private void monsterHit() {
@@ -111,9 +121,9 @@ public abstract class Monster extends Tile{
 		}
 			
 	}
-	private void pushback() {
+	private void pushback(int distance) {
 		pushbackdir=Hero.getInstance().dir;
-		stepToPush=96;
+		stepToPush=distance;
 	}
 	public void destroy(int destroyID) {
 		mask=new Rectangle(x,y,0,0);

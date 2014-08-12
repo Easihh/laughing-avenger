@@ -1,5 +1,9 @@
 package main;
+import item.Arrow;
+import item.BlueCandle;
+import item.Bomb;
 import item.Item;
+import item.MagicalRod;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -22,7 +26,7 @@ public class Hero {
 	public Image obtainItem;
 	public Attack attack=new Attack();
 	public boolean canAttack,isAttacking;
-	Image attack_img=null;
+	public Image attack_img=null;
 	public Inventory inventory;
 	public Item[][] inventory_items;
 	public Item specialItem;
@@ -38,6 +42,14 @@ public class Hero {
 		key_amount=bomb_amount=rupee_amount=999;
 		mainWeapon=0;//no weapon
 		inventory_items=new Item[inventoryRow][inventoryCol];
+		inventory_items[0][0]=new BlueCandle(241,98,Item.ID.BlueCandle);;
+		inventory_items[0][0].hasOwnership=true;
+		inventory_items[0][1]=new Arrow(273,98,Item.ID.Arrow);;
+		inventory_items[0][1].hasOwnership=true;
+		inventory_items[0][2]=new Bomb(305,98,Item.ID.Bomb);;
+		inventory_items[0][2].hasOwnership=true;
+		inventory_items[0][3]=new MagicalRod(337,98,Item.ID.MagicalRod);;
+		inventory_items[0][3].hasOwnership=true;
 		canAttack=true;
 		isAttacking=false;
 		isInsideShop=Shop.ID.None.value;

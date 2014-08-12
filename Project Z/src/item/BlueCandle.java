@@ -1,7 +1,6 @@
 package item;
 
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.io.IOException;
@@ -14,7 +13,7 @@ import main.Fire;
 import main.Hero;
 import main.Hero.Direction;
 import main.Map;
-import main.SecretRoomMarker;
+import main.TeleportMarker;
 import main.Tile;
 import monster.Monster;
 
@@ -71,11 +70,11 @@ public class BlueCandle extends Item {
 		Map map=Map.getInstance();
 		for(int i=map.worldX*map.tilePerRow;i<map.worldX*map.tilePerRow+map.tilePerRow;i++){
 			for(int j=map.worldY*map.tilePerCol;j<map.worldY*map.tilePerCol+map.tilePerCol;j++){
-				if(Map.allObject[i][j]!=null && Map.allObject[i][j].x==192 && Map.allObject[i][j].y==736)
+				if(Map.allObject[i][j]!=null && Map.allObject[i][j].x==736 && Map.allObject[i][j].y==800)
 					if(Map.allObject[i][j].mask.intersects(fire.mask) && Map.allObject[i][j].type==Tile.ID.Tree){
 						Sound.secret.setFramePosition(0);
 						Sound.secret.start();
-						Map.allObject[i][j]=new SecretRoomMarker(Map.allObject[i][j].x, Map.allObject[i][j].y, Tile.ID.SecretRoom);
+						Map.allObject[i][j]=new TeleportMarker(Map.allObject[i][j].x, Map.allObject[i][j].y, Tile.ID.SecretRoom);
 						Map.allObject[i][j].img=Ressource.game_tileset.get(5);
 					}
 			}

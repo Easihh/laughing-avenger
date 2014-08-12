@@ -17,7 +17,7 @@ public class RedOctorok extends Monster{
 		OctorokHit1=new Movement("RedOctorok_Hit1",250);
 		OctorokHit2=new Movement("RedOctorok_Hit2",250);
 		dir=Direction.Down;
-		hitpoint=20;
+		hitpoint=2;
 		moveSpeed=1;
 	}
 

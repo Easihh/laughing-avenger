@@ -15,7 +15,7 @@ public class Attack {
 	private static Stopwatch sEffectTimer;
 	public Sword mySword;
 	Stopwatch last_sword,last_moving_sword;
-	Vector<BufferedImage> attackPose;
+	public static Vector<BufferedImage> attackPose;
 	public Attack(){
 		last_sword=new Stopwatch();
 		last_moving_sword=new Stopwatch();

@@ -15,7 +15,7 @@ public class Tile {
 	public Rectangle mask;
 	private final int height=32,width=32;
 	public enum ID{ Background(0),Sand(1),Tree(2), Type1BrownBlock(3), TeleportMarker(4),SecretRoom(5),Type1GreenBlock(6),
-		Type2GreenBlock(7),Type3GreenBlock(8),Type4GreenBlock(9),Type5GreenBlock(10);
+		Type2GreenBlock(7),Type3GreenBlock(8),Type4GreenBlock(9),Type5GreenBlock(10),Type6GreenBlock(11);
 			int value;
 			private ID(int value){
 				this.value=value;

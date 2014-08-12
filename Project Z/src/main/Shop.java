@@ -5,6 +5,7 @@ import item.BlueCandleSold;
 import item.BombSold;
 import item.HeartContainer;
 import item.Item;
+import item.MagicalRodPickUp;
 import item.WoodSword;
 
 import java.awt.Color;
@@ -16,6 +17,8 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
+import utility.Ressource;
 
 
 import monster.Merchant;
@@ -74,20 +77,23 @@ public class Shop {
 					break;
 		case "5":	//teleport marker
 					theRoom[coordX][coordY]=new TeleportMarker(coordX*tileSize,coordY*tileSize,Tile.ID.TeleportMarker);
+					theRoom[coordX][coordY].img=Ressource.game_tileset.get(0);
 					break;	
-		case "12": 	theRoom[coordX][coordY]=new BlueCandleSold(coordX*tileSize,coordY*tileSize,Item.ID.BlueCandle);
+		case "13": 	theRoom[coordX][coordY]=new BlueCandleSold(coordX*tileSize,coordY*tileSize,Item.ID.BlueCandle);
 					break;
-		case "14":	theRoom[coordX][coordY]=new Fire(coordX*tileSize,coordY*tileSize,Monster.ID.Fire);
+		case "15":	theRoom[coordX][coordY]=new Fire(coordX*tileSize,coordY*tileSize,Monster.ID.Fire);
 					break;
-		case "15":	theRoom[coordX][coordY]=new WoodSword(coordX*tileSize,coordY*tileSize,Item.ID.WoodSword);
+		case "16":	theRoom[coordX][coordY]=new WoodSword(coordX*tileSize,coordY*tileSize,Item.ID.WoodSword);
 					break;
-		case "16":	theRoom[coordX][coordY]=new Merchant(coordX*tileSize,coordY*tileSize,Monster.ID.Merchant);
+		case "17":	theRoom[coordX][coordY]=new Merchant(coordX*tileSize,coordY*tileSize,Monster.ID.Merchant);
 					break;
-		case "17":	theRoom[coordX][coordY]=new ArrowSold(coordX*tileSize,coordY*tileSize,Item.ID.Arrow);
+		case "18":	theRoom[coordX][coordY]=new ArrowSold(coordX*tileSize,coordY*tileSize,Item.ID.Arrow);
 					break;
-		case "18":	theRoom[coordX][coordY]=new HeartContainer(coordX*tileSize,coordY*tileSize,Item.ID.HeartContainer);
+		case "19":	theRoom[coordX][coordY]=new HeartContainer(coordX*tileSize,coordY*tileSize,Item.ID.HeartContainer);
 					break;
-		case "19":	theRoom[coordX][coordY]=new BombSold(coordX*tileSize,coordY*tileSize,Item.ID.Bomb);
+		case "20":	theRoom[coordX][coordY]=new BombSold(coordX*tileSize,coordY*tileSize,Item.ID.Bomb);
+					break;
+		case "21":	theRoom[coordX][coordY]=new MagicalRodPickUp(coordX*tileSize,coordY*tileSize,Item.ID.MagicalRod);
 					break;				
 		}
 	}

@@ -14,6 +14,7 @@ import javax.xml.stream.XMLStreamReader;
 import monster.Monster;
 import monster.RedOctorok;
 
+import utility.Ressource;
 import utility.Sound;
 
 
@@ -99,6 +100,7 @@ public class Map {
 					break;	
 		case "5":	//teleport marker
 					allObject[coordX][coordY]=new TeleportMarker(coordX*tileSize,coordY*tileSize,Tile.ID.TeleportMarker);
+					allObject[coordX][coordY].img=Ressource.game_tileset.get(0);
 					break;			
 		case "7": 	allObject[coordX][coordY]=new Tile(coordX*tileSize,coordY*tileSize,Tile.ID.Type1GreenBlock);
 					break;
@@ -109,10 +111,12 @@ public class Map {
 		case "10": 	allObject[coordX][coordY]=new Tile(coordX*tileSize,coordY*tileSize,Tile.ID.Type4GreenBlock);
 					break;
 		case "11": 	allObject[coordX][coordY]=new Tile(coordX*tileSize,coordY*tileSize,Tile.ID.Type5GreenBlock);
-					break;	
-		case "13":	allObject[coordX][coordY]=new RedOctorok(coordX*tileSize,coordY*tileSize,Monster.ID.RedOctorok);
 					break;
-		case "14":	allObject[coordX][coordY]=new Fire(coordX*tileSize,coordY*tileSize,Monster.ID.Fire);
+		case "12": 	allObject[coordX][coordY]=new Tile(coordX*tileSize,coordY*tileSize,Tile.ID.Type6GreenBlock);
+					break;				
+		case "14":	allObject[coordX][coordY]=new RedOctorok(coordX*tileSize,coordY*tileSize,Monster.ID.RedOctorok);
+					break;
+		case "15":	allObject[coordX][coordY]=new Fire(coordX*tileSize,coordY*tileSize,Monster.ID.Fire);
 					break;
 		//case "9":	allObject[coordX][coordY]=new WoodSwordPickUp(coordX*tileSize,coordY*tileSize,Item.ID.WoodSword);
 			//		break;

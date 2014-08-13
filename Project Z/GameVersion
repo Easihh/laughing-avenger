@@ -1,3 +1,9 @@
+Version 0.10:
+
+-Fixed issue where Sword attack could no longer be used after using MagicalRod.
+-Item Magical Boomerang has been added.
+-Magical Boomerang sound has been added.
+
 Version 0.09:
 
 -Bombs now have effects and sounds.

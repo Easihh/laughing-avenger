@@ -5,6 +5,7 @@ import item.BlueCandleSold;
 import item.BombSold;
 import item.HeartContainer;
 import item.Item;
+import item.MagicalBoomerangPickUp;
 import item.MagicalRodPickUp;
 import item.WoodSword;
 
@@ -94,7 +95,9 @@ public class Shop {
 		case "20":	theRoom[coordX][coordY]=new BombSold(coordX*tileSize,coordY*tileSize,Item.ID.Bomb);
 					break;
 		case "21":	theRoom[coordX][coordY]=new MagicalRodPickUp(coordX*tileSize,coordY*tileSize,Item.ID.MagicalRod);
-					break;				
+					break;
+		case "22":	theRoom[coordX][coordY]=new MagicalBoomerangPickUp(coordX*tileSize,coordY*tileSize,Item.ID.MagicalBoomerang);
+					break;			
 		}
 	}
 

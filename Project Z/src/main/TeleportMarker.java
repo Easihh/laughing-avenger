@@ -2,6 +2,7 @@ package main;
 
 import item.BlueCandle;
 import item.Item;
+import item.MagicalBoomerang;
 import item.MagicalRod;
 
 import java.awt.Graphics;
@@ -74,8 +75,13 @@ public class TeleportMarker extends Tile{
 			((BlueCandle)hero.specialItem).timer=null;
 			((BlueCandle)hero.specialItem).fire=null;
 		}
-		if(hero.specialItem!=null && hero.specialItem.type==Item.ID.MagicalRod)
-			((MagicalRod)hero.specialItem).projectile=null;
+		if(hero.specialItem!=null && hero.specialItem.type==Item.ID.MagicalRod){
+			((MagicalRod)hero.specialItem).projectile=null;	
+		}
+		if(hero.specialItem!=null && hero.specialItem.type==Item.ID.MagicalBoomerang){
+			((MagicalBoomerang)hero.specialItem).myBoomerang=null;
+				Sound.boomerang.stop();
+		}
 		hero.attack.theSword=null;
 		hero.attack.sEffect=null;
 	}

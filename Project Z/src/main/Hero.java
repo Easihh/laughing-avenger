@@ -3,6 +3,7 @@ import item.Arrow;
 import item.BlueCandle;
 import item.Bomb;
 import item.Item;
+import item.MagicalBoomerang;
 import item.MagicalRod;
 
 import java.awt.Graphics;
@@ -50,6 +51,8 @@ public class Hero {
 		inventory_items[0][2].hasOwnership=true;
 		inventory_items[0][3]=new MagicalRod(337,98,Item.ID.MagicalRod);;
 		inventory_items[0][3].hasOwnership=true;
+		//inventory_items[0][4]=new MagicalBoomerang(369,98,Item.ID.MagicalBoomerang);;
+		//inventory_items[0][4].hasOwnership=true;
 		canAttack=true;
 		isAttacking=false;
 		isInsideShop=Shop.ID.None.value;

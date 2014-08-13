@@ -37,7 +37,7 @@ public class Attack {
 		}
 	}
 	public void tryAttack(Hero hero) {
-		if(mySword==null && hero.attack_img==null && last_sword.elapsedMillis()>500){
+		if(last_sword.elapsedMillis()>500){
 			Sound.sword.setFramePosition(0);
 			Sound.sword.start();
 			last_sword.reset();

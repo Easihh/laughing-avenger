@@ -78,6 +78,7 @@ public class Ressource {
 		new Sound("bombDrop");
 		new Sound("bombBlow");
 		new Sound("magicalRod");
+		new Sound("boomerang");
 	}
 
 	private void loadWeaponType() throws IOException {

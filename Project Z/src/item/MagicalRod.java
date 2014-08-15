@@ -25,6 +25,7 @@ public class MagicalRod extends Item {
 	private int theRodX,theRodY;
 	private final long attack_delay=350;
 	private Stopwatch last_attack;
+	private boolean showRod=false;
 	public MagicalRod(int x, int y, ID type) {
 		super(x, y, type);
 		inventoryX=x;
@@ -55,9 +56,9 @@ public class MagicalRod extends Item {
 	public void render(Graphics g) {
 		if(projectile!=null){
 			projectile.render(g);
-			if(Hero.getInstance().isAttacking)
-				g.drawImage(theRod,theRodX,theRodY,null);
 		}
+		if(showRod)
+			g.drawImage(theRod,theRodX,theRodY,null);
 	}
 
 	@Override
@@ -71,6 +72,7 @@ public class MagicalRod extends Item {
 			last_attack.reset();
 			projectile=new Projectile(getInfoRect(hero), getProjectileImage(hero), hero.dir);
 			setRodImage(hero);
+			showRod=true;
 		}
 	}
 
@@ -125,8 +127,10 @@ public class MagicalRod extends Item {
 	public void update() {
 		if(projectile!=null){
 			projectile.update();
-			if(last_attack.elapsedMillis()>attack_delay)
-				Hero.getInstance().isAttacking=false;
+		}
+		if(last_attack.elapsedMillis()>attack_delay){
+			Hero.getInstance().isAttacking=false;
+			showRod=false;
 		}
 		if(projectile!=null && projectile.outOfBound()){
 			projectile=null;

@@ -25,6 +25,7 @@ public class Projectile {
 		this.dir=dir;
 		width=infoRect.width;
 		height=infoRect.height;
+		mask=new Rectangle(x,y,width,height);
 	}
 	public void update(){
 		switch(dir){

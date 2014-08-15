@@ -1,5 +1,6 @@
 package item;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
 
@@ -9,47 +10,48 @@ import main.Hero;
 import main.Map;
 import main.Shop;
 import main.Tile;
-
 import utility.Ressource;
 import utility.Sound;
 import utility.Stopwatch;
 
-public class HeartContainer extends Item{
-	public HeartContainer(int x, int y, ID type) {
+public class RedPotionSold extends Item{
+
+	public RedPotionSold(int x, int y, ID type) {
 		super(x, y, type);
+		cost=75;
+		this.type=type;
 		loadImage();
 	}
 
 	private void loadImage() {
-		try {img=ImageIO.read(getClass().getResourceAsStream("/map/HeartContainer.png"));} 
+		try {img=ImageIO.read(getClass().getResourceAsStream("/map/RedLifePotion.png"));
+		}
 		catch (IOException e) {e.printStackTrace();}	
 	}
-
 	@Override
 	public void render(Graphics g) {
 		g.drawImage(img,x,y,null);
+		g.setColor(Color.WHITE);
+		if(pickUpItemTimer==null)
+			g.drawString(""+cost, x+8, y+64);
 	}
-
 	@Override
 	public void use() {	}
-
 	@Override
 	public void update() {
-		checkCollisionWithHero();
-	}
-
-	private void checkCollisionWithHero() {
-		Hero hero=Hero.getInstance();
-		if(x==hero.x && y==hero.y && pickUpItemTimer==null){
-				hero.obtainItem=Ressource.obtainItem;
+		if(x==Hero.getInstance().x && y==Hero.getInstance().y && pickUpItemTimer==null){
+			if(Hero.getInstance().rupee_amount>=cost){
+				Hero.getInstance().rupee_amount-=cost;
+				Hero.getInstance().obtainItem=Ressource.obtainItem;
 				pickUpItemTimer=new Stopwatch();
 				pickUpItemTimer.start();
 				Sound.newItem.setFramePosition(0);
 				Sound.newInventItem.setFramePosition(0);
 				Sound.newItem.start();
 				Sound.newInventItem.start();
-				hero.maxHealth+=2;
-				hero.currentHealth+=2;
+				Hero.getInstance().inventory_items[0][5]=new RedPotion(401,98,Item.ID.RedPotion);;
+				Hero.getInstance().inventory_items[0][5].hasOwnership=true;
+			}
 		}
 		if(pickUpItemTimer!=null){
 			y=Hero.getInstance().y-height;
@@ -62,7 +64,6 @@ public class HeartContainer extends Item{
 			Hero.getInstance().obtainItem=null;
 		}
 	}
-
 	private void destroyOtherItems() {
 		Map map=Map.getInstance();
 		Tile[][] theRoom=Map.allShop.get(Hero.getInstance().isInsideShop-1).theRoom;

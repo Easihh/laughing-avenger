@@ -24,7 +24,7 @@ public class BlueCandle extends Item {
 	public BlueCandle(int x,int y,Item.ID type){
 		super(x, y, type);
 		name="Blue Candle";
-		cost=60;
+		//cost=60;
 		inventoryX=x;
 		InventoryY=y;
 		this.x=x;

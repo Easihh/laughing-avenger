@@ -3,6 +3,7 @@ import item.Arrow;
 import item.BlueCandle;
 import item.Bomb;
 import item.Item;
+import item.Item.ID;
 import item.MagicalBoomerang;
 import item.MagicalRod;
 
@@ -12,7 +13,12 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import javax.sound.sampled.Clip;
+
+import main.Main.GameState;
+
 import utility.Input;
+import utility.Sound;
 import utility.Stopwatch;
 
 public class Hero {
@@ -38,7 +44,7 @@ public class Hero {
 	public Hero(){
 		x=224;
 		y=256;
-		currentHealth=30;
+		currentHealth=15;
 		maxHealth=30;
 		key_amount=bomb_amount=rupee_amount=999;
 		mainWeapon=0;//no weapon
@@ -92,7 +98,7 @@ public class Hero {
 			attack.tryAttack(this);
 		}
 		if(!isAttacking && obtainItem==null){
-			if(target==0 && !isTranslating())checkKey();
+			if(target==0 && !isTranslating() && Main.gameStatus==GameState.Normal)checkKey();
 			if(target>0)
 				move();
 		}
@@ -263,5 +269,22 @@ public class Hero {
 		case Left:	return x-step<=(map.worldX*map.roomWidth);
 		}
 		return false;
+	}
+	public void checkIfUsingPotion() {
+		if(specialItem!=null && (specialItem.type==ID.BluePotion || specialItem.type==ID.RedPotion))
+			specialItem.update();
+	}
+	public void getHurt(int pushDistance) {
+		invincible_timer=new Stopwatch();
+		invincible_timer.start();
+		Sound.linkHurt.setFramePosition(0);
+		Sound.linkHurt.start();
+		beingPushed(pushDistance);
+		if(currentHealth>0)
+			currentHealth-=1;
+		if(currentHealth<=2){
+			Sound.lowHealth.setFramePosition(0);
+			Sound.lowHealth.loop(Clip.LOOP_CONTINUOUSLY);
+		}
 	}
 }

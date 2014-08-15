@@ -65,6 +65,7 @@ public class MagicalBoomerang extends Item{
 		if(myBoomerang!=null){
 			myBoomerang.mask=new Rectangle(myBoomerang.x,myBoomerang.y,width,height);
 			degree+=0.3;
+			if(myBoomerang.outOfBound())currentStep=stepTillComeBack;
 			if(currentStep<stepTillComeBack){
 				if(myBoomerang.dir==Direction.Right){
 					myBoomerang.x+=4;

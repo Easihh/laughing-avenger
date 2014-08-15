@@ -1,10 +1,12 @@
 package monster;
 
 import item.Arrow;
+import item.Heart;
 import item.Item;
 import item.MagicalRod;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import javax.sound.sampled.Clip;
 import main.Hero;
 import main.Hero.Direction;
 import main.Map;
+import main.Projectile;
 import main.Tile;
 
 import utility.Ressource;
@@ -27,6 +30,7 @@ public abstract class Monster extends Tile{
 	public BufferedImage img,killEffect;
 	public Rectangle mask;
 	public Stopwatch invincible_timer,death;
+	public Projectile projectile;
 	protected static int id=0;
 	public final int invincible_duration=500,width=32,height=32,step=16,pushbackSpeed=4;
 	public enum ID{ RedOctorok(1),Fire(2),WoodSword(3),Merchant(4);
@@ -85,7 +89,7 @@ public abstract class Monster extends Tile{
 				if(hitpoint>0)
 					pushback(64);
 				((MagicalRod)hero.specialItem).projectile=null;
-				hero.isAttacking=false;
+				//hero.isAttacking=false;
 		}
 	}
 	private void monsterHit() {
@@ -106,19 +110,21 @@ public abstract class Monster extends Tile{
 	public void checkHeroCollision(){
 		Hero hero=Hero.getInstance();
 		int pushDistance=64;
-		if(mask.intersects(new Rectangle(hero.x,hero.y,32,32)) && hero.invincible_timer==null){
-			hero.invincible_timer=new Stopwatch();
-			hero.invincible_timer.start();
-			Sound.linkHurt.setFramePosition(0);
-			Sound.linkHurt.start();
-			hero.beingPushed(pushDistance);
-			if(hero.currentHealth>0)
-				hero.currentHealth-=1;
-			if(hero.currentHealth<=2){
-				Sound.lowHealth.setFramePosition(0);
-				Sound.lowHealth.loop(Clip.LOOP_CONTINUOUSLY);
-			}
+		if(mask.intersects(new Rectangle(hero.x,hero.y,32,32)) && hero.invincible_timer==null)
+			hero.getHurt(pushDistance);
+		if(projectile!=null && projectile.mask.intersects(new Rectangle(hero.x,hero.y,32,32)) && hero.invincible_timer==null){
+			if((projectile.dir==Direction.Down && hero.dir!=Direction.Up) ||
+					(projectile.dir==Direction.Left && hero.dir!=Direction.Right) ||
+					(projectile.dir==Direction.Right && hero.dir!=Direction.Left) ||
+					(projectile.dir==Direction.Up && hero.dir!=Direction.Down))
+				hero.getHurt(pushDistance);
+			else{
+					Sound.shield.setFramePosition(0);
+					Sound.shield.start();
+				}
+			projectile=null;
 		}
+			
 			
 	}
 	private void pushback(int distance) {
@@ -129,8 +135,27 @@ public abstract class Monster extends Tile{
 		mask=new Rectangle(x,y,0,0);
 		for(int i=0;i<Map.getInstance().worldWidth;i++)
 			for(int j=0;j<Map.getInstance().worldHeight;j++)
-				if(Map.allObject[i][j] instanceof Monster && ((Monster)Map.allObject[i][j]).myID==destroyID)
-					Map.allObject[i][j]=null;
+				if(Map.allObject[i][j] instanceof Monster && ((Monster)Map.allObject[i][j]).myID==destroyID){					
+					Map.allObject[i][j]=getLoot(Map.allObject[i][j]);
+				}
+	}
+	private Item getLoot(Tile aTile) {
+		Point finalPosition=getFinalPosition(aTile);
+		if(finalPosition.x%16!=0)System.out.println("Unaligned X");
+		if(finalPosition.y%16!=0)System.out.println("Unaligned Y");
+		return new Heart(finalPosition.x, finalPosition.y, Item.ID.HeartContainer);
+	}
+	
+	/** Because Monster could be moving/not aligned when killed we want to spawn the Item aligned with Tile.
+	 * @param aTile **/
+	private Point getFinalPosition(Tile aTile) {
+		switch(((Monster)aTile).dir){
+		case Left: 	return new Point(x-((Monster)aTile).stepToMove,y);
+		case Right:	return new Point(x+((Monster)aTile).stepToMove,y);
+		case Up:	return new Point(x,y-((Monster)aTile).stepToMove);
+		case Down:	return new Point(x,y+((Monster)aTile).stepToMove);
+		}
+		return null;
 	}
 	public void updateMask() {
 		mask=new Rectangle(x,y,width,height);	

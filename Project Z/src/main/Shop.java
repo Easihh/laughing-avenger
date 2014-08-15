@@ -2,11 +2,13 @@ package main;
 
 import item.ArrowSold;
 import item.BlueCandleSold;
+import item.BluePotionSold;
 import item.BombSold;
 import item.HeartContainer;
 import item.Item;
 import item.MagicalBoomerangPickUp;
 import item.MagicalRodPickUp;
+import item.RedPotionSold;
 import item.WoodSword;
 
 import java.awt.Color;
@@ -97,7 +99,11 @@ public class Shop {
 		case "21":	theRoom[coordX][coordY]=new MagicalRodPickUp(coordX*tileSize,coordY*tileSize,Item.ID.MagicalRod);
 					break;
 		case "22":	theRoom[coordX][coordY]=new MagicalBoomerangPickUp(coordX*tileSize,coordY*tileSize,Item.ID.MagicalBoomerang);
-					break;			
+					break;
+		case "23":	theRoom[coordX][coordY]=new BluePotionSold(coordX*tileSize,coordY*tileSize,Item.ID.BluePotion);
+					break;
+		case "24":	theRoom[coordX][coordY]=new RedPotionSold(coordX*tileSize,coordY*tileSize,Item.ID.RedPotion);
+					break;				
 		}
 	}
 

@@ -24,7 +24,6 @@ public class Arrow extends Item{
 		this.type=type;
 		loadImage();
 	}
-
 	private void loadImage() {
 		try {img=ImageIO.read(getClass().getResourceAsStream("/map/Arrow.png"));
 		BufferedImage image=ImageIO.read(getClass().getResourceAsStream("/map/Arrows.png"));

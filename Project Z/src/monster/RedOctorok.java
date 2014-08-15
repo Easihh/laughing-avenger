@@ -2,15 +2,21 @@ package monster;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 
 import main.Hero.Direction;
 import main.Map;
 import main.Movement;
+import main.Projectile;
 
 
 public class RedOctorok extends Monster{
-	Movement Octorok,OctorokHit1,OctorokHit2;
+	private Movement Octorok,OctorokHit1,OctorokHit2;
+	private BufferedImage projectile_img;
 	public RedOctorok(int x, int y, ID type) {
 		super(x,y,type);
 		Octorok=new Movement("RedOctorok", 250);
@@ -19,10 +25,17 @@ public class RedOctorok extends Monster{
 		dir=Direction.Down;
 		hitpoint=2;
 		moveSpeed=1;
+		loadProjectileImage();
+	}
+
+	private void loadProjectileImage() {
+		try {projectile_img=ImageIO.read(getClass().getResourceAsStream("/map/rockProjectile.png"));} 
+		catch (IOException e) {e.printStackTrace();}	
 	}
 
 	@Override
 	public void render(Graphics g) {
+		if(projectile !=null)projectile.render(g);
 		if(death==null && invincible_timer==null)
 			g.drawImage(Octorok.getWalkAnimation(dir).getImage(),x,y,null);
 		if(death==null && invincible_timer!=null && invincible_timer.elapsedMillis()<250)
@@ -42,14 +55,18 @@ public class RedOctorok extends Monster{
 			updateMask();
 			checkHeroSwordCollision();
 			checkHeroCollision();
+			if(projectile!=null)projectile.update();
+			if(projectile!=null && projectile.outOfBound())projectile=null;
 			if(stepToMove==0){
 				if(x%step!=0 || y%step!=0){
 					System.out.println("x:"+x%step);
 					System.out.println("y:"+y%step);
 					System.out.println("ERROR UNALIGNED");
 				}
-				if(!collisionTile() && !outOfBound(step,dir))
+				if(!collisionTile() && !outOfBound(step,dir)){
+					tryShoot();
 					rdymove();
+				}
 				else getNewDirection();
 			}
 			if(stepToMove>0 && pushbackdir==Direction.None)
@@ -58,6 +75,26 @@ public class RedOctorok extends Monster{
 				pushbackMove();
 			if(invincible_timer!=null && invincible_timer.elapsedMillis()>invincible_duration)
 				invincible_timer=null;
+		}
+	}
+
+	private void tryShoot() {
+		Random rng=new Random();
+		int value=rng.nextInt(100);
+		if(value<5)
+			createProjectile();
+	}
+
+	private void createProjectile() {
+		switch(dir){
+		case Left:	projectile=new Projectile(new Rectangle(x-32,y,32,32), projectile_img, dir);
+					break;
+		case Right:	projectile=new Projectile(new Rectangle(x+32,y,32,32), projectile_img, dir);
+					break;
+		case Up:	projectile=new Projectile(new Rectangle(x,y-32,32,32), projectile_img, dir);
+					break;
+		case Down:	projectile=new Projectile(new Rectangle(x,y+32,32,32), projectile_img, dir);
+					break;
 		}
 	}
 

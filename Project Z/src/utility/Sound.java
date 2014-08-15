@@ -12,7 +12,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class Sound {
 	
 	public static Clip overWorldMusic,sword,swordCombine,selector,candle,enemyHit,enemyKill,newItem,newInventItem,
-	linkHurt,enterShop,lowHealth,arrow,secret,bombDrop,bombBlow,magicalRod,boomerang;
+	linkHurt,enterShop,lowHealth,arrow,secret,bombDrop,bombBlow,magicalRod,boomerang,getHeart,shield;
 	public Sound(String filename){
 		InputStream source=this.getClass().getResourceAsStream("/sound/"+filename+".wav");
 		InputStream sound=new BufferedInputStream(source);
@@ -38,6 +38,8 @@ public class Sound {
 		if(filename.equalsIgnoreCase("bombBlow"))bombBlow=clip;
 		if(filename.equalsIgnoreCase("magicalRod"))magicalRod=clip;
 		if(filename.equalsIgnoreCase("boomerang"))boomerang=clip;
+		if(filename.equalsIgnoreCase("getHeart"))getHeart=clip;
+		if(filename.equalsIgnoreCase("shield"))shield=clip;
 		} catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
 			e.printStackTrace();}
 	}

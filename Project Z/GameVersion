@@ -1,3 +1,22 @@
+Version 0.12:
+
+-Blue and Red Potion Item has been added.
+-Blue and Red Potion Item pauses the game and heal the Hero to Full Life.
+-Blue Potion has a single use while Red potion transform into blue potion once used.
+-Red Octorok Monster can now shoot projectile.
+-Hero can deflect Octorok's projectile if facing the opposite direction of incoming projectile.
+-Added Deflect shield sound.
+
+Version 0.11:
+
+-Fixed a bug where MagicalRod would be invisible if hitting monster at very close range.
+-Fixed a bug where Player attack pose would reset automatically if monster was killed with MagicalRod at close range.
+-Monster can now drop Items.
+-Heart that can regenerate health can now drop from Monsters.
+-Heart Sound has been added.
+-Magical Boomerang can now be used to  take certain object such as Hearts.
+-Magical Bommerang  will now start returning to character if out of room bounds.
+
 Version 0.10:
 
 -Fixed issue where Sword attack could no longer be used after using MagicalRod.

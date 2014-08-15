@@ -43,15 +43,18 @@ public class Main implements Runnable{
 	}
 	@Override
 	public void run() {
+		Hero hero=Hero.getInstance();
 		watch.start();
 		fpsWatcher.start();
 		while(true){
 		if((watch.elapsedMillis())>=refresh_delay){
 			fps++;
 				if(gameStatus==GameState.Normal){
-					Hero.getInstance().update();
+					hero.update();
 					Map.getInstance().update();
 				}
+				if(gameStatus==GameState.Paused)
+					hero.checkIfUsingPotion();
 				frame.repaint();
 				watch.reset();
 		}

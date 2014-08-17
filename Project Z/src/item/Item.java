@@ -22,7 +22,7 @@ public abstract class Item extends Tile{
 	public String name;
 	public ID type;
 	public enum ID{ BlueCandle(0),WoodSword(1),Arrow(2),HeartContainer(3),Bomb(4), MagicalRod(5),MagicalBoomerang(6),BluePotion(7),
-		RedPotion(8);
+		RedPotion(8),MagicalShield(9),BlueRing(10);
 		public int value;
 		private ID(int value){
 		this.value=value;

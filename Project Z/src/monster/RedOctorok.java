@@ -25,6 +25,7 @@ public class RedOctorok extends Monster{
 		dir=Direction.Down;
 		hitpoint=2;
 		moveSpeed=1;
+		damage=2;
 		loadProjectileImage();
 	}
 

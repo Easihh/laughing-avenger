@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.Clip;
 
 import main.Hero;
 import main.Hero.Direction;
@@ -32,6 +31,7 @@ public abstract class Monster extends Tile{
 	public Stopwatch invincible_timer,death;
 	public Projectile projectile;
 	protected static int id=0;
+	public double damage;
 	public final int invincible_duration=500,width=32,height=32,step=16,pushbackSpeed=4;
 	public enum ID{ RedOctorok(1),Fire(2),WoodSword(3),Merchant(4);
 		public int value;
@@ -111,13 +111,13 @@ public abstract class Monster extends Tile{
 		Hero hero=Hero.getInstance();
 		int pushDistance=64;
 		if(mask.intersects(new Rectangle(hero.x,hero.y,32,32)) && hero.invincible_timer==null)
-			hero.getHurt(pushDistance);
+			hero.getHurt(pushDistance,damage);
 		if(projectile!=null && projectile.mask.intersects(new Rectangle(hero.x,hero.y,32,32)) && hero.invincible_timer==null){
 			if((projectile.dir==Direction.Down && hero.dir!=Direction.Up) ||
 					(projectile.dir==Direction.Left && hero.dir!=Direction.Right) ||
 					(projectile.dir==Direction.Right && hero.dir!=Direction.Left) ||
 					(projectile.dir==Direction.Up && hero.dir!=Direction.Down))
-				hero.getHurt(pushDistance);
+				hero.getHurt(pushDistance,damage);
 			else{
 					Sound.shield.setFramePosition(0);
 					Sound.shield.start();

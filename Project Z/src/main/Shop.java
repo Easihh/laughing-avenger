@@ -3,11 +3,13 @@ package main;
 import item.ArrowSold;
 import item.BlueCandleSold;
 import item.BluePotionSold;
+import item.BlueRingSold;
 import item.BombSold;
 import item.HeartContainer;
 import item.Item;
 import item.MagicalBoomerangPickUp;
 import item.MagicalRodPickUp;
+import item.MagicalShieldSold;
 import item.RedPotionSold;
 import item.WoodSword;
 
@@ -103,7 +105,11 @@ public class Shop {
 		case "23":	theRoom[coordX][coordY]=new BluePotionSold(coordX*tileSize,coordY*tileSize,Item.ID.BluePotion);
 					break;
 		case "24":	theRoom[coordX][coordY]=new RedPotionSold(coordX*tileSize,coordY*tileSize,Item.ID.RedPotion);
-					break;				
+					break;	
+		case "25":	theRoom[coordX][coordY]=new MagicalShieldSold(coordX*tileSize,coordY*tileSize,Item.ID.MagicalShield);
+					break;
+		case "26":	theRoom[coordX][coordY]=new BlueRingSold(coordX*tileSize,coordY*tileSize,Item.ID.BlueRing);
+					break;			
 		}
 	}
 

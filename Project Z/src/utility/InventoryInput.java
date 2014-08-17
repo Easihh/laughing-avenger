@@ -7,7 +7,8 @@ import main.Main.GameState;
 
 public class InventoryInput implements KeyListener{
 	public boolean canMoveSelector;
-	Stopwatch timer;
+	private Stopwatch timer;
+	public static int currentRowIndex=0,currentColIndex=0;
 	public InventoryInput(){
 		timer=new Stopwatch();
 		timer.start();

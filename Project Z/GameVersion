@@ -1,3 +1,12 @@
+Version 0.13:
+
+-Magical Shield Item has been added.
+-Hero now have new walking animation if possessing Magical Shield.
+-Blue Ring Item has been added.
+-Hero take 1/2 of damage from monster when possessing blue ring.
+-Hero now change color to white when possessing blue ring.
+-Current Selected Item now shows up on the small Square while in Inventory.
+
 Version 0.12:
 
 -Blue and Red Potion Item has been added.

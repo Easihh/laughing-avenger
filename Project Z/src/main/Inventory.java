@@ -1,5 +1,7 @@
 package main;
 
+import item.Item;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -37,12 +39,16 @@ public class Inventory extends JPanel{
 		}
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
+			Item selectedItem=Hero.getInstance().inventory_items[InventoryInput.currentRowIndex][InventoryInput.currentColIndex];
 			g.drawImage(selector.mySelect, selector.x, selector.y, null);
 			g.setColor(Color.red);
 			g.setFont(new Font(Font.MONOSPACED,Font.BOLD,20));
 			g.drawString("INVENTORY", 96, 72);
 			g.setColor(Color.magenta);
 			g.drawRect(112, 96, 48, 48);
+			if(selectedItem!=null
+					&& selectedItem.hasOwnership)
+				g.drawImage(selectedItem.img,120,104,null);
 			g.drawRect(240, 97, 192, 97);
 			drawItem(g);
 			drawTriforce(g);

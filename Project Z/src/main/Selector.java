@@ -4,6 +4,8 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import utility.InventoryInput;
 import utility.Sound;
 
 public class Selector {
@@ -31,6 +33,7 @@ public class Selector {
 			Sound.selector.flush();
 			Sound.selector.start();
 			updateMask();
+			InventoryInput.currentColIndex--;
 		}
 	}
 	public void tryMoveRight() {
@@ -40,6 +43,7 @@ public class Selector {
 			Sound.selector.flush();
 			Sound.selector.start();
 			updateMask();
+			InventoryInput.currentColIndex++;
 		}
 	}
 	public void tryMoveDown() {
@@ -49,6 +53,7 @@ public class Selector {
 			Sound.selector.flush();
 			Sound.selector.start();
 			updateMask();
+			InventoryInput.currentRowIndex++;
 		}
 	}
 	public void tryMoveUp() {
@@ -58,6 +63,7 @@ public class Selector {
 			Sound.selector.flush();
 			Sound.selector.start();
 			updateMask();
+			InventoryInput.currentRowIndex--;
 		}
 	}
 	public void itemCollision() {

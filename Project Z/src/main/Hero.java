@@ -4,7 +4,6 @@ import item.BlueCandle;
 import item.Bomb;
 import item.Item;
 import item.Item.ID;
-import item.MagicalBoomerang;
 import item.MagicalRod;
 
 import java.awt.Graphics;
@@ -29,10 +28,11 @@ public class Hero {
 	public int translateX,translateY;
 	public enum Direction{Up,Down,Left,Right,None};
 	public Direction dir;
-	public Movement movement,movementHit1,movementHit2;
+	public Movement movement,movementHit1,movementHit2,bigShieldmovement,bigShieldmovementHit1,bigShieldmovementHit2,
+	bigShieldWhitemovement,bigShieldRedmovement,Whitemovement,Redmovement;
 	public Image obtainItem;
 	public Attack attack=new Attack();
-	public boolean canAttack,isAttacking;
+	public boolean canAttack,isAttacking,hasMagicShield,hasBlueRing;
 	public Image attack_img=null;
 	public Inventory inventory;
 	public Item[][] inventory_items;
@@ -60,12 +60,19 @@ public class Hero {
 		//inventory_items[0][4]=new MagicalBoomerang(369,98,Item.ID.MagicalBoomerang);;
 		//inventory_items[0][4].hasOwnership=true;
 		canAttack=true;
-		isAttacking=false;
+		isAttacking=hasMagicShield=hasBlueRing=false;
 		isInsideShop=Shop.ID.None.value;
 		dir=Direction.Down;
 		movement=new Movement("Link_Movement",100);
 		movementHit1=new Movement("Link_Movement_Hit1",100);
 		movementHit2=new Movement("Link_Movement_Hit2",100);
+		bigShieldmovement=new Movement("BigShield_Link_Movement", 100);
+		bigShieldmovementHit1=new Movement("BigShield_Link_Movement_Hit1", 100);
+		bigShieldmovementHit2=new Movement("BigShield_Link_Movement_Hit2", 100);
+		Redmovement=new Movement("RedLink_Movement",100);
+		Whitemovement=new Movement("WhiteLink_Movement",100);
+		bigShieldRedmovement=new Movement("BigShield_RedLink_Movement",100);
+		bigShieldWhitemovement=new Movement("BigShield_WhiteLink_Movement",100);
 	}
 	public static Hero getInstance(){
 		if(theHero==null)
@@ -78,12 +85,26 @@ public class Hero {
 		if(specialItem!=null)
 			specialItem.render(g);
 		if(!isAttacking && obtainItem==null){
-			if(invincible_timer==null)
-				s.drawImage(movement.getWalkAnimation(dir).getImage(),x,y,null);
-			else if(invincible_timer!=null && invincible_timer.elapsedMillis()<invincible_duration/2)
-				s.drawImage(movementHit1.getWalkAnimation(dir).getImage(),x,y,null);
-			else if(invincible_timer!=null && invincible_timer.elapsedMillis()>=invincible_duration/2)
-				s.drawImage(movementHit2.getWalkAnimation(dir).getImage(),x,y,null);
+			if(invincible_timer==null){
+				if(!hasMagicShield && !hasBlueRing)
+					s.drawImage(movement.getWalkAnimation(dir).getImage(),x,y,null);
+				if(!hasMagicShield && hasBlueRing)
+					s.drawImage(Whitemovement.getWalkAnimation(dir).getImage(),x,y,null);
+				if(hasMagicShield && !hasBlueRing)
+					s.drawImage(bigShieldmovement.getWalkAnimation(dir).getImage(),x,y,null);
+				if(hasMagicShield && hasBlueRing)
+					s.drawImage(bigShieldWhitemovement.getWalkAnimation(dir).getImage(),x,y,null);
+			}
+			else if(invincible_timer!=null && invincible_timer.elapsedMillis()<invincible_duration/2){
+				if(!hasMagicShield)
+					s.drawImage(movementHit1.getWalkAnimation(dir).getImage(),x,y,null);
+				else s.drawImage(bigShieldmovementHit1.getWalkAnimation(dir).getImage(),x,y,null);
+			}
+			else if(invincible_timer!=null && invincible_timer.elapsedMillis()>=invincible_duration/2){
+				if(!hasMagicShield)
+					s.drawImage(movementHit2.getWalkAnimation(dir).getImage(),x,y,null);
+				else s.drawImage(bigShieldmovementHit2.getWalkAnimation(dir).getImage(),x,y,null);
+			}
 		}
 		if(isAttacking && obtainItem==null)
 			s.drawImage(attack_img,x,y,null);
@@ -116,52 +137,82 @@ public class Hero {
 	private void checkKey() {
 		if(Input.key[0]==Input.Key.W  && (Input.key[1]==Input.Key.D || Input.key[3]==Input.Key.A)){//up and left or right is pressed; up take precedence
 			dir=Direction.Up;
-			movement.walk_up.setImage();
-			movementHit1.walk_up.setImage();
-			movementHit2.walk_up.setImage();
+			updateMovementImage();
 			if(!collisionCheck(new Rectangle(x,y-step,step,step),new Rectangle(x+step,y-step,step,step)))
 				target=step;
 		}
 		else if(Input.key[2]==Input.Key.S  && (Input.key[1]==Input.Key.D || Input.key[3]==Input.Key.A)){//down and left or right is pressed; down take precedence
 			dir=Direction.Down;
-			movement.walk_down.setImage();
-			movementHit1.walk_down.setImage();
-			movementHit2.walk_down.setImage();
+			updateMovementImage();
 			if(!collisionCheck(new Rectangle(x,y+height,step,step),new Rectangle(x+step,y+height,step,step)))
 				target=step;
 		}
 		else if(Input.key[0]==Input.Key.W){
 			dir=Direction.Up;
-			movement.walk_up.setImage();
-			movementHit1.walk_up.setImage();
-			movementHit2.walk_up.setImage();
+			updateMovementImage();
 			if(!collisionCheck(new Rectangle(x,y-step,step,step),new Rectangle(x+step,y-step,step,step)))
 				target=step;
 		}
 		else if(Input.key[1]==Input.Key.D){
 			dir=Direction.Right;
-			movement.walk_right.setImage();
-			movementHit1.walk_right.setImage();
-			movementHit2.walk_right.setImage();
+			updateMovementImage();
 			if(!collisionCheck(new Rectangle(x+width,y,step,step),new Rectangle(x+width,y+step,step,step)))
 				target=step;
 		}
 		else if(Input.key[2]==Input.Key.S){
 			dir=Direction.Down;
-			movement.walk_down.setImage();
-			movementHit1.walk_down.setImage();
-			movementHit2.walk_down.setImage();
+			updateMovementImage();
 			if(!collisionCheck(new Rectangle(x,y+height,step,step),new Rectangle(x+step,y+height,step,step)))
 				target=step;
 		}
 		else if(Input.key[3]==Input.Key.A){
 			dir=Direction.Left;
-			movement.walk_left.setImage();
-			movementHit1.walk_left.setImage();
-			movementHit2.walk_left.setImage();
+			updateMovementImage();
 			if(!collisionCheck(new Rectangle(x-step,y,step,step),new Rectangle(x-step,y+step,step,step)))
 				target=step;
 		}
+	}
+	private void updateMovementImage() {
+		movement.walk_up.setImage();
+		movementHit1.walk_up.setImage();
+		movementHit2.walk_up.setImage();
+		bigShieldmovement.walk_up.setImage();
+		bigShieldmovementHit1.walk_up.setImage();
+		bigShieldmovementHit2.walk_up.setImage();
+		Redmovement.walk_up.setImage();
+		Whitemovement.walk_up.setImage();
+		bigShieldRedmovement.walk_up.setImage();
+		bigShieldWhitemovement.walk_up.setImage();
+		movement.walk_left.setImage();
+		movementHit1.walk_left.setImage();
+		movementHit2.walk_left.setImage();
+		bigShieldmovement.walk_left.setImage();
+		bigShieldmovementHit1.walk_left.setImage();
+		bigShieldmovementHit2.walk_left.setImage();
+		Redmovement.walk_left.setImage();
+		Whitemovement.walk_left.setImage();
+		bigShieldRedmovement.walk_left.setImage();
+		bigShieldWhitemovement.walk_left.setImage();
+		movement.walk_down.setImage();
+		movementHit1.walk_down.setImage();
+		movementHit2.walk_down.setImage();
+		bigShieldmovement.walk_down.setImage();
+		bigShieldmovementHit1.walk_down.setImage();
+		bigShieldmovementHit2.walk_down.setImage();
+		Redmovement.walk_down.setImage();
+		Whitemovement.walk_down.setImage();
+		bigShieldRedmovement.walk_down.setImage();
+		bigShieldWhitemovement.walk_down.setImage();
+		movement.walk_right.setImage();
+		movementHit1.walk_right.setImage();
+		movementHit2.walk_right.setImage();
+		bigShieldmovement.walk_right.setImage();
+		bigShieldmovementHit1.walk_right.setImage();
+		bigShieldmovementHit2.walk_right.setImage();
+		Redmovement.walk_right.setImage();
+		Whitemovement.walk_right.setImage();
+		bigShieldRedmovement.walk_right.setImage();
+		bigShieldWhitemovement.walk_right.setImage();
 	}
 	private boolean collisionCheck(Rectangle mask1, Rectangle mask2) {
 		//calculate worldCoordinate to only check against tile in current room.
@@ -274,14 +325,18 @@ public class Hero {
 		if(specialItem!=null && (specialItem.type==ID.BluePotion || specialItem.type==ID.RedPotion))
 			specialItem.update();
 	}
-	public void getHurt(int pushDistance) {
+	public void getHurt(int pushDistance,double damage) {
 		invincible_timer=new Stopwatch();
 		invincible_timer.start();
 		Sound.linkHurt.setFramePosition(0);
 		Sound.linkHurt.start();
 		beingPushed(pushDistance);
-		if(currentHealth>0)
-			currentHealth-=1;
+		if(currentHealth>0){
+			if(hasBlueRing)
+				currentHealth-=Math.ceil(damage/2);
+			else currentHealth-=damage;
+			System.out.println("Current health:"+currentHealth);
+		}
 		if(currentHealth<=2){
 			Sound.lowHealth.setFramePosition(0);
 			Sound.lowHealth.loop(Clip.LOOP_CONTINUOUSLY);

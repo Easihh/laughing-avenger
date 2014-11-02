@@ -4,23 +4,25 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
-
+/*Author Enrico Talbot
+ * 
+ * This class represent the Green Monster that follows the Hero in Game.It's special ability is
+ * to Sleep and become a solid block as soon as it is in contact with the Hero.
+ */
 public class Leeper extends Monster{
 	private boolean path_exist=false;
 	private int step_to_move;
-	private final int step=2;
-	private final int movement=16;
+	private final int step=2,movement=16;
 	private final long nano=1000000L;
 	private int last_update=0;
-	private Movement move;
-	private Movement sleep;
+	private Movement move,sleep;
 	private Node nextMovement;
 	public boolean isSleeping;
 	
 	public Leeper(int x, int y, ID type) {
 		super(x, y, type);
 		move=new Movement("leeper_movement", 150);
-		sleep=new Movement("leeper_sleep",500);
+		sleep=new Movement("leeper_sleep",500);//since this Monster has different animation when sleeping
 		depth=2;
 		isSleeping=false;
 		dir=Game.Direction.Left;
@@ -63,7 +65,7 @@ public class Leeper extends Monster{
 			if(Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat && type!=Tile.ID.MoveableBlock)move();
 		}
 		if(isSleeping) sleep.getWalkAnimation(dir).setImage();
-		if(type==Tile.ID.boat && !Character.isPushing){
+		if(type==Tile.ID.boat && !Labyrinth.hero.isPushing){
 			if(boat_movement)boatMovement();
 			if(!boat_movement)
 				boat_movement=true;
@@ -77,8 +79,12 @@ public class Leeper extends Monster{
 	}
 	private boolean isCollidingHero() {
 
-		return(shape.intersects(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY(),width,height)));
+		return(shape.intersects(new Rectangle(Labyrinth.hero.x,Labyrinth.hero.y,width,height)));
 	}
+	/* Because its possible for the Monster to be shot while its still moving thus
+	 * possibly becoming unaligned with the grid,we want the monster to finish its movement
+	 * to the next grid even if it has been shot; this way the monster will stay aligned.
+	 */
 	private void reverseMove() {
 		if(step_to_move>0){	
 			switch(dir){
@@ -94,10 +100,16 @@ public class Leeper extends Monster{
 			case Down:	step_to_move=y%movement;
 						y-=step;
 						break;
+			default:
+				break;
 			}
 			step_to_move-=step;
 		}	
 	}
+	/* Since we want monster to always be aligned with grid, they can only move 
+	 * a certain distance at once but we dont want to move all at once therefore we
+	 * have to move slightly every game update until we reach the next grid location.
+	 */
 	private void stepMove() {
 		if(step_to_move>0){	
 			switch(dir){
@@ -109,6 +121,8 @@ public class Leeper extends Monster{
 						break;
 			case Down:	y+=step;
 						break;
+			default:
+				break;
 			}
 			step_to_move-=step;
 		}
@@ -129,6 +143,11 @@ public class Leeper extends Monster{
 		}
 		return false;
 	}
+	/*This is the movement logic for the Monster.The monster will try and find the shortest path via
+	 * the A* algorithmn and then decide where it needs to move.It is possible that there are no path
+	 * to the Hero at any point in the game therefore the Monster should be moving differently in 
+	 *this case.
+	 */
 	private void move() {
 		last_update++;
 		if(step_to_move==0  && x%movement==0 && y%movement==0 && 
@@ -174,14 +193,17 @@ public class Leeper extends Monster{
 							y+=step;
 						else getnewDirection();
 						break;
+			default:
+				break;
 			}
 		}
 	}
-	
+	/* This Monster will turn into sleeping mode as soon as they are in contact with the Hero.
+	 */
 	private void willSleep() {
 		switch(dir){
 		case Left:	if(new Rectangle(x-half_width,y-half_height,width,height+half_height).intersects
-						(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY(),width,height))){
+						(new Rectangle(Labyrinth.hero.x,Labyrinth.hero.y,width,height))){
 						x+=step;
 						Sound.resetSound();
 						Sound.Sleeper.start();
@@ -189,7 +211,7 @@ public class Leeper extends Monster{
 					}
 					break;
 		case Right:	if(new Rectangle(x+half_width,y-half_height,width,height+half_height).intersects
-						(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY(),width,height))){
+						(new Rectangle(Labyrinth.hero.x,Labyrinth.hero.y,width,height))){
 						x-=step;
 						Sound.resetSound();
 						Sound.Sleeper.start();
@@ -197,7 +219,7 @@ public class Leeper extends Monster{
 					}
 					break;
 		case Up:	if(new Rectangle(x-half_width,y-half_height,width+half_width,height).intersects
-						(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY(),width,height))){
+						(new Rectangle(Labyrinth.hero.x,Labyrinth.hero.y,width,height))){
 						y+=step;
 						Sound.resetSound();
 						Sound.Sleeper.start();
@@ -205,21 +227,21 @@ public class Leeper extends Monster{
 					}	
 					break;
 		case Down:	if(new Rectangle(x-half_width,y+half_height,width+half_width,height).intersects
-					(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY(),width,height))){
+					(new Rectangle(Labyrinth.hero.x,Labyrinth.hero.y,width,height))){
 						y-=step;
 						Sound.resetSound();
 						Sound.Sleeper.start();
 						isSleeping=true;
 					}					
 					break;
+		default:
+			break;
 			
 		}
-		//System.out.println("targetX:"+Character.targetX);
-		//System.out.println("step:"+step_to_move);
-		//System.out.println("deltaX:"+deltaX);
-		//System.out.println("deltaY:"+deltaY);
-		//System.out.println("direction:"+Character.getInstance().dir);
 	}
+	/*This is the A* Algorithmn part that find the shortest path from the monster to the Hero while
+	 * also taking collision into consideration and then the Monster will follow this given path.
+	 */
 	private void shortestPath(){
 		Node goal=new Node(getHeroPosition());
 		Open=new ArrayList<Node>();
@@ -264,16 +286,17 @@ public class Leeper extends Monster{
 	private Point getHeroPosition() {
 		//get hero position including future position if he is moving
 		Point position=null;
-		Character hero=Character.getInstance();
+		Character hero=Labyrinth.hero;
 		switch(hero.dir){
-		case Right:	position=new Point(hero.getX()+Character.targetX,hero.getY());
+		case Right:	position=new Point(hero.x+hero.targetX,hero.y);
 					break;
-		case Left:	position=new Point(hero.getX()+Character.targetX,hero.getY());
+		case Left:	position=new Point(hero.x+hero.targetX,hero.y);
 					break;
-		case Up:	position=new Point(hero.getX(),hero.getY()+Character.targetX);
+		case Up:	position=new Point(hero.x,hero.y+hero.targetX);
 					break;
-		case Down:	position=new Point(hero.getX(),hero.getY()+Character.targetX);
+		case Down:	position=new Point(hero.x,hero.y+hero.targetX);
 					break;
+		default:	break;
 		}
 		if(position.x%movement!=0 || position.y%movement!=0)System.out.println("ERROR PATH WONT BE AlIGNED");
 		return position;

@@ -2,22 +2,16 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.sound.sampled.*;
-
+/* Author Enrico Talbot
+ * 
+ * This is the Class where Sounds are played from and loaded.Since we do not want to keep loading
+ * sound file every time its needed, we instead load all sounds at the start of the game and get a 
+ * reference to it so we can play the sound when needed without latency caused by constantly loading 
+ * a file.
+ */
 public class Sound {
-	public static Clip 	ArrowBridgePowerUsed;
-	public static Clip 	ChestOpen;
-	public static Clip 	Death;
-	public static Clip 	DoorOpen;
-	public static Clip	DragonSound;
-	public static Clip 	HammerPowerUsed;
-	public static Clip 	HeartSound;
-	public static Clip 	MedusaSound;
-	public static Clip	MonsterDestroyed;
-	public static Clip	PowerEnabled;
-	public static Clip 	Sleeper;
-	public static Clip	ShotSound;
-	public static Clip 	StageMusic;
-	public static Clip 	Water;
+	public static Clip 	ArrowBridgePowerUsed,ChestOpen,Death,DoorOpen,DragonSound,HammerPowerUsed,
+	HeartSound,MedusaSound,MonsterDestroyed,PowerEnabled,Sleeper,ShotSound,StageMusic,Water;
     public Sound(String Filename) {
     	InputStream source=this.getClass().getResourceAsStream("/Sound/"+Filename+".wav");
         InputStream Sound=new BufferedInputStream(source);

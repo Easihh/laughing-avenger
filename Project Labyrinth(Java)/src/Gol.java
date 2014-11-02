@@ -2,6 +2,13 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+/* Author Enrico Talbot
+ * 
+ * This is the Class that represent the Gol monster in game(Pink Dragon).This Monster special
+ * ability is that it will awaken and start shooting the Hero if in Line of Sight once all the hearts
+ * have been taken in a given Level.
+ */
 public class Gol extends Monster {
 	private final long nano=1000000L;
 	private BufferedImage projectile_img;
@@ -35,7 +42,7 @@ public class Gol extends Monster {
 		fireProjectile();
 		if(projectile!=null && !canShoot)
 			projectile.update();
-		if(type==Tile.ID.boat && !Character.isPushing){
+		if(type==Tile.ID.boat && !Labyrinth.hero.isPushing){
 			if(boat_movement)boatMovement();
 			if(!boat_movement)
 				boat_movement=true;
@@ -95,6 +102,8 @@ public class Gol extends Monster {
 						break;
 		case GolRight:	projectile_img=bullet_type[2];
 						break;
+		default:
+			break;
 		}
 	}
 
@@ -105,29 +114,35 @@ public class Gol extends Monster {
 		}
 		return false;
 	}
+	/* Gol Monsters should only be allowed to shoot if the hero is in detect range(partial or fully) within
+	 * a single row X-axis(left,right) or column Y-axis(up,down) depending which direction the Monster is facing.
+	 * Gol's Projectile should not be able to pass through solid object such as a wall(This is decided in the Character Class)                        .
+	 */
 	private boolean LineofSight() {
-		Character hero=Character.getInstance();
+		Character hero=Labyrinth.hero;
 		switch(type){
-		case GolUp: 	if((hero.getX()+hero.step==x || hero.getX()==x || hero.getX()-hero.step==x) && hero.getY()<y){
+		case GolUp: 	if((hero.x+hero.step==x || hero.x==x || hero.x-hero.step==x) && hero.y<y){
 							projectile_dir=Game.Direction.Up;
 							return true;
 						}
 						break;
-		case GolDown:	if((x-hero.step==hero.getX() || x==hero.getX()|| x+hero.step==hero.getX()) && hero.getY()>y){
+		case GolDown:	if((x-hero.step==hero.x || x==hero.x|| x+hero.step==hero.x) && hero.y>y){
 							projectile_dir=Game.Direction.Down;
 							return true;
 						}
 						break;
-		case GolLeft:	if((hero.getY()-hero.step==y || hero.getY()+hero.step==y ||y==hero.getY()) && x>hero.getX()){
+		case GolLeft:	if((hero.y-hero.step==y || hero.y+hero.step==y ||y==hero.y) && x>hero.x){
 							projectile_dir=Game.Direction.Left;
 							return true;
 						}
 						break;
-		case GolRight:	if((hero.getY()-hero.step==y || hero.getY()+hero.step==y || y==hero.getY()) && x<hero.getX()){
+		case GolRight:	if((hero.y-hero.step==y || hero.y+hero.step==y || y==hero.y) && x<hero.x){
 							projectile_dir=Game.Direction.Right;
 							return true;
 						}
 						break;
+		default:
+			break;
 		}
 		return false;
 	}

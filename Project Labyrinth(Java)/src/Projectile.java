@@ -2,16 +2,18 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+/* Author Enrico Talbot
+ * 
+ * This class is used for Character and Monster Projectile.
+ * A Projectile's Collision Mask is represented as a Square subdivided into 8 equal part in order to
+ * represent partial collision with other object or Character.
+ */
 public class Projectile {
-	private BufferedImage img=null;	
-	private final int half_width=16;
-	private final int half_height=16;
-	private final int width=32;
-	private final int height=32;
+	private BufferedImage img=null;	//how the projectile looks.
+	private final int half_width=16,half_height=16,width=32,height=32;
 	public int projectile_speed=6;	
 	public Game.Direction dir;
-	public int x;
-	public int y;
+	public int x,y;
 	public Rectangle lefttop,leftbottom,righttop,rightbottom,topleft,topright,bottomleft,bottomright;
 	public Projectile(int x,int y,BufferedImage img,Game.Direction dir){
 		this.x=x;
@@ -36,6 +38,7 @@ public class Projectile {
 	public void render(Graphics g) {
 		g.drawImage(img,x,y,null);
 	}
+	//Update Project location at every game update and update its Mask to match new location.
 	public void update(){
 		switch(dir){
 		case Right:	x+=projectile_speed;
@@ -46,6 +49,7 @@ public class Projectile {
 					break;
 		case Up: 	y-=projectile_speed;
 					break;
+		default:	break;
 		}
 		buildMask();
 	}

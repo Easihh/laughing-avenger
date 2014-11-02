@@ -8,13 +8,18 @@ import java.util.Collections;
 import java.util.Stack;
 import javax.imageio.ImageIO;
 
+/* Author Enrico Talbot
+ * 
+ * Class that represent the Monster Alma which is first shown on Level 8.This monster ability is
+ * that it will follow the Hero until it touch him making the hero die.This monster will also
+ * switch to a roll form when moving on the right or left is there are no object collision.
+ * Unlike other monsters who follow the Hero to his death, this Monster cannot go on Grass tile.
+ */
 public class Alma extends Monster{
 	private Animation roll;
 	private boolean path_exist=false;
 	private int last_update=0;
-	private final int step=2;
-	private final int movement=16;
-	private final int roll_animation_duration=150;
+	private final int step=2,movement=16,roll_animation_duration=150;
 	private int step_to_move;
 	private Movement move;
 	private Node nextMovement;
@@ -55,7 +60,7 @@ public class Alma extends Monster{
 	public void update(){
 		getAnimation().setImage();
 		if(Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat && type!=Tile.ID.MoveableBlock)move();
-		if(type==Tile.ID.boat && !Character.isPushing){
+		if(type==Tile.ID.boat && !Labyrinth.hero.isPushing){
 			if(boat_movement)boatMovement();
 			if(!boat_movement)
 				boat_movement=true;
@@ -69,8 +74,12 @@ public class Alma extends Monster{
 	}
 	private boolean isCollidingHero() {
 
-		return(shape.intersects(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY(),width,height)));
+		return(shape.intersects(new Rectangle(Labyrinth.hero.x,Labyrinth.hero.y,width,height)));
 	}
+	/* Because its possible for the Monster to be shot while its still moving thus
+	 * possibly becoming unaligned with the grid,we want the monster to finish its movement
+	 * to the next grid even if it has been shot; this way the monster will stay aligned.
+	 */
 	private void reverseMove() {
 		if(step_to_move>0){	
 			switch(dir){
@@ -86,10 +95,15 @@ public class Alma extends Monster{
 			case Down:	step_to_move=y%movement;
 						y-=step;
 						break;
+			default:
+				break;
 			}
 			step_to_move-=step;
 		}	
 	}
+	/* Decides which animation is played based on the Direction and 
+	 * whether there are objects in its path.
+	 */
 	private Animation getAnimation(){
 		switch(dir){
 		case Left: 	if(!Object_inBetween("Left"))
@@ -100,9 +114,15 @@ public class Alma extends Monster{
 					return move.walk_right;
 		case Up: 	return move.walk_up;
 		case Down: 	return move.walk_down;
+		default:
+			break;
 		}
 		return null;
 	}
+	/* Since we want monster to always be aligned with grid, they can only move 
+	 * a certain distance at once but we dont want to move all at once therefore we
+	 * have to move slightly every game update until we reach the next grid location.
+	 */
 	private void stepMove() {
 		if(step_to_move>0){	
 			switch(dir){
@@ -114,6 +134,8 @@ public class Alma extends Monster{
 						break;
 			case Down:	y+=step;
 						break;
+			default:
+				break;
 			}
 			step_to_move-=step;
 		}
@@ -153,6 +175,11 @@ public class Alma extends Monster{
 		}
 		return false;
 	}
+	/*This is the movement logic for the Monster.The monster will try and find the shortest path via
+	 * the A* algorithmn and then decide where it needs to move.It is possible that there are no path
+	 * to the Hero at any point in the game therefore the Monster should be moving differently in 
+	 *this case.
+	 */
 	private void move() {
 		last_update++;
 		if(step_to_move==0 &&
@@ -197,9 +224,14 @@ public class Alma extends Monster{
 							y+=step;
 						else getnewDirection();
 						break;
+			default:
+				break;
 			}
 		}
 	}
+	/*This is the A* Algorithmn part that find the shortest path(the least heuristic value from Monster to Player) from the 
+	 * monster to the Hero while also taking collision into consideration and then the Monster will follow this given path.
+	 */
 	private void shortestPath(){
 		Node goal=new Node(getHeroPosition());
 		Open=new ArrayList<Node>();
@@ -244,16 +276,18 @@ public class Alma extends Monster{
 	private Point getHeroPosition() {
 		//get hero position including future position if he is moving
 		Point position=null;
-		Character hero=Character.getInstance();
+		Character hero=Labyrinth.hero;
 		switch(hero.dir){
-		case Right:	position=new Point(hero.getX()+Character.targetX,hero.getY());
+		case Right:	position=new Point(hero.x+hero.targetX,hero.y);
 					break;
-		case Left:	position=new Point(hero.getX()+Character.targetX,hero.getY());
+		case Left:	position=new Point(hero.x+hero.targetX,hero.y);
 					break;
-		case Up:	position=new Point(hero.getX(),hero.getY()+Character.targetX);
+		case Up:	position=new Point(hero.x,hero.y+hero.targetX);
 					break;
-		case Down:	position=new Point(hero.getX(),hero.getY()+Character.targetX);
+		case Down:	position=new Point(hero.x,hero.y+hero.targetX);
 					break;
+		default:
+			break;
 		}
 		if(position.x%16!=0 || position.y%16!=0)System.out.println("ERROR PATH WONT BE AlIGNED");
 		return position;

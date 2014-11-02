@@ -1,33 +1,25 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Collections;
+/* Author Enrico Talbot
+ * 
+ * This Class represent the main Hero in the game.This class decides how the Hero
+ * should move, Collision detection with different tiles and monster's projectile, abilities etc.
+ */
 
-public class Character {
-	private static Character instance=null; 
-	private final int width=32;
-	private final int height=32;
-	private Game.button lastKey;
+ public class Character {
+	private final int width=32,height=32;
 	private int movement=2;
-	private int x;
-	private int y;
+	public  int x,y,ammo,targetX;
 	private Movement move;
 	private Projectile weapon=null;
 	private Tile select_Tile;
 	
 	public final int step=16;
-	public ArrayList<Game.button> keypressed;
-	public static boolean isShooting;
-	public static boolean isPushing;
-	public static boolean isMoving;
-	public static boolean beingPushed;
-	public static boolean isOnBoat;
-	public boolean canShot;
+	public static boolean isShooting,isOnBoat;
+	public  boolean isPushing,isMoving,beingPushed,canShot;
 	public Death Death;
 	public Game.Direction dir;
-	public int ammo;
-	public static int targetX;
 	public Power aPower;
 	
 	public Character(){
@@ -35,53 +27,28 @@ public class Character {
 		move= new Movement("lolo_movement",100);
 		aPower=new Power();
 		Death=new Death();
-		isShooting=false;
-		isMoving=false;
-		isPushing=false;
-		isOnBoat=false;
-		canShot=false;
+		isShooting=isMoving=isPushing=isOnBoat=canShot=beingPushed=false;
 		 dir=Game.Direction.Up;
-		 lastKey=Game.button.None;
-		 beingPushed=false;
-		 keypressed=new ArrayList<Game.button>();
 		 targetX=0;
-	}
-	  public static Character getInstance() {
-		    if(instance == null) {
-		        instance = new Character();}
-		     return instance;}
-	  public static void destroyInstance() {
-		  		instance =null;}
-	  
-	  public int getX(){
-		  return x;}
-	  public int getY(){
-		  return y;}
-	  public void setX(int x){
-		  this.x=x;}
-	  public void setY(int y){
-		  this.y=y;}
-	  
+	}	  
 	public void render(Graphics g){
-		if(keypressed.size()==0)					
-			move.getWalkAnimation(dir).reset();
 		g.drawImage(move.getWalkAnimation(dir).getImage(),x,y,width,height,null);
 		if(Character.isShooting && weapon!=null)
 			weapon.render(g);		
 	}
 	
-	public void update(){
+	public void update(Input input){
 		if(Labyrinth.GameState==Game.GameState.Normal){
 			if(isWalkingSand())
 				movement=1;
 			else movement=2;
 			if(canShot){
 				checkPower();
-				if(canShot)
+				if(canShot && input.key[4]==1)
 					fireProjectile();
 				canShot=false;
 			}
-			movement();
+			movement(input);
 			CollisionWithWater();
 			MonsterBulletCollision();
 			CollisionWithBullet();
@@ -95,6 +62,11 @@ public class Character {
 			bullet_state();
 			weapon.update();
 		}
+		if(noInput(input))
+			move.getWalkAnimation(dir).reset();
+	}
+	private boolean noInput(Input input) {
+		return (input.key[0]==0 && input.key[1]==0 && input.key[2]==0 && input.key[3]==0);
 	}
 	private void CollisionWithWater() {
 		boolean isCollidingWater=false;
@@ -134,17 +106,17 @@ public class Character {
 		return false;
 	}
 	private void CollisionWithMonster() {
-		for(Tile aTile:Level.map_tile){
-			if(aTile instanceof Skull)
-				if(aTile.shape.intersects(x, y, width, height)){
-					if(((Skull) aTile).isActive && ((Skull)aTile).TransformedState==0){
+		for(int i=0;i<Level.map_tile.size();i++){
+			if(Level.map_tile.get(i) instanceof Skull)
+				if(Level.map_tile.get(i).shape.intersects(x, y, width, height)){
+					if(((Skull) Level.map_tile.get(i)).isActive && ((Skull)Level.map_tile.get(i)).TransformedState==0){
 						Death.play();
 					break;
 					}
 				}
-			if(aTile instanceof Alma)
-				if(aTile.shape.intersects(x, y, width, height)){
-					if(((Alma) aTile).TransformedState==0){
+			if(Level.map_tile.get(i) instanceof Alma)
+				if(Level.map_tile.get(i).shape.intersects(x, y, width, height)){
+					if(((Alma) Level.map_tile.get(i)).TransformedState==0){
 						Death.play();
 						break;
 					}
@@ -185,6 +157,9 @@ public class Character {
 				}	}
 			}
 		}
+	/* We have to determine what the Shoot is colliding with at any time.We have to keep in mind that it's possible for the
+	 * "Shot" to be colliding with two different tile at the same time in order to determine what should happen.
+	 */
 	private void bullet_state() {
 		Tile colliding_tile1;
 		Tile colliding_tile2;
@@ -203,7 +178,8 @@ public class Character {
 						break;
 			case Down:	colliding_tile1=getCollidingTile(weapon.bottomleft);
 						colliding_tile2=getCollidingTile(weapon.bottomright);
-						bulletCollision(colliding_tile1,colliding_tile2);			
+						bulletCollision(colliding_tile1,colliding_tile2);
+			default:	break;			
 						}
 			}
 	private void bulletCollision(Tile colliding_tile1, Tile colliding_tile2) {
@@ -233,7 +209,9 @@ public class Character {
 				return Level.map_tile.get(i);}
 		return null;
 	}
-	
+	/* When a character bullet first fully collide with a Monster 
+	 * it is transformed into a different state depending on its curernt state
+	 */
 	private void checkMonsterState(Monster aTile) {
 		if(aTile.TransformedState==0)
 				aTile.transform();
@@ -243,15 +221,20 @@ public class Character {
 		}
 		
 	}
-	
+	/* Main Collision Method to determine what should be done when player is in contact with most of the game object.
+	 * When a player is moving there are invisible collision masks to determine what kind tile the player is touching.
+	 * A player should not be able to walk through solid object whether he is partially or fully colliding with said tile.
+	 * 
+	 * This Method is called every time the player tries to move.This method return whether there is a collision or not.
+	 */
 	private boolean checkCollision(Rectangle mask1,Rectangle mask2) {
 		Tile intersect1=null;
 		Tile intersect2=null;
-		for(Tile aTile:Level.map_tile){
-			if(aTile.shape.intersects(mask1))
-					intersect1=aTile;
-			if(aTile.shape.intersects(mask2))
-					intersect2=aTile;
+		for(int i=0;i<Level.map_tile.size();i++){
+			if(Level.map_tile.get(i).shape.intersects(mask1))
+					intersect1=Level.map_tile.get(i);
+			if(Level.map_tile.get(i).shape.intersects(mask2))
+					intersect2=Level.map_tile.get(i);
 		}
 		if(Level.goal.shape.intersects(mask1) && Level.goal.shape.intersects(mask2))
 			if(Level.goal.type==Tile.ID.BottomChestOpen)
@@ -294,7 +277,8 @@ public class Character {
 										x=intersect1.x;
 										y=intersect1.y;
 									}
-							return true;
+									return true;
+				default:			break;
 				}
 				
 			}
@@ -308,7 +292,7 @@ public class Character {
 					if(intersect2.type!=Tile.ID.AmmoHeart && intersect2.type!=Tile.ID.NoAmmoHeart) //hearth considered solid  for enemy projectile 
 						return true;
 				}
-				//not not solid object; look if its One-way Arrow
+				//not solid object; look if its One-way Arrow
 				if(intersect2 instanceof OneWayArrow){
 					OneWayArrow anArrow=(OneWayArrow)intersect2;
 					return (anArrow.checkArrow());
@@ -319,7 +303,7 @@ public class Character {
 				if(intersect1.type!=Tile.ID.AmmoHeart && intersect1.type!=Tile.ID.NoAmmoHeart) //hearth considered solid  for enemy projectile 
 					return true;
 			}
-			//not not solid object; look if its One-way Arrow
+			//not solid object; look if its One-way Arrow
 			if(intersect1 instanceof OneWayArrow){
 				OneWayArrow anArrow=(OneWayArrow)intersect1;
 				return (anArrow.checkArrow());
@@ -353,13 +337,8 @@ public class Character {
 			ammo+=2;
 	}
 	
-	private void movement() {
-		if(!keypressed.isEmpty()&& !isMoving){//if a button direction is held down
-			if(keypressed.size()==1)
-				lastKey=keypressed.get(0);//get last pressed button
-			else
-				lastKey=keypressed.get(keypressed.size()-1);//get last pressed button
-			if(lastKey==Game.button.W){
+	private void movement(Input input) {
+		if (input.key[0]==1 && (input.key[3]==1 || input.key[1]==1) && !isMoving){//up and another key is pressed.Up take precedence
 				dir=Game.Direction.Up;
 				move.walk_up.setImage();
 				if(!checkCollision(new Rectangle(x,y-step,step,step),new Rectangle(x+16,y-step,step,step)) && isAligned()){
@@ -369,7 +348,7 @@ public class Character {
 						isMoving=true;
 				}
 			}
-			if(lastKey==Game.button.S){
+		if (input.key[2]==1 && (input.key[1]==0 || input.key[3]==1) && !isMoving){//down and another key is pressed.Down take precedence.
 				dir=Game.Direction.Down;			
 				move.walk_down.setImage();
 				if(!checkCollision(new Rectangle(x,y+height,step,step),new Rectangle(x+step,y+height,step,step))&& isAligned()){
@@ -379,27 +358,27 @@ public class Character {
 					isMoving=true;
 				}
 			}
-			if(lastKey==Game.button.D){
-				if(checkKeypressed()){
-					switch(dir){
-					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,step,step))&& isAligned()){
-									move.walk_down.setImage();
-									if(isOnBoat)
-										targetX=2*step;
-									else targetX=step;
-									isMoving=true;
-								}
-								break;
-					case Up:	if(!checkCollision(new Rectangle(x,y-step,step,step),new Rectangle(x+16,y-step,step,step))&& isAligned()){
-									move.walk_up.setImage();
-									if(isOnBoat)
-										targetX=2*-step;
-									else targetX=-step;
-									isMoving=true;
-								}
-								break;
-					}
-				}else{
+		if (input.key[0]==1 && !isMoving){//up
+			dir=Game.Direction.Up;
+			move.walk_up.setImage();
+			if(!checkCollision(new Rectangle(x,y-step,step,step),new Rectangle(x+16,y-step,step,step)) && isAligned()){
+				if(isOnBoat)
+					targetX=2*-step;
+				else targetX=-step;
+					isMoving=true;
+			}
+		}
+		if (input.key[2]==1 && !isMoving){//down
+			dir=Game.Direction.Down;			
+			move.walk_down.setImage();
+			if(!checkCollision(new Rectangle(x,y+height,step,step),new Rectangle(x+step,y+height,step,step))&& isAligned()){
+				if(isOnBoat)
+					targetX=2*step;
+				else targetX=step;
+				isMoving=true;
+			}
+		}
+		if (input.key[1]==1 && !isMoving){//right
 					dir=Game.Direction.Right;
 					move.walk_right.setImage();
 					if(!checkCollision(new Rectangle(x+width,y,step,step),new Rectangle(x+width,y+step,step,step))&& isAligned()){
@@ -408,44 +387,30 @@ public class Character {
 						else targetX=step;
 						isMoving=true;
 					}
+			}
+		if (input.key[3]==1 && !isMoving){//left
+			dir=Game.Direction.Left;			
+			move.walk_left.setImage();
+			if(!checkCollision(new Rectangle(x-step,y,step,step),new Rectangle(x-step,y+step,step,step))&& isAligned()){
+				if(isOnBoat)
+					targetX=2*-step;
+				else targetX=-step;
+				isMoving=true;
 				}
 			}
-			if(lastKey==Game.button.A){
-				if(checkKeypressed()){
-					switch(dir){
-					case Down:	if(!checkCollision(new Rectangle(x,y+height,16,16),new Rectangle(x+step,y+height,step,step))&& isAligned()){
-									move.walk_down.setImage();
-									if(isOnBoat)
-										targetX=2*step;
-									else targetX=step;
-									isMoving=true;
-								}
-								break;
-					case Up:	if(!checkCollision(new Rectangle(x,y-step,16,16),new Rectangle(x+step,y-step,step,step))&& isAligned()){
-									move.walk_up.setImage();
-									if(isOnBoat)
-										targetX=2*-step;
-									else targetX=-step;
-									isMoving=true;
-								}
-								break;
-					}
-				}else{	dir=Game.Direction.Left;			
-						move.walk_left.setImage();
-						if(!checkCollision(new Rectangle(x-step,y,step,step),new Rectangle(x-step,y+step,step,step))&& isAligned()){
-							if(isOnBoat)
-								targetX=2*-step;
-							else targetX=-step;
-								isMoving=true;
-				}
-			}
-		}
+		checkMovementState();	
 	}
-	checkMovementState();	
-}
 	private boolean isAligned(){
 		return(x%step==0 && y%step==0);
 	}
+	/* Method used to determine movement.In order for the Character to always be aligned with the grid,
+	 * the player can only move half a grid at once before another movement input is allowed.Since we
+	 * want the character movement to be fluid we have to slowly increase its position until it reach half a grid
+	 * in step instead of all at once.
+	 * 
+	 * This Method also does the same thing when a character is moving a block since we want the block to also move in a fluid
+	 * manner and not all at once.
+	 */
 	private void checkMovementState() {
 		if(targetX<0){
 			if(dir==Game.Direction.Left){
@@ -492,42 +457,6 @@ public class Character {
 			isPushing=false;
 		}
 	}
-	public boolean checkKeypressed() {
-		//check if up and down arrow arrow are held down
-		//we dont want to move to right and left if thats true;
-		for(Game.button abutton:keypressed){
-			if(abutton==Game.button.S || abutton==Game.button.W)
-				return true;
-		}
-		return false;
-	}
-	public boolean checkIfpressed(Game.button a) {
-		for(Game.button abutton:keypressed){
-			if(abutton==a)
-				return true;
-		}
-		return false;
-	}
-	public void releaseButton(int keycode) {
-		switch(keycode){
-		case KeyEvent.VK_A:		removeKey(Game.button.A);
-								break;
-		case KeyEvent.VK_S:		removeKey(Game.button.S);
-								break;
-		case KeyEvent.VK_W:		removeKey(Game.button.W);
-								break;
-		case KeyEvent.VK_D:		removeKey(Game.button.D);
-								break;				
-		}
-	}
-	private void removeKey(Game.button d) {
-		Game.button toRemove=Game.button.None;
-		for(Game.button abutton:keypressed){
-			if(abutton==d)
-				toRemove=abutton;
-		}
-		keypressed.remove(toRemove);
-	}
 	private void fireProjectile() {
 		if(!Character.isShooting)
 			if(ammo>=1){
@@ -556,6 +485,7 @@ public class Character {
 					break;
 		case Down:	weapon=new Projectile(x,y+targetX,Game.projectile_img.get(1),dir);
 					break;
+		default:	break;
 		}
 	}
 }

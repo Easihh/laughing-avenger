@@ -1,12 +1,15 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 
+import javax.imageio.ImageIO;
+/* Author Enrico Talbot 
+ * 
+ * This class Represent how the game should deal with the Hero's Death.
+ */
 public class Death {
 	private final long nano=1000000L;
-	private final int  width=32;
-	private final int height=32;
+	private final int  width=32,height=32;
 	private Animation Death;
 	private BufferedImage img;
 	private BufferedImage[] animation;
@@ -22,7 +25,7 @@ public class Death {
 		isDone();
 		if(!isDone){
 			Death.setImage();
-			g.drawImage(Death.getImage(),Character.getInstance().getX(),Character.getInstance().getY(),width,height,null);
+			g.drawImage(Death.getImage(),Labyrinth.hero.x,Labyrinth.hero.y,width,height,null);
 		}
 	}
 	
@@ -48,6 +51,7 @@ public class Death {
 		 Death.AddScene(animation[2], 100);
 		 Death.AddScene(animation[3], 500);
 	}
+	/* After the Hero dies, the current level should be restarted.*/
 	private void isDone(){
 		if(Death.index==Death.getLastIndex()){
 			if(Death.getSceneCurrentDuration(Death.getLastIndex())+(System.nanoTime()

@@ -2,18 +2,22 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Vector;
 import javax.imageio.ImageIO;
-
+/* Author Enrico Talbot
+ * 
+ * This class builds the movement animation for each object that moves.
+ */
 public class Movement {
 	public Animation walk_down=new Animation();
 	public Animation walk_up=new Animation();
 	public Animation walk_left=new Animation();
 	public Animation walk_right=new Animation();
 	private BufferedImage img;
-	private int sheet_cols;
-	private int sheet_row;
-	private int assetSize=32;
+	private int sheet_cols,sheet_row,assetSize=32;
 	private Vector<BufferedImage> spriteSheet;
 	
+	/* This class takes an Image that contains all the movement of the object.
+	 * Each direction is a row in the source Image sorted from up->Down->Left->Right
+	 */
 	public Movement(String source,int delay){
 		 try {spriteSheet=getSpriteSheet(source);
 		 	buildAnimation(delay);
@@ -46,7 +50,8 @@ public class Movement {
 			case Left: 	return walk_left;
 			case Right:	return walk_right;
 			case Up:	return walk_up;
-			case Down:	return walk_down;	
+			case Down:	return walk_down;
+			default:		break;	
 		}
 		return null;
 	}

@@ -19,27 +19,35 @@ public class OneWayArrow  extends Tile{
 							break;
 		case OneWayDown:	img=Game.game_tileset.get(Tile.ID.OneWayDown.value);
 							break;
+		default:
+			break;
 		}
 	}
+	/* Decides the Hero collision with One-Way Arrow.The hero may not be able to pass
+	 * through a One-Way arrow if he is moving in a direction at the opposite of where the 
+	 * One-Way arrow is pointing.i.e The hero cannot pass through a one way arrow by moving
+	 * up if the One-Way Arrow is pointing down unless the Hero was fully colliding with a
+	 * One-Way Arrow in a different direction.
+	 */
 	public boolean checkArrow() {
-		Character hero=Character.getInstance();
-			if(Character.getInstance().dir==Game.Direction.Down && type==Tile.ID.OneWayUp){
-				if(shape.contains(hero.getX(),hero.getY()+height-1) || shape.contains(hero.getX()+width,hero.getY()+height-1))
+		Character hero=Labyrinth.hero;
+			if(Labyrinth.hero.dir==Game.Direction.Down && type==Tile.ID.OneWayUp){
+				if(shape.contains(hero.x,hero.y+height-1) || shape.contains(hero.x+width,hero.y+height-1))
 					return false;//allow pass
 				return true; 
 			}
-			if(Character.getInstance().dir==Game.Direction.Up && type==Tile.ID.OneWayDown){
-				if(shape.contains(hero.getX(),hero.getY()) || shape.contains(hero.getX()+width,hero.getY()))
+			if(Labyrinth.hero.dir==Game.Direction.Up && type==Tile.ID.OneWayDown){
+				if(shape.contains(hero.x,hero.y) || shape.contains(hero.x+width,hero.y))
 					return false;
 				return true;
 			}
-			if(Character.getInstance().dir==Game.Direction.Left && type==Tile.ID.OneWayRight){
-				if(shape.contains(hero.getX(),hero.getY()) || shape.contains(hero.getX(),hero.getY()+height))
+			if(Labyrinth.hero.dir==Game.Direction.Left && type==Tile.ID.OneWayRight){
+				if(shape.contains(hero.x,hero.y) || shape.contains(hero.x,hero.y+height))
 					return false;
 				return true;
 			}
-			if(Character.getInstance().dir==Game.Direction.Right && type==Tile.ID.OneWayLeft){
-				if(shape.contains(hero.getX()+width-1,hero.getY()) ||shape.contains(hero.getX()+width-1,hero.getY()+height-1))
+			if(Labyrinth.hero.dir==Game.Direction.Right && type==Tile.ID.OneWayLeft){
+				if(shape.contains(hero.x+width-1,hero.y) ||shape.contains(hero.x+width-1,hero.y+height-1))
 					return false;
 				return true;
 			}

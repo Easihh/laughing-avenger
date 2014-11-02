@@ -2,7 +2,9 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-
+/* Author Enrico Talbot
+ * This Class decides how Water is represented and its animation.
+ */
 public class Water extends Tile{
 	private Animation Water;
 	private BufferedImage[] single_img;
@@ -29,6 +31,7 @@ public class Water extends Tile{
 				single_img[j]=img.getSubimage(j*width, i*height, width, height);
 			 }
 		 }
+		//Build Water Animation.
 		Water.AddScene(single_img[0], 600);
 		Water.AddScene(single_img[1], 300);
 		Water.AddScene(single_img[2], 600);

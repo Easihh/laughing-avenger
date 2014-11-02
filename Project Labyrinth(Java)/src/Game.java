@@ -2,15 +2,15 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Vector;
 import javax.imageio.ImageIO;
-
+/* Author Enrico Talbot
+ * 
+ * This class contains references to certain objects/assets to be used Throughout the program.
+ */
 public class Game {
-	public static Vector<BufferedImage> monsterState;
-	public static Vector<BufferedImage> game_tileset;
-	public static Vector<BufferedImage>	projectile_img;
+	public static Vector<BufferedImage> monsterState,game_tileset,projectile_img;
 	public static BufferedImage background;
 	private BufferedImage img=null;
-	private int sheet_row;
-	private int sheet_cols;
+	private int sheet_row,sheet_cols;
 	private final int assetSize=32;
 	enum Direction{Up,Down,Left,Right,None};
 	enum button{W,A,S,D,None};

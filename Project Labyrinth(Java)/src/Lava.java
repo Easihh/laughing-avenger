@@ -2,7 +2,9 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-
+/* Author Enrico Talbot
+ * This Class decides how Lava is represented and its animation.
+ */
 public class Lava extends Tile {
 	Animation Lava;
 	BufferedImage[] single_img;
@@ -26,6 +28,7 @@ public class Lava extends Tile {
 				single_img[(i*col)+j]=img.getSubimage(j*width, i*height, width, height);
 			 }
 		 }
+		//Build Lava Animation.
 		Lava.AddScene(single_img[0], 1000);
 		Lava.AddScene(single_img[1], 1500);
 		Lava.AddScene(single_img[2], 1500);

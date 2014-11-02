@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
+
 import javax.imageio.ImageIO;
 
 public class Skull extends Monster{
@@ -13,16 +14,14 @@ public class Skull extends Monster{
 	private Animation Skull;
 	private boolean path_exist=false;
 	private BufferedImage[] skull_img;
-	private final int step=2;
-	private final int movement=16;
-	private int step_to_move;
-	private int update_counter;
+	private final int step=2,movement=16;
+	private int step_to_move,update_counter;
 	private Node nextMovement;
 	public Skull(int x,int y, ID type) {
 		super(x, y, type);
 		depth=2;
 		dir=Game.Direction.Left;
-		isActive=false;
+		isActive=false;//Skull is asleep until all hearts are taken
 		Skull=new Animation();
 		getImage();		
 	}
@@ -52,19 +51,13 @@ public class Skull extends Monster{
 		img=Game.monsterState.get(0);
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;	
-		System.out.println("targetX:"+Character.targetX);
-		System.out.println("step:"+step_to_move);
-		System.out.println("X:"+x%16);
-		System.out.println("Y:"+y%16);
-		System.out.println("DistanceX:"+(Character.getInstance().getX()-x));
-		System.out.println("DistanceY:"+(Character.getInstance().getY()-y));
 	}
 	public void update(){
 		checkState();
 		checkifdrown();
 		if(isActive && Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat && type!=Tile.ID.MoveableBlock)
 			move();
-		if(type==Tile.ID.boat && !Character.isPushing){
+		if(type==Tile.ID.boat && !Labyrinth.hero.isPushing){
 			if(boat_movement)boatMovement();
 			if(!boat_movement)
 				boat_movement=true;
@@ -76,6 +69,10 @@ public class Skull extends Monster{
 		}
 		updateMask();
 	}
+	/* Because its possible for the Monster to be shot while its still moving thus
+	 * possibly becoming unaligned with the grid,we want the monster to finish its movement
+	 * to the next grid even if it has been shot; this way the monster will stay aligned.
+	 */
 	private void reverseMove() {
 		if(step_to_move>0){	
 			switch(dir){
@@ -91,13 +88,15 @@ public class Skull extends Monster{
 			case Down:	step_to_move=y%movement;
 						y-=step;
 						break;
+			default:
+				break;
 			}
 			step_to_move-=step;
 		}	
 	}
 	private boolean isCollidingHero() {
 
-		return(shape.intersects(new Rectangle(Character.getInstance().getX(),Character.getInstance().getY(),width,height)));
+		return(shape.intersects(new Rectangle(Labyrinth.hero.x,Labyrinth.hero.y,width,height)));
 	}
 	private void Kill_Respawn() {
 		Skull me=copy();
@@ -130,6 +129,11 @@ public class Skull extends Monster{
 		}
 		return false;
 	}
+	/*This is the movement logic for the Monster.The monster will try and find the shortest path via
+	 * the A* algorithmn and then decide where it needs to move.It is possible that there are no path
+	 * to the Hero at any point in the game therefore the Monster should be moving differently in 
+	 *this case.
+	 */
 	private void move() {
 		update_counter++;
 		if(step_to_move==0 && x%movement==0 && y%movement==0 && update_counter>=(movement/step) && TransformedState==0){
@@ -173,9 +177,15 @@ public class Skull extends Monster{
 							y+=step;
 						else getnewDirection();
 						break;
+			default:
+				break;
 			}
 		}
 	}
+	/* Since we want monster to always be aligned with grid, they can only move 
+	 * a certain distance at once but we dont want to move all at once therefore we
+	 * have to move slightly every game update until we reach the next grid location.
+	 */
 	private void stepMove() {
 		if(step_to_move>0){	
 			switch(dir){
@@ -187,10 +197,15 @@ public class Skull extends Monster{
 						break;
 			case Down:	y+=step;
 						break;
+			default:
+				break;
 			}
 			step_to_move-=step;
 		}
 	}
+	/*This is the A* Algorithmn part that find the shortest path from the monster to the Hero while
+	 * also taking collision into consideration and then the Monster will follow this given path.
+	 */
 	private void shortestPath(){
 		Node goal=new Node(getHeroPosition());
 		Open=new ArrayList<Node>();
@@ -235,16 +250,18 @@ public class Skull extends Monster{
 	private Point getHeroPosition() {
 		//get hero position including future position if he is moving
 		Point position=null;
-		Character hero=Character.getInstance();
+		Character hero=Labyrinth.hero;
 		switch(hero.dir){
-		case Right:	position=new Point(hero.getX()+Character.targetX,hero.getY());
+		case Right:	position=new Point(hero.x+hero.targetX,hero.y);
 					break;
-		case Left:	position=new Point(hero.getX()+Character.targetX,hero.getY());
+		case Left:	position=new Point(hero.x+hero.targetX,hero.y);
 					break;
-		case Up:	position=new Point(hero.getX(),hero.getY()+Character.targetX);
+		case Up:	position=new Point(hero.x,hero.y+hero.targetX);
 					break;
-		case Down:	position=new Point(hero.getX(),hero.getY()+Character.targetX);
+		case Down:	position=new Point(hero.x,hero.y+hero.targetX);
 					break;
+		default:
+			break;
 		}
 		if(position.x%16!=0 || position.y%16!=0)System.out.println("ERROR PATH WONT BE AlIGNED");
 		return position;

@@ -1,6 +1,12 @@
 import java.awt.Image;
 import java.util.Vector;
-
+/*Author Enrico Talbot
+ * 
+ * Utility Class for the Game.This class decides how animation are built and used.
+ * Since an animation is just a series of Image with a certain duration; we build the Scene
+ * using subImages of a spriteSheet with a duration for each subImages in order to determine
+ * how long each subImage should play out.
+ */
 
 public class Animation {
 	private final long nano=1000000L;

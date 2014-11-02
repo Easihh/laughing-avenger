@@ -1,81 +1,67 @@
 import java.awt.Dimension;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import java.awt.Toolkit;
+/* Author:Enrico Talbot
+ * 
+ * This is the Main Class of the Game.This class is a Thread different than the JFrame UI thread 
+ * because repainting with a JFrame should be done in a different Thread to prevent with redrawing constantly.
+ */
 
-
-public class Labyrinth extends JFrame{
-	private static final long serialVersionUID = 1L;
+public class Labyrinth implements Runnable{
 	private MainPanel mainPane;
-	static boolean level_is_loaded=false;
-	static Game.GameState GameState;
-	static long prev;
-	private final int ScreenWidth=672;
-	private final int ScreenHeight=540;
+	public static boolean level_is_loaded=false;
+	public static Game.GameState GameState;
+	public static Character hero;
+	private final int ScreenWidth=672,ScreenHeight=512,fps_wanted=60;
+	private Thread t=null;
+	private JFrame frame;
+	private StopWatch watch,fpswatch;
+	private int fps=0;
+	private long refresh_delay=1000/fps_wanted;
+	private Input input;
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Labyrinth frame = new Labyrinth();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		new Labyrinth().setup();
 	}
 
-	public Labyrinth() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Labyrinth.class.getResource("/tileset/Game_Icon.png")));
+	private void  setup() {
+		watch=new StopWatch();
+		fpswatch=new StopWatch();
+		frame=new JFrame();
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Labyrinth.class.getResource("/tileset/Game_Icon.png")));
 		GameState=Game.GameState.NotStarted;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(new Dimension(ScreenWidth,ScreenHeight));
-		setResizable(false);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		new Game();
 		mainPane = new MainPanel();
-		setContentPane(mainPane);
-		addKeyListener(new Input());
-		start();
+		mainPane.setPreferredSize(new Dimension(ScreenWidth,ScreenHeight));
+		frame.setContentPane(mainPane);
+		frame.pack();
+		input=new Input();
+		frame.addKeyListener(input);
+		frame.setVisible(true);
+		t=new Thread(this);
+		t.start();
 	}
-	public void start(){
-		new Thread(){
-			long nano=1000000000L;
-			int fps_wanted=60;
-			long refresh_delay=nano/fps_wanted;
-			long timer=0;
-			long prev=System.nanoTime();
-			int fps=0;
-			public void run(){
-				while(true){
-					fps++;
-				if((System.nanoTime()-prev)<refresh_delay){
-					long sleep=refresh_delay-(System.nanoTime()-prev);
-					sleep/=1000000;
-					try {
-						Thread.sleep(sleep);
-						if(Labyrinth.level_is_loaded){
-							Character.getInstance().update();
-						}	
-						if(GameState!=Game.GameState.NotStarted && Labyrinth.level_is_loaded){
-							for(int i=0;i<Level.map_tile.size();i++)
-								Level.map_tile.get(i).update();
-						}
-						repaint();
-						prev=System.nanoTime();
-					}catch (InterruptedException e) {
-						e.printStackTrace();
+	public void run(){
+		watch.start();
+		fpswatch.start();
+		while(true){
+			if(watch.elapsedMillis()>=refresh_delay){
+				fps++;
+				if(Labyrinth.level_is_loaded){
+					Labyrinth.hero.update(input);	
+				}
+				if(GameState!=Game.GameState.NotStarted && Labyrinth.level_is_loaded){
+					for(int i=0;i<Level.map_tile.size();i++)
+						Level.map_tile.get(i).update();
 					}
-				}
-				if((System.nanoTime()-timer)/nano>=1){						
-					setTitle("Project:Labyrinth FPS:"+fps);
-					fps=0;
-					timer=System.nanoTime();
-				}
-				if(System.nanoTime()-prev>=refresh_delay){
-					prev=System.nanoTime();
+				watch.reset();
+				frame.repaint();//call paintComponents of the MainPanel class to redraw everything
+			}
+			if(fpswatch.elapsedMillis()>=1000){						
+				frame.setTitle("Project:Labyrinth FPS:"+fps);
+				fps=0;
+				fpswatch.reset();
 				}
 			}
 		}
-	}.start();
-	}
 }

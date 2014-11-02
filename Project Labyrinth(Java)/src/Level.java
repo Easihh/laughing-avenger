@@ -9,37 +9,30 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
+/* Author Enrico Talbot
+ * 
+ * This class deals with how the Level is created and stored in the game.
+ */
 public class Level {
 	private final long nano=1000000000L;
-	private final int tileSize=32; 
-	private int coordX;
-	private int coordY;
-	private final int maxPower=3;
+	private final int tileSize=32,maxPower=3; 
+	private int coordX,coordY;
 	private Tile map_background;
 	private static ArrayList<Tile> toRespawn;
 	private static Vector<Long> Respawn_Timer;
 	private static Tile goal_top;
-	private static boolean canRespawn;
-	private static boolean chestIsOpen;
+	private static boolean canRespawn,chestIsOpen;
 	
-	public static int room=1;
-	public static int remake=0;
-	public final static int map_width=512;
-	public final static int map_height=512;
-	public static int heart_amount;
-	public static ArrayList<Tile> map_tile;
-	public static ArrayList<Tile> toRemove;//Monster to be removed and then respawned
-	public static ArrayList<Tile> toDelete;//tile to be deleted
-	public static ArrayList<Tile> toAdd;
+	public static int room=1,remake=0,heart_amount;
+	//Map Width and Map Height should match the TMX/XML file and should not be changed alone.
+	public final static int map_width=512,map_height=512;
+	public static ArrayList<Tile> map_tile,toRemove,toDelete,toAdd;
 	public static Game.SpecialPower[] Power;
 	public static Tile goal;
 	
 	public Level(){
-			coordX=0;
-			coordY=0;
+			coordX=coordY=heart_amount=0;
 			goal_top=null;
-			heart_amount=0;
 			map_tile=new ArrayList<Tile>();
 			toRemove=new ArrayList<Tile>();
 			toAdd=new ArrayList<Tile>();
@@ -47,18 +40,22 @@ public class Level {
 			toRespawn=new ArrayList<Tile>();
 			Respawn_Timer=new Vector<Long>();
 			Power=new Game.SpecialPower[maxPower];
-			verifyPowerAllowed();
-			map_background=new Tile(Game.background);
+			verifyPowerAllowed();//check if current level allow Special Power
+			map_background=new Tile(Game.background);//Fill map with  background image at first.
 			canRespawn=true;
 			chestIsOpen=false;
 			try{readMap();}
 			catch (IOException | XMLStreamException e){
 				e.printStackTrace();
 			}
-		Collections.sort(Level.map_tile);
+		Collections.sort(Level.map_tile);//tile will be drawn via lowest priority first(depth)
 		Labyrinth.level_is_loaded=true;
 		Labyrinth.GameState=Game.GameState.NotStarted;
 	}
+	/* The Level are created by loading the appropriate XML file that were created via a Program
+	 * called Tiled and Then each object from the XML file is associated with a certain game Object
+	 * and added to the correct row/column representation of the Level.
+	 */
 	private void readMap() throws XMLStreamException, IOException {
 		
 		XMLInputFactory inputFactory= XMLInputFactory.newFactory();
@@ -84,15 +81,17 @@ public class Level {
 		
 	}
 	private void verifyPowerAllowed() {
-		if(room==7){
+		if(room==7)
 			Power[0]=Game.SpecialPower.Hammer;
-		}
 		if(room==6){
 			Power[0]=Game.SpecialPower.Ladder;
 			Power[1]=Game.SpecialPower.Ladder;
 		}
 		
 	}
+	/* Decides which game object is created at the row/column position in the Level
+	 * based on the reading from the XML file.
+	 */
 	private void createTile(String attributeValue) throws IOException {
 		switch(attributeValue){
 		case "0": 	//blank tile;show background
@@ -111,10 +110,9 @@ public class Level {
 					heart_amount+=1;
 					Level.map_tile.add(new Tile(coordX,coordY,Tile.ID.NoAmmoHeart));
 					break;
-		case "6": 	Character.destroyInstance();
-					Character.getInstance();
-					Character.getInstance().setX(coordX);
-					Character.getInstance().setY(coordY);
+		case "6": 	Labyrinth.hero=new Character();
+					Labyrinth.hero.x=(coordX);
+					Labyrinth.hero.y=(coordY);
 					break;
 		case "8": 	
 					Level.map_tile.add(new Medusa(coordX,coordY,Tile.ID.SleepMedusa));
@@ -214,6 +212,10 @@ public class Level {
 					break;				
 		}
 	}
+	/* This will draw the representation of the current Level.
+	 * Top part of chest is only shown when all hearts are taken.
+	 * This Method also try to respawn Monsters if its possible to
+	 */
 	public void render(Graphics g){
 		map_background.render(g);
 		goal.render(g);
@@ -226,17 +228,18 @@ public class Level {
 			toDelete.clear();
 			Collections.sort(map_tile);
 		}
-		for(Tile aTile:map_tile){
-			aTile.render(g);
-		}
+		for(int i=0;i<map_tile.size();i++)
+			map_tile.get(i).render(g);
 		if(!toRemove.isEmpty()){
 			map_tile.removeAll(toRemove);
 			toRemove.clear();
 		}
-		if(!toRespawn.isEmpty() && canRespawn){
+		if(!toRespawn.isEmpty() && canRespawn)
 			checkRespawn();
-		}
 	}
+	/* Monster should respawn after a certain amount of time has passed since 
+	 * they were killed/removed from the game.
+	 */
 	private void checkRespawn() {
 		for(int i=0;i<Respawn_Timer.size();i++){
 			if((System.nanoTime()-Respawn_Timer.elementAt(i))/nano >10){
@@ -249,6 +252,11 @@ public class Level {
 		}
 		
 	}
+	/*We have to make sure that the Monster respawned is of the correct type in case of Monster
+	 * that can "awaken" when all hearts are taken.For example its possible to kill a monster
+	 * in non-awakened state and then open the chest(awaken) before the respawn can take place
+	 * therefore the monster respawned should be in the awaken state should this situation happen.
+	 */
 	private void getCorrectType(Monster Monster) {
 		
 		switch(Monster.type){
@@ -265,13 +273,18 @@ public class Level {
 						break;
 		case Skull:		Monster.img=Game.game_tileset.get(Tile.ID.Skull.value);
 						Monster.isActive=true;
-						break;		
+						break;
+		default:
+			break;		
 		}
 	}
-	static void addRespawn(Tile tile) {
+	public static void addRespawn(Tile tile) {
 		toRespawn.add(tile);
 		Respawn_Timer.add(System.nanoTime());
 	}
+	/* When the hero has obtained all the hearts in a given level,the goal(chest) changes
+	 * state  and all monster that can awake are now activated.
+	 */
 	public static void openChest() {
 		chestIsOpen=true;
 		Sound.resetSound();
@@ -279,7 +292,8 @@ public class Level {
 		goal=new Tile(goal.x,goal.y,Tile.ID.BottomChestOpen);
 		goal_top=new Tile(goal.x,goal.y-32,Tile.ID.TopChest);	
 		//awake all monster
-		for(Tile aTile:map_tile){
+		for(int i=0;i<map_tile.size();i++){
+			Tile aTile=map_tile.get(i);
 			if(aTile instanceof Monster){
 				Monster Monster=(Monster)aTile;
 				switch(aTile.type){
@@ -298,11 +312,15 @@ public class Level {
 										break;
 					case Skull:			Monster.img=Game.game_tileset.get(Tile.ID.Skull.value);
 										Monster.isActive=true;
-										break;	
+										break;
+					default:			break;	
 				}
 			}
 		}
 	}
+	/* Since it is possible to shot a monster once ->transform into ball form -> open chest activate
+	 * all sleeping monster, the monster that was transformed into ball form type should also be 
+	 * activated*/
 	private static void AwakeBall(Tile aTile) {
 		Monster Monster=(Monster)aTile;
 		switch(aTile.oldtype){
@@ -319,14 +337,19 @@ public class Level {
 						break;	
 		case Skull:		Monster.previousState=Game.game_tileset.get(Tile.ID.Skull.value);
 						Monster.isActive=true;
-						break;	
+						break;
+		default:		break;	
 		}
 		
 	}
+	/* Upon taking the goal, the goal should changed into a "taken goal" state and all monsters 
+	 * should be deleted from the game.Monster respawn should be disabled once the goal has been taken. 
+	 */
 	public static void takeGoal() {
 		goal=new Tile(goal.x,goal.y,Tile.ID.BottomChestEmpty);
 		//open the goal
-		for(Tile aTile:map_tile){
+		for(int i=0;i<map_tile.size();i++){
+			Tile aTile=map_tile.get(i);
 			if(aTile.img==Game.game_tileset.get(Tile.ID.ClosedDoor.value)){
 				aTile.type=Tile.ID.OpenDoor;
 				aTile.isSolid=false;

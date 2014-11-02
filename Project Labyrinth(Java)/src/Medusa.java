@@ -1,8 +1,14 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 
+import javax.imageio.ImageIO;
+/* Author Enrico Talbot
+ * 
+ * This class is the representation of the Medusa Object in Game.It has a special ability
+ * where it freeze the Hero upon seeing it and shooting it as long as the hero is within its detect
+ * range.
+ */
 public class Medusa extends Monster {
 	private BufferedImage[] bullet_type;
 	private BufferedImage projectile_img;
@@ -39,16 +45,22 @@ public class Medusa extends Monster {
 			 }
 		 }
 	}
+	/* Medusa Monster should only be allowed to shoot if the Hero is fully in detect range within
+	 * a single row X-axis(left,right) or column Y-axis(up,down).Medusa should not be able to shoot 
+	 * the Hero even if he is in full detect range if there are solid object such as a wall in-between
+	 * the Monster and the Hero.If the hero is partially in range, the Medusa should change to show 
+	 * that the player is close to being in fully detect range and automatically die.
+	 */
 	private void MultiDirectionSight(){
 		boolean shoot=false;
 		boolean inRange=false;
-		Character hero=Character.getInstance();
+		Character hero=Labyrinth.hero;
 		/*Case Down*/
-		if((Math.abs(hero.getX()-x) <=hero.step) && y<hero.getY()){
+		if((Math.abs(hero.x-x) <=hero.step) && y<hero.y){
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 		}
-		if(hero.getX()==x  && y<hero.getY()){
+		if(hero.x==x  && y<hero.y){
 				//hero found in line of sight
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
@@ -59,11 +71,11 @@ public class Medusa extends Monster {
 			}
 		}
 		/*Case Up*/
-		if((Math.abs(hero.getX()-x)<=hero.step|| hero.getX()-hero.step==x) && y>hero.getY()){
+		if((Math.abs(hero.x-x)<=hero.step|| hero.x-hero.step==x) && y>hero.y){
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 		}
-		if( x==hero.getX() && y>hero.getY()){
+		if( x==hero.x && y>hero.y){
 			inRange=true;
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			if(!Object_inBetween("Up")){
@@ -73,11 +85,11 @@ public class Medusa extends Monster {
 			}
 		}
 		/*Case Left*/
-		if((Math.abs(hero.getY()-y) <=hero.step)&& x>hero.getX()){
+		if((Math.abs(hero.y-y) <=hero.step)&& x>hero.x){
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 		}
-		if((y==hero.getY()) && x>hero.getX()){
+		if((y==hero.y) && x>hero.x){
 			inRange=true;
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			if(!Object_inBetween("Left")){
@@ -87,11 +99,11 @@ public class Medusa extends Monster {
 			}
 		}
 		/*Case Right*/
-		if((Math.abs(hero.getY()-y) <=hero.step) && x<hero.getX()){
+		if((Math.abs(hero.y-y) <=hero.step) && x<hero.x){
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			inRange=true;
 		}
-		if(y==hero.getY() && x<hero.getX()){
+		if(y==hero.y && x<hero.x){
 			inRange=true;
 			img=Game.game_tileset.get(Tile.ID.MedusaAwaken.value);
 			if(!Object_inBetween("Right")){

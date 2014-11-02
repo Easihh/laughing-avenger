@@ -1,4 +1,13 @@
-Version 0.42C Final
+Version 0.42D Final
+
+-Level 9 now has only 3 Leeper down from 5.
+-Movement Code for Character has been greatly improved.
+-Comments should now be showing up on source code.
+-Singleton pattern has been removed throughout the program.
+-Removed redundant code.
+-Cleaned up a lot of the code.
+
+Version 0.42C 
 
 -Fixed bug where hammer special power were given at level 9 instead of 7.
 

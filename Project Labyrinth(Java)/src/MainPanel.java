@@ -6,23 +6,27 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
-
+/* Author Enrico Talbot
+ *  This is the basically the UI/Frame of the Game where everything is drawn and displayed.
+ */
 public class MainPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private Animation flash_icon=null;
-	private BufferedImage power_icon=null;
-	private BufferedImage hammer_icon=null;
+	private BufferedImage power_icon=null,hammer_icon=null;
 	private final Font font=new Font("Serif", Font.BOLD, 18);
-	private  Character hero;
 	public static Level theLevel;
+	
 	public MainPanel(){
 		setBackground(Color.black);	
 		loadSound();
 		loadPower();
 		theLevel=new Level();
 	}
+	/* Labyrinth Class "frame.repaint" call this function.
+	 * This will draw all the tile in the Level,Effects,Monster and the Game UI 
+	 * and its text and then the Hero.
+	 */
 	public void paintComponent(Graphics g){
-		hero=Character.getInstance();
 			super.paintComponent(g);
 			theLevel.render(g);
 			g.setColor(Color.white);
@@ -33,11 +37,10 @@ public class MainPanel extends JPanel {
 			drawSpecialPower(g);
 			g.setFont(font);
 			drawText(g);
-			if(Labyrinth.GameState==Game.GameState.Death && !hero.Death.isDone){
-				hero.Death.render(g);
-			}
+			if(Labyrinth.GameState==Game.GameState.Death && !Labyrinth.hero.Death.isDone)
+				Labyrinth.hero.Death.render(g);
 			if(Labyrinth.GameState!=Game.GameState.Death)
-				hero.render(g);
+				Labyrinth.hero.render(g);
 	}
 	private void drawText(Graphics g) {
 		g.drawString("LVL",528,54);
@@ -45,9 +48,9 @@ public class MainPanel extends JPanel {
 		g.drawString("RM#",528,118);
 		g.drawString(""+Level.remake,544,150);
 		g.drawString("PW",528,240);
-		g.drawString(""+hero.ammo,544,212);
-		g.drawString("x:"+hero.getX(), 544, 400);
-		g.drawString("y:"+hero.getY(), 544, 432);
+		g.drawString(""+Labyrinth.hero.ammo,544,212);
+		g.drawString("x:"+Labyrinth.hero.x, 544, 400);
+		g.drawString("y:"+Labyrinth.hero.y, 544, 432);
 	}
 	private void drawSpecialPower(Graphics g) {
 		int tileSize=32;
@@ -61,14 +64,14 @@ public class MainPanel extends JPanel {
 		}
 	}
 	private void drawPowerIcon(Graphics g) {
-		if(!hero.aPower.powerActivated_hammer && !hero.aPower.powerActivated_ladder && !hero.aPower.powerActivated_arrow){
+		if(!Labyrinth.hero.aPower.powerActivated_hammer && !Labyrinth.hero.aPower.powerActivated_ladder && !Labyrinth.hero.aPower.powerActivated_arrow){
 			g.drawImage(power_icon, 528, 256,null);
 			g.drawImage(power_icon, 528, 288,null);
 			g.drawImage(power_icon, 528, 320,null);
 		}
 	}
 	private void drawFlashIcon(Graphics g) {
-		if(hero.aPower.powerActivated_hammer || hero.aPower.powerActivated_ladder || hero.aPower.powerActivated_arrow){
+		if(Labyrinth.hero.aPower.powerActivated_hammer || Labyrinth.hero.aPower.powerActivated_ladder || Labyrinth.hero.aPower.powerActivated_arrow){
 			g.drawImage(flash_icon.getImage(), 528, 256,null);
 			g.drawImage(flash_icon.getImage(), 528, 289,null);
 			g.drawImage(flash_icon.getImage(), 528, 321,null);

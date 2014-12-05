@@ -3,7 +3,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.Rectangle;
-/* Author Enrico Talbot
+/**
  * 
  * This is the Top Level Class where most of the Game object are derived from.*/
 
@@ -26,14 +26,29 @@ public class Tile implements Comparable<Tile> {
 	private boolean willMove;
 	private Tile collision_tile=null;
 	protected final int height=32,width=32,half_height=16,half_width=16;
-	public int depth=1,oldX,oldY;//depth is needed to draw object in order as 2 tile can occupy same space.
-	public ID type,oldtype;// to keep track of what kind of Tile they are/were before changing to another type and revert back
-	public boolean isSolid=true,isMovingAcrossScreen=false;//Monster shot twice within few second flies across the screen.
+	/***depth is needed to draw object in order as 2 tile can occupy same space.*/
+	public int depth=1;
+	/*** Previous X-axis position before some action happened*/
+	public int oldX;
+	/*** Previous Y-axis position before some action happened*/
+	public int oldY;
+	/*** Current type of the Tile*/
+	public ID type;
+	/*** to keep track of what kind of Tile they are/were before changing to another type and revert back*/
+	public ID oldtype;
+	/*** determine whether tile is solid/can be passed through*/
+	public boolean isSolid=true;
+	/*** Monster shot twice within few second flies across the screen.*/
+	public boolean isMovingAcrossScreen=false;
+	/*** The Tile direction if there are any*/
 	public Game.Direction dir;
 	protected int x,y;
+	/*** The representation of the Tile*/
 	public Image img;
-	public Polygon shape;//used to determine collision
-	public Game.Direction WaterDir;//Used for Water Tile that have a wind direction.
+	/*** The Shape of the Tile in order to determine collision*/
+	public Polygon shape;
+	/*** Used for Water Tile that have a wind direction.*/
+	public Game.Direction WaterDir;
 	
 	public Tile(int x, int y,ID type) {
 		this.x=x;
@@ -77,6 +92,7 @@ public class Tile implements Comparable<Tile> {
 		img=image;
 		type=ID.background;// we have a background
 	}
+	/*** Method that render the Tile on the screen.*/
 	public void render(Graphics g) {
 		g.setColor(Color.BLUE);
 		if(type==ID.background){//draw map filled with the background image
@@ -89,6 +105,10 @@ public class Tile implements Comparable<Tile> {
 		else
 			g.drawImage(img,x,y,width,height,null);
 	}
+	/**
+	 * Collision method for a Tile.Tile should not traverse any solid tile.
+	 * Returns whether there exist a collision.
+	 */
 	public boolean checkCollision(Rectangle mask1,Rectangle mask2) {
 		for(int i=0;i<Level.map_tile.size();i++){
 			if(Level.map_tile.get(i).shape.intersects(mask1)|| Level.map_tile.get(i).shape.intersects(mask2)){
@@ -99,13 +119,13 @@ public class Tile implements Comparable<Tile> {
 		return false;
 	}
 	@Override
-	/* Used to sort the Tile by their Depth before painting them by depth order.*/
+	/*** Used to sort the Tile by their Depth before painting them by depth order.*/
 	public int compareTo(Tile anotherTile) {
 		if(depth<anotherTile.depth)return -1;
 		if(depth==anotherTile.depth)return 0;
 		return 1;
 	}
-	/* Monster that are shot twice must flies across the screen and not collide with anything*/
+	/*** Monster that are shot twice must flies across the screen and not collide with anything*/
 	public void moveAcross_Screen(Game.Direction direction){
 		shape.reset();//tile can now pass through everything
 		isMovingAcrossScreen = true;
@@ -115,7 +135,7 @@ public class Tile implements Comparable<Tile> {
 		Sound.MonsterDestroyed.setFramePosition(0);
 		Sound.MonsterDestroyed.start();
 	}
-	/* Search if there is an object between the direction of the tile and the Main Character and whether
+	/** Search if there is an object between the direction of the tile and the Main Character and whether
 	 * that object should act as a block or not in the path from the tile to the Character.The step of each
 	 * Search should be the smallest step the main Character can move. 
 	 */
@@ -162,7 +182,7 @@ public class Tile implements Comparable<Tile> {
 		}
 		return false;
 	}
-	/* This Method decides how things work when moving object such as Green Block or  Monster that 
+	/** This Method decides how things work when moving object such as Green Block or  Monster that 
 	 * have been shot once.A Green Block should only be allowed to be moved if the Character is Fully 
 	 * Colliding on either of the Four Side of the Block i.e partially colliding character with the 
 	 * block will not be allowed to push it.
@@ -289,7 +309,7 @@ public class Tile implements Comparable<Tile> {
 	}
 	public void update(){}
 	
-	/* this Method update the new location of the Monster when its flying across the screen at the update
+	/** this Method update the new location of the Monster when its flying across the screen at the update
 	 * location speed.
 	 */
 	public void updateLocation() {
@@ -305,7 +325,7 @@ public class Tile implements Comparable<Tile> {
 		default:	break;
 		}
 	}
-	/*In order to determine collision we use a Square Mask at a size equal to the tile size and we must
+	/**In order to determine collision we use a Square Mask at a size equal to the tile size and we must
 	update its coordinates should the tile moves.*/
 	public void updateMask(){
 		int[] xpoints={x,x+width,x+width,x};

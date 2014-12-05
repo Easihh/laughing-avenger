@@ -6,6 +6,7 @@ public class OneWayArrow  extends Tile{
 		isSolid=false;
 		getImage();
 	}
+	/*** Render the Arrow Tile on screen */
 	public void render(Graphics g){
 		g.drawImage(img,x,y,null);	
 	}
@@ -23,7 +24,7 @@ public class OneWayArrow  extends Tile{
 			break;
 		}
 	}
-	/* Decides the Hero collision with One-Way Arrow.The hero may not be able to pass
+	/** Decides the Hero collision with One-Way Arrow.The hero may not be able to pass
 	 * through a One-Way arrow if he is moving in a direction at the opposite of where the 
 	 * One-Way arrow is pointing.i.e The hero cannot pass through a one way arrow by moving
 	 * up if the One-Way Arrow is pointing down unless the Hero was fully colliding with a

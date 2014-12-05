@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-/*Author Enrico Talbot
+/**
  * 
  * This is the Class for the Monster represented as a Green Worm in The Game.
  * It has no special abilities.
@@ -17,6 +17,9 @@ public class Snakey  extends Monster{
 		SnakeyAnimation=new Animation();
 		try {getImage();} catch (IOException e) {e.printStackTrace();}
 	}
+	/**
+	 *Main Method of the Snakey Class that update its state and its animation as well as collision
+	 *check*/
 	public void update(){
 		updateAnimation();
 		checkState();
@@ -55,13 +58,14 @@ public class Snakey  extends Monster{
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;
 	}
-	//Monster killed in any ways should be able to respawn with the same type that they were 
-	//before being shot.
+	/**Monster killed in any ways should be able to respawn with the same type that they were 
+	before being shot.*/
 	private void Kill_Respawn() {
 		Snakey me=copy();
 		Level.addRespawn(me);
 		Level.toRemove.add(this);
 	}
+	/*** Return a copy the given Snakey object*/
 	public Snakey  copy(){
 		Snakey clone=new Snakey(oldX,oldY,oldtype);
 		return clone;

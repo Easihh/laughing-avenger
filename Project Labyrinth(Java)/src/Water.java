@@ -16,7 +16,7 @@ public class Water extends Tile{
 		depth=-1;
 		getImage();
 	}
-	
+	/*** Method that decides how the The Water and its Animation should be shown on the screen*/
 	public void render(Graphics g){
 		Water.setImage();
 		g.drawImage(Water.getImage(),x,y,null);

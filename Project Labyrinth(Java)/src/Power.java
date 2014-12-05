@@ -11,10 +11,15 @@ import java.awt.Rectangle;
 public class Power {
 	private Tile colliding_tile1=null,colliding_tile2=null;
 	private final int height=32,width=32,half_width=16,half_height=16;
-	public boolean powerActivated_hammer=false,powerActivated_ladder=false,powerActivated_arrow=false;
+	/*** Whether the hammer power is activated*/
+	public boolean powerActivated_hammer=false;
+	/*** Whether the ladder power is activated*/
+	public boolean powerActivated_ladder=false;
+	/*** Whether the arrow changer power is activated*/
+	public boolean powerActivated_arrow=false;
 	Character hero;
 	public Power(){}
-	/* Ladder can only be used if the next Full tile infront of the Character is Water Type.*/
+	/*** Ladder can only be used if the next Full tile infront of the Character is Water Type.*/
 	public	void useLadder() {
 		Sound.ArrowBridgePowerUsed.setFramePosition(0);
 		findCollidingTile();
@@ -69,7 +74,7 @@ public class Power {
 					}
 				}
 			}
-	
+	/*** Ladder can only be used if the next Full tile infront of the Character is Rock Type.*/
 	public void useHammer() {;
 		Sound.HammerPowerUsed.setFramePosition(0);
 		findCollidingTile();
@@ -91,7 +96,7 @@ public class Power {
 						}
 					}
 				}
-	
+	/*** Ladder can only be used if the next Full tile infront of the Character is Arrow Type.*/
 	public void useArrow() {
 		Sound.ArrowBridgePowerUsed.setFramePosition(0);
 		findCollidingTile();

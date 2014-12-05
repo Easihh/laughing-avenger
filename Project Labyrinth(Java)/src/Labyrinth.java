@@ -1,16 +1,18 @@
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import java.awt.Toolkit;
-/* Author:Enrico Talbot
- * 
+/**
  * This is the Main Class of the Game.This class is a Thread different than the JFrame UI thread 
  * because repainting with a JFrame should be done in a different Thread to prevent with redrawing constantly.
  */
 
 public class Labyrinth implements Runnable{
 	private MainPanel mainPane;
+	/*** Whether the Level has bene loaded yet*/
 	public static boolean level_is_loaded=false;
+	/*** Current Game State*/
 	public static Game.GameState GameState;
+	/*** Character Object */
 	public static Character hero;
 	private final int ScreenWidth=672,ScreenHeight=512,fps_wanted=60;
 	private Thread t=null;
@@ -41,6 +43,7 @@ public class Labyrinth implements Runnable{
 		t=new Thread(this);
 		t.start();
 	}
+	/** The Game Update and refresh screen Loop*/
 	public void run(){
 		watch.start();
 		fpswatch.start();

@@ -8,11 +8,10 @@ import java.util.Collections;
 import java.util.Stack;
 import javax.imageio.ImageIO;
 
-/* Author Enrico Talbot
- * 
+/** 
  * Class that represent the Monster Alma which is first shown on Level 8.This monster ability is
  * that it will follow the Hero until it touch him making the hero die.This monster will also
- * switch to a roll form when moving on the right or left is there are no object collision.
+ * switch to a roll form when moving on the right or left if there are no object collision.
  * Unlike other monsters who follow the Hero to his death, this Monster cannot go on Grass tile.
  */
 public class Alma extends Monster{
@@ -48,8 +47,6 @@ public class Alma extends Monster{
 			roll.AddScene(images[1], roll_animation_duration);
 			} catch (IOException e) {e.printStackTrace();}
 	}
-
-	@Override
 	public void transform() {
 		previousState=img;
 		type=Tile.ID.MoveableBlock;
@@ -57,6 +54,9 @@ public class Alma extends Monster{
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;
 	}
+	/**
+	 *Main Method of the Alma Class that update its state and its animation as well as collision
+	 *check*/
 	public void update(){
 		getAnimation().setImage();
 		if(Labyrinth.GameState==Game.GameState.Normal && type!=Tile.ID.boat && type!=Tile.ID.MoveableBlock)move();
@@ -76,7 +76,7 @@ public class Alma extends Monster{
 
 		return(shape.intersects(new Rectangle(Labyrinth.hero.x,Labyrinth.hero.y,width,height)));
 	}
-	/* Because its possible for the Monster to be shot while its still moving thus
+	/* Because its possible for the Monster to be shot while it's still moving thus
 	 * possibly becoming unaligned with the grid,we want the monster to finish its movement
 	 * to the next grid even if it has been shot; this way the monster will stay aligned.
 	 */
@@ -119,7 +119,7 @@ public class Alma extends Monster{
 		}
 		return null;
 	}
-	/* Since we want monster to always be aligned with grid, they can only move 
+	/*Since we want monster to always be aligned with grid, they can only move 
 	 * a certain distance at once but we dont want to move all at once therefore we
 	 * have to move slightly every game update until we reach the next grid location.
 	 */
@@ -140,7 +140,6 @@ public class Alma extends Monster{
 			step_to_move-=step;
 		}
 	}
-	@Override
 	public void render(Graphics g) {
 		checkState();
 		checkIfDrown();
@@ -164,10 +163,14 @@ public class Alma extends Monster{
 		Level.addRespawn(me);
 		Level.toRemove.add(this);
 	}
+	/**
+	 * Returns a copy of the current Alma object.
+	 */
 	public Alma copy(){
 		Alma clone=new Alma(oldX,oldY,oldtype);
 		return clone;
 	}
+	/* Return whether the Character has gone outside the screen boundaries*/
 	private boolean isOffScreen(){
 		if(x>Level.map_width || x<0 || y<0 || y>Level.map_height){
 			Kill_Respawn();
@@ -292,6 +295,10 @@ public class Alma extends Monster{
 		if(position.x%16!=0 || position.y%16!=0)System.out.println("ERROR PATH WONT BE AlIGNED");
 		return position;
 	}
+	/**
+	 * Collision method for this Monster.The Monster should not traverse any solid tile or Grass tile.
+	 * Returns whether there exist a collision at next position based on current direction.
+	 */
 	public boolean checkCollison(Rectangle mask1,Rectangle mask2) {
 		for(int i=0;i<Level.map_tile.size();i++){
 			if(Level.map_tile.get(i).shape.intersects(mask1)|| Level.map_tile.get(i).shape.intersects(mask2)){

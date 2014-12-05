@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-/* Author Enrico Talbot
+/**
  * 
  * This Monster is represented as a pink monster that move in a given direction.It's special
  * ability is to freeze and shoot player in its detect range(same as Medusa class) except this Monster
@@ -65,7 +65,9 @@ public class DonMedusa extends Monster {
 	}
 	@Override
 	public void transform() {}//impossible to hit this monster
-	
+	/**
+	 *Main Method of the Don-Medusa Class that update its state and its animation as well as collision
+	 *check*/
 	public void update(){
 		fireProjectile();
 		if(Labyrinth.GameState==Game.GameState.Normal)

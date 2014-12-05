@@ -26,10 +26,12 @@ public abstract class Monster extends Tile {
 	public Monster(int x, int y, ID type) {
 		super(x, y, type);
 	}
+	/***Method that transform the monster into the white ball form.*/
 	public abstract void transform();
+	/*** Method that decides how the The Monster and its Animation should be shown on the screen(if at all).*/
 	public abstract void render(Graphics g);
 	
-	/* This Method decides how  far the Monster will be thrown in the water and its change of state*/
+	/** This Method decides how  far the Monster will be thrown in the water and its change of state*/
 	public void moveInWater() {	
 		if(!isDrowning){
 			switch(Labyrinth.hero.dir){

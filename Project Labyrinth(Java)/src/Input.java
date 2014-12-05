@@ -1,7 +1,7 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-/* Author Enrico Talbot
+/**
  * 
  * This is the class where the possible input in the game is recorded/dealt with.When the Level is
  * first loaded, the game is in pause mode until you press any of the movement key.
@@ -9,10 +9,13 @@ import java.awt.event.KeyListener;
  * The Game currently use WASD movement keys.
  */
 public class Input implements KeyListener {
-	/* key[0]=="W",key[1]=="D",key[2]=="S",key[3]=="A",key[4]=="Space"*/
+	/** key[0]=="W",key[1]=="D",key[2]=="S",key[3]=="A",key[4]=="Space"*/
 	public int[] key=new int[5];
 	
 	@Override
+	/*** Decides which key have been pressed and change the status of the Game to Normal if no key
+	 * had been pressed since the Maze Creation.
+	 */
 	public void keyPressed(KeyEvent e) {
 		int keycode=e.getKeyCode();
 		if(keycode==KeyEvent.VK_A){
@@ -49,6 +52,7 @@ public class Input implements KeyListener {
 		}
 	}
 	@Override
+	/*** Decides when key are released*/
 	public void keyReleased(KeyEvent e) {
 		int keycode=e.getKeyCode();
 		switch(keycode){

@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-/* Author Enrico Talbot
+/**
  * 
  * This class is the representation of the Medusa Object in Game.It has a special ability
  * where it freeze the Hero upon seeing it and shooting it as long as the hero is within its detect
@@ -27,6 +27,9 @@ public class Medusa extends Monster {
 	}
 	@Override
 	public void transform() {}//impossible to shot this monster
+	/**
+	 *Main Method of the Medusa Class that update its state  as well as collision
+	 *check*/
 	public void update(){
 		if(canShoot)
 			MultiDirectionSight();

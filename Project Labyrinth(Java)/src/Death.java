@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-/* Author Enrico Talbot 
+/**
  * 
  * This class Represent how the game should deal with the Hero's Death.
  */
@@ -13,6 +13,7 @@ public class Death {
 	private Animation Death;
 	private BufferedImage img;
 	private BufferedImage[] animation;
+	/** Whether the Death animation has finished playing*/
 	public boolean isDone;
 	
 	public Death(){
@@ -20,7 +21,7 @@ public class Death {
 		Death=new Animation();
 		getSpriteFromSheet();
 	}
-	
+	/*** Plays the Animation  until it has finished*/
 	public void render(Graphics g){
 		isDone();
 		if(!isDone){
@@ -61,7 +62,9 @@ public class Death {
 			}
 		}
 	}
-	
+	/***  When Death happen, the Stage music stop and Death sounds start while the gamestate change to death state
+	 * where the game will now render the death scene.
+	 */
 	public void play(){
 		Sound.StageMusic.stop();
 		Sound.Death.start();

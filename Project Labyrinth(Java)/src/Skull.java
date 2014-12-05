@@ -52,6 +52,9 @@ public class Skull extends Monster{
 		time_since_transform=System.nanoTime();	
 		TransformedState=1;	
 	}
+	/**
+	 *Main Method of the Skull Class that update its state and its animation as well as collision
+	 *check*/
 	public void update(){
 		checkState();
 		checkifdrown();

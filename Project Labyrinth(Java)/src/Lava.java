@@ -2,7 +2,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-/* Author Enrico Talbot
+/**
  * This Class decides how Lava is represented and its animation.
  */
 public class Lava extends Tile {
@@ -13,6 +13,7 @@ public class Lava extends Tile {
 		Lava=new Animation();
 		getImage();
 	}
+	/** Render the Lave on screen*/
 	public void render(Graphics g){
 		Lava.setImage();
 		g.drawImage(Lava.getImage(),x,y,null);

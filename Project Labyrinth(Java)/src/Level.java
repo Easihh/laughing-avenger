@@ -9,7 +9,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-/* Author Enrico Talbot
+/**
  * 
  * This class deals with how the Level is created and stored in the game.
  */
@@ -22,12 +22,21 @@ public class Level {
 	private static Vector<Long> Respawn_Timer;
 	private static Tile goal_top;
 	private static boolean canRespawn,chestIsOpen;
-	
-	public static int room=1,remake=0,heart_amount;
+	/*** Current Room*/
+	public static int room=1;
+	/*** How Many Time the Room has been remade due to death*/
+	public static int remake=0;
+	/*** The number of Heart in the current Level*/
+	public static int heart_amount;
 	//Map Width and Map Height should match the TMX/XML file and should not be changed alone.
-	public final static int map_width=512,map_height=512;
+	/*** The Map Width*/
+	public final static int map_width=512;
+	/*** The Map Height*/
+	public final static int map_height=512;
 	public static ArrayList<Tile> map_tile,toRemove,toDelete,toAdd;
+	/*** Representation of the Powers*/
 	public static Game.SpecialPower[] Power;
+	/*** Representation of the goal*/
 	public static Tile goal;
 	
 	public Level(){
@@ -212,7 +221,7 @@ public class Level {
 					break;				
 		}
 	}
-	/* This will draw the representation of the current Level.
+	/** This will draw the representation of the current Level.
 	 * Top part of chest is only shown when all hearts are taken.
 	 * This Method also try to respawn Monsters if its possible to
 	 */
@@ -278,11 +287,12 @@ public class Level {
 			break;		
 		}
 	}
+	/*** Method that add the parameter tile to the list of object to respawn*/
 	public static void addRespawn(Tile tile) {
 		toRespawn.add(tile);
 		Respawn_Timer.add(System.nanoTime());
 	}
-	/* When the hero has obtained all the hearts in a given level,the goal(chest) changes
+	/** When the hero has obtained all the hearts in a given level,the goal(chest) changes
 	 * state  and all monster that can awake are now activated.
 	 */
 	public static void openChest() {
@@ -342,7 +352,7 @@ public class Level {
 		}
 		
 	}
-	/* Upon taking the goal, the goal should changed into a "taken goal" state and all monsters 
+	/** Upon taking the goal, the goal should changed into a "taken goal" state and all monsters 
 	 * should be deleted from the game.Monster respawn should be disabled once the goal has been taken. 
 	 */
 	public static void takeGoal() {
@@ -365,12 +375,14 @@ public class Level {
 		Sound.resetSound();
 		Sound.DoorOpen.start();
 	}
+	/*** Move to next Maze*/
 	public static void nextLevel() {
 		remake=0;
 		room+=1;
 		Labyrinth.level_is_loaded=false;
 		MainPanel.theLevel=new Level();
 	}
+	/*** Restart the current Maze*/
 	public static void restart() {
 		remake++;
 		Labyrinth.level_is_loaded=false;

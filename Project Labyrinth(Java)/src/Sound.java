@@ -2,7 +2,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.sound.sampled.*;
-/* Author Enrico Talbot
+/**
  * 
  * This is the Class where Sounds are played from and loaded.Since we do not want to keep loading
  * sound file every time its needed, we instead load all sounds at the start of the game and get a 
@@ -12,6 +12,7 @@ import javax.sound.sampled.*;
 public class Sound {
 	public static Clip 	ArrowBridgePowerUsed,ChestOpen,Death,DoorOpen,DragonSound,HammerPowerUsed,
 	HeartSound,MedusaSound,MonsterDestroyed,PowerEnabled,Sleeper,ShotSound,StageMusic,Water;
+	/*** Load the given sound specified by Filename in the Memory*/
     public Sound(String Filename) {
     	InputStream source=this.getClass().getResourceAsStream("/Sound/"+Filename+".wav");
         InputStream Sound=new BufferedInputStream(source);
@@ -38,6 +39,7 @@ public class Sound {
 		catch (IOException io){io.printStackTrace();}
 		catch (UnsupportedAudioFileException uafe){uafe.printStackTrace();}
     }
+    /*** Reset all Sound as to make them start from the beginning*/
     public static void resetSound(){
 		Sound.ArrowBridgePowerUsed.setFramePosition(0);
 		Sound.ChestOpen.setFramePosition(0);

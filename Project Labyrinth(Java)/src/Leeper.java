@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
-/*Author Enrico Talbot
+/**
  * 
  * This class represent the Green Monster that follows the Hero in Game.It's special ability is
  * to Sleep and become a solid block as soon as it is in contact with the Hero.
@@ -17,6 +17,7 @@ public class Leeper extends Monster{
 	private int last_update=0;
 	private Movement move,sleep;
 	private Node nextMovement;
+	/*** Whether this Monster is currently is Sleep Mode*/
 	public boolean isSleeping;
 	
 	public Leeper(int x, int y, ID type) {
@@ -57,6 +58,9 @@ public class Leeper extends Monster{
 		TransformedState=1;
 		}
 	}
+	/**
+	 *Main Method of the Leeper Class that update its state and its animation as well as collision
+	 *check*/
 	public void update(){
 		checkState();
 		checkIfDrown();
@@ -132,6 +136,7 @@ public class Leeper extends Monster{
 		Level.addRespawn(me);
 		Level.toRemove.add(this);
 	}
+	/*** Return a Copy of this Object*/
 	public Leeper copy(){
 		Leeper clone=new Leeper(oldX,oldY,oldtype);
 		return clone;
@@ -301,6 +306,10 @@ public class Leeper extends Monster{
 		if(position.x%movement!=0 || position.y%movement!=0)System.out.println("ERROR PATH WONT BE AlIGNED");
 		return position;
 	}
+	/**
+	 * Collision method for this Monster.The Monster should not traverse any solid tile.
+	 * Returns whether there exist a collision at next position based on current direction.
+	 */
 	public boolean checkCollison(Rectangle mask1,Rectangle mask2) {
 		for(int i=0;i<Level.map_tile.size();i++){
 			if(Level.map_tile.get(i).shape.intersects(mask1)|| Level.map_tile.get(i).shape.intersects(mask2)){

@@ -1,6 +1,6 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
-/* Author Enrico Talbot
+/**
  * 
  * This class is the representation of the Ghost-like Created in Game.It has a push Hero ability.
  */
@@ -21,6 +21,9 @@ public class Phantom extends Monster {
 	}
 	@Override
 	public void transform() {}//this monster is immune to Hero's bullet
+	/**
+	 *Main Method of the Phantom Class that update its state and its animation as well as collision
+	 *check*/
 	public void update(){
 		Character hero=Labyrinth.hero;
 		if(Labyrinth.GameState==Game.GameState.Normal)

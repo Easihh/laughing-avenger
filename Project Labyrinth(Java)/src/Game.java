@@ -2,24 +2,31 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Vector;
 import javax.imageio.ImageIO;
-/* Author Enrico Talbot
+/**
  * 
  * This class contains references to certain objects/assets to be used Throughout the program.
  */
 public class Game {
+	/*** The Images containing the game's Tile*/
 	public static Vector<BufferedImage> monsterState,game_tileset,projectile_img;
+	/*** The Image containing the game's background*/
 	public static BufferedImage background;
 	private BufferedImage img=null;
 	private int sheet_row,sheet_cols;
 	private final int assetSize=32;
+	/*** The Game's possible Direction*/
 	enum Direction{Up,Down,Left,Right,None};
+	/*** Possible valid input */
 	enum button{W,A,S,D,None};
+	/*** The different Game States*/
 	enum GameState{NotStarted,Normal,Paused,Death}
+	/*** The different Powers*/
 	enum SpecialPower{Hammer,Ladder,ArrowChange,None}
 	public Game(){
 		try {loadAssets();
 			} catch (IOException e) {e.printStackTrace();}
 	}
+	/*** Load the main game Assets in Memory since they will be used often*/
 	public void loadAssets() throws IOException{
 		monsterState=getSpriteSheet("monster_state");
 		game_tileset=getSpriteSheet("game_tileset");

@@ -1,7 +1,7 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.Collections;
-/* Author Enrico Talbot
+/**
  * 
  * This Class represent the main Hero in the game.This class decides how the Hero
  * should move, Collision detection with different tiles and monster's projectile, abilities etc.
@@ -10,16 +10,36 @@ import java.util.Collections;
  public class Character {
 	private final int width=32,height=32;
 	private int movement=2;
-	public  int x,y,ammo,targetX;
+	/** The X-axis position of the Character*/
+	public  int x;
+	/** The Y-axis position of the Character*/
+	public 	int y;
+	/** The Amount of Ammunition the Character currently possess*/
+	public 	int ammo;
+	/** Amount of X or Y-axis step in order to reach the next tile position*/
+	public 	int targetX;
 	private Movement move;
 	private Projectile weapon=null;
 	private Tile select_Tile;
-	
+	/*** Maximum distance the Character is allowed at once*/
 	public final int step=16;
-	public static boolean isShooting,isOnBoat;
-	public  boolean isPushing,isMoving,beingPushed,canShot;
+	/*** Determines whether the Character is currently shooting*/
+	public static boolean isShooting;
+	/*** Determines whether the Character is currently surfing on a Monster*/
+	public static boolean isOnBoat;
+	/*** Determines whether the Character is currently pushing something*/
+	public  boolean isPushing;
+	/*** Determines whether the Character is currently moving*/
+	public  boolean isMoving;
+	/*** Determines whether the Character is currently being pushed*/
+	public  boolean beingPushed;
+	/*** Determines whether the Character can shoot*/
+	public  boolean canShot;
+	/*** The Character's Death Logic*/
 	public Death Death;
+	/*** The Direction the Character is facing*/
 	public Game.Direction dir;
+	/*** The power the Character possess/will be able to activate.*/
 	public Power aPower;
 	
 	public Character(){
@@ -30,13 +50,16 @@ import java.util.Collections;
 		isShooting=isMoving=isPushing=isOnBoat=canShot=beingPushed=false;
 		 dir=Game.Direction.Up;
 		 targetX=0;
-	}	  
+	}
+	/*** Method that decides how the the Character,its Weapon and its Animation should be shown on the screen.*/
 	public void render(Graphics g){
 		g.drawImage(move.getWalkAnimation(dir).getImage(),x,y,width,height,null);
 		if(Character.isShooting && weapon!=null)
 			weapon.render(g);		
 	}
-	
+	/**
+	 *Main Method of the Character Class that update its state and its animation as well as collision
+	 *check and does the Input detection and Movement*/
 	public void update(Input input){
 		if(Labyrinth.GameState==Game.GameState.Normal){
 			if(isWalkingSand())

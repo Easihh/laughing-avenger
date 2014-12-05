@@ -2,20 +2,23 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Vector;
 import javax.imageio.ImageIO;
-/* Author Enrico Talbot
- * 
+/*** 
  * This class builds the movement animation for each object that moves.
  */
 public class Movement {
+	/** The Animation representing walking down*/
 	public Animation walk_down=new Animation();
+	/** The Animation representing walking up*/
 	public Animation walk_up=new Animation();
+	/** The Animation representing walking left*/
 	public Animation walk_left=new Animation();
+	/** The Animation representing walking right*/
 	public Animation walk_right=new Animation();
 	private BufferedImage img;
 	private int sheet_cols,sheet_row,assetSize=32;
 	private Vector<BufferedImage> spriteSheet;
 	
-	/* This class takes an Image that contains all the movement of the object.
+	/** This class takes an Image that contains all the movement of the object.
 	 * Each direction is a row in the source Image sorted from up->Down->Left->Right
 	 */
 	public Movement(String source,int delay){
@@ -44,7 +47,8 @@ public class Movement {
 			 }
 		}
 		return sheet;
-	}	
+	}
+	/*** Return the Correct animation object depending on the direction of the Character*/
 	public Animation getWalkAnimation(Game.Direction dir){
 		switch(dir){	
 			case Left: 	return walk_left;

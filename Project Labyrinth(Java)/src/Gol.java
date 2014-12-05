@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-/* Author Enrico Talbot
+/** Author
  * 
  * This is the Class that represent the Gol monster in game(Pink Dragon).This Monster special
  * ability is that it will awaken and start shooting the Hero if in Line of Sight once all the hearts
@@ -34,6 +34,9 @@ public class Gol extends Monster {
 			Kill_Respawn();
 		}	
 	}
+	/**
+	 *Main Method of the Gol Class that update its state and its animation as well as collision
+	 *check*/
 	public void update(){
 		checkState();
 		checkIfDrown();
@@ -64,6 +67,7 @@ public class Gol extends Monster {
 		Level.addRespawn(me);
 		Level.toRemove.add(this);
 	}
+	/*** Return a Copy of this object*/
 	public Gol copy(){
 		Gol clone=new Gol(oldX,oldY,oldtype);
 		return clone;

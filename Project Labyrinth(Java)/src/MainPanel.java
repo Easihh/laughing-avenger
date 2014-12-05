@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
-/* Author Enrico Talbot
+/**
  *  This is the basically the UI/Frame of the Game where everything is drawn and displayed.
  */
 public class MainPanel extends JPanel {
@@ -14,6 +14,7 @@ public class MainPanel extends JPanel {
 	private Animation flash_icon=null;
 	private BufferedImage power_icon=null,hammer_icon=null;
 	private final Font font=new Font("Serif", Font.BOLD, 18);
+	/***  The Maze Level Object*/
 	public static Level theLevel;
 	
 	public MainPanel(){
@@ -22,7 +23,7 @@ public class MainPanel extends JPanel {
 		loadPower();
 		theLevel=new Level();
 	}
-	/* Labyrinth Class "frame.repaint" call this function.
+	/** Labyrinth Class "frame.repaint" call this function.
 	 * This will draw all the tile in the Level,Effects,Monster and the Game UI 
 	 * and its text and then the Hero.
 	 */

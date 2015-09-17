@@ -1,0 +1,4 @@
+Version 0.000
+
+-Added SFML Graphic library to the project
+-Created the Main Window for the program.

@@ -1,0 +1,15 @@
+Zelda/Debug/vc120.pdb
+Zelda/Debug/vc120.idb
+Zelda/Zelda.aps
+Zelda/Zelda.vcxproj
+Zelda/Debug/Zelda.tlog/link.write.1.tlog
+Zelda/Debug/Game.obj
+*.log
+*.tlog
+Zelda/Zelda.vcxproj.filters
+*.obj
+*.idb
+Zelda(C++)/Zelda.aps
+*.vcxproj
+Zelda(C++)/Debug/vc120.pdb
+*.filters

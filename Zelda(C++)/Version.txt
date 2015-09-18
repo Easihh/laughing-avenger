@@ -1,3 +1,8 @@
+Version 0.001
+
+-Added GameManager class to manager the game object and update/draw.
+-Added Basic GameLoop.
+
 Version 0.000
 
 -Added SFML Graphic library to the project

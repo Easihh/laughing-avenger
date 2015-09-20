@@ -1,3 +1,10 @@
+Version 0.003
+
+-GameLoop with fixed interval update is now complete
+-Frame rate can be seen in the program Title.
+-Added the Player  represented as a blue square on the screen
+-Player can move around the using keyboard keys.
+
 Version 0.002
 
 -Moved Game Static variables to their own class.

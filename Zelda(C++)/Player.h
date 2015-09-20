@@ -8,13 +8,18 @@ public:
 	sf::RectangleShape sprite;
 	Player();
 	~Player();
-	void update();
+	void update(std::map<std::string, GameObject*> mapObjects);
 	void draw(sf::RenderWindow& mainWindow);
-	const unsigned int PLAYER_HEIGHT = 32;
-	const unsigned int PLAYER_WIDTH = 32;
-	unsigned int xPosition;
-	unsigned int yPosition;
+	enum Direction{Right,Left,Up,Down};
 private:
-
+	const int minStep = 16;
+	unsigned int stepToMove;
+	Direction dir;
+	void completeMove();
+	bool isColliding(std::map<std::string, GameObject*> mapObjects);
+	bool collision;
+	int xOffset, yOffset;
+	int getXOffset();
+	int getYOffset();
 };
 #endif

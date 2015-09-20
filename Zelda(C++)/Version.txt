@@ -1,8 +1,14 @@
+Version 0.004
+
+-Fixed Screen Flicking issue caused by updating window faster than game loop draw.
+-Player Position is now always aligned with the grid(16x16)
+-Collision Detection is now implemented.
+
 Version 0.003
 
--GameLoop with fixed interval update is now complete
+-GameLoop with fixed interval update is now complete.
 -Frame rate can be seen in the program Title.
--Added the Player  represented as a blue square on the screen
+-Added the Player  represented as a blue square on the screen.
 -Player can move around the using keyboard keys.
 
 Version 0.002

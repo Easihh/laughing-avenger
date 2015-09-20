@@ -3,7 +3,9 @@
 #include "Game.h"
 #include <sstream>
 #include "Static.h"
+#include "Player.h"
 GameManager::GameManager(){}
+std::vector<GameObject*> test;
 GameManager::~GameManager()
 {
 	std::for_each(gameObjects.begin(), gameObjects.end(), GameObjectDeallocator());
@@ -19,18 +21,22 @@ void GameManager::updateAll(sf::RenderWindow& mainWindow){
 		fpsCounter = 0;
 		fpsTimer = sf::Time::Zero;
 	}
-	while (timeSinceLastUpdate.asMilliseconds() >= 1667){
+	if (timeSinceLastUpdate.asMilliseconds() >= 1667){
+		mainWindow.clear(sf::Color::Black);
 		fpsCounter++;
 		timeSinceLastUpdate -= timePerFrame;
+		itr = gameObjects.begin();
 		while (itr != gameObjects.end()){
-			itr->second->update();
+			itr->second->update(gameObjects);
 			itr->second->draw(mainWindow);
 			itr++;
 		}
+		mainWindow.display();
 	}
 }
 void GameManager::add(std::string key,GameObject* obj){
 	gameObjects.insert(std::pair<std::string, GameObject*>(key,obj));
+	test.push_back(obj);
 }
 void GameManager::remove(std::string key){
 	std::map<std::string, GameObject*>::iterator results = gameObjects.find(key);

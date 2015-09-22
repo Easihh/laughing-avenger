@@ -1,8 +1,18 @@
+Version 0.005
+
+-Boost library added to the project.
+-GameManager has been replaced by WorldMap.
+-Layer1(Background) tile are now read from CSV file.
+-Added Zelda-Worldmap_Layer 1 file with dummy value.
+-Added Zelda-Worldmap_Layer 2 file with dummy value.
+-Player and Other non-tile Objects are Temporarly Deleted.
+
 Version 0.004
 
 -Fixed Screen Flicking issue caused by updating window faster than game loop draw.
--Player Position is now always aligned with the grid(16x16)
+-Player Position is now always aligned with the grid(16x16).
 -Collision Detection is now implemented.
+-Player X/Y position now shown on screen for DEV purpose.
 
 Version 0.003
 

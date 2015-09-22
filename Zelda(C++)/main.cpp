@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include "Game.h"
-int WINAPI WinMain(HINSTANCE inst, HINSTANCE prev, LPSTR cmd, int show)
+//WINAPI WinMain(HINSTANCE inst, HINSTANCE prev, LPSTR cmd, int show)
+int main()
 {
 	Game game;
 	game.Start();

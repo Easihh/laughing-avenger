@@ -2,13 +2,11 @@
 #define PLAYER_H
 #include "SFML\Graphics.hpp"
 #include "GameObject.h"
-
 class Player:public GameObject{
 public:
-	sf::RectangleShape sprite;
-	Player();
+	Player(float x,float y);
 	~Player();
-	void update(std::map<std::string, GameObject*> mapObjects);
+	void update();
 	void draw(sf::RenderWindow& mainWindow);
 	enum Direction{Right,Left,Up,Down};
 private:
@@ -16,10 +14,11 @@ private:
 	unsigned int stepToMove;
 	Direction dir;
 	void completeMove();
-	bool isColliding(std::map<std::string, GameObject*> mapObjects);
+	bool isColliding();
 	bool collision;
 	int xOffset, yOffset;
 	int getXOffset();
 	int getYOffset();
+	void loadImage();
 };
 #endif

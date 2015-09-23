@@ -8,11 +8,12 @@
 #include <vector>
 #include <iostream>
 #include "GameObject.h"
+#include "Player.h"
 class WorldMap{
 public:
 	WorldMap();
 	~WorldMap();
-	void loadMap();
+	void loadMap(std::string filename);
 	static const int WorldRows = 16;
 	static const int WorldColumns = 16;
 	const int TileWidth = 32;
@@ -31,5 +32,7 @@ private:
 	std::string line;
 	std::vector<std::string> strs;
 	int lastWorldXIndex,lastWorldYIndex;
+	void createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType);
+	Player* player;
 };
 #endif

@@ -11,7 +11,8 @@ public:
 	float yPosition;
 	unsigned int width;
 	unsigned int height;
-	sf::RectangleShape sprite;
+	sf::Texture texture;
+	sf::Sprite sprite;
 private:
 };
 

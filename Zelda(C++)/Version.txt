@@ -1,3 +1,10 @@
+Version 0.006
+
+-Both Background and Object Layer are now loaded.
+-Both Layer now update and draw on screen.
+-Moved Player current coordinate outside the play grid.
+-Colission is Disabled/Broken.
+
 Version 0.005
 
 -Boost library added to the project.

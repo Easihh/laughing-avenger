@@ -2,28 +2,48 @@
 #include "Static.h"
 #include "Tile.h"
 WorldMap::WorldMap(){
-	lastWorldXIndex = 0;
-	lastWorldYIndex = 0;
-	loadMap();
+	loadMap("Map/Zelda-Worldmap_Layer 1.csv");
+	loadMap("Map/Zelda-Worldmap_Layer 2.csv");
 }
 WorldMap::~WorldMap(){
 
 }
-void WorldMap::loadMap(){
-	in.open("Map/Zelda-Worldmap_Layer 1.csv");
+void WorldMap::loadMap(std::string filename){
+	lastWorldXIndex = 0;
+	lastWorldYIndex = 0;
+	in.open(filename);
 	while (!in.eof()){
 		std::getline(in, line, '\n');
 		boost::split(strs, line, boost::is_any_of(","));
 		for (std::vector<std::string>::iterator it = strs.begin(); it < strs.end(); it++){
 			std::cout << "Value:" << *it << std::endl;
-			Tile* backgroundTile=new Tile(lastWorldXIndex * TileWidth, lastWorldYIndex * TileHeight);
-			worldLayer1[lastWorldYIndex][lastWorldXIndex] = backgroundTile;
+			std::string val = *it;
+			createTile(lastWorldXIndex, lastWorldYIndex, atoi(val.c_str()));
 			lastWorldXIndex++;
 		}
 		lastWorldYIndex++;
 		lastWorldXIndex = 0;
 	}
 	in.close();
+	
+}
+void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType){
+	switch (tileType){
+	case -1:
+		//Dummy tile;
+		Tile* backgroundTile;
+		backgroundTile = new Tile(lastWorldXIndex * 0, lastWorldYIndex * TileHeight);
+		worldLayer2[lastWorldYIndex][lastWorldXIndex] = backgroundTile;
+		break;
+	case 0:
+		backgroundTile = new Tile(lastWorldXIndex * TileWidth, lastWorldYIndex * TileHeight);
+		worldLayer2[lastWorldYIndex][lastWorldXIndex] = backgroundTile;
+		break;
+	case 1:
+		backgroundTile = new Tile(lastWorldXIndex * TileWidth, lastWorldYIndex * TileHeight);
+		worldLayer1[lastWorldYIndex][lastWorldXIndex] = backgroundTile;
+		break;
+	}
 }
 void WorldMap::update(sf::RenderWindow& mainWindow){
 	timeSinceLastUpdate += timerClock.restart();
@@ -45,15 +65,12 @@ void WorldMap::update(sf::RenderWindow& mainWindow){
 				worldLayer1[i][j]->draw(mainWindow);
 			}
 		}
-		sf::Font font;
-		std::stringstream position;
-		position << "X:" << std::endl << "Y:";
-		font.loadFromFile("arial.ttf");
-		sf::Text txt(position.str(), font);
-		txt.setColor(sf::Color::Red);
-		txt.setPosition(400, 400);
-		txt.setCharacterSize(24);
-		mainWindow.draw(txt);
+		for (int i = 0; i < WorldRows; i++){
+			for (int j = 0; j < WorldColumns; j++){
+				worldLayer2[i][j]->update();
+				worldLayer2[i][j]->draw(mainWindow);
+			}
+		}
 		mainWindow.display();
 	}
 }

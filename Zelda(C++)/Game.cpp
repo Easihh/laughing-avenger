@@ -20,7 +20,6 @@ void Game::Start(){
 		return;
 	mainWindow.create(sf::VideoMode(Static::SCREEN_WIDTH, Static::SCREEN_HEIGHT, 32), "Zelda: Final Quest");
 	mainWindow.setFramerateLimit(60);
-	Player* player = new Player();
 	Static::gameState = Static::Playing;
 	while (Static::gameState != Static::Exiting){
 		GameLoop();

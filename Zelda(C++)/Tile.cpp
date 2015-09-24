@@ -1,8 +1,9 @@
 #include "Tile.h"
 
-Tile::Tile(float x,float y){
+Tile::Tile(float x, float y,bool canBeCollidedWith){
 	xPosition = x;
 	yPosition = y;
+	isCollideable = canBeCollidedWith;
 	texture.loadFromFile("Tileset/Sand.png");
 	sprite.setTexture(texture);
 	sprite.setPosition(xPosition, yPosition);

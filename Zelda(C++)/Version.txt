@@ -1,3 +1,10 @@
+
+Version 0.006
+
+-Fixed severals issues caused by header A requiring B and header B requiring header A.
+-Collision/Movement is now fixed/reenabled.
+-Player and Object can no longer collide with a background tile.
+
 Version 0.006
 
 -Both Background and Object Layer are now loaded.

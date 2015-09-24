@@ -6,7 +6,7 @@ class Player:public GameObject{
 public:
 	Player(float x,float y);
 	~Player();
-	void update();
+	void update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void draw(sf::RenderWindow& mainWindow);
 	enum Direction{Right,Left,Up,Down};
 private:
@@ -14,7 +14,7 @@ private:
 	unsigned int stepToMove;
 	Direction dir;
 	void completeMove();
-	bool isColliding();
+	bool isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	bool collision;
 	int xOffset, yOffset;
 	int getXOffset();

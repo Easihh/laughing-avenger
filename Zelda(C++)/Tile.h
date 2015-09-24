@@ -3,9 +3,9 @@
 
 #include "GameObject.h"
 
-class Tile:public GameObject{
+class Tile :public GameObject{
 public:
-	Tile(float x,float y);
+	Tile(float x, float y, bool canBeCollidedWith);
 	~Tile();
 	void draw(sf::RenderWindow& mainWindow);
 	void update();

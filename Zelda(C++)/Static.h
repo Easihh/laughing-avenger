@@ -2,16 +2,20 @@
 #define STATIC_H
 
 #include <string>
-#include "GameObject.h"
+namespace Global{
+	extern const unsigned int FPS_RATE;
+	extern const unsigned int SCREEN_WIDTH;
+	extern const unsigned int SCREEN_HEIGHT;
+	extern const int TileWidth;
+	extern const int TileHeight;
+	extern unsigned int CURRENT_FPS;
+};
 class Static{
 public:
-	const static unsigned int FPS_RATE;
-	const static unsigned int SCREEN_WIDTH;
-	const static unsigned int SCREEN_HEIGHT;
-	static unsigned int CURRENT_FPS;
 	static enum GameState{ NotStarted, Paused, Playing, Menu, Exiting }; 
-	static GameState gameState;
+	static  GameState gameState;
 	const static std::string GAME_TITLE;
-	static bool intersect(GameObject* RectA, GameObject* RectB, int offsetX,int offsetY);
+	static const int WorldRows=16;
+	static const int WorldColumns=16;
 };
 #endif

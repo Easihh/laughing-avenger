@@ -1,7 +1,4 @@
 #include "Game.h"
-#include "Static.h"
-#include "Player.h"
-#include "WorldMap.h"
 Game::Game(){}
 Game::~Game(){}
 void Game::GameLoop(){
@@ -18,8 +15,8 @@ void Game::GameLoop(){
 void Game::Start(){
 	if (Static::gameState != Static::NotStarted)
 		return;
-	mainWindow.create(sf::VideoMode(Static::SCREEN_WIDTH, Static::SCREEN_HEIGHT, 32), "Zelda: Final Quest");
-	mainWindow.setFramerateLimit(60);
+	mainWindow.create(sf::VideoMode(Global::SCREEN_WIDTH, Global::SCREEN_HEIGHT, 32), "Zelda: Final Quest");
+	mainWindow.setFramerateLimit(Global::FPS_RATE);
 	Static::gameState = Static::Playing;
 	while (Static::gameState != Static::Exiting){
 		GameLoop();

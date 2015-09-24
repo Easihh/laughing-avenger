@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "Static.h"
 #include <sstream>
 #include <Windows.h>
  Player::Player(float x,float y){
@@ -15,50 +14,47 @@
 	 sprite.setTexture(texture);
 	 sprite.setPosition(xPosition, yPosition);
  }
- void Player::update(){
+ void Player::update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
 		 if (stepToMove == 0){
 			 dir = Left;
-			 if (!isColliding())
+			 if (!isColliding(worldLayer))
 				stepToMove = minStep;
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
 		 if (stepToMove == 0){
 			 dir = Right;
-			 if (!isColliding())
+			 if (!isColliding(worldLayer))
 				 stepToMove = minStep;
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
 		 if (stepToMove == 0){
 			 dir = Up;
-			 if (!isColliding())
+			 if (!isColliding(worldLayer))
 				 stepToMove = minStep;
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
 		 if (stepToMove == 0){
 			 dir = Down;
-			 if (!isColliding())
+			 if (!isColliding(worldLayer))
 				 stepToMove = minStep;
 		 }
 	 }
 	 if (stepToMove!=0)
 		completeMove();
  }
- bool Player::isColliding(){
+ bool Player::isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 collision = false;
-	/* while (itr != mapObjects.end()){
-		 GameObject* obj = itr->second;
-		 if (obj == this)itr++;
-		 else
-		 {
-			 if (Static::intersect(this, obj, getXOffset(),getYOffset()))
-				 collision = true;		 
-			 itr++;
+	 for (int i = 0; i < Static::WorldRows; i++){
+		 for (int j = 0; j < Static::WorldColumns; j++){
+			 if (worldLayer[i][j] == this)continue;
+			 if (intersect(this, worldLayer[i][j], getXOffset(), getYOffset()))
+				 collision = true;
 		 }
-	 }*/
+	 }
 	 return collision;
  }
  int Player::getXOffset(){
@@ -93,6 +89,7 @@
 			 yPosition += 2;
 			 break;
 	 }
+	 sprite.setPosition(xPosition, yPosition);
  }
  void Player::draw(sf::RenderWindow& mainWindow){
 	 mainWindow.draw(sprite);

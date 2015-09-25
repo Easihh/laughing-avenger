@@ -8,7 +8,6 @@
 #include <vector>
 #include <iostream>
 #include "Player.h"
-#include "Tile.h"
 class WorldMap{
 public:
 	WorldMap();
@@ -24,12 +23,7 @@ public:
 	sf::Clock timerClock, fpsClock;
 	void update(sf::RenderWindow& mainWindow);
 private:
-	Tile* backgroundTile;
-	std::ifstream in;
-	std::string line;
-	std::vector<std::string> strs;
 	int lastWorldXIndex,lastWorldYIndex;
 	void createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType);
-	Player* player;
 };
 #endif

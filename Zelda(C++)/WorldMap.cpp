@@ -1,4 +1,5 @@
 #include "WorldMap.h"
+#include "Tile.h"
 WorldMap::WorldMap(){
 	loadMap("Map/Zelda-Worldmap_Layer 1.csv");
 	loadMap("Map/Zelda-Worldmap_Layer 2.csv");
@@ -7,6 +8,9 @@ WorldMap::~WorldMap(){
 
 }
 void WorldMap::loadMap(std::string filename){
+	std::ifstream in;
+	std::string line;
+	std::vector<std::string> strs;
 	lastWorldXIndex = 0;
 	lastWorldYIndex = 0;
 	in.open(filename);
@@ -26,19 +30,23 @@ void WorldMap::loadMap(std::string filename){
 	
 }
 void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType){
+	Tile* tile;
+	Player* player;
 	switch (tileType){
 	case -1:
-		//Dummy tile;
-		backgroundTile = new Tile(lastWorldXIndex * 0, lastWorldYIndex * Global::TileHeight,false);
-		worldLayer2[lastWorldYIndex][lastWorldXIndex] = backgroundTile;
+		//no tile;
 		break;
 	case 0:
-		player = new Player(lastWorldXIndex* Global::TileWidth, lastWorldYIndex* Global::TileHeight);
+		player = new Player(lastWorldXIndex, lastWorldYIndex);
 		worldLayer2[lastWorldYIndex][lastWorldXIndex] = player;
 		break;
 	case 1:
-		backgroundTile = new Tile(lastWorldXIndex * Global::TileWidth, lastWorldYIndex * Global::TileHeight,false);
-		worldLayer1[lastWorldYIndex][lastWorldXIndex] = backgroundTile;
+		tile = new Tile(lastWorldXIndex, lastWorldYIndex, false,1);
+		worldLayer1[lastWorldYIndex][lastWorldXIndex] = tile;
+		break;
+	case 2:
+		tile = new Tile(lastWorldXIndex,lastWorldYIndex, true,2);
+		worldLayer2[lastWorldYIndex][lastWorldXIndex] = tile;
 		break;
 	}
 }
@@ -58,14 +66,16 @@ void WorldMap::update(sf::RenderWindow& mainWindow){
 		timeSinceLastUpdate -= timePerFrame;
 		for (int i = 0; i < Static::WorldRows; i++){
 			for (int j = 0; j < Static::WorldColumns; j++){
-				worldLayer1[i][j]->update(worldLayer1);
+				//worldLayer1[i][j]->update(worldLayer1);
 				worldLayer1[i][j]->draw(mainWindow);
 			}
 		}
 		for (int i = 0; i < Static::WorldRows; i++){
 			for (int j = 0; j < Static::WorldColumns; j++){
-				worldLayer2[i][j]->update(worldLayer2);
-				worldLayer2[i][j]->draw(mainWindow);
+				if (worldLayer2[i][j] != NULL){
+					worldLayer2[i][j]->update(worldLayer2);
+					worldLayer2[i][j]->draw(mainWindow);
+				}
 			}
 		}
 		mainWindow.display();

@@ -15,10 +15,12 @@ private:
 	Direction dir;
 	void completeMove();
 	bool isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
-	bool collision;
 	int xOffset, yOffset;
 	int getXOffset();
 	int getYOffset();
 	void loadImage();
+	sf::IntRect subRect;
+	int walkAnimationIndex;
+	void updateAnimationFrame();
 };
 #endif

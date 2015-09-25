@@ -1,5 +1,16 @@
+Version 0.008
 
-Version 0.006
+-Player now has walking animations.
+-Background Layer tiles are now only drawn and unnecessary updated also.
+-Dummy tile are no longer created when there is a -1 in CSV file.
+-Fixed an issue where update would try to update possible null object in Object Layer.
+-Fixed an issue where collision check would try to check against possible null object.
+-Object layer now load image from tileset and no longer load dummy rectangle.
+-Added Trees on The Tileset.
+-Fixed a Bug where player would not face the correct position if in collision when changing direction.
+
+
+Version 0.007
 
 -Fixed severals issues caused by header A requiring B and header B requiring header A.
 -Collision/Movement is now fixed/reenabled.

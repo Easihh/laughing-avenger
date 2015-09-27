@@ -1,78 +1,100 @@
 #include "Player.h"
 #include <sstream>
 #include <Windows.h>
+#include <iostream>
  Player::Player(float x,float y){
+	 swordMaxFrame = 30;
+	 swordCurrentFrame = 0;
+	 swordDelay = 0;
+	 swordMaxDelay = 16;
 	 xPosition = x * Global::TileWidth;
 	 yPosition = y * Global::TileHeight;
 	 width = Global::TileWidth;
 	 height = Global::TileHeight;
-	 dir = Up;
-	 walkAnimationIndex = 0;
+	 dir = Static::Direction::Up;
+	 canAttack = true;
+	 isAttacking = false;
 	 loadImage();
 }
  Player::~Player(){
  }
  void Player::loadImage(){
-	 texture.loadFromFile("Tileset/Link_Movement.png");
-	 subRect.height = height;
-	 subRect.width = width;
-	 subRect.left = 0;
-	 subRect.top = 0;
-	 sprite.setTexture(texture);
-	 sprite.setTextureRect(subRect);
-	 sprite.setPosition(xPosition, yPosition);
+	walkAnimation =new Animation("Link_Movement", width, height,xPosition,yPosition,6);
+	attackAnimation=new Animation("Link_Attack", width, height, xPosition, yPosition, NULL);
  }
  void Player::update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
+	 bool keyPressed = false;
+	 if (isAttacking){
+		 swordCurrentFrame++;
+		 if (swordCurrentFrame >= swordMaxFrame){
+			 isAttacking = false;
+			 swordCurrentFrame = 0;
+			 delete sword;
+		 }
+	 }
+	 if (!isAttacking && !canAttack)
+		 swordDelay++;
+		 if (swordDelay >= swordMaxDelay){
+			 swordDelay = 0;
+			 canAttack = true;
+		 }
+
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+		 keyPressed = true;
 		 if (stepToMove == 0){
-			 if (dir != Left){
-				 dir = Left;
-				 walkAnimationIndex = 0;
-				 updateAnimationFrame();
+			 if (dir != Static::Direction::Left){
+				 dir = Static::Direction::Left;
+				 walkAnimation->reset();
 			 }
-			 dir = Left;
 			 if (!isColliding(worldLayer))
-				stepToMove = minStep;
+				stepToMove = Global::minStep;
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+		 keyPressed = true;
 		 if (stepToMove == 0){
-			 if (dir != Right){
-				 dir = Right;
-				 walkAnimationIndex = 0;
-				 updateAnimationFrame();
+			 if (dir != Static::Direction::Right){
+				 dir = Static::Direction::Right;
+				 walkAnimation->reset();
 			 }
-			 dir = Right;
 			 if (!isColliding(worldLayer))
-				 stepToMove = minStep;
+				 stepToMove = Global::minStep;
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+		 keyPressed = true;
 		 if (stepToMove == 0){
-			 if (dir != Up){
-				 dir = Up;
-				 walkAnimationIndex = 0;
-				 updateAnimationFrame();
+			 if (dir != Static::Direction::Up){
+				 dir = Static::Direction::Up;
+				 walkAnimation->reset();
 			 }
-			 dir = Up;
 			 if (!isColliding(worldLayer))
-				 stepToMove = minStep;
+				 stepToMove = Global::minStep;
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+		 keyPressed = true;
 		 if (stepToMove == 0){
-			 if (dir != Down){
-				 dir = Down;
-				 walkAnimationIndex = 0;
-				 updateAnimationFrame();
+			 if (dir != Static::Direction::Down){
+				 dir = Static::Direction::Down;
+				 walkAnimation->reset();
 			 }
-			 dir = Down;
 			 if (!isColliding(worldLayer))
-				 stepToMove = minStep;
+				 stepToMove = Global::minStep;
 		 }
 	 }
-	 if (stepToMove!=0)
-		completeMove();
+	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+		 if (canAttack && !isAttacking){
+			 sword = new Sword(xPosition, yPosition, dir);
+			 isAttacking = true;
+			 canAttack = false;
+		 }
+	 }
+	 if (stepToMove != 0)
+		 completeMove();
+	 if (keyPressed)
+		walkAnimation->updateAnimationFrame(dir);
+	 attackAnimation->updateAnimationFrame(dir);
  }
  bool Player::isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 bool collision = false;
@@ -88,67 +110,46 @@
  }
  int Player::getXOffset(){
 	 xOffset = 0;
-	 if (dir == Left)
-		 xOffset = -minStep;
-	 else if (dir == Right)
-		 xOffset = minStep;
+	 if (dir == Static::Direction::Left)
+		 xOffset = -Global::minStep;
+	 else if (dir == Static::Direction::Right)
+		 xOffset = Global::minStep;
 	 return xOffset;
  }
  int Player::getYOffset(){
 	 yOffset = 0;
-	 if (dir == Up)
-		 yOffset = -minStep;
-	 else if (dir == Down)
-		 yOffset = minStep;
+	 if (dir == Static::Direction::Up)
+		 yOffset = -Global::minStep;
+	 else if (dir == Static::Direction::Down)
+		 yOffset = Global::minStep;
 	 return yOffset;
  }
  void Player::completeMove(){
 	 stepToMove -= 2;
 	 switch (dir){
-		 case Right:
+	 case Static::Direction::Right:
 			 xPosition += 2;
 			 break;
-		 case Left:
+	 case Static::Direction::Left:
 			 xPosition -= 2;
 			 break;
-		 case Up:
+	 case Static::Direction::Up:
 			 yPosition -= 2;
 			 break;
-		 case Down:
+	 case Static::Direction::Down:
 			 yPosition += 2;
 			 break;
 	 }
-	 if (stepToMove==0){
-		 walkAnimationIndex++;
-		 if (walkAnimationIndex > 1)
-			 walkAnimationIndex = 0;
-		 updateAnimationFrame();
-	 }
-	 sprite.setPosition(xPosition, yPosition);
- }
- void Player::updateAnimationFrame(){
-	 subRect.height = height;
-	 subRect.width = width;
-	 subRect.left = walkAnimationIndex*width;
-	 switch (dir)
-	 {
-	 case Player::Right:
-			subRect.top = height * 3;
-			break;
-	 case Player::Left:
-			subRect.top = height*2;
-		 break;
-	 case Player::Up:
-			subRect.top = 0;
-			break;
-	 case Player::Down:
-			subRect.top = height;
-			break;
-	 }
-	 sprite.setTextureRect(subRect);
+	 walkAnimation->sprite.setPosition(xPosition, yPosition);
+	 attackAnimation->sprite.setPosition(xPosition, yPosition);
  }
  void Player::draw(sf::RenderWindow& mainWindow){
-	 mainWindow.draw(sprite);
+	 if (!isAttacking)
+		mainWindow.draw(walkAnimation->sprite);
+	 else {
+		 mainWindow.draw(attackAnimation->sprite);
+		 mainWindow.draw(sword->sprite);
+	 }
 
 	 sf::Font font;
 	 std::stringstream position;

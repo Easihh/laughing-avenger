@@ -7,6 +7,7 @@ namespace Global
 	 const int TileWidth=32;
 	 const int TileHeight=32;
 	 unsigned int CURRENT_FPS=0;
+	 const int minStep = 16;
 }
 Static::GameState Static::gameState=NotStarted;
 const std::string Static::GAME_TITLE = "Zelda: Last Quest ";

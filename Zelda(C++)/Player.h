@@ -1,26 +1,29 @@
 #ifndef PLAYER_H
 #define PLAYER_H
+
 #include "SFML\Graphics.hpp"
 #include "GameObject.h"
+#include "Animation.h"
+#include "Sword.h"
 class Player:public GameObject{
 public:
 	Player(float x,float y);
 	~Player();
 	void update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void draw(sf::RenderWindow& mainWindow);
-	enum Direction{Right,Left,Up,Down};
 private:
-	const int minStep = 16;
 	unsigned int stepToMove;
-	Direction dir;
+	Static::Direction dir;
 	void completeMove();
 	bool isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
-	int xOffset, yOffset;
+	int xOffset, yOffset,swordMaxFrame,swordCurrentFrame,swordDelay,swordMaxDelay;
 	int getXOffset();
 	int getYOffset();
 	void loadImage();
 	sf::IntRect subRect;
-	int walkAnimationIndex;
-	void updateAnimationFrame();
+	Animation* walkAnimation;
+	Animation* attackAnimation;
+	Sword* sword;
+	bool canAttack,isAttacking;
 };
 #endif

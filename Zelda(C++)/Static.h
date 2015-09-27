@@ -9,10 +9,12 @@ namespace Global{
 	extern const int TileWidth;
 	extern const int TileHeight;
 	extern unsigned int CURRENT_FPS;
+	extern const int minStep;
 };
 class Static{
 public:
 	static enum GameState{ NotStarted, Paused, Playing, Menu, Exiting }; 
+	static enum Direction{ Right, Left, Up, Down };
 	static  GameState gameState;
 	const static std::string GAME_TITLE;
 	static const int WorldRows=16;

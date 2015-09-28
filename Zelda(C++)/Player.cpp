@@ -41,45 +41,49 @@
 
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
 		 keyPressed = true;
-		 if (stepToMove == 0){
+		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Static::Direction::Left){
+				 getUnalignedCount(Static::Direction::Left);
 				 dir = Static::Direction::Left;
 				 walkAnimation->reset();
 			 }
-			 if (!isColliding(worldLayer))
+			 if (!isColliding(worldLayer) && stepToAlign==0)
 				stepToMove = Global::minStep;
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
 		 keyPressed = true;
-		 if (stepToMove == 0){
+		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Static::Direction::Right){
+				 getUnalignedCount(Static::Direction::Right);
 				 dir = Static::Direction::Right;
 				 walkAnimation->reset();
 			 }
-			 if (!isColliding(worldLayer))
+			 if (!isColliding(worldLayer) && stepToAlign==0)
 				 stepToMove = Global::minStep;
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
 		 keyPressed = true;
-		 if (stepToMove == 0){
+		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Static::Direction::Up){
+				 getUnalignedCount(Static::Direction::Up);
 				 dir = Static::Direction::Up;
 				 walkAnimation->reset();
 			 }
-			 if (!isColliding(worldLayer))
+			 if (!isColliding(worldLayer) && stepToAlign==0)
 				 stepToMove = Global::minStep;
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
 		 keyPressed = true;
-		 if (stepToMove == 0){
+		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Static::Direction::Down){
+				 getUnalignedCount(Static::Direction::Down);
 				 dir = Static::Direction::Down;
 				 walkAnimation->reset();
 			 }
-			 if (!isColliding(worldLayer))
+			 if (!isColliding(worldLayer) && stepToAlign==0)
 				 stepToMove = Global::minStep;
 		 }
 	 }
@@ -92,6 +96,8 @@
 	 }
 	 if (stepToMove != 0)
 		 completeMove();
+	 if (stepToAlign != 0)
+		 snapToGrid();
 	 if (keyPressed)
 		walkAnimation->updateAnimationFrame(dir);
 	 attackAnimation->updateAnimationFrame(dir);
@@ -124,20 +130,81 @@
 		 yOffset = Global::minStep;
 	 return yOffset;
  }
- void Player::completeMove(){
-	 stepToMove -= 2;
+ void Player::getUnalignedCount(Static::Direction nextDir){
+	 int x = xPosition;
+	 int y = yPosition;
+	 stepIsNegative = false;
+	 switch (nextDir){
+	 case Static::Direction::Right:
+		 stepToAlign = Global::HalfTileHeight -( y %Global::HalfTileHeight);
+		 break;
+	 case Static::Direction::Left:
+		 stepToAlign = Global::HalfTileHeight - (y %Global::HalfTileHeight);
+		 break;
+	 case Static::Direction::Up:
+		 stepToAlign = Global::HalfTileWidth - (x %Global::HalfTileWidth);
+		 break;
+	 case Static::Direction::Down:
+		 stepToAlign = Global::HalfTileWidth - (x %Global::HalfTileWidth);
+		 break;
+	 }
+	 if (stepToAlign >= Global::minGridStep/2){
+		 stepToAlign = Global::minGridStep - stepToAlign;
+		 stepIsNegative = true;
+	 }
+	 if (stepToAlign == Global::minGridStep)stepToAlign = 0;
+ }
+ void Player::snapToGrid(){
 	 switch (dir){
 	 case Static::Direction::Right:
-			 xPosition += 2;
+	 case Static::Direction::Left:
+		 if (!stepIsNegative){
+			 if (stepToAlign<Global::minStep)
+				 yPosition += stepToAlign;
+			 else  yPosition += Global::minStep;
+		 }
+		 else 
+		 {
+			 if (stepToAlign<Global::minStep)
+				 yPosition -= stepToAlign;
+			 else  yPosition -= Global::minStep;
+		 }
+		 break;
+	 case Static::Direction::Up:
+	 case Static::Direction::Down:
+		 if (!stepIsNegative){
+			 if (stepToAlign < Global::minStep)
+				 xPosition += stepToAlign;
+			 else xPosition += Global::minStep;
+		 }
+		 else
+		 {
+			 if (stepToAlign < Global::minStep)
+				 xPosition -= stepToAlign;
+			 else xPosition -= Global::minStep;
+		 }
+		 break;
+	 }
+	 if (stepToAlign < Global::minStep)
+		 stepToAlign = 0;
+	 else stepToAlign -= Global::minStep;
+	 walkAnimation->sprite.setPosition(xPosition, yPosition);
+	 attackAnimation->sprite.setPosition(xPosition, yPosition);
+ }
+ void Player::completeMove(){
+	 stepToMove -= Global::minStep;
+	 switch (dir){
+	 case Static::Direction::Right:
+		 xPosition += Global::minStep;
 			 break;
 	 case Static::Direction::Left:
-			 xPosition -= 2;
+		 xPosition -= Global::minStep;
 			 break;
 	 case Static::Direction::Up:
-			 yPosition -= 2;
+		 yPosition -= Global::minStep;
 			 break;
 	 case Static::Direction::Down:
-			 yPosition += 2;
+		 yPosition += Global::minStep;
 			 break;
 	 }
 	 walkAnimation->sprite.setPosition(xPosition, yPosition);
@@ -150,7 +217,9 @@
 		 mainWindow.draw(attackAnimation->sprite);
 		 mainWindow.draw(sword->sprite);
 	 }
-
+	 drawText(mainWindow);
+ }
+ void Player::drawText(sf::RenderWindow& mainWindow){
 	 sf::Font font;
 	 std::stringstream position;
 	 position << "X:" << xPosition << std::endl << "Y:" << yPosition;

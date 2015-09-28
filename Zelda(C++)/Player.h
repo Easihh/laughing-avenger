@@ -16,14 +16,17 @@ private:
 	Static::Direction dir;
 	void completeMove();
 	bool isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
-	int xOffset, yOffset,swordMaxFrame,swordCurrentFrame,swordDelay,swordMaxDelay;
+	int xOffset, yOffset,swordMaxFrame,swordCurrentFrame,swordDelay,swordMaxDelay,stepToAlign;
 	int getXOffset();
 	int getYOffset();
 	void loadImage();
+	void getUnalignedCount(Static::Direction nextDir);
+	void snapToGrid();
+	void drawText(sf::RenderWindow& mainWindow);
 	sf::IntRect subRect;
 	Animation* walkAnimation;
 	Animation* attackAnimation;
 	Sword* sword;
-	bool canAttack,isAttacking;
+	bool canAttack,isAttacking,stepIsNegative;
 };
 #endif

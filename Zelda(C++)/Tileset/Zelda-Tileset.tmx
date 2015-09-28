@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="ZeldaTileset.tsx"/>
  <layer name="Layer 2" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjZmBgYKYSJhbQQj85YLDrZ8bBppf9A62fcYDtJ0YftfQPFAYAKtYBKw==
+   eJxjZmBgYKYSJhbQQj85YLDrZ0aj6W3/QOtnHGD7idFHLf0DhQEq4gEr
   </data>
  </layer>
  <layer name="Layer 1" width="16" height="16" visible="0">

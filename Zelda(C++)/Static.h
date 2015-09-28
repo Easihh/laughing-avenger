@@ -10,6 +10,9 @@ namespace Global{
 	extern const int TileHeight;
 	extern unsigned int CURRENT_FPS;
 	extern const int minStep;
+	extern const int HalfTileWidth;
+	extern const int HalfTileHeight;
+	extern const int minGridStep;
 };
 class Static{
 public:

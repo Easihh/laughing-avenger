@@ -1,5 +1,9 @@
 Version 0.010
 
+-Player can no longer move during the attack animation.
+-Fixed an issue where player would sometime "slide" to become aligned with the grid when releasing inputs.
+-Improvement to movement/alignment code.
+
 Version 0.009
 
 -Separated Animation from Player class to it's own class.

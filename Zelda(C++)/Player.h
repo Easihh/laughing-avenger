@@ -16,7 +16,7 @@ private:
 	Static::Direction dir;
 	void completeMove();
 	bool isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
-	int xOffset, yOffset,swordMaxFrame,swordCurrentFrame,swordDelay,swordMaxDelay,stepToAlign;
+	int xOffset, yOffset,stepToAlign;
 	int getXOffset();
 	int getYOffset();
 	void loadImage();

@@ -3,10 +3,6 @@
 #include <Windows.h>
 #include <iostream>
  Player::Player(float x,float y){
-	 swordMaxFrame = 30;
-	 swordCurrentFrame = 0;
-	 swordDelay = 0;
-	 swordMaxDelay = 16;
 	 xPosition = x * Global::TileWidth;
 	 yPosition = y * Global::TileHeight;
 	 width = Global::TileWidth;
@@ -24,21 +20,7 @@
  }
  void Player::update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 bool keyPressed = false;
-	 if (isAttacking){
-		 swordCurrentFrame++;
-		 if (swordCurrentFrame >= swordMaxFrame){
-			 isAttacking = false;
-			 swordCurrentFrame = 0;
-			 delete sword;
-		 }
-	 }
-	 if (!isAttacking && !canAttack)
-		 swordDelay++;
-		 if (swordDelay >= swordMaxDelay){
-			 swordDelay = 0;
-			 canAttack = true;
-		 }
-
+	 sword->update(isAttacking, canAttack);
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
 		 keyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
@@ -87,8 +69,9 @@
 				 stepToMove = Global::minStep;
 		 }
 	 }
-	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
 		 if (canAttack && !isAttacking){
+			 delete sword;
 			 sword = new Sword(xPosition, yPosition, dir);
 			 isAttacking = true;
 			 canAttack = false;

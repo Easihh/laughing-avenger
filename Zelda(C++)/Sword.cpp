@@ -3,6 +3,10 @@
 Sword::Sword(float playerX,float playerY,Static::Direction dir){
 	xPosition = playerX;
 	yPosition = playerY;
+	swordMaxFrame = 30;
+	swordCurrentFrame = 0;
+	swordDelay = 0;
+	swordMaxDelay = 16;
 	loadImage(dir);
 }
 Sword::~Sword(){
@@ -33,4 +37,20 @@ void Sword::loadImage(Static::Direction dir){
 	}	
 	sprite.setTexture(texture);
 	sprite.setPosition(xPosition, yPosition);
+}
+void Sword::update(bool& isAttacking,bool& canAttack){
+	if (isAttacking){
+		swordCurrentFrame++;
+		if (swordCurrentFrame >= swordMaxFrame){
+		isAttacking = false;
+		swordCurrentFrame = 0;
+		}
+	}
+	if (!isAttacking && !canAttack){
+		swordDelay++;
+		if (swordDelay >= swordMaxDelay){
+			swordDelay = 0;
+			canAttack = true;
+		}
+	}
 }

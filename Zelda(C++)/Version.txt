@@ -1,3 +1,8 @@
+Version 0.011
+
+-Fixed an issue where player could not attack while moving.
+-Moved Sword logic from Player to Sword class.
+
 Version 0.010
 
 -Player can no longer move during the attack animation.

@@ -2,6 +2,7 @@
 #define STATIC_H
 
 #include <string>
+#include "SFML\Graphics.hpp"
 namespace Global{
 	extern const unsigned int FPS_RATE;
 	extern const unsigned int SCREEN_WIDTH;
@@ -13,6 +14,7 @@ namespace Global{
 	extern const int HalfTileWidth;
 	extern const int HalfTileHeight;
 	extern const int minGridStep;
+	extern sf::View gameView;
 };
 class Static{
 public:
@@ -20,7 +22,7 @@ public:
 	static enum Direction{ Right, Left, Up, Down };
 	static  GameState gameState;
 	const static std::string GAME_TITLE;
-	static const int WorldRows=16;
-	static const int WorldColumns=16;
+	static const int WorldRows=32;
+	static const int WorldColumns=32;
 };
 #endif

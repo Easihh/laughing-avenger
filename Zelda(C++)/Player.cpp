@@ -19,10 +19,10 @@
 	attackAnimation=new Animation("Link_Attack", width, height, xPosition, yPosition, NULL);
  }
  void Player::update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
-	 bool keyPressed = false;
+	 bool movementKeyPressed = false;
 	 sword->update(isAttacking, canAttack);
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-		 keyPressed = true;
+		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Static::Direction::Left){
 				 getUnalignedCount(Static::Direction::Left);
@@ -34,7 +34,7 @@
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-		 keyPressed = true;
+		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Static::Direction::Right){
 				 getUnalignedCount(Static::Direction::Right);
@@ -46,7 +46,7 @@
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-		 keyPressed = true;
+		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Static::Direction::Up){
 				 getUnalignedCount(Static::Direction::Up);
@@ -58,7 +58,7 @@
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-		 keyPressed = true;
+		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Static::Direction::Down){
 				 getUnalignedCount(Static::Direction::Down);
@@ -81,9 +81,16 @@
 		 completeMove();
 	 if (stepToAlign != 0)
 		 snapToGrid();
-	 if (keyPressed)
+	 if (movementKeyPressed)
 		walkAnimation->updateAnimationFrame(dir);
 	 attackAnimation->updateAnimationFrame(dir);
+	 checkMapBoundaries();
+ }
+ bool Player::checkMapBoundaries(){
+	 if (xPosition > Global::SCREEN_WIDTH){
+		 Global::gameView.setCenter(512,256);
+		 return false;
+	 }
  }
  bool Player::isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 bool collision = false;
@@ -194,6 +201,8 @@
 	 attackAnimation->sprite.setPosition(xPosition, yPosition);
  }
  void Player::draw(sf::RenderWindow& mainWindow){
+	 if (!checkMapBoundaries())
+		 mainWindow.setView(Global::gameView);
 	 if (!isAttacking)
 		mainWindow.draw(walkAnimation->sprite);
 	 else {
@@ -209,7 +218,7 @@
 	 font.loadFromFile("arial.ttf");
 	 sf::Text txt(position.str(), font);
 	 txt.setColor(sf::Color::Red);
-	 txt.setPosition(512, 200);
-	 txt.setCharacterSize(24);
+	 txt.setPosition(xPosition, yPosition-32);
+	 txt.setCharacterSize(12);
 	 mainWindow.draw(txt);
  }

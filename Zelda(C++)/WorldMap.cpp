@@ -8,17 +8,21 @@ WorldMap::~WorldMap(){
 
 }
 void WorldMap::loadMap(std::string filename){
+	int* test [Static::WorldRows][Static::WorldColumns];
+	worldLayer2[0][0] = NULL;
 	std::ifstream in;
 	std::string line;
 	std::vector<std::string> strs;
 	lastWorldXIndex = 0;
 	lastWorldYIndex = 0;
 	in.open(filename);
+	if (in.fail())
+		std::cout << "Failed To open:" + filename<<std::endl;
 	while (!in.eof()){
 		std::getline(in, line, '\n');
 		boost::split(strs, line, boost::is_any_of(","));
 		for (std::vector<std::string>::iterator it = strs.begin(); it < strs.end(); it++){
-			std::cout << "Value:" << *it << std::endl;
+			std::cout <<"Row:"<<lastWorldXIndex <<" Col:"<<lastWorldYIndex << " Value:" << *it << std::endl;
 			std::string val = *it;
 			createTile(lastWorldXIndex, lastWorldYIndex, atoi(val.c_str()));
 			lastWorldXIndex++;
@@ -38,15 +42,15 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 		break;
 	case 0:
 		player = new Player(lastWorldXIndex, lastWorldYIndex);
-		worldLayer2[lastWorldYIndex][lastWorldXIndex] = player;
+		worldLayer2[lastWorldXIndex][lastWorldYIndex] = player;
 		break;
 	case 1:
 		tile = new Tile(lastWorldXIndex, lastWorldYIndex, false,1);
-		worldLayer1[lastWorldYIndex][lastWorldXIndex] = tile;
+		worldLayer1[lastWorldXIndex][lastWorldYIndex] = tile;
 		break;
 	case 2:
 		tile = new Tile(lastWorldXIndex,lastWorldYIndex, true,2);
-		worldLayer2[lastWorldYIndex][lastWorldXIndex] = tile;
+		worldLayer2[lastWorldXIndex][lastWorldYIndex] = tile;
 		break;
 	}
 }
@@ -66,8 +70,10 @@ void WorldMap::update(sf::RenderWindow& mainWindow){
 		timeSinceLastUpdate -= timePerFrame;
 		for (int i = 0; i < Static::WorldRows; i++){
 			for (int j = 0; j < Static::WorldColumns; j++){
-				//worldLayer1[i][j]->update(worldLayer1);
-				worldLayer1[i][j]->draw(mainWindow);
+				if (worldLayer1[i][j] != NULL){
+					//worldLayer1[i][j]->update(worldLayer1);//background tile should not change
+					worldLayer1[i][j]->draw(mainWindow);
+				}
 			}
 		}
 		for (int i = 0; i < Static::WorldRows; i++){

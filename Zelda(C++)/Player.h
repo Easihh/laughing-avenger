@@ -27,6 +27,7 @@ private:
 	Animation* walkAnimation;
 	Animation* attackAnimation;
 	Sword* sword;
+	bool checkMapBoundaries();
 	bool canAttack,isAttacking,stepIsNegative;
 };
 #endif

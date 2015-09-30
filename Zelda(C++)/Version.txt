@@ -1,3 +1,10 @@
+Version 0.012
+
+-Increased World Map to 1 more screen size.
+-Resized ScreenSize to correct value without position debug info.
+-Position Info is now over the player head.
+-Started work on View to scroll between screen when moving.
+
 Version 0.011
 
 -Fixed an issue where player could not attack while moving.

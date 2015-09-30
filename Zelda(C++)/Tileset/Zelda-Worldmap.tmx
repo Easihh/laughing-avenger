@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="16" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" name="Zelda-World" tilewidth="32" tileheight="32" tilecount="3">
+  <tile id="0">
+   <image width="32" height="32" source="Hero.png"/>
+  </tile>
+  <tile id="1">
+   <image width="32" height="32" source="Sand.png"/>
+  </tile>
+  <tile id="2">
+   <image width="32" height="32" source="Tree.png"/>
+  </tile>
+ </tileset>
+ <layer name="Layer 1" width="32" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjYmBgYBrFo3gUj+JRPIpH8YjCABDwBAE=
+  </data>
+ </layer>
+ <layer name="Layer 2" width="32" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjZmBgYB7FJANy9aHrH7V/8NmPzVxsagbS/5QCSv1PS/thgJHKdhJr/1CI/1H7qWv/SMUAc7MCWg==
+  </data>
+ </layer>
+</map>

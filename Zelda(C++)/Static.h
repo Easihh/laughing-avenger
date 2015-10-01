@@ -14,6 +14,9 @@ namespace Global{
 	extern const int HalfTileWidth;
 	extern const int HalfTileHeight;
 	extern const int minGridStep;
+	extern const int roomWidth;
+	extern const int roomHeight;
+	extern const int inventoryHeight;
 	extern sf::View gameView;
 };
 class Static{

@@ -1,3 +1,8 @@
+Version 0.013
+
+-Player can now move back and forth between the 2 current screen.
+-Screen Transition for Left and Right direction is now completed.
+
 Version 0.012
 
 -Increased World Map to 1 more screen size.

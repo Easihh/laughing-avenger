@@ -3,13 +3,16 @@
 #include <Windows.h>
 #include <iostream>
  Player::Player(float x,float y){
-	 xPosition = x * Global::TileWidth;
-	 yPosition = y * Global::TileHeight;
+	 xPosition = x;
+	 yPosition = y;
+	 worldX = yPosition / Global::roomHeight;
+	 worldY = xPosition / Global::roomWidth;
 	 width = Global::TileWidth;
 	 height = Global::TileHeight;
 	 dir = Static::Direction::Up;
 	 canAttack = true;
 	 isAttacking = false;
+	 isScreenTransitioning = false;
 	 loadImage();
 }
  Player::~Player(){
@@ -21,7 +24,7 @@
  void Player::update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 bool movementKeyPressed = false;
 	 sword->update(isAttacking, canAttack);
-	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !isScreenTransitioning){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Static::Direction::Left){
@@ -33,7 +36,7 @@
 				stepToMove = Global::minStep;
 		 }
 	 }
-	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !isScreenTransitioning){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Static::Direction::Right){
@@ -45,7 +48,7 @@
 				 stepToMove = Global::minStep;
 		 }
 	 }
-	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !isScreenTransitioning){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Static::Direction::Up){
@@ -57,7 +60,7 @@
 				 stepToMove = Global::minStep;
 		 }
 	 }
-	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !isScreenTransitioning){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Static::Direction::Down){
@@ -84,13 +87,48 @@
 	 if (movementKeyPressed)
 		walkAnimation->updateAnimationFrame(dir);
 	 attackAnimation->updateAnimationFrame(dir);
-	 checkMapBoundaries();
+	 if (!isScreenTransitioning)
+		checkMapBoundaries();
+	 else screenTransition();
  }
- bool Player::checkMapBoundaries(){
-	 if (xPosition > Global::SCREEN_WIDTH){
-		 Global::gameView.setCenter(512,256);
-		 return false;
+ void Player::checkMapBoundaries(){
+	 switch (dir){
+	 case Static::Direction::Right:
+		 if (xPosition+(width/2) > (Global::roomWidth*worldY) + Global::roomWidth){
+			 worldY++;
+			 transitionStep = maxTransitionStep;
+			 isScreenTransitioning = true;
+		 }
+		 break;
+	 case Static::Direction::Left:
+		 if (xPosition+(width/2) < (Global::roomWidth*worldY)){
+			 worldY--;
+			 transitionStep = maxTransitionStep;
+			 isScreenTransitioning = true;
+		 }
+		 break;
 	 }
+ }
+ void Player::screenTransition(){
+	 int minTransitionStep = 2;
+	 float increaseStep = maxTransitionStep / minTransitionStep;
+	 float x = Global::gameView.getCenter().x;
+	 float y = Global::gameView.getCenter().y;
+
+	 switch (dir){
+	 case Static::Direction::Right:
+		 Global::gameView.setCenter(x + (Global::roomWidth / (increaseStep)),
+			 (Global::roomHeight*worldX) +(Global::inventoryHeight/2) + (Global::roomHeight /  2));
+		 break;
+	 case Static::Direction::Left:{
+		 Global::gameView.setCenter(x - (Global::roomWidth / (increaseStep)),
+			 (Global::roomHeight*worldX) + (Global::inventoryHeight/2) + Global::roomHeight / 2);
+		 break;
+		}
+	 }
+	 transitionStep -= minTransitionStep;
+	 if (transitionStep == 0)
+		 isScreenTransitioning = false;
  }
  bool Player::isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 bool collision = false;
@@ -201,8 +239,7 @@
 	 attackAnimation->sprite.setPosition(xPosition, yPosition);
  }
  void Player::draw(sf::RenderWindow& mainWindow){
-	 if (!checkMapBoundaries())
-		 mainWindow.setView(Global::gameView);
+		mainWindow.setView(Global::gameView);
 	 if (!isAttacking)
 		mainWindow.draw(walkAnimation->sprite);
 	 else {
@@ -214,11 +251,12 @@
  void Player::drawText(sf::RenderWindow& mainWindow){
 	 sf::Font font;
 	 std::stringstream position;
-	 position << "X:" << xPosition << std::endl << "Y:" << yPosition;
+	 position << "X:" << xPosition << std::endl << "Y:" << yPosition <<std::endl 
+		 <<"WorldX:"<<worldX <<std::endl <<"WorldY:"<<worldY<<std::endl;
 	 font.loadFromFile("arial.ttf");
 	 sf::Text txt(position.str(), font);
 	 txt.setColor(sf::Color::Red);
-	 txt.setPosition(xPosition, yPosition-32);
+	 txt.setPosition(xPosition, yPosition-64);
 	 txt.setCharacterSize(12);
 	 mainWindow.draw(txt);
  }

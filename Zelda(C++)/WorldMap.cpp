@@ -8,8 +8,6 @@ WorldMap::~WorldMap(){
 
 }
 void WorldMap::loadMap(std::string filename){
-	int* test [Static::WorldRows][Static::WorldColumns];
-	worldLayer2[0][0] = NULL;
 	std::ifstream in;
 	std::string line;
 	std::vector<std::string> strs;
@@ -36,20 +34,22 @@ void WorldMap::loadMap(std::string filename){
 void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType){
 	Tile* tile;
 	Player* player;
+	float x = lastWorldXIndex*Global::TileWidth;
+	float y = lastWorldYIndex*Global::TileHeight;
 	switch (tileType){
 	case -1:
 		//no tile;
 		break;
 	case 0:
-		player = new Player(lastWorldXIndex, lastWorldYIndex);
+		player = new Player(x,y + Global::inventoryHeight);
 		worldLayer2[lastWorldXIndex][lastWorldYIndex] = player;
 		break;
 	case 1:
-		tile = new Tile(lastWorldXIndex, lastWorldYIndex, false,1);
+		tile = new Tile(x, y + Global::inventoryHeight, false, 1);
 		worldLayer1[lastWorldXIndex][lastWorldYIndex] = tile;
 		break;
 	case 2:
-		tile = new Tile(lastWorldXIndex,lastWorldYIndex, true,2);
+		tile = new Tile(x,y + Global::inventoryHeight, true, 2);
 		worldLayer2[lastWorldXIndex][lastWorldYIndex] = tile;
 		break;
 	}

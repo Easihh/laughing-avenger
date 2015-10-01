@@ -16,7 +16,8 @@ private:
 	Static::Direction dir;
 	void completeMove();
 	bool isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
-	int xOffset, yOffset,stepToAlign;
+	int xOffset, yOffset, stepToAlign, worldX, worldY, transitionStep;
+	int const maxTransitionStep=150;
 	int getXOffset();
 	int getYOffset();
 	void loadImage();
@@ -27,7 +28,8 @@ private:
 	Animation* walkAnimation;
 	Animation* attackAnimation;
 	Sword* sword;
-	bool checkMapBoundaries();
-	bool canAttack,isAttacking,stepIsNegative;
+	void checkMapBoundaries();
+	void screenTransition();
+	bool canAttack,isAttacking,stepIsNegative,isScreenTransitioning;
 };
 #endif

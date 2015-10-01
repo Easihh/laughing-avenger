@@ -1,8 +1,8 @@
 #include "Tile.h"
 
 Tile::Tile(float x, float y,bool canBeCollidedWith,int type){
-	xPosition = x * Global::TileWidth;
-	yPosition = y * Global::TileHeight;
+	xPosition = x;
+	yPosition = y;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
 	isCollideable = canBeCollidedWith;

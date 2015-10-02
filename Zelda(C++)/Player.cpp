@@ -13,6 +13,9 @@
 	 canAttack = true;
 	 isAttacking = false;
 	 isScreenTransitioning = false;
+	 playerBar.setFillColor(sf::Color::Blue);
+	 sf::Vector2f size(Global::roomWidth, Global::inventoryHeight);
+	 playerBar.setSize(size);
 	 loadImage();
 }
  Player::~Player(){
@@ -107,6 +110,20 @@
 			 isScreenTransitioning = true;
 		 }
 		 break;
+	 case Static::Direction::Down:
+		 if (yPosition + (height / 2) > (Global::roomHeight*worldX)+Global::roomHeight+Global::inventoryHeight){
+			 worldX++;
+			 transitionStep = maxTransitionStep;
+			 isScreenTransitioning = true;
+		 }
+		 break;
+	 case Static::Direction::Up:
+		 if (yPosition + (height / 2) < (Global::roomHeight*worldX) + Global::inventoryHeight){
+			 worldX--;
+			 transitionStep = maxTransitionStep;
+			 isScreenTransitioning = true;
+		 }
+		 break;
 	 }
  }
  void Player::screenTransition(){
@@ -114,17 +131,36 @@
 	 float increaseStep = maxTransitionStep / minTransitionStep;
 	 float x = Global::gameView.getCenter().x;
 	 float y = Global::gameView.getCenter().y;
+	 float barX = playerBar.getPosition().x;
+	 float barY = playerBar.getPosition().y;
+	 float nextPosition;
 
 	 switch (dir){
+
 	 case Static::Direction::Right:
 		 Global::gameView.setCenter(x + (Global::roomWidth / (increaseStep)),
 			 (Global::roomHeight*worldX) +(Global::inventoryHeight/2) + (Global::roomHeight /  2));
+		 nextPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
+		 playerBar.setPosition(barX + nextPosition, barY);
 		 break;
-	 case Static::Direction::Left:{
+
+	 case Static::Direction::Left:
 		 Global::gameView.setCenter(x - (Global::roomWidth / (increaseStep)),
 			 (Global::roomHeight*worldX) + (Global::inventoryHeight/2) + Global::roomHeight / 2);
+		 nextPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
+		 playerBar.setPosition(barX - nextPosition, barY);
 		 break;
-		}
+
+	 case Static::Direction::Down:
+		 Global::gameView.setCenter(x, y + (Global::roomHeight / (increaseStep)));
+		 nextPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
+		// playerBar.setPosition(barX, barY + nextPosition);
+		 break;
+	 case Static::Direction::Up:
+		 Global::gameView.setCenter(x, y - (Global::roomHeight / (increaseStep)));
+		 nextPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
+		 // playerBar.setPosition(barX, barY + nextPosition);
+		 break;
 	 }
 	 transitionStep -= minTransitionStep;
 	 if (transitionStep == 0)
@@ -247,6 +283,7 @@
 		 mainWindow.draw(sword->sprite);
 	 }
 	 drawText(mainWindow);
+	 mainWindow.draw(playerBar);
  }
  void Player::drawText(sf::RenderWindow& mainWindow){
 	 sf::Font font;

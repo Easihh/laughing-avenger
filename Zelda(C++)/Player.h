@@ -23,6 +23,7 @@ private:
 	void loadImage();
 	void getUnalignedCount(Static::Direction nextDir);
 	void snapToGrid();
+	void drawPlayerBar(sf::RenderWindow& mainWindow);
 	void drawText(sf::RenderWindow& mainWindow);
 	sf::IntRect subRect;
 	Animation* walkAnimation;
@@ -31,5 +32,6 @@ private:
 	void checkMapBoundaries();
 	void screenTransition();
 	bool canAttack,isAttacking,stepIsNegative,isScreenTransitioning;
+	sf::RectangleShape playerBar;
 };
 #endif

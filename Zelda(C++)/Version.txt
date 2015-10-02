@@ -1,3 +1,10 @@
+Version 0.014
+
+-World Map screen size was increased by 1
+-Screen Transition from all 4 direction is completed.
+-Added Temporary Blue rectangle(Future Player bar) that transition to next screen.
+-Down/Up transition for tempory player bar is currently disabled due to depth drawing issue.
+
 Version 0.013
 
 -Player can now move back and forth between the 2 current screen.

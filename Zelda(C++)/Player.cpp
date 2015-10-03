@@ -95,35 +95,36 @@
 	 else screenTransition();
  }
  void Player::checkMapBoundaries(){
+	 bool outsideBoundary = false;
 	 switch (dir){
 	 case Static::Direction::Right:
-		 if (xPosition+(width/2) > (Global::roomWidth*worldY) + Global::roomWidth){
+		 if (xPosition + width > (Global::roomWidth*worldY) + Global::roomWidth){
 			 worldY++;
-			 transitionStep = maxTransitionStep;
-			 isScreenTransitioning = true;
+			 outsideBoundary = true;
 		 }
 		 break;
 	 case Static::Direction::Left:
-		 if (xPosition+(width/2) < (Global::roomWidth*worldY)){
+		 if (xPosition < (Global::roomWidth*worldY)){
 			 worldY--;
-			 transitionStep = maxTransitionStep;
-			 isScreenTransitioning = true;
+			 outsideBoundary = true;
 		 }
 		 break;
 	 case Static::Direction::Down:
-		 if (yPosition + (height / 2) > (Global::roomHeight*worldX)+Global::roomHeight+Global::inventoryHeight){
+		 if (yPosition + height > (Global::roomHeight*worldX)+Global::roomHeight+Global::inventoryHeight){
 			 worldX++;
-			 transitionStep = maxTransitionStep;
-			 isScreenTransitioning = true;
+			 outsideBoundary = true;
 		 }
 		 break;
 	 case Static::Direction::Up:
-		 if (yPosition + (height / 2) < (Global::roomHeight*worldX) + Global::inventoryHeight){
+		 if (yPosition < (Global::roomHeight*worldX) + Global::inventoryHeight){
 			 worldX--;
-			 transitionStep = maxTransitionStep;
-			 isScreenTransitioning = true;
+			 outsideBoundary = true;
 		 }
 		 break;
+	 }
+	 if (outsideBoundary){
+		 transitionStep = maxTransitionStep;
+		 isScreenTransitioning = true;
 	 }
  }
  void Player::screenTransition(){
@@ -154,17 +155,20 @@
 	 case Static::Direction::Down:
 		 Global::gameView.setCenter(x, y + (Global::roomHeight / (increaseStep)));
 		 nextPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
-		// playerBar.setPosition(barX, barY + nextPosition);
+		 playerBar.setPosition(barX, barY + nextPosition);
 		 break;
 	 case Static::Direction::Up:
 		 Global::gameView.setCenter(x, y - (Global::roomHeight / (increaseStep)));
 		 nextPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
-		 // playerBar.setPosition(barX, barY + nextPosition);
+		 playerBar.setPosition(barX, barY - nextPosition);
 		 break;
 	 }
+	 walkAnimation->updateAnimationFrame(dir);
 	 transitionStep -= minTransitionStep;
-	 if (transitionStep == 0)
+	 if (transitionStep == 0){
+		 stepToMove = Global::TileHeight+1;
 		 isScreenTransitioning = false;
+	 }
  }
  bool Player::isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 bool collision = false;
@@ -275,7 +279,8 @@
 	 attackAnimation->sprite.setPosition(xPosition, yPosition);
  }
  void Player::draw(sf::RenderWindow& mainWindow){
-		mainWindow.setView(Global::gameView);
+	 mainWindow.setView(Global::gameView);
+	 mainWindow.draw(playerBar);
 	 if (!isAttacking)
 		mainWindow.draw(walkAnimation->sprite);
 	 else {
@@ -283,7 +288,6 @@
 		 mainWindow.draw(sword->sprite);
 	 }
 	 drawText(mainWindow);
-	 mainWindow.draw(playerBar);
  }
  void Player::drawText(sf::RenderWindow& mainWindow){
 	 sf::Font font;

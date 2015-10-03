@@ -1,3 +1,10 @@
+Version 0.015
+
+-Player bar now has a lower depth than main hero.
+-Improved Transition feel with the edge of the screen.
+-Blue bar(player bar) now follow player in all screen transition directions.
+-Walking animation now continue to play while in screen transition.
+
 Version 0.014
 
 -World Map screen size was increased by 1

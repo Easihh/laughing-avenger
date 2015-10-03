@@ -12,10 +12,11 @@ public:
 	sf::Sprite sprite;
 	void updateAnimationFrame(Static::Direction dir);
 	void reset();
+	int currentIndex;
 private:
 	sf::Texture texture;
 	sf::IntRect subRect;
-	int height, width, maxRow, maxCol,xPosition,yPosition, currentIndex,fRate,fCounter;
+	int height, width, maxRow, maxCol,xPosition,yPosition,fRate,fCounter;
 };
 
 #endif

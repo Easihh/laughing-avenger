@@ -16,6 +16,8 @@ namespace Global{
 	extern const int minGridStep;
 	extern const int roomWidth;
 	extern const int roomHeight;
+	extern const int roomCols;
+	extern const int roomRows;
 	extern const int inventoryHeight;
 	extern sf::View gameView;
 };

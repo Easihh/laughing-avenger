@@ -11,13 +11,14 @@ public:
 	~Player();
 	void update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void draw(sf::RenderWindow& mainWindow);
+	int worldX, worldY;
 private:
 	unsigned int stepToMove;
 	Static::Direction dir;
 	void completeMove();
 	bool isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
-	int xOffset, yOffset, stepToAlign, worldX, worldY, transitionStep;
-	int const maxTransitionStep=150;
+	int xOffset, yOffset, stepToAlign, transitionStep;
+	int const maxTransitionStep=120;
 	int getXOffset();
 	int getYOffset();
 	void loadImage();

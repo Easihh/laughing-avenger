@@ -20,7 +20,7 @@ void WorldMap::loadMap(std::string filename){
 		std::getline(in, line, '\n');
 		boost::split(strs, line, boost::is_any_of(","));
 		for (std::vector<std::string>::iterator it = strs.begin(); it < strs.end(); it++){
-			std::cout <<"Row:"<<lastWorldXIndex <<" Col:"<<lastWorldYIndex << " Value:" << *it << std::endl;
+			//std::cout <<"Row:"<<lastWorldXIndex <<" Col:"<<lastWorldYIndex << " Value:" << *it << std::endl;
 			std::string val = *it;
 			createTile(lastWorldXIndex, lastWorldYIndex, atoi(val.c_str()));
 			lastWorldXIndex++;
@@ -33,7 +33,6 @@ void WorldMap::loadMap(std::string filename){
 }
 void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType){
 	Tile* tile;
-	Player* player;
 	float x = lastWorldXIndex*Global::TileWidth;
 	float y = lastWorldYIndex*Global::TileHeight;
 	switch (tileType){
@@ -42,7 +41,7 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 		break;
 	case 0:
 		player = new Player(x,y + Global::inventoryHeight);
-		worldLayer2[lastWorldXIndex][lastWorldYIndex] = player;
+		//worldLayer2[lastWorldXIndex][lastWorldYIndex] = player;
 		break;
 	case 1:
 		tile = new Tile(x, y + Global::inventoryHeight, false, 1);
@@ -68,22 +67,84 @@ void WorldMap::update(sf::RenderWindow& mainWindow){
 		mainWindow.clear(sf::Color::Black);
 		fpsCounter++;
 		timeSinceLastUpdate -= timePerFrame;
-		for (int i = 0; i < Static::WorldRows; i++){
-			for (int j = 0; j < Static::WorldColumns; j++){
-				if (worldLayer1[i][j] != NULL){
-					//worldLayer1[i][j]->update(worldLayer1);//background tile should not change
-					worldLayer1[i][j]->draw(mainWindow);
-				}
-			}
-		}
-		for (int i = 0; i < Static::WorldRows; i++){
-			for (int j = 0; j < Static::WorldColumns; j++){
-				if (worldLayer2[i][j] != NULL){
-					worldLayer2[i][j]->update(worldLayer2);
-					worldLayer2[i][j]->draw(mainWindow);
-				}
-			}
-		}
+		drawBackgroundTile(mainWindow);
+		drawAndUpdateCurrentScreen(mainWindow);
+		drawAndUpdateRightScreen(mainWindow);
+		drawAndUpdateLeftScreen(mainWindow);
+		drawAndUpdateUpScreen(mainWindow);
+		drawAndUpdateDownScreen(mainWindow);
+		player->update(worldLayer2);
+		player->draw(mainWindow);
 		mainWindow.display();
+	}
+}
+void WorldMap::drawBackgroundTile(sf::RenderWindow& mainWindow){
+	for (int i = 0; i < Static::WorldRows; i++){
+		for (int j = 0; j < Static::WorldColumns; j++){
+			if (worldLayer1[i][j] != NULL){
+				//worldLayer1[i][j]->update(worldLayer1);//background tile should not change
+				worldLayer1[i][j]->draw(mainWindow);
+			}
+		}
+	}
+}
+void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
+	float startX = player->worldX*Global::roomRows;
+	float startY = player->worldY*Global::roomCols;
+	for (int i = startY; i < startY + Global::roomCols; i++){
+		for (int j = startX; j < startX + Global::roomRows; j++){
+			if (worldLayer2[i][j] != NULL){
+				worldLayer2[i][j]->update(worldLayer2);
+				worldLayer2[i][j]->draw(mainWindow);
+			}
+		}
+	}
+}
+void WorldMap::drawAndUpdateRightScreen(sf::RenderWindow& mainWindow){
+	float startX = (player->worldX)*Global::roomRows;
+	float startY = (player->worldY+1)*Global::roomCols;
+	if ((player->worldY + 1) * Global::roomCols < Static::WorldColumns){
+		for (int i = startY; i < startY + Global::roomCols; i++){
+			for (int j = startX; j < startX + Global::roomRows; j++){
+				if (worldLayer2[i][j] != NULL)
+					worldLayer2[i][j]->draw(mainWindow);
+			}
+		}
+	}
+}
+void WorldMap::drawAndUpdateLeftScreen(sf::RenderWindow& mainWindow){
+	float startX = (player->worldX)*Global::roomRows;
+	float startY = (player->worldY - 1)*Global::roomCols;
+	if (player->worldY	!=0){
+		for (int i = startY; i < startY + Global::roomCols; i++){
+			for (int j = startX; j < startX + Global::roomRows; j++){
+				if (worldLayer2[i][j] != NULL)
+					worldLayer2[i][j]->draw(mainWindow);
+			}
+		}
+	}
+}
+void WorldMap::drawAndUpdateUpScreen(sf::RenderWindow& mainWindow){
+	float startX = (player->worldX-1)*Global::roomRows;
+	float startY = (player->worldY)*Global::roomCols;
+	if (player->worldX != 0){
+		for (int i = startY; i < startY + Global::roomCols; i++){
+			for (int j = startX; j < startX + Global::roomRows; j++){
+				if (worldLayer2[i][j] != NULL)
+					worldLayer2[i][j]->draw(mainWindow);
+			}
+		}
+	}
+}
+void WorldMap::drawAndUpdateDownScreen(sf::RenderWindow& mainWindow){
+	float startX = (player->worldX+1)*Global::roomRows;
+	float startY = (player->worldY)*Global::roomCols;
+	if ((player->worldX + 1) * Global::roomCols < Static::WorldColumns){
+		for (int i = startY; i < startY + Global::roomCols; i++){
+			for (int j = startX; j < startX + Global::roomRows; j++){
+				if (worldLayer2[i][j] != NULL)
+					worldLayer2[i][j]->draw(mainWindow);
+			}
+		}
 	}
 }

@@ -1,3 +1,12 @@
+Version 0.016
+
+-Transition time between screen has been decreased.
+-WorldMap is no longer been updated/drawn all at once every frame.
+-Only player current screen is now being updated for event.
+-Map is now being drawn one tile ahead in all direction for transition screen purpose.
+-Player and it's object now has a higher draw priority over all object.
+-Changed Player Bar from blue to black background.
+
 Version 0.015
 
 -Player bar now has a lower depth than main hero.

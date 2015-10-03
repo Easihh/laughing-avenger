@@ -13,13 +13,12 @@
 	 canAttack = true;
 	 isAttacking = false;
 	 isScreenTransitioning = false;
-	 playerBar.setFillColor(sf::Color::Blue);
+	 playerBar.setFillColor(sf::Color::Black);
 	 sf::Vector2f size(Global::roomWidth, Global::inventoryHeight);
 	 playerBar.setSize(size);
 	 loadImage();
 }
- Player::~Player(){
- }
+ Player::~Player(){}
  void Player::loadImage(){
 	walkAnimation =new Animation("Link_Movement", width, height,xPosition,yPosition,6);
 	attackAnimation=new Animation("Link_Attack", width, height, xPosition, yPosition, NULL);

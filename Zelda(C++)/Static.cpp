@@ -13,6 +13,8 @@ namespace Global
 	 const int minGridStep = 16;
 	 const int roomWidth = 512;
 	 const int roomHeight = 512;
+	 const int roomCols = 16;
+	 const int roomRows = 16;
 	 const int inventoryHeight = 128;
 	 sf::View gameView;
 }

@@ -25,5 +25,12 @@ public:
 private:
 	int lastWorldXIndex,lastWorldYIndex;
 	void createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType);
+	void drawBackgroundTile(sf::RenderWindow& mainWindow);
+	void drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow);
+	void drawAndUpdateRightScreen(sf::RenderWindow& mainWindow);
+	void drawAndUpdateLeftScreen(sf::RenderWindow& mainWindow);
+	void drawAndUpdateDownScreen(sf::RenderWindow& mainWindow);
+	void drawAndUpdateUpScreen(sf::RenderWindow& mainWindow);
+	Player* player;
 };
 #endif

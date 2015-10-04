@@ -1,5 +1,6 @@
 #include "WorldMap.h"
 #include "Tile.h"
+#include "Octorok.h"
 WorldMap::WorldMap(){
 	loadMap("Map/Zelda-Worldmap_Layer 1.csv");
 	loadMap("Map/Zelda-Worldmap_Layer 2.csv");
@@ -32,7 +33,7 @@ void WorldMap::loadMap(std::string filename){
 	
 }
 void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType){
-	Tile* tile;
+	GameObject* tile;
 	float x = lastWorldXIndex*Global::TileWidth;
 	float y = lastWorldYIndex*Global::TileHeight;
 	switch (tileType){
@@ -48,7 +49,11 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 		worldLayer1[lastWorldXIndex][lastWorldYIndex] = tile;
 		break;
 	case 2:
-		tile = new Tile(x,y + Global::inventoryHeight, true, 2);
+		tile = new Tile(x, y + Global::inventoryHeight, true, 2);
+		worldLayer2[lastWorldXIndex][lastWorldYIndex] = tile;
+		break;
+	case 3:
+		tile = new Octorok(x, y + Global::inventoryHeight, false);
 		worldLayer2[lastWorldXIndex][lastWorldYIndex] = tile;
 		break;
 	}
@@ -93,10 +98,10 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 	float startY = player->worldY*Global::roomCols;
 	for (int i = startY; i < startY + Global::roomCols; i++){
 		for (int j = startX; j < startX + Global::roomRows; j++){
-			if (worldLayer2[i][j] != NULL){
+			if (worldLayer2[i][j] != NULL)
 				worldLayer2[i][j]->update(worldLayer2);
+			if (worldLayer2[i][j] != NULL)
 				worldLayer2[i][j]->draw(mainWindow);
-			}
 		}
 	}
 }

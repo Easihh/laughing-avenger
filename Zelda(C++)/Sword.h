@@ -2,13 +2,19 @@
 #define SWORD_H
 
 #include "GameObject.h"
+#include <vector>
 class Sword :public GameObject{
 public:
 	Sword(float playerX, float playerY, Static::Direction dir);
 	~Sword();
 	void loadImage(Static::Direction dir);
-	void update(bool& isAttacking, bool& canAttack);
+	void endSword();
+	void update(bool& isAttacking, bool& canAttack, GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 private:
-	int swordCurrentFrame, swordMaxFrame, swordDelay, swordMaxDelay;
+	int swordCurrentFrame, swordDelay,strength;
+	const int swordMaxFrame=30, swordMaxDelay=16;
+	bool isCollidingWithMonster(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
+	std::vector<GameObject*> collidingMonsterList;
+	void updateMonster();
 };
 #endif

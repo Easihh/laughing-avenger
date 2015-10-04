@@ -2,6 +2,7 @@
 #include <sstream>
 #include <Windows.h>
 #include <iostream>
+#include "Tile.h"
  Player::Player(float x,float y){
 	 xPosition = x;
 	 yPosition = y;
@@ -10,22 +11,41 @@
 	 width = Global::TileWidth;
 	 height = Global::TileHeight;
 	 dir = Static::Direction::Up;
+	 healthPoint = 2;
 	 canAttack = true;
 	 isAttacking = false;
 	 isScreenTransitioning = false;
-	 playerBar.setFillColor(sf::Color::Black);
-	 sf::Vector2f size(Global::roomWidth, Global::inventoryHeight);
-	 playerBar.setSize(size);
+	 isInvincible = false;
+	 setupPlayerBar();
 	 loadImage();
 }
  Player::~Player(){}
+ void Player::setupPlayerMarker(){ 
+	 playerMarker.setFillColor(sf::Color::Green);
+	 sf::Vector2f size(Global::playerMarkerWidth, Global::playerMarkerHeight);
+	 playerMarker.setSize(size);
+	 playerMarker.setPosition(48, 32);
+ }
+ void Player::setupMap(){
+	 overworldMap.setFillColor(sf::Color(128, 128, 128));
+	 sf::Vector2f size(128,64);
+	 overworldMap.setSize(size);
+	 overworldMap.setPosition(48, 32);
+ }
+void Player::setupPlayerBar(){
+	playerBar.setFillColor(sf::Color::Black);
+	sf::Vector2f size(Global::roomWidth, Global::inventoryHeight);
+	playerBar.setSize(size);
+	setupMap();
+	setupPlayerMarker();
+ }
  void Player::loadImage(){
 	walkAnimation =new Animation("Link_Movement", width, height,xPosition,yPosition,6);
 	attackAnimation=new Animation("Link_Attack", width, height, xPosition, yPosition, NULL);
  }
  void Player::update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 bool movementKeyPressed = false;
-	 sword->update(isAttacking, canAttack);
+	 sword->update(isAttacking, canAttack, worldLayer);
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !isScreenTransitioning){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
@@ -92,31 +112,97 @@
 	 if (!isScreenTransitioning)
 		checkMapBoundaries();
 	 else screenTransition();
+	 if (isCollidingWithMonster(worldLayer))
+		 takeDamage();
+	 checkInvincible();
+ }
+ bool Player::isCollidingWithMonster(GameObject* worldMap[Static::WorldRows][Static::WorldColumns]){
+	 bool isColliding = false;
+	 float startX = worldX*Global::roomRows;
+	 float startY = worldY*Global::roomCols;
+	 for (int i = startY; i < startY + Global::roomCols; i++){
+		 for (int j = startX; j < startX + Global::roomRows; j++){
+			 if (worldMap[i][j] != NULL){
+				 if (dynamic_cast<Monster*>(worldMap[i][j]))
+					 if (intersect(this, worldMap[i][j], 0, 0)){
+						 isColliding = true;
+						 collidingMonster = (Monster*)worldMap[i][j];
+						 break;
+					 }
+			 }
+		 }
+	 }
+	 return isColliding;
+ }
+ void Player::takeDamage(){
+	 if (!isInvincible){
+		 healthPoint -= collidingMonster->strength;
+		 pushback();
+		 if (healthPoint <= 0)
+			 std::cout << "I'm Dead";
+		 else isInvincible = true;
+	 }
+ }
+ void Player::pushback(){
+	 switch (dir){
+	 case Static::Direction::Down:
+		 yPosition -= height * 2;
+		 break;
+	 case Static::Direction::Up:
+		 yPosition += height * 2;
+		 break;
+	 case Static::Direction::Left:
+		 xPosition += width * 2;
+		 break;
+	 case Static::Direction::Right:
+		 xPosition -= width * 2;
+		 break;
+	 }
+	 if (isAttacking)
+		sword->endSword();
+	 walkAnimation->sprite.setPosition(xPosition, yPosition);
+	 attackAnimation->sprite.setPosition(xPosition, yPosition);
+ }
+ void Player::checkInvincible(){
+	 if (isInvincible){
+		 currentInvincibleFrame++;
+		 if (currentInvincibleFrame >= maxInvincibleFrame){
+			 isInvincible = false;
+			 currentInvincibleFrame = 0;
+		 }
+	 }
  }
  void Player::checkMapBoundaries(){
 	 bool outsideBoundary = false;
+	 float markerX = playerMarker.getPosition().x;
+	 float markerY = playerMarker.getPosition().y;
+
 	 switch (dir){
 	 case Static::Direction::Right:
 		 if (xPosition + width > (Global::roomWidth*worldY) + Global::roomWidth){
 			 worldY++;
+			 playerMarker.setPosition(markerX + Global::playerMarkerWidth, markerY);
 			 outsideBoundary = true;
 		 }
 		 break;
 	 case Static::Direction::Left:
 		 if (xPosition < (Global::roomWidth*worldY)){
 			 worldY--;
+			 playerMarker.setPosition(markerX - Global::playerMarkerWidth, markerY);
 			 outsideBoundary = true;
 		 }
 		 break;
 	 case Static::Direction::Down:
 		 if (yPosition + height > (Global::roomHeight*worldX)+Global::roomHeight+Global::inventoryHeight){
 			 worldX++;
+			 playerMarker.setPosition(markerX, markerY + Global::playerMarkerHeight);
 			 outsideBoundary = true;
 		 }
 		 break;
 	 case Static::Direction::Up:
 		 if (yPosition < (Global::roomHeight*worldX) + Global::inventoryHeight){
 			 worldX--;
+			 playerMarker.setPosition(markerX, markerY - Global::playerMarkerHeight);
 			 outsideBoundary = true;
 		 }
 		 break;
@@ -129,39 +215,42 @@
  void Player::screenTransition(){
 	 int minTransitionStep = 2;
 	 float increaseStep = maxTransitionStep / minTransitionStep;
-	 float x = Global::gameView.getCenter().x;
-	 float y = Global::gameView.getCenter().y;
+	 float viewX = Global::gameView.getCenter().x;
+	 float viewY = Global::gameView.getCenter().y;
 	 float barX = playerBar.getPosition().x;
 	 float barY = playerBar.getPosition().y;
-	 float nextPosition;
-
+	 float mapX = overworldMap.getPosition().x;
+	 float mapY = overworldMap.getPosition().y;
+	 float markerX = playerMarker.getPosition().x;
+	 float markerY = playerMarker.getPosition().y;
+	 float nextXPosition=0;
+	 float nextYPosition = 0;
 	 switch (dir){
 
 	 case Static::Direction::Right:
-		 Global::gameView.setCenter(x + (Global::roomWidth / (increaseStep)),
+		 Global::gameView.setCenter(viewX + (Global::roomWidth / (increaseStep)),
 			 (Global::roomHeight*worldX) +(Global::inventoryHeight/2) + (Global::roomHeight /  2));
-		 nextPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
-		 playerBar.setPosition(barX + nextPosition, barY);
+		 nextXPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
 		 break;
 
 	 case Static::Direction::Left:
-		 Global::gameView.setCenter(x - (Global::roomWidth / (increaseStep)),
+		 Global::gameView.setCenter(viewX - (Global::roomWidth / (increaseStep)),
 			 (Global::roomHeight*worldX) + (Global::inventoryHeight/2) + Global::roomHeight / 2);
-		 nextPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
-		 playerBar.setPosition(barX - nextPosition, barY);
+		 nextXPosition = -((float)minTransitionStep*Global::roomWidth / maxTransitionStep);
 		 break;
 
 	 case Static::Direction::Down:
-		 Global::gameView.setCenter(x, y + (Global::roomHeight / (increaseStep)));
-		 nextPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
-		 playerBar.setPosition(barX, barY + nextPosition);
+		 Global::gameView.setCenter(viewX, viewY + (Global::roomHeight / (increaseStep)));
+		 nextYPosition = (float)minTransitionStep*Global::roomHeight / maxTransitionStep;
 		 break;
 	 case Static::Direction::Up:
-		 Global::gameView.setCenter(x, y - (Global::roomHeight / (increaseStep)));
-		 nextPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
-		 playerBar.setPosition(barX, barY - nextPosition);
+		 Global::gameView.setCenter(viewX, viewY - (Global::roomHeight / (increaseStep)));
+		 nextYPosition = -((float)minTransitionStep*Global::roomHeight / maxTransitionStep);
 		 break;
 	 }
+	 playerBar.setPosition(barX + nextXPosition, barY + nextYPosition);
+	 overworldMap.setPosition(mapX + nextXPosition, mapY + nextYPosition);
+	 playerMarker.setPosition(markerX + nextXPosition, markerY + nextYPosition);
 	 walkAnimation->updateAnimationFrame(dir);
 	 transitionStep -= minTransitionStep;
 	 if (transitionStep == 0){
@@ -170,13 +259,16 @@
 	 }
  }
  bool Player::isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
+	 float startX = worldX*Global::roomRows;
+	 float startY = worldY*Global::roomCols;
 	 bool collision = false;
-	 for (int i = 0; i < Static::WorldRows; i++){
-		 for (int j = 0; j < Static::WorldColumns; j++){
+	 for (int i = startY; i <startY + Global::roomCols; i++){
+		 for (int j = startX; j < startX + Global::roomRows; j++){
 			 if (worldLayer[i][j] == this)continue;
 			 if (worldLayer[i][j] == NULL)continue;
-			 if (intersect(this, worldLayer[i][j], getXOffset(), getYOffset()))
-				 collision = true;
+			 if (dynamic_cast<Tile*>(worldLayer[i][j]))
+				if (intersect(this, worldLayer[i][j], getXOffset(), getYOffset()))
+					collision = true;
 		 }
 	 }
 	 return collision;
@@ -280,6 +372,8 @@
  void Player::draw(sf::RenderWindow& mainWindow){
 	 mainWindow.setView(Global::gameView);
 	 mainWindow.draw(playerBar);
+	 mainWindow.draw(overworldMap);
+	 mainWindow.draw(playerMarker);
 	 if (!isAttacking)
 		mainWindow.draw(walkAnimation->sprite);
 	 else {

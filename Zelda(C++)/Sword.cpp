@@ -1,17 +1,16 @@
 #include "Sword.h"
 #include <string>
+#include "Monster.h"
+#include <iostream>
 Sword::Sword(float playerX,float playerY,Static::Direction dir){
 	xPosition = playerX;
 	yPosition = playerY;
-	swordMaxFrame = 30;
 	swordCurrentFrame = 0;
 	swordDelay = 0;
-	swordMaxDelay = 16;
 	loadImage(dir);
+	strength = 1;
 }
-Sword::~Sword(){
-
-}
+Sword::~Sword(){}
 void Sword::loadImage(Static::Direction dir){
 	switch (dir){
 	case Static::Direction::Left:
@@ -34,13 +33,17 @@ void Sword::loadImage(Static::Direction dir){
 		xPosition = xPosition + (Global::minGridStep / 4);
 		yPosition = yPosition - Global::minGridStep - (Global::minGridStep / 2);
 		break;
-	}	
+	}
 	sprite.setTexture(texture);
+	width = sprite.getTextureRect().width;
+	height = sprite.getTextureRect().height;
 	sprite.setPosition(xPosition, yPosition);
 }
-void Sword::update(bool& isAttacking,bool& canAttack){
+void Sword::update(bool& isAttacking, bool& canAttack, GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	if (isAttacking){
 		swordCurrentFrame++;
+		if (isCollidingWithMonster(worldLayer));
+			updateMonster();
 		if (swordCurrentFrame >= swordMaxFrame){
 		isAttacking = false;
 		swordCurrentFrame = 0;
@@ -53,4 +56,36 @@ void Sword::update(bool& isAttacking,bool& canAttack){
 			canAttack = true;
 		}
 	}
+}
+bool Sword::isCollidingWithMonster(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
+	collidingMonsterList.clear();
+	bool isColliding = false;
+	int worldX=xPosition/Global::roomWidth;
+	int worldY=yPosition/Global::roomHeight;
+	float startX = worldX*Global::roomRows;
+	float startY = worldY*Global::roomCols;
+	for (int i = startY; i < startY + Global::roomCols; i++){
+		for (int j = startX; j < startX + Global::roomRows; j++){
+			if (worldLayer[i][j] != NULL){
+				if (dynamic_cast<Monster*>(worldLayer[i][j]))
+					if (intersect(this, worldLayer[i][j], 0, 0)){
+						isColliding = true;
+						collidingMonsterList.push_back(worldLayer[i][j]);
+					}
+			}
+		}
+	}
+	return isColliding;
+}
+void Sword::updateMonster(){
+	for each (GameObject* mstr in collidingMonsterList)
+	{
+		Monster* temp = (Monster*)mstr;
+		temp->takeDamage(strength);
+		//std::cout << "Collision at X:" << temp->xPosition << " Y:" << temp->yPosition<<std::endl;
+	}
+}
+void Sword::endSword(){
+	swordDelay = swordMaxDelay;
+	swordCurrentFrame = swordMaxFrame;
 }

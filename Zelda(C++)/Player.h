@@ -5,23 +5,29 @@
 #include "GameObject.h"
 #include "Animation.h"
 #include "Sword.h"
+#include "Monster.h"
 class Player:public GameObject{
 public:
 	Player(float x,float y);
 	~Player();
 	void update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void draw(sf::RenderWindow& mainWindow);
-	int worldX, worldY;
+	int worldX, worldY,healthPoint;
 private:
 	unsigned int stepToMove;
 	Static::Direction dir;
 	void completeMove();
+	void setupPlayerBar();
+	void setupMap();
+	void setupPlayerMarker();
 	bool isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
-	int xOffset, yOffset, stepToAlign, transitionStep;
-	int const maxTransitionStep=120;
+	bool isCollidingWithMonster(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
+	int xOffset, yOffset, stepToAlign, transitionStep,currentInvincibleFrame;
+	int const maxTransitionStep = 90, maxInvincibleFrame=60;
 	int getXOffset();
 	int getYOffset();
 	void loadImage();
+	void takeDamage();
 	void getUnalignedCount(Static::Direction nextDir);
 	void snapToGrid();
 	void drawPlayerBar(sf::RenderWindow& mainWindow);
@@ -32,7 +38,10 @@ private:
 	Sword* sword;
 	void checkMapBoundaries();
 	void screenTransition();
-	bool canAttack,isAttacking,stepIsNegative,isScreenTransitioning;
-	sf::RectangleShape playerBar;
+	bool canAttack,isAttacking,stepIsNegative,isScreenTransitioning,isInvincible;
+	void checkInvincible();
+	void pushback();
+	sf::RectangleShape playerBar,overworldMap,playerMarker;
+	Monster* collidingMonster;
 };
 #endif

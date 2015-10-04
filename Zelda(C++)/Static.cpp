@@ -16,6 +16,8 @@ namespace Global
 	 const int roomCols = 16;
 	 const int roomRows = 16;
 	 const int inventoryHeight = 128;
+	 const int playerMarkerWidth=8;
+	 const int playerMarkerHeight = 8;
 	 sf::View gameView;
 }
 Static::GameState Static::gameState=NotStarted;

@@ -1,3 +1,15 @@
+Version 0.017
+
+-Transition time between screen has been decreased again.
+-Overworld map(gray square) now appears on player bar.
+-Player marker(green dot) on map now appears on player bar.
+-Collision check is now only done on current map object.
+-Add First Monster Red Octorok(movement NotYetImplemented);
+-Player sword can damage Monster and kill it.
+-Touching Monster decreate player hp(health bar NotYetImplemented);
+-Player/monster gain tempory immunity after being hit.
+-Touching monster push the player back.
+
 Version 0.016
 
 -Transition time between screen has been decreased.

@@ -12,8 +12,8 @@ protected:
 public:
 	Monster();
 	~Monster();
-	void destroy(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void takeDamage(int damage);
 	int strength;
+	sf::RectangleShape* mask;
 };
 #endif

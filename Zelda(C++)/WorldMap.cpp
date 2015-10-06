@@ -42,7 +42,6 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 		break;
 	case 0:
 		player = new Player(x,y + Global::inventoryHeight);
-		//worldLayer2[lastWorldXIndex][lastWorldYIndex] = player;
 		break;
 	case 1:
 		tile = new Tile(x, y + Global::inventoryHeight, false, 1);
@@ -93,15 +92,28 @@ void WorldMap::drawBackgroundTile(sf::RenderWindow& mainWindow){
 		}
 	}
 }
+void WorldMap::freeSpace(){
+	for each (GameObject* obj in toDelete)
+	{
+		int row = obj->spawnRow;
+		int col = obj->spawnCol;
+		delete obj;
+		worldLayer2[row][col] = NULL;
+	}
+	toDelete.clear();
+}
 void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
+	freeSpace();
 	float startX = player->worldX*Global::roomRows;
 	float startY = player->worldY*Global::roomCols;
 	for (int i = startY; i < startY + Global::roomCols; i++){
 		for (int j = startX; j < startX + Global::roomRows; j++){
-			if (worldLayer2[i][j] != NULL)
+			if (worldLayer2[i][j] != NULL){
 				worldLayer2[i][j]->update(worldLayer2);
-			if (worldLayer2[i][j] != NULL)
 				worldLayer2[i][j]->draw(mainWindow);
+				if (worldLayer2[i][j]->toBeDeleted)
+					toDelete.push_back(worldLayer2[i][j]);
+			}
 		}
 	}
 }

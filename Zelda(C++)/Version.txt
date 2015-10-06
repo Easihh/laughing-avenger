@@ -1,12 +1,20 @@
+Version 0.018
+
+-Collision detection is no longer required to be done on the full image of the monsters.
+-Added fullmask/collision mask debug collision graphic around the player/monsters for debug purpose.
+-Object Deletion logic is no longer done inside the same Object class.
+-PlayerBar is now its own class.
+-Some code cleanup.
+
 Version 0.017
 
 -Transition time between screen has been decreased again.
 -Overworld map(gray square) now appears on player bar.
 -Player marker(green dot) on map now appears on player bar.
 -Collision check is now only done on current map object.
--Add First Monster Red Octorok(movement NotYetImplemented);
+-Add First Monster Red Octorok(movement NotYetImplemented).
 -Player sword can damage Monster and kill it.
--Touching Monster decreate player hp(health bar NotYetImplemented);
+-Touching Monster decrease player hp(health bar NotYetImplemented);
 -Player/monster gain tempory immunity after being hit.
 -Touching monster push the player back.
 

@@ -10,6 +10,8 @@ void Game::GameLoop(){
 	case Static::Playing:
 		world.update(mainWindow);
 		break;
+	case Static::Inventory:
+		break;
 	}
 }
 void Game::Start(){

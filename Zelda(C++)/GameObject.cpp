@@ -6,10 +6,27 @@ void GameObject::update(GameObject* worldMap[Static::WorldRows][Static::WorldCol
 }
 void GameObject::draw(sf::RenderWindow& mainWindow){
 }
-bool GameObject::intersect(GameObject* rectA,GameObject* rectB, int offsetX,int offsetY){
+bool GameObject::intersect(sf::RectangleShape* rectA, sf::RectangleShape* rectB, int offsetX, int offsetY){
+	float rectAx		= rectA->getPosition().x;
+	float rectAxSize	= rectA->getSize().x;
+	float rectAySize	= rectA->getSize().y;
+	float rectAy		= rectA->getPosition().y;
+	float rectBx		= rectB->getPosition().x;
+	float rectBxSize	= rectB->getSize().x;
+	float rectBySize	= rectB->getSize().y;
+	float rectBy		= rectB->getPosition().y;
 return(
-rectA->xPosition + offsetX < rectB->xPosition + rectB->width  &&
-rectA->xPosition + rectA->width +offsetX > rectB->xPosition &&
-rectA->yPosition + offsetY < rectB->yPosition + rectB->height &&
-rectA->yPosition + rectA->height +offsetY > rectB->yPosition);
+	rectAx + offsetX < rectBx + rectBxSize  &&
+	rectAx + rectAxSize + offsetX > rectBx &&
+	rectAy + offsetY < rectBy + rectBySize &&
+	rectAy + rectAySize + offsetY > rectBy);
+}
+void GameObject::setupFullMask(){
+	fullMask = new sf::RectangleShape();
+	sf::Vector2f size(width, height);
+	fullMask->setSize(size);
+	fullMask->setOutlineThickness(1);
+	fullMask->setFillColor(sf::Color::Transparent);
+	fullMask->setPosition(xPosition, yPosition);
+	fullMask->setOutlineColor(sf::Color::Black);
 }

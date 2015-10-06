@@ -8,6 +8,7 @@ Sword::Sword(float playerX,float playerY,Static::Direction dir){
 	swordCurrentFrame = 0;
 	swordDelay = 0;
 	loadImage(dir);
+	setupFullMask();
 	strength = 1;
 }
 Sword::~Sword(){}
@@ -68,7 +69,7 @@ bool Sword::isCollidingWithMonster(GameObject* worldLayer[Static::WorldRows][Sta
 		for (int j = startX; j < startX + Global::roomRows; j++){
 			if (worldLayer[i][j] != NULL){
 				if (dynamic_cast<Monster*>(worldLayer[i][j]))
-					if (intersect(this, worldLayer[i][j], 0, 0)){
+					if (intersect(fullMask, ((Monster*)worldLayer[i][j])->mask, 0, 0)){
 						isColliding = true;
 						collidingMonsterList.push_back(worldLayer[i][j]);
 					}

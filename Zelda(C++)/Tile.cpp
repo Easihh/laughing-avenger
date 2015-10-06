@@ -7,6 +7,7 @@ Tile::Tile(float x, float y,bool canBeCollidedWith,int type){
 	height = Global::TileHeight;
 	isCollideable = canBeCollidedWith;
 	loadTileImage(type);
+	setupFullMask();
 }
 Tile::~Tile(){}
 void Tile::draw(sf::RenderWindow& mainWindow){

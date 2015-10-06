@@ -8,14 +8,15 @@ public:
 	~GameObject();
 	virtual void update(GameObject* worldMap[Static::WorldRows][Static::WorldColumns]);
 	virtual void draw(sf::RenderWindow& mainWindow);
-	float xPosition;
-	float yPosition;
-	unsigned int width;
-	unsigned int height;
+	float xPosition,yPosition;
+	unsigned int width,height,spawnCol,spawnRow;
 	bool isCollideable;
+	bool toBeDeleted;
+	void setupFullMask();
 	sf::Texture texture;
 	sf::Sprite sprite;
-	static bool intersect(GameObject* RectA, GameObject* RectB, int offsetX, int offsetY);
+	sf::RectangleShape* fullMask;
+	static bool intersect(sf::RectangleShape* rectA, sf::RectangleShape* rectB, int offsetX, int offsetY);
 private:
 };
 

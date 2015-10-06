@@ -32,5 +32,7 @@ private:
 	void drawAndUpdateDownScreen(sf::RenderWindow& mainWindow);
 	void drawAndUpdateUpScreen(sf::RenderWindow& mainWindow);
 	Player* player;
+	std::vector<GameObject*> toDelete;
+	void freeSpace();
 };
 #endif

@@ -6,6 +6,7 @@
 #include "Animation.h"
 #include "Sword.h"
 #include "Monster.h"
+#include "PlayerBar.h"
 class Player:public GameObject{
 public:
 	Player(float x,float y);
@@ -17,9 +18,6 @@ private:
 	unsigned int stepToMove;
 	Static::Direction dir;
 	void completeMove();
-	void setupPlayerBar();
-	void setupMap();
-	void setupPlayerMarker();
 	bool isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	bool isCollidingWithMonster(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	int xOffset, yOffset, stepToAlign, transitionStep,currentInvincibleFrame;
@@ -41,7 +39,10 @@ private:
 	bool canAttack,isAttacking,stepIsNegative,isScreenTransitioning,isInvincible;
 	void checkInvincible();
 	void pushback();
-	sf::RectangleShape playerBar,overworldMap,playerMarker;
+	void checkMovementInput(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
+	void checkAttackInput();
+	void checkInventoryInput();
 	Monster* collidingMonster;
+	PlayerBar* playerBar;
 };
 #endif

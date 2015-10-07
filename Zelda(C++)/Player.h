@@ -7,6 +7,7 @@
 #include "Sword.h"
 #include "Monster.h"
 #include "PlayerBar.h"
+#include "Inventory.h"
 class Player:public GameObject{
 public:
 	Player(float x,float y);
@@ -14,6 +15,9 @@ public:
 	void update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void draw(sf::RenderWindow& mainWindow);
 	int worldX, worldY,healthPoint;
+	bool inventoryKeyReleased;
+	Inventory* inventory;
+	PlayerBar* playerBar;
 private:
 	unsigned int stepToMove;
 	Static::Direction dir;
@@ -43,6 +47,5 @@ private:
 	void checkAttackInput();
 	void checkInventoryInput();
 	Monster* collidingMonster;
-	PlayerBar* playerBar;
 };
 #endif

@@ -12,9 +12,8 @@ public:
 	void draw(sf::RenderWindow& mainWindow);
 	void update();
 	void setBarNextPosition(float stepX, float stepY);
-	sf::RectangleShape playerMarker;
+	sf::RectangleShape playerMarker, playerBar, overworldMap;
 private:
-	sf::RectangleShape playerBar, overworldMap;
 	float barX, barY, mapX, mapY, markerX, markerY;
 };
 #endif

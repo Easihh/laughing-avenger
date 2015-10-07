@@ -19,6 +19,7 @@
 	 loadImage();
 	 setupFullMask();
 	 playerBar = new PlayerBar();
+	 inventoryKeyReleased = true;
 }
  Player::~Player(){}
  void Player::loadImage(){
@@ -43,10 +44,15 @@
 	 checkInvincible();
 	 fullMask->setPosition(xPosition, yPosition);
 	 playerBar->update();
+
  }
  void Player::checkInventoryInput(){
-	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)){
+	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && inventoryKeyReleased){
 		 Static::gameState = Static::GameState::Inventory;
+		 delete inventory;
+		 inventoryKeyReleased = false;
+		 inventory = new Inventory();
+		 inventory->transitionToInventory(playerBar);
 	 }
  }
  void Player::checkAttackInput(){

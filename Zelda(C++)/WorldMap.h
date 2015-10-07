@@ -15,13 +15,8 @@ public:
 	void loadMap(std::string filename);
 	GameObject* worldLayer1[Static::WorldRows][Static::WorldColumns];
 	GameObject* worldLayer2[Static::WorldRows][Static::WorldColumns];
-	int FPS_REFRESH_RATE = 1000;
-	unsigned int fpsCounter = 0;
-	sf::Time timePerFrame = sf::seconds(1.0f / 60.0f);
-	sf::Time timeSinceLastUpdate = sf::Time::Zero;
-	sf::Time fpsTimer = sf::Time::Zero;
-	sf::Clock timerClock, fpsClock;
-	void update(sf::RenderWindow& mainWindow);
+	void update(sf::RenderWindow& mainWindow,sf::Event& event);
+	Player* player;
 private:
 	int lastWorldXIndex,lastWorldYIndex;
 	void createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType);
@@ -31,7 +26,6 @@ private:
 	void drawAndUpdateLeftScreen(sf::RenderWindow& mainWindow);
 	void drawAndUpdateDownScreen(sf::RenderWindow& mainWindow);
 	void drawAndUpdateUpScreen(sf::RenderWindow& mainWindow);
-	Player* player;
 	std::vector<GameObject*> toDelete;
 	void freeSpace();
 };

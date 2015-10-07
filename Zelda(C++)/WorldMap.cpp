@@ -57,20 +57,9 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 		break;
 	}
 }
-void WorldMap::update(sf::RenderWindow& mainWindow){
-	timeSinceLastUpdate += timerClock.restart();
-	fpsTimer += fpsClock.restart();
-	if (fpsTimer.asMilliseconds() >= FPS_REFRESH_RATE){
-		std::stringstream title;
-		title << Static::GAME_TITLE << "FPS:" << fpsCounter;
-		mainWindow.setTitle(title.str());
-		fpsCounter = 0;
-		fpsTimer = sf::Time::Zero;
-	}
-	if (timeSinceLastUpdate.asMilliseconds() >= 1667){
-		mainWindow.clear(sf::Color::Black);
-		fpsCounter++;
-		timeSinceLastUpdate -= timePerFrame;
+void WorldMap::update(sf::RenderWindow& mainWindow,sf::Event& event){
+	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Q)
+		player->inventoryKeyReleased = true;
 		drawBackgroundTile(mainWindow);
 		drawAndUpdateCurrentScreen(mainWindow);
 		drawAndUpdateRightScreen(mainWindow);
@@ -80,7 +69,6 @@ void WorldMap::update(sf::RenderWindow& mainWindow){
 		player->update(worldLayer2);
 		player->draw(mainWindow);
 		mainWindow.display();
-	}
 }
 void WorldMap::drawBackgroundTile(sf::RenderWindow& mainWindow){
 	for (int i = 0; i < Static::WorldRows; i++){

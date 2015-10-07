@@ -1,3 +1,10 @@
+Version 0.019
+
+-Moved Timer/GameLoop logic timing from WorldMap to Game class for better clarity in WorldMap update.
+-Pressing Q now bring up inventory screen/bring you back to the game.
+-The game is paused while in inventory mode.
+-Inventory screen currently only display player bar and blue rectangle that will hold the items.
+
 Version 0.018
 
 -Collision detection is no longer required to be done on the full image of the monsters.

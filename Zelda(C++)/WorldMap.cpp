@@ -58,6 +58,7 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 	}
 }
 void WorldMap::update(sf::RenderWindow& mainWindow,sf::Event& event){
+	mainWindow.setKeyRepeatEnabled(true);
 	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Q)
 		player->inventoryKeyReleased = true;
 		drawBackgroundTile(mainWindow);

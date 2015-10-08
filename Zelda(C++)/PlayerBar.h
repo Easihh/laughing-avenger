@@ -13,6 +13,7 @@ public:
 	void update();
 	void setBarNextPosition(float stepX, float stepY);
 	sf::RectangleShape playerMarker, playerBar, overworldMap;
+	int healthPoint;
 private:
 	float barX, barY, mapX, mapY, markerX, markerY;
 };

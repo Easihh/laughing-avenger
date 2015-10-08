@@ -11,7 +11,6 @@
 	 width = Global::TileWidth;
 	 height = Global::TileHeight;
 	 dir = Static::Direction::Up;
-	 healthPoint = 2;
 	 canAttack = true;
 	 isAttacking = false;
 	 isScreenTransitioning = false;
@@ -19,6 +18,9 @@
 	 loadImage();
 	 setupFullMask();
 	 playerBar = new PlayerBar();
+	 inventory = new Inventory();
+	 inventory->items[0][0] = new Item(0, 0,"MagicalBoomerang");
+	 inventory->items[2][2] = new Item(0, 0, "Bomb");
 	 inventoryKeyReleased = true;
 }
  Player::~Player(){}
@@ -49,9 +51,7 @@
  void Player::checkInventoryInput(){
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && inventoryKeyReleased){
 		 Static::gameState = Static::GameState::Inventory;
-		 delete inventory;
 		 inventoryKeyReleased = false;
-		 inventory = new Inventory();
 		 inventory->transitionToInventory(playerBar);
 	 }
  }
@@ -138,9 +138,9 @@
  }
  void Player::takeDamage(){
 	 if (!isInvincible){
-		 healthPoint -= collidingMonster->strength;
+		 playerBar->healthPoint -= collidingMonster->strength;
 		 pushback();
-		 if (healthPoint <= 0)
+		 if (playerBar->healthPoint <= 0)
 			 std::cout << "I'm Dead";
 		 else isInvincible = true;
 	 }

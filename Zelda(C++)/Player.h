@@ -14,7 +14,7 @@ public:
 	~Player();
 	void update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void draw(sf::RenderWindow& mainWindow);
-	int worldX, worldY,healthPoint;
+	int worldX, worldY;
 	bool inventoryKeyReleased;
 	Inventory* inventory;
 	PlayerBar* playerBar;

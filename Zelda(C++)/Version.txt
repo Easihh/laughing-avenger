@@ -1,3 +1,10 @@
+Version 0.020
+
+ -Inventory Object is no longer unecessary recreated each time player open menu.
+ -Player's Health is now part of playerBar class.
+ -Opening inventory now show item you own inside the blue rectangle.
+ -Inventory now has a selector that can move between the item you possess.
+
 Version 0.019
 
 -Moved Timer/GameLoop logic timing from WorldMap to Game class for better clarity in WorldMap update.

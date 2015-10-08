@@ -31,5 +31,7 @@ public:
 	const static std::string GAME_TITLE;
 	static const int WorldRows=32;
 	static const int WorldColumns=32;
+	static const int inventoryRows=3;
+	static const int inventoryCols=5;
 };
 #endif

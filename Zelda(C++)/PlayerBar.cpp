@@ -8,6 +8,7 @@ PlayerBar::PlayerBar(){
 	mapY = 32;
 	barX = 0;
 	barY = 0;
+	healthPoint = 2;
 	setupPlayerBar();
 }
 void PlayerBar::setupMap(){

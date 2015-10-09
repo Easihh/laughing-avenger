@@ -21,6 +21,8 @@ namespace Global{
 	extern const int inventoryHeight;
 	extern const int playerMarkerWidth;
 	extern const int playerMarkerHeight;
+	extern const int overworldMapWidth;
+	extern const int overworldMapHeight;
 	extern sf::View gameView;
 };
 class Static{

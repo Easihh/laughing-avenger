@@ -138,9 +138,9 @@
  }
  void Player::takeDamage(){
 	 if (!isInvincible){
-		 playerBar->healthPoint -= collidingMonster->strength;
+		 playerBar->decreaseCurrentHP(collidingMonster->strength);
 		 pushback();
-		 if (playerBar->healthPoint <= 0)
+		 if (playerBar->getCurrentHP() <= 0)
 			 std::cout << "I'm Dead";
 		 else isInvincible = true;
 	 }

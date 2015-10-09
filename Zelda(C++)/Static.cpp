@@ -18,6 +18,8 @@ namespace Global
 	 const int inventoryHeight = 128;
 	 const int playerMarkerWidth=8;
 	 const int playerMarkerHeight = 8;
+	 extern const int overworldMapWidth=128;
+	 extern const int overworldMapHeight=64;
 	 sf::View gameView;
 }
 Static::GameState Static::gameState=NotStarted;

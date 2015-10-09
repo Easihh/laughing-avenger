@@ -1,3 +1,10 @@
+Version 0.021
+
+-Changed font to one closer to Nintendo font(8bit).
+-Can now keep track of current and max health.
+-Now Display Health bar on the player bar/inventory based on current and max health.
+-Now Display 2 Item Slots(empty currently) for two main input (A & S) on main screen.
+
 Version 0.020
 
  -Inventory Object is no longer unecessary recreated each time player open menu.

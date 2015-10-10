@@ -24,6 +24,7 @@ void Inventory::transitionToInventory(PlayerBar* playerBar){
 	playerBar->playerBar.setPosition(playerBar->playerBar.getPosition().x, playerBar->playerBar.getPosition().y + Global::SCREEN_HEIGHT - Global::inventoryHeight);
 	playerBar->overworldMap.setPosition(playerBar->overworldMap.getPosition().x, playerBar->overworldMap.getPosition().y + Global::SCREEN_HEIGHT-Global::inventoryHeight);
 	playerBar->playerMarker.setPosition(playerBar->playerMarker.getPosition().x, playerBar->playerMarker.getPosition().y + Global::SCREEN_HEIGHT - Global::inventoryHeight);
+	playerBar->movePlayerBarToBottomScreen();
 	inventoryRect.setPosition(playerBar->overworldMap.getPosition().x + 144, playerBar->overworldMap.getPosition().y -416);
 	x = inventoryRect.getPosition().x;
 	y = inventoryRect.getPosition().y;
@@ -75,6 +76,7 @@ void Inventory::transitionBackToGame(PlayerBar* playerBar){
 	playerBar->playerBar.setPosition(playerBar->playerBar.getPosition().x, playerBar->playerBar.getPosition().y - Global::SCREEN_HEIGHT + Global::inventoryHeight);
 	playerBar->overworldMap.setPosition(playerBar->overworldMap.getPosition().x, playerBar->overworldMap.getPosition().y - Global::SCREEN_HEIGHT + Global::inventoryHeight);
 	playerBar->playerMarker.setPosition(playerBar->playerMarker.getPosition().x, playerBar->playerMarker.getPosition().y - Global::SCREEN_HEIGHT + Global::inventoryHeight);
+	playerBar->movePlayerBarToTopScreen();
 	keyWasReleased = false;
 }
 void Inventory::drawInventoryItems(sf::RenderWindow& mainWindow){

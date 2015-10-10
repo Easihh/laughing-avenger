@@ -14,15 +14,24 @@ public:
 	void setBarNextPosition(float stepX, float stepY);
 	void decreaseCurrentHP(int amount);
 	int getCurrentHP();
+	void movePlayerBarToBottomScreen();
+	void movePlayerBarToTopScreen();
 	sf::RectangleShape playerMarker, playerBar, overworldMap;
 private:
-	float barX, barY, mapX, mapY, markerX, markerY;
-	sf::Texture fullHeartTexture,halfHeartTexture,emptyHeartTexture,itemSlotTexture;
+	float barX, barY, mapX, mapY, markerX, markerY, healthBarStartX, healthBarStartY,itemSlotStartX,itemSlotStartY,
+		diamondStartX, diamondStartY, itemSlotTextStartX,itemSlotTextStartY,bombStartX,bombStartY,bombTextStartX,
+		bombTextStartY,diamondTextStartX,diamondTextStartY;
+	sf::Texture fullHeartTexture,halfHeartTexture,emptyHeartTexture,itemSlotTexture,bombIconTexture,diamondIconTexture;
 	sf::Sprite sprite;
 	void drawHearts(sf::RenderWindow& mainWindow);
-	void drawPlayerBarText(sf::RenderWindow& mainWindow);
-	void drawPlayerBarImg(sf::RenderWindow& mainWindow);
+	void drawPlayerBar(sf::RenderWindow& mainWindow);
+	void drawItemsSlot(sf::RenderWindow& mainWindow);
+	void drawBombInfo(sf::RenderWindow& mainWindow);
+	void drawDiamondInfo(sf::RenderWindow& mainWindow);
 	const int heartWidth = 16,heartHeight=16,maxHeartPerRow=8;
+	void loadImages();
+	sf::Font font;
+	sf::Text txt;
 	int currentHealthPoint, maxHealthPoint;
 };
 #endif

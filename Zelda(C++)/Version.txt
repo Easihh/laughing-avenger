@@ -1,3 +1,9 @@
+Version 0.022
+
+-PlayerBar now display bomb and diamond icon and amount.
+-PlayerBar object no longer get their position from other objects.
+-PlayerBar class cleanup/removal of reliance on magic number for position.
+
 Version 0.021
 
 -Changed font to one closer to Nintendo font(8bit).

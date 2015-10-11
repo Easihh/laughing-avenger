@@ -13,14 +13,18 @@ PlayerBar::PlayerBar(){
 	itemSlotStartY = 36;
 	diamondStartX = 152;
 	diamondStartY = 32;
-	diamondTextStartX = 152;
+	diamondTextStartX = 155;
 	diamondTextStartY = 30;
 	itemSlotTextStartX = 228;
 	itemSlotTextStartY = 26;
-	bombStartX = 152;
+	bombStartX = 150;
 	bombStartY = 96;
 	bombTextStartX = 170;
 	bombTextStartY = 78;
+	keyStartX = 150;
+	keyStartY = 56;
+	keyTextStartX = 170;
+	keyTextStartY = 54;
 	loadImages();
 	setupPlayerBar();
 }
@@ -31,6 +35,7 @@ void PlayerBar::loadImages(){
 	itemSlotTexture.loadFromFile("Tileset/Itemslot.png");
 	diamondIconTexture.loadFromFile("Tileset/rupees_icon.png");
 	bombIconTexture.loadFromFile("Tileset/bomb_icon.png");
+	keyIconTexture.loadFromFile("Tileset/keys_icon.png");
 	font.loadFromFile("zelda.ttf");
 }
 int PlayerBar::getCurrentHP(){
@@ -61,9 +66,12 @@ void PlayerBar::setupPlayerMarker(){
 	playerMarker.setPosition(markerX, markerY);
 }
 void PlayerBar::setBarNextPosition(float stepX,float stepY){
-	playerBar.setPosition(barX + stepX, barY + stepY);
-	playerMarker.setPosition(markerX + stepX, markerY + stepY);
-	overworldMap.setPosition(mapX + stepX, mapY + stepY);
+	barX += stepX;
+	barY += stepY;
+	markerX += stepX;
+	markerY += stepY;
+	mapX += stepX;
+	mapY += stepY;
 	healthBarStartX += stepX;
 	healthBarStartY += stepY;
 	itemSlotStartX += stepX;
@@ -78,24 +86,38 @@ void PlayerBar::setBarNextPosition(float stepX,float stepY){
 	bombTextStartY += stepY;
 	diamondTextStartX += stepX;
 	diamondTextStartY += stepY;
+	keyStartX += stepX;
+	keyStartY += stepY;
+	keyTextStartX += stepX;
+	keyTextStartY += stepY;
 }
 void PlayerBar::movePlayerBarToBottomScreen(){
 	healthBarStartY += Global::SCREEN_HEIGHT-Global::inventoryHeight;
 	itemSlotStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	diamondStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 	itemSlotTextStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	diamondStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	diamondTextStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 	bombStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 	bombTextStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	diamondTextStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	keyStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	keyTextStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	barY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	mapY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	markerY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 }
 void PlayerBar::movePlayerBarToTopScreen(){
 	healthBarStartY =healthBarStartY-Global::SCREEN_HEIGHT + Global::inventoryHeight;
 	itemSlotStartY = itemSlotStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	diamondStartY = diamondStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 	itemSlotTextStartY = itemSlotTextStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	diamondStartY = diamondStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	diamondTextStartY = diamondTextStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 	bombStartY = bombStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 	bombTextStartY = bombTextStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	diamondTextStartY = diamondTextStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	keyStartY = keyStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	keyTextStartY = keyTextStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	barY = barY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	markerY = markerY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	mapY = mapY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 }
 void PlayerBar::drawHearts(sf::RenderWindow& mainWindow){
 	int totalHearts = maxHealthPoint / 2;
@@ -168,8 +190,18 @@ void PlayerBar::drawBombInfo(sf::RenderWindow& mainWindow){
 	txt.setPosition(bombTextStartX, bombTextStartY);
 	txt.setString("X99");
 	mainWindow.draw(txt);
-	sprite.setTexture(bombIconTexture);
+	sprite.setTexture(bombIconTexture,true);
 	sprite.setPosition(bombStartX, bombStartY - bombIconTexture.getSize().y);
+	mainWindow.draw(sprite);
+}
+void PlayerBar::drawKeyInfo(sf::RenderWindow& mainWindow){
+	txt.setCharacterSize(14);
+	txt.setColor(sf::Color::White);
+	txt.setPosition(keyTextStartX, keyTextStartY);
+	txt.setString("X99");
+	mainWindow.draw(txt);
+	sprite.setTexture(keyIconTexture,true);
+	sprite.setPosition(keyStartX, keyStartY);
 	mainWindow.draw(sprite);
 }
 void PlayerBar::drawDiamondInfo(sf::RenderWindow& mainWindow){
@@ -192,6 +224,7 @@ void PlayerBar::drawPlayerBar(sf::RenderWindow& mainWindow){
 	drawHearts(mainWindow);
 	drawBombInfo(mainWindow);
 	drawDiamondInfo(mainWindow);
+	drawKeyInfo(mainWindow);
 	drawItemsSlot(mainWindow);
 }
 void PlayerBar::draw(sf::RenderWindow& mainWindow){
@@ -201,10 +234,7 @@ void PlayerBar::draw(sf::RenderWindow& mainWindow){
 	drawPlayerBar(mainWindow);
 }
 void PlayerBar::update(){
-	barX = playerBar.getPosition().x;
-	barY = playerBar.getPosition().y;
-	markerX = playerMarker.getPosition().x;
-	markerY = playerMarker.getPosition().y;
-	mapX = overworldMap.getPosition().x;
-	mapY = overworldMap.getPosition().y;
+	playerBar.setPosition(barX, barY);
+	overworldMap.setPosition(mapX, mapY);
+	playerMarker.setPosition(markerX, markerY);
 }

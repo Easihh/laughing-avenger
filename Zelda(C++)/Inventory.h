@@ -13,6 +13,7 @@ public:
 	void transitionBackToGame(PlayerBar* playerBar);
 	bool keyWasReleased;
 	Item* items[Static::inventoryRows][Static::inventoryCols];
+	void updateInventoryPosition(float stepX, float stepY);
 private:
 	sf::RectangleShape inventoryRect;
 	void getInput(sf::Event& event);

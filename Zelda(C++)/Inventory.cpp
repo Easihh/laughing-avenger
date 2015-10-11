@@ -9,6 +9,8 @@ Inventory::Inventory(){
 	sf::Vector2f size(Global::SCREEN_WIDTH/2, 96);
 	inventoryRect.setSize(size);
 	hasBoomrang = false;
+	x = 192;
+	y = 96;
 	selectorInventoryXIndex = 0;
 	selectorInventoryYIndex = 0;
 	loadSelector();
@@ -20,14 +22,13 @@ void Inventory::loadSelector(){
 	selector.setPosition(228, 180);
 }
 Inventory::~Inventory(){}
+void Inventory::updateInventoryPosition(float stepX,float stepY){
+	x += stepX;
+	y += stepY;
+}
 void Inventory::transitionToInventory(PlayerBar* playerBar){
-	playerBar->playerBar.setPosition(playerBar->playerBar.getPosition().x, playerBar->playerBar.getPosition().y + Global::SCREEN_HEIGHT - Global::inventoryHeight);
-	playerBar->overworldMap.setPosition(playerBar->overworldMap.getPosition().x, playerBar->overworldMap.getPosition().y + Global::SCREEN_HEIGHT-Global::inventoryHeight);
-	playerBar->playerMarker.setPosition(playerBar->playerMarker.getPosition().x, playerBar->playerMarker.getPosition().y + Global::SCREEN_HEIGHT - Global::inventoryHeight);
 	playerBar->movePlayerBarToBottomScreen();
-	inventoryRect.setPosition(playerBar->overworldMap.getPosition().x + 144, playerBar->overworldMap.getPosition().y -416);
-	x = inventoryRect.getPosition().x;
-	y = inventoryRect.getPosition().y;
+	inventoryRect.setPosition(x, y);
 	selector.setPosition(x,y);
 	items[0][0]->sprite.setPosition(x, y);
 	items[2][2]->sprite.setPosition(x + (2 * selectorWidth), y + (2*selectorHeight));
@@ -73,9 +74,6 @@ void Inventory::update(sf::Event& event, PlayerBar* playerBar){
 }
 void Inventory::transitionBackToGame(PlayerBar* playerBar){
 	Static::gameState = Static::GameState::Playing;
-	playerBar->playerBar.setPosition(playerBar->playerBar.getPosition().x, playerBar->playerBar.getPosition().y - Global::SCREEN_HEIGHT + Global::inventoryHeight);
-	playerBar->overworldMap.setPosition(playerBar->overworldMap.getPosition().x, playerBar->overworldMap.getPosition().y - Global::SCREEN_HEIGHT + Global::inventoryHeight);
-	playerBar->playerMarker.setPosition(playerBar->playerMarker.getPosition().x, playerBar->playerMarker.getPosition().y - Global::SCREEN_HEIGHT + Global::inventoryHeight);
 	playerBar->movePlayerBarToTopScreen();
 	keyWasReleased = false;
 }

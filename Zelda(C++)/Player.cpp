@@ -183,28 +183,28 @@
 	 case Static::Direction::Right:
 		 if (xPosition + width > (Global::roomWidth*worldY) + Global::roomWidth){
 			 worldY++;
-			 playerBar->playerMarker.setPosition(markerX + Global::playerMarkerWidth, markerY);
+			 playerBar->markerX += Global::playerMarkerWidth;
 			 outsideBoundary = true;
 		 }
 		 break;
 	 case Static::Direction::Left:
 		 if (xPosition < (Global::roomWidth*worldY)){
 			 worldY--;
-			 playerBar->playerMarker.setPosition(markerX - Global::playerMarkerWidth, markerY);
+			 playerBar->markerX -= Global::playerMarkerWidth;
 			 outsideBoundary = true;
 		 }
 		 break;
 	 case Static::Direction::Down:
 		 if (yPosition + height > (Global::roomHeight*worldX)+Global::roomHeight+Global::inventoryHeight){
 			 worldX++;
-			 playerBar->playerMarker.setPosition(markerX, markerY + Global::playerMarkerHeight);
+			 playerBar->markerY += Global::playerMarkerHeight;
 			 outsideBoundary = true;
 		 }
 		 break;
 	 case Static::Direction::Up:
 		 if (yPosition < (Global::roomHeight*worldX) + Global::inventoryHeight){
 			 worldX--;
-			 playerBar->playerMarker.setPosition(markerX, markerY - Global::playerMarkerHeight);
+			 playerBar->markerY -= Global::playerMarkerHeight;
 			 outsideBoundary = true;
 		 }
 		 break;
@@ -245,6 +245,7 @@
 		 break;
 	 }
 	 playerBar->setBarNextPosition(nextXPosition,nextYPosition);
+	 inventory->updateInventoryPosition(nextXPosition, nextYPosition);
 	 walkAnimation->updateAnimationFrame(dir);
 	 transitionStep -= minTransitionStep;
 	 if (transitionStep == 0){

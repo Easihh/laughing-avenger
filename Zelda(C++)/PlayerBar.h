@@ -17,17 +17,20 @@ public:
 	void movePlayerBarToBottomScreen();
 	void movePlayerBarToTopScreen();
 	sf::RectangleShape playerMarker, playerBar, overworldMap;
+	float markerX, markerY;
 private:
-	float barX, barY, mapX, mapY, markerX, markerY, healthBarStartX, healthBarStartY,itemSlotStartX,itemSlotStartY,
+	float barX, barY, mapX, mapY, healthBarStartX, healthBarStartY,itemSlotStartX,itemSlotStartY,
 		diamondStartX, diamondStartY, itemSlotTextStartX,itemSlotTextStartY,bombStartX,bombStartY,bombTextStartX,
-		bombTextStartY,diamondTextStartX,diamondTextStartY;
-	sf::Texture fullHeartTexture,halfHeartTexture,emptyHeartTexture,itemSlotTexture,bombIconTexture,diamondIconTexture;
+		bombTextStartY, diamondTextStartX, diamondTextStartY, keyTextStartX, keyTextStartY, keyStartX, keyStartY;
+	sf::Texture fullHeartTexture,halfHeartTexture,emptyHeartTexture,itemSlotTexture,bombIconTexture,diamondIconTexture,
+		keyIconTexture;
 	sf::Sprite sprite;
 	void drawHearts(sf::RenderWindow& mainWindow);
 	void drawPlayerBar(sf::RenderWindow& mainWindow);
 	void drawItemsSlot(sf::RenderWindow& mainWindow);
 	void drawBombInfo(sf::RenderWindow& mainWindow);
 	void drawDiamondInfo(sf::RenderWindow& mainWindow);
+	void drawKeyInfo(sf::RenderWindow& mainWindow);
 	const int heartWidth = 16,heartHeight=16,maxHeartPerRow=8;
 	void loadImages();
 	sf::Font font;

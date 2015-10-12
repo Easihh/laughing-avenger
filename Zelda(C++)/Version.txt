@@ -1,3 +1,8 @@
+Version 0.024
+
+-Fixed an Issue where pushback would sometime push a player and get stuck.
+-Player is no longer pushed back if there is a colliding tile inbetween pushback locations.
+
 Version 0.023
 
 -Keys Icon/Amounts has been added to the playerBar.

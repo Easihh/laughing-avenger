@@ -29,7 +29,7 @@ private:
 	int getXOffset();
 	int getYOffset();
 	void loadImage();
-	void takeDamage();
+	void takeDamage(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void getUnalignedCount(Static::Direction nextDir);
 	void snapToGrid();
 	void drawPlayerBar(sf::RenderWindow& mainWindow);
@@ -42,10 +42,11 @@ private:
 	void screenTransition();
 	bool canAttack,isAttacking,stepIsNegative,isScreenTransitioning,isInvincible;
 	void checkInvincible();
-	void pushback();
+	void pushback(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void checkMovementInput(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void checkAttackInput();
 	void checkInventoryInput();
+	bool isCollidingWithTile(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns],float offsetX,float offsetY);
 	Monster* collidingMonster;
 };
 #endif

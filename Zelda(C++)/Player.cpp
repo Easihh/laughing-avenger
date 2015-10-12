@@ -42,7 +42,7 @@
 		checkMapBoundaries();
 	 else screenTransition();
 	 if (isCollidingWithMonster(worldLayer))
-		 takeDamage();
+		 takeDamage(worldLayer);
 	 checkInvincible();
 	 fullMask->setPosition(xPosition, yPosition);
 	 playerBar->update();
@@ -136,28 +136,56 @@
 	 }
 	 return isColliding;
  }
- void Player::takeDamage(){
+ void Player::takeDamage(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 if (!isInvincible){
 		 playerBar->decreaseCurrentHP(collidingMonster->strength);
-		 pushback();
+		 pushback(worldLayer);
 		 if (playerBar->getCurrentHP() <= 0)
 			 std::cout << "I'm Dead";
 		 else isInvincible = true;
 	 }
  }
- void Player::pushback(){
+ bool Player::isCollidingWithTile(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns], float intersectWidth, float intersectHeight){
+	 bool isColliding = false;
+	 sf::RectangleShape* pushbackLineCheck = new sf::RectangleShape();
+
+	 sf::Vector2f size(width, height);
+	 pushbackLineCheck->setSize(size);
+	 pushbackLineCheck->setPosition(xPosition + intersectWidth, yPosition + intersectHeight);
+	 for (int i = 0; i < Static::WorldRows; i++){
+		 for (int j = 0; j < Static::WorldColumns; j++){
+			 if (dynamic_cast<Tile*>(worldLayer[i][j]))
+				 if (worldLayer[i][j]->intersect(worldLayer[i][j]->fullMask, pushbackLineCheck, 0, 0)){
+					 isColliding = true;
+					 std::cout << "CollisionX:" << worldLayer[i][j]->xPosition << std::endl;
+					 std::cout << "CollisionY:" << worldLayer[i][j]->yPosition << std::endl;
+					 break;
+				 }
+		 }
+	 }
+	 return isColliding;
+ }
+ void Player::pushback(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
+	 float intersectWidth;
+	 float intersectHeight=2 * Global::TileHeight;;
 	 switch (dir){
 	 case Static::Direction::Down:
-		 yPosition -= height * 2;
+		 if (!isCollidingWithTile(worldLayer, 0, -intersectHeight))
+			yPosition -= height * 2;
 		 break;
 	 case Static::Direction::Up:
-		 yPosition += height * 2;
+		 if (!isCollidingWithTile(worldLayer, 0, intersectHeight))
+			yPosition += height * 2;
 		 break;
 	 case Static::Direction::Left:
-		 xPosition += width * 2;
+		 intersectWidth = 3 * Global::TileWidth;
+		 if (!isCollidingWithTile(worldLayer, intersectWidth,0))
+			 xPosition += width * 2;
 		 break;
 	 case Static::Direction::Right:
-		 xPosition -= width * 2;
+		 intersectWidth = 2 * Global::TileWidth;
+		 if (!isCollidingWithTile(worldLayer, -intersectWidth, 0))
+			xPosition -= width * 2;
 		 break;
 	 }
 	 if (isAttacking)
@@ -270,7 +298,7 @@
  }
  int Player::getXOffset(){
 	 xOffset = 0;
-	 if (dir == Static::Direction::Left)
+	if (dir == Static::Direction::Left)
 		 xOffset = -Global::minStep;
 	 else if (dir == Static::Direction::Right)
 		 xOffset = Global::minStep;

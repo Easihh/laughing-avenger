@@ -38,7 +38,7 @@ private:
 	Animation* walkAnimation;
 	Animation* attackAnimation;
 	Sword* sword;
-	void checkMapBoundaries();
+	void endScreenTransition();
 	void screenTransition();
 	bool canAttack,isAttacking,stepIsNegative,isScreenTransitioning,isInvincible;
 	void checkInvincible();
@@ -47,6 +47,7 @@ private:
 	void checkAttackInput();
 	void checkInventoryInput();
 	bool isCollidingWithTile(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns],float offsetX,float offsetY);
+	bool isOutsideMapBound(float x, float y);
 	Monster* collidingMonster;
 };
 #endif

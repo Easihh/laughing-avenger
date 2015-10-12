@@ -38,9 +38,8 @@
 	 if (stepToAlign != 0)
 		 snapToGrid();
 	 attackAnimation->updateAnimationFrame(dir);
-	 if (!isScreenTransitioning)
-		checkMapBoundaries();
-	 else screenTransition();
+	 if(isScreenTransitioning)
+		 screenTransition();
 	 if (isCollidingWithMonster(worldLayer))
 		 takeDamage(worldLayer);
 	 checkInvincible();
@@ -67,6 +66,7 @@
  }
  void Player::checkMovementInput(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 bool movementKeyPressed = false;
+	 bool outsideBound = false;
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !isScreenTransitioning){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
@@ -77,6 +77,7 @@
 			 }
 			 if (!isColliding(worldLayer) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
+			 outsideBound = isOutsideMapBound(xPosition - stepToMove, yPosition);
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !isScreenTransitioning){
@@ -89,6 +90,7 @@
 			 }
 			 if (!isColliding(worldLayer) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
+			 outsideBound = isOutsideMapBound(xPosition+width, yPosition);
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !isScreenTransitioning){
@@ -101,6 +103,7 @@
 			 }
 			 if (!isColliding(worldLayer) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
+			 outsideBound = isOutsideMapBound(xPosition, yPosition-stepToMove);
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !isScreenTransitioning){
@@ -113,10 +116,15 @@
 			 }
 			 if (!isColliding(worldLayer) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
+			 outsideBound = isOutsideMapBound(xPosition, yPosition+height);
 		 }
 	 }
 	 if (movementKeyPressed)
 		 walkAnimation->updateAnimationFrame(dir);
+	 if (outsideBound){
+		 transitionStep = maxTransitionStep;
+		 isScreenTransitioning = true;
+	 }
  }
  bool Player::isCollidingWithMonster(GameObject* worldMap[Static::WorldRows][Static::WorldColumns]){
 	 bool isColliding = false;
@@ -167,25 +175,30 @@
  }
  void Player::pushback(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 float intersectWidth;
-	 float intersectHeight=2 * Global::TileHeight;;
+	 float intersectHeight=2 * Global::TileHeight;
+	 float pushBackDistance = 64;
 	 switch (dir){
 	 case Static::Direction::Down:
 		 if (!isCollidingWithTile(worldLayer, 0, -intersectHeight))
-			yPosition -= height * 2;
+			 if (!isOutsideMapBound(xPosition, yPosition - pushBackDistance))
+				yPosition -= pushBackDistance;
 		 break;
 	 case Static::Direction::Up:
 		 if (!isCollidingWithTile(worldLayer, 0, intersectHeight))
-			yPosition += height * 2;
+			 if (!isOutsideMapBound(xPosition, yPosition + pushBackDistance))
+				yPosition += pushBackDistance;
 		 break;
 	 case Static::Direction::Left:
 		 intersectWidth = 3 * Global::TileWidth;
 		 if (!isCollidingWithTile(worldLayer, intersectWidth,0))
-			 xPosition += width * 2;
+			 if (!isOutsideMapBound(xPosition + pushBackDistance, yPosition))
+				 xPosition += pushBackDistance;
 		 break;
 	 case Static::Direction::Right:
 		 intersectWidth = 2 * Global::TileWidth;
 		 if (!isCollidingWithTile(worldLayer, -intersectWidth, 0))
-			xPosition -= width * 2;
+			 if (!isOutsideMapBound(xPosition - pushBackDistance, yPosition))
+				xPosition -= pushBackDistance;
 		 break;
 	 }
 	 if (isAttacking)
@@ -202,44 +215,41 @@
 		 }
 	 }
  }
- void Player::checkMapBoundaries(){
+ bool Player::isOutsideMapBound(float x, float y){
 	 bool outsideBoundary = false;
+	 if (x > (Global::roomWidth*worldY) + Global::roomWidth)
+		 outsideBoundary = true;
+	 else if (x < (Global::roomWidth*worldY))
+		 outsideBoundary = true;
+	 else if (y < (Global::roomHeight*worldX) + Global::inventoryHeight)
+		 outsideBoundary = true;
+	 else if (y > (Global::roomHeight*worldX) + Global::roomHeight + Global::inventoryHeight)
+		 outsideBoundary = true;
+	 return outsideBoundary;
+ }
+ void Player::endScreenTransition(){
+	 stepToMove = Global::TileHeight + 1;
+	 isScreenTransitioning = false;
 	 float markerX = playerBar->playerMarker.getPosition().x;
 	 float markerY = playerBar->playerMarker.getPosition().y;
 
 	 switch (dir){
+	 case Static::Direction::Down:
+		worldX++;
+		playerBar->markerY += Global::playerMarkerHeight;
+		break;
+	 case Static::Direction::Up:
+		 worldX--;
+		 playerBar->markerY -= Global::playerMarkerHeight;
+		 break;
 	 case Static::Direction::Right:
-		 if (xPosition + width > (Global::roomWidth*worldY) + Global::roomWidth){
-			 worldY++;
-			 playerBar->markerX += Global::playerMarkerWidth;
-			 outsideBoundary = true;
-		 }
+		 worldY++;
+		 playerBar->markerX += Global::playerMarkerWidth;
 		 break;
 	 case Static::Direction::Left:
-		 if (xPosition < (Global::roomWidth*worldY)){
-			 worldY--;
-			 playerBar->markerX -= Global::playerMarkerWidth;
-			 outsideBoundary = true;
-		 }
+		 worldY--;
+		 playerBar->markerX -= Global::playerMarkerWidth;
 		 break;
-	 case Static::Direction::Down:
-		 if (yPosition + height > (Global::roomHeight*worldX)+Global::roomHeight+Global::inventoryHeight){
-			 worldX++;
-			 playerBar->markerY += Global::playerMarkerHeight;
-			 outsideBoundary = true;
-		 }
-		 break;
-	 case Static::Direction::Up:
-		 if (yPosition < (Global::roomHeight*worldX) + Global::inventoryHeight){
-			 worldX--;
-			 playerBar->markerY -= Global::playerMarkerHeight;
-			 outsideBoundary = true;
-		 }
-		 break;
-	 }
-	 if (outsideBoundary){
-		 transitionStep = maxTransitionStep;
-		 isScreenTransitioning = true;
 	 }
  }
  void Player::screenTransition(){
@@ -277,8 +287,7 @@
 	 walkAnimation->updateAnimationFrame(dir);
 	 transitionStep -= minTransitionStep;
 	 if (transitionStep == 0){
-		 stepToMove = Global::TileHeight+1;
-		 isScreenTransitioning = false;
+		 endScreenTransition();
 	 }
  }
  bool Player::isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){

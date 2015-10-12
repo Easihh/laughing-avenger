@@ -1,3 +1,9 @@
+Version 0.025
+
+-Fixed an issue where health would be displayed incorrectly at 0 health.
+-Player is no longer pushed back if being pushed outside the room boundaries.
+-Improved logic/code for screen transition/map boundaries.
+
 Version 0.024
 
 -Fixed an Issue where pushback would sometime push a player and get stuck.

@@ -7,7 +7,7 @@ PlayerBar::PlayerBar(){
 	barX = barY = 0;
 	healthBarStartX = 320;
 	healthBarStartY = 80;
-	currentHealthPoint = 15;
+	currentHealthPoint = 16;
 	maxHealthPoint = 32;
 	itemSlotStartX = 216;
 	itemSlotStartY = 36;
@@ -42,7 +42,8 @@ int PlayerBar::getCurrentHP(){
 	return currentHealthPoint;
 }
 void PlayerBar::decreaseCurrentHP(int amount){
-	currentHealthPoint -= amount;
+	if (currentHealthPoint >= amount)
+		currentHealthPoint -= amount;
 }
 void PlayerBar::setupMap(){
 	overworldMap.setFillColor(sf::Color(128, 128, 128));
@@ -142,7 +143,7 @@ void PlayerBar::drawHearts(sf::RenderWindow& mainWindow){
 	}
 	//Draw Half-Heart
 	for (int i = 0; i < halfHeartAmount; i++){
-		sprite.setTexture(halfHeartTexture);
+		sprite.setTexture(halfHeartTexture,true);
 		sprite.setPosition(tmpHealthBarStartX, tmpHealthBarStartY);
 		mainWindow.draw(sprite);
 		tmpHealthBarStartX += heartWidth;
@@ -155,7 +156,7 @@ void PlayerBar::drawHearts(sf::RenderWindow& mainWindow){
 	}
 	//Draw Empty-Heart
 	for (int i = 0; i < emptyHeartAmount; i++){
-		sprite.setTexture(emptyHeartTexture);
+		sprite.setTexture(emptyHeartTexture,true);
 		sprite.setPosition(tmpHealthBarStartX, tmpHealthBarStartY);
 		mainWindow.draw(sprite);
 		tmpHealthBarStartX += heartWidth;

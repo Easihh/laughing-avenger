@@ -75,7 +75,7 @@
 				 dir = Static::Direction::Left;
 				 walkAnimation->reset();
 			 }
-			 if (!isColliding(worldLayer) && stepToAlign == 0)
+			 if (!isColliding(worldLayer,fullMask,getXOffset(),getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
 			 outsideBound = isOutsideMapBound(xPosition - stepToMove, yPosition);
 		 }
@@ -88,7 +88,7 @@
 				 dir = Static::Direction::Right;
 				 walkAnimation->reset();
 			 }
-			 if (!isColliding(worldLayer) && stepToAlign == 0)
+			 if (!isColliding(worldLayer, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
 			 outsideBound = isOutsideMapBound(xPosition+width, yPosition);
 		 }
@@ -101,7 +101,7 @@
 				 dir = Static::Direction::Up;
 				 walkAnimation->reset();
 			 }
-			 if (!isColliding(worldLayer) && stepToAlign == 0)
+			 if (!isColliding(worldLayer, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
 			 outsideBound = isOutsideMapBound(xPosition, yPosition-stepToMove);
 		 }
@@ -114,7 +114,7 @@
 				 dir = Static::Direction::Down;
 				 walkAnimation->reset();
 			 }
-			 if (!isColliding(worldLayer) && stepToAlign == 0)
+			 if (!isColliding(worldLayer, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
 			 outsideBound = isOutsideMapBound(xPosition, yPosition+height);
 		 }
@@ -153,50 +153,53 @@
 		 else isInvincible = true;
 	 }
  }
- bool Player::isCollidingWithTile(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns], float intersectWidth, float intersectHeight){
-	 bool isColliding = false;
-	 sf::RectangleShape* pushbackLineCheck = new sf::RectangleShape();
-
-	 sf::Vector2f size(width, height);
-	 pushbackLineCheck->setSize(size);
-	 pushbackLineCheck->setPosition(xPosition + intersectWidth, yPosition + intersectHeight);
-	 for (int i = 0; i < Static::WorldRows; i++){
-		 for (int j = 0; j < Static::WorldColumns; j++){
+ bool Player::isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns],sf::RectangleShape* mask,float xOffset,float yOffset){
+	 int startX = worldX*Global::roomRows;
+	 int startY = worldY*Global::roomCols;
+	 bool collision = false;
+	 for (int i = startY; i <startY + Global::roomCols; i++){
+		 for (int j = startX; j < startX + Global::roomRows; j++){
+			 if (worldLayer[i][j] == NULL)continue;
 			 if (dynamic_cast<Tile*>(worldLayer[i][j]))
-				 if (worldLayer[i][j]->intersect(worldLayer[i][j]->fullMask, pushbackLineCheck, 0, 0)){
-					 isColliding = true;
-					 std::cout << "CollisionX:" << worldLayer[i][j]->xPosition << std::endl;
-					 std::cout << "CollisionY:" << worldLayer[i][j]->yPosition << std::endl;
-					 break;
+				 if (intersect(mask, worldLayer[i][j]->fullMask, xOffset, yOffset)){
+					 collision = true;
+					 //std::cout << "CollisionX:" << worldLayer[i][j]->xPosition << std::endl;
+					 //std::cout << "CollisionY:" << worldLayer[i][j]->yPosition << std::endl;
 				 }
 		 }
 	 }
-	 return isColliding;
+	 return collision;
  }
  void Player::pushback(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 float intersectWidth;
 	 float intersectHeight=2 * Global::TileHeight;
 	 float pushBackDistance = 64;
+	 sf::RectangleShape* pushbackLineCheck = new sf::RectangleShape();
+
+	 sf::Vector2f size(width, height);
+	 pushbackLineCheck->setSize(size);
+	 pushbackLineCheck->setPosition(xPosition, yPosition);
+
 	 switch (dir){
 	 case Static::Direction::Down:
-		 if (!isCollidingWithTile(worldLayer, 0, -intersectHeight))
+		 if (!isColliding(worldLayer, pushbackLineCheck, 0, -intersectHeight))
 			 if (!isOutsideMapBound(xPosition, yPosition - pushBackDistance))
 				yPosition -= pushBackDistance;
 		 break;
 	 case Static::Direction::Up:
-		 if (!isCollidingWithTile(worldLayer, 0, intersectHeight))
+		 if (!isColliding(worldLayer, pushbackLineCheck, 0, intersectHeight))
 			 if (!isOutsideMapBound(xPosition, yPosition + pushBackDistance))
 				yPosition += pushBackDistance;
 		 break;
 	 case Static::Direction::Left:
 		 intersectWidth = 3 * Global::TileWidth;
-		 if (!isCollidingWithTile(worldLayer, intersectWidth,0))
+		 if (!isColliding(worldLayer, pushbackLineCheck, intersectWidth, 0))
 			 if (!isOutsideMapBound(xPosition + pushBackDistance, yPosition))
 				 xPosition += pushBackDistance;
 		 break;
 	 case Static::Direction::Right:
 		 intersectWidth = 2 * Global::TileWidth;
-		 if (!isCollidingWithTile(worldLayer, -intersectWidth, 0))
+		 if (!isColliding(worldLayer, pushbackLineCheck, - intersectWidth, 0))
 			 if (!isOutsideMapBound(xPosition - pushBackDistance, yPosition))
 				xPosition -= pushBackDistance;
 		 break;
@@ -289,21 +292,6 @@
 	 if (transitionStep == 0){
 		 endScreenTransition();
 	 }
- }
- bool Player::isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
-	 int startX = worldX*Global::roomRows;
-	 int startY = worldY*Global::roomCols;
-	 bool collision = false;
-	 for (int i = startY; i <startY + Global::roomCols; i++){
-		 for (int j = startX; j < startX + Global::roomRows; j++){
-			 if (worldLayer[i][j] == this)continue;
-			 if (worldLayer[i][j] == NULL)continue;
-			 if (dynamic_cast<Tile*>(worldLayer[i][j]))
-				if (intersect(fullMask, worldLayer[i][j]->fullMask, getXOffset(), getYOffset()))
-					collision = true;
-		 }
-	 }
-	 return collision;
  }
  int Player::getXOffset(){
 	 xOffset = 0;

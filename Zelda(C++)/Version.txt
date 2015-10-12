@@ -1,3 +1,8 @@
+Version 0.026
+
+-Fixed an issue where sword hit detection would not correctly apply to monster near map boundaries.
+-Refactored Collision Methods.
+
 Version 0.025
 
 -Fixed an issue where health would be displayed incorrectly at 0 health.

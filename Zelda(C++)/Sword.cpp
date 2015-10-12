@@ -62,7 +62,7 @@ bool Sword::isCollidingWithMonster(GameObject* worldLayer[Static::WorldRows][Sta
 	collidingMonsterList.clear();
 	bool isColliding = false;
 	int worldX=xPosition/Global::roomWidth;
-	int worldY=yPosition/Global::roomHeight;
+	int worldY=(yPosition-Global::inventoryHeight)/Global::roomHeight;
 	float startX = worldX*Global::roomRows;
 	float startY = worldY*Global::roomCols;
 	for (int i = startY; i < startY + Global::roomCols; i++){

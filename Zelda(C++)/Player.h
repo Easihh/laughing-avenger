@@ -22,7 +22,7 @@ private:
 	unsigned int stepToMove;
 	Static::Direction dir;
 	void completeMove();
-	bool isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
+	bool isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns], sf::RectangleShape* mask, float xOffset, float yOffset);
 	bool isCollidingWithMonster(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	int xOffset, yOffset, stepToAlign, transitionStep,currentInvincibleFrame;
 	int const maxTransitionStep = 90, maxInvincibleFrame=60;
@@ -46,7 +46,6 @@ private:
 	void checkMovementInput(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void checkAttackInput();
 	void checkInventoryInput();
-	bool isCollidingWithTile(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns],float offsetX,float offsetY);
 	bool isOutsideMapBound(float x, float y);
 	Monster* collidingMonster;
 };

@@ -22,7 +22,10 @@ Animation::Animation(std::string filename, int recHeight, int recWidth, float re
 }
 Animation::Animation(){}
 Animation::~Animation(){}
-void Animation::updateAnimationFrame(Static::Direction dir){
+void Animation::updateAnimationFrame(Static::Direction dir,float x,float y){
+	xPosition = x;
+	yPosition = y;
+	sprite.setPosition(xPosition, yPosition);
 	fCounter++;
 	if (fRate!=NULL && fCounter >= fRate){
 		fCounter = 0;
@@ -30,6 +33,12 @@ void Animation::updateAnimationFrame(Static::Direction dir){
 		if (currentIndex >= maxCol)
 			currentIndex = 0;
 	}
+	setSubRectangle(dir);
+}
+void Animation::reset(){
+		currentIndex = 0;
+}
+void Animation::setSubRectangle(Static::Direction dir){
 	subRect.left = currentIndex*width;
 	switch (dir)
 	{
@@ -47,7 +56,4 @@ void Animation::updateAnimationFrame(Static::Direction dir){
 		break;
 	}
 	sprite.setTextureRect(subRect);
-}
-void Animation::reset(){
-		currentIndex = 0;
 }

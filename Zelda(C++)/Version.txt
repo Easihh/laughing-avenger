@@ -1,3 +1,12 @@
+Version 0.027
+
+-Sword hit detection now apply to the full size of the monster.
+-No longer possible to keep "attacking" by holding down attack button.
+-Visual cue when player is in invincible mode has been added.
+-Increased speed at which the sword appear when pressing attack button.
+-Fixed animation sometime not reseting properly after attacking.
+-Fixed an issue where sword hit detection would not work outside the 1st room.
+
 Version 0.026
 
 -Fixed an issue where sword hit detection would not correctly apply to monster near map boundaries.

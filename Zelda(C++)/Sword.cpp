@@ -7,6 +7,7 @@ Sword::Sword(float playerX,float playerY,Static::Direction dir){
 	yPosition = playerY;
 	swordCurrentFrame = 0;
 	swordDelay = 0;
+	swordDir = dir;
 	loadImage(dir);
 	setupFullMask();
 	strength = 1;
@@ -40,14 +41,18 @@ void Sword::loadImage(Static::Direction dir){
 	height = sprite.getTextureRect().height;
 	sprite.setPosition(xPosition, yPosition);
 }
-void Sword::update(bool& isAttacking, bool& canAttack, GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
+void Sword::update(bool& isAttacking, bool& canAttack, GameObject* worldLayer[Static::WorldRows][Static::WorldColumns],Animation* walkAnimation[3]){
 	if (isAttacking){
 		swordCurrentFrame++;
 		if (isCollidingWithMonster(worldLayer));
 			updateMonster();
 		if (swordCurrentFrame >= swordMaxFrame){
-		isAttacking = false;
-		swordCurrentFrame = 0;
+			isAttacking = false;
+			swordCurrentFrame = 0;
+			for (int i = 0; i < 3; i++){
+				walkAnimation[i]->reset();
+				walkAnimation[i]->setSubRectangle(swordDir);
+			}
 		}
 	}
 	if (!isAttacking && !canAttack){
@@ -61,15 +66,15 @@ void Sword::update(bool& isAttacking, bool& canAttack, GameObject* worldLayer[St
 bool Sword::isCollidingWithMonster(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	collidingMonsterList.clear();
 	bool isColliding = false;
-	int worldX=xPosition/Global::roomWidth;
-	int worldY=(yPosition-Global::inventoryHeight)/Global::roomHeight;
+	int worldY=xPosition/Global::roomWidth;
+	int worldX=(yPosition-Global::inventoryHeight)/Global::roomHeight;
 	float startX = worldX*Global::roomRows;
 	float startY = worldY*Global::roomCols;
 	for (int i = startY; i < startY + Global::roomCols; i++){
 		for (int j = startX; j < startX + Global::roomRows; j++){
 			if (worldLayer[i][j] != NULL){
 				if (dynamic_cast<Monster*>(worldLayer[i][j]))
-					if (intersect(fullMask, ((Monster*)worldLayer[i][j])->mask, 0, 0)){
+					if (intersect(fullMask, ((Monster*)worldLayer[i][j])->fullMask, 0, 0)){
 						isColliding = true;
 						collidingMonsterList.push_back(worldLayer[i][j]);
 					}

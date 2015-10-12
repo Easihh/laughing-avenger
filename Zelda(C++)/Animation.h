@@ -10,7 +10,8 @@ public:
 	Animation(std::string filename, int recHeight, int recWidth, float rectX, float rectY,const int framerate);
 	~Animation();
 	sf::Sprite sprite;
-	void updateAnimationFrame(Static::Direction dir);
+	void updateAnimationFrame(Static::Direction dir, float x, float y);
+	void setSubRectangle(Static::Direction dir);
 	void reset();
 	int currentIndex;
 private:

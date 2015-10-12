@@ -22,14 +22,21 @@
 	 inventory->items[0][0] = new Item(0, 0,"MagicalBoomerang");
 	 inventory->items[2][2] = new Item(0, 0, "Bomb");
 	 inventoryKeyReleased = true;
+	 attackKeyReleased = true;
 }
  Player::~Player(){}
  void Player::loadImage(){
-	walkAnimation =new Animation("Link_Movement", width, height,xPosition,yPosition,6);
-	attackAnimation=new Animation("Link_Attack", width, height, xPosition, yPosition, NULL);
+	walkingAnimation[0] = new Animation("Link_Movement", width, height, xPosition, yPosition, 6);
+	walkingAnimation[1] = new Animation("Link_Movement_Hit1", width, height, xPosition, yPosition, 6);
+	walkingAnimation[2] = new Animation("Link_Movement_Hit2", width, height, xPosition, yPosition, 6);
+	walkAnimationIndex = 0;
+	attackAnimation[0]=new Animation("Link_Attack", width, height, xPosition, yPosition, NULL);
+	attackAnimation[1] = new Animation("Link_Attack_Hit1", width, height, xPosition, yPosition, NULL);
+	attackAnimation[2] = new Animation("Link_Attack_Hit2", width, height, xPosition, yPosition, NULL);
+	attackAnimationIndex = 0;
  }
  void Player::update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
-	 sword->update(isAttacking, canAttack, worldLayer);
+	 sword->update(isAttacking, canAttack, worldLayer, walkingAnimation);
 	 checkMovementInput(worldLayer);
 	 checkAttackInput();
 	 checkInventoryInput();
@@ -37,7 +44,7 @@
 		 completeMove();
 	 if (stepToAlign != 0)
 		 snapToGrid();
-	 attackAnimation->updateAnimationFrame(dir);
+	 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir,xPosition,yPosition);
 	 if(isScreenTransitioning)
 		 screenTransition();
 	 if (isCollidingWithMonster(worldLayer))
@@ -56,11 +63,12 @@
  }
  void Player::checkAttackInput(){
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
-		 if (canAttack && !isAttacking){
+		 if (canAttack && !isAttacking && attackKeyReleased){
 			 delete sword;
 			 sword = new Sword(xPosition, yPosition, dir);
 			 isAttacking = true;
 			 canAttack = false;
+			 attackKeyReleased = false;
 		 }
 	 }
  }
@@ -73,7 +81,7 @@
 			 if (dir != Static::Direction::Left){
 				 getUnalignedCount(Static::Direction::Left);
 				 dir = Static::Direction::Left;
-				 walkAnimation->reset();
+				 walkingAnimation[walkAnimationIndex]->reset();
 			 }
 			 if (!isColliding(worldLayer,fullMask,getXOffset(),getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
@@ -86,7 +94,7 @@
 			 if (dir != Static::Direction::Right){
 				 getUnalignedCount(Static::Direction::Right);
 				 dir = Static::Direction::Right;
-				 walkAnimation->reset();
+				 walkingAnimation[walkAnimationIndex]->reset();
 			 }
 			 if (!isColliding(worldLayer, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
@@ -99,7 +107,7 @@
 			 if (dir != Static::Direction::Up){
 				 getUnalignedCount(Static::Direction::Up);
 				 dir = Static::Direction::Up;
-				 walkAnimation->reset();
+				 walkingAnimation[walkAnimationIndex]->reset();
 			 }
 			 if (!isColliding(worldLayer, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
@@ -112,7 +120,7 @@
 			 if (dir != Static::Direction::Down){
 				 getUnalignedCount(Static::Direction::Down);
 				 dir = Static::Direction::Down;
-				 walkAnimation->reset();
+				 walkingAnimation[walkAnimationIndex]->reset();
 			 }
 			 if (!isColliding(worldLayer, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
@@ -120,7 +128,7 @@
 		 }
 	 }
 	 if (movementKeyPressed)
-		 walkAnimation->updateAnimationFrame(dir);
+		 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir,xPosition,yPosition);
 	 if (outsideBound){
 		 transitionStep = maxTransitionStep;
 		 isScreenTransitioning = true;
@@ -147,6 +155,8 @@
  void Player::takeDamage(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
 	 if (!isInvincible){
 		 playerBar->decreaseCurrentHP(collidingMonster->strength);
+		 walkAnimationIndex = 1;
+		 attackAnimationIndex = 1;
 		 pushback(worldLayer);
 		 if (playerBar->getCurrentHP() <= 0)
 			 std::cout << "I'm Dead";
@@ -206,15 +216,32 @@
 	 }
 	 if (isAttacking)
 		sword->endSword();
-	 walkAnimation->sprite.setPosition(xPosition, yPosition);
-	 attackAnimation->sprite.setPosition(xPosition, yPosition);
+	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(xPosition, yPosition);
+	 attackAnimation[attackAnimationIndex]->sprite.setPosition(xPosition, yPosition);
  }
  void Player::checkInvincible(){
 	 if (isInvincible){
 		 currentInvincibleFrame++;
+		 if (currentInvincibleFrame % 6 == 0){//switch image back and forth every 6 frames;
+			 if (walkAnimationIndex == 1){
+				 walkAnimationIndex++;
+				 attackAnimationIndex++;
+			 }
+			 else 
+			 {
+				 walkAnimationIndex--;
+				 attackAnimationIndex--;
+			 }
+			walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir,xPosition,yPosition);
+			attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, xPosition, yPosition);
+		 }
 		 if (currentInvincibleFrame >= maxInvincibleFrame){
 			 isInvincible = false;
 			 currentInvincibleFrame = 0;
+			 walkAnimationIndex = 0;
+			 attackAnimationIndex = 0;
+			 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, xPosition, yPosition);
+			 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, xPosition, yPosition);
 		 }
 	 }
  }
@@ -287,7 +314,7 @@
 	 }
 	 playerBar->setBarNextPosition(nextXPosition,nextYPosition);
 	 inventory->updateInventoryPosition(nextXPosition, nextYPosition);
-	 walkAnimation->updateAnimationFrame(dir);
+	 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir,xPosition,yPosition);
 	 transitionStep -= minTransitionStep;
 	 if (transitionStep == 0){
 		 endScreenTransition();
@@ -367,8 +394,8 @@
 	 if (stepToAlign < Global::minStep)
 		 stepToAlign = 0;
 	 else stepToAlign -= Global::minStep;
-	 walkAnimation->sprite.setPosition(xPosition, yPosition);
-	 attackAnimation->sprite.setPosition(xPosition, yPosition);
+	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(xPosition, yPosition);
+	 attackAnimation[attackAnimationIndex]->sprite.setPosition(xPosition, yPosition);
  }
  void Player::completeMove(){
 	 stepToMove -= Global::minStep;
@@ -386,16 +413,16 @@
 		 yPosition += Global::minStep;
 			 break;
 	 }
-	 walkAnimation->sprite.setPosition(xPosition, yPosition);
-	 attackAnimation->sprite.setPosition(xPosition, yPosition);
+	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(xPosition, yPosition);
+	 attackAnimation[attackAnimationIndex]->sprite.setPosition(xPosition, yPosition);
  }
  void Player::draw(sf::RenderWindow& mainWindow){
 	 mainWindow.setView(Global::gameView);
 	 playerBar->draw(mainWindow);
 	 if (!isAttacking)
-		mainWindow.draw(walkAnimation->sprite);
+		 mainWindow.draw(walkingAnimation[walkAnimationIndex]->sprite);
 	 else {
-		 mainWindow.draw(attackAnimation->sprite);
+		 mainWindow.draw(attackAnimation[attackAnimationIndex]->sprite);
 		 mainWindow.draw(sword->sprite);
 		 mainWindow.draw(*(sword->fullMask));
 	 }

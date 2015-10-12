@@ -15,7 +15,7 @@ public:
 	void update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void draw(sf::RenderWindow& mainWindow);
 	int worldX, worldY;
-	bool inventoryKeyReleased;
+	bool inventoryKeyReleased, attackKeyReleased;
 	Inventory* inventory;
 	PlayerBar* playerBar;
 private:
@@ -35,8 +35,9 @@ private:
 	void drawPlayerBar(sf::RenderWindow& mainWindow);
 	void drawText(sf::RenderWindow& mainWindow);
 	sf::IntRect subRect;
-	Animation* walkAnimation;
-	Animation* attackAnimation;
+	int walkAnimationIndex;
+	Animation* attackAnimation[3];
+	int attackAnimationIndex;
 	Sword* sword;
 	void endScreenTransition();
 	void screenTransition();
@@ -48,5 +49,6 @@ private:
 	void checkInventoryInput();
 	bool isOutsideMapBound(float x, float y);
 	Monster* collidingMonster;
+	Animation * walkingAnimation[3];
 };
 #endif

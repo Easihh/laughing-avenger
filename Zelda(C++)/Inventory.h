@@ -15,16 +15,24 @@ public:
 	Item* items[Static::inventoryRows][Static::inventoryCols];
 	void updateInventoryPosition(float stepX, float stepY);
 private:
-	sf::RectangleShape inventoryRect;
+	sf::RectangleShape inventoryRect, itemSelected;
 	void getInput(sf::Event& event);
 	sf::Sprite selector;
+	sf::Font font;
+	sf::Text txt;
 	sf::Texture texture;
 	const int selectorWidth=32, selectorHeight = 32;
 	void loadSelector();
 	void drawInventoryItems(sf::RenderWindow& mainWindow);
+	void drawInventoryText(sf::RenderWindow& mainWindow);
 	bool hasBoomrang;
 	void findNextSelectorPosition();
+	void loadInventoryRectangle();
+	void loadInventoryCurrentSelection();
+	void selectFirstInventoryItemOwned();
 	int selectorInventoryXIndex, selectorInventoryYIndex;
-	float x, y;
+	float x, y, itemSelectedX, itemSelectedY, inventoryTextX, inventoryTextY,
+		itemUseButtonTextX, itemUseButtonTextY;
+	sf::Sprite selectedItem;
 };
 #endif

@@ -3,19 +3,38 @@
 #include <iostream>
 Inventory::Inventory(){
 	keyWasReleased = false;
-	inventoryRect.setOutlineColor(sf::Color(64,0,128));
-	inventoryRect.setOutlineThickness(3);
-	inventoryRect.setFillColor(sf::Color::Transparent);
-	sf::Vector2f size(Global::SCREEN_WIDTH/2, 96);
-	inventoryRect.setSize(size);
 	hasBoomrang = false;
-	x = 192;
-	y = 96;
-	selectorInventoryXIndex = 0;
-	selectorInventoryYIndex = 0;
+	inventoryTextX = 52;
+	inventoryTextY = 52;
+	itemUseButtonTextX = 16;
+	itemUseButtonTextY = 136;
+	font.loadFromFile("zelda.ttf");
+	txt.setFont(font);
+	loadInventoryCurrentSelection();
+	loadInventoryRectangle();
 	loadSelector();
 }
+void Inventory::loadInventoryCurrentSelection(){
+	itemSelectedX = 100;
+	itemSelectedY = 100;
+	itemSelected.setOutlineColor(sf::Color(64, 0, 128));
+	itemSelected.setOutlineThickness(3);
+	itemSelected.setFillColor(sf::Color::Transparent);
+	sf::Vector2f size(Global::TileWidth, Global::TileHeight);
+	itemSelected.setSize(size);
+}
+void Inventory::loadInventoryRectangle(){
+	x = 192;
+	y = 96;
+	inventoryRect.setOutlineColor(sf::Color(64, 0, 128));
+	inventoryRect.setOutlineThickness(3);
+	inventoryRect.setFillColor(sf::Color::Transparent);
+	sf::Vector2f size(Global::SCREEN_WIDTH / 2, 96);
+	inventoryRect.setSize(size);
+}
 void Inventory::loadSelector(){
+	selectorInventoryXIndex = 0;
+	selectorInventoryYIndex = 0;
 	if (!texture.loadFromFile("Tileset/Selector.png"))
 		std::cout << "Failed to load Selector";
 	selector.setTexture(texture);
@@ -25,13 +44,34 @@ Inventory::~Inventory(){}
 void Inventory::updateInventoryPosition(float stepX,float stepY){
 	x += stepX;
 	y += stepY;
+	itemSelectedX += stepX;
+	itemSelectedY += stepY;
+	inventoryTextX += stepX;
+	inventoryTextY += stepY;
+	itemUseButtonTextX += stepX;
+	itemUseButtonTextY += stepY;
 }
 void Inventory::transitionToInventory(PlayerBar* playerBar){
 	playerBar->movePlayerBarToBottomScreen();
 	inventoryRect.setPosition(x, y);
+	itemSelected.setPosition(itemSelectedX, itemSelectedY);
 	selector.setPosition(x,y);
+	selectFirstInventoryItemOwned();
 	items[0][0]->sprite.setPosition(x, y);
 	items[2][2]->sprite.setPosition(x + (2 * selectorWidth), y + (2*selectorHeight));
+}
+void Inventory::selectFirstInventoryItemOwned(){
+	for (int i = 0; i < Static::inventoryRows; i++){
+		for (int j = 0; j < Static::inventoryCols; j++){
+			if (items[i][j] != NULL){
+				selectorInventoryYIndex = j;
+				selectorInventoryXIndex = i;
+				selectedItem = items[i][j]->sprite;
+				selectedItem.setPosition(itemSelectedX, itemSelectedY);
+				return;
+			}
+		}
+	}
 }
 void Inventory::getInput(sf::Event& event){
 	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Q)
@@ -53,6 +93,8 @@ void Inventory::findNextSelectorPosition(){
 				selectorInventoryYIndex = j;
 				selectorInventoryXIndex = i;
 				found = true;
+				selectedItem = items[i][j]->sprite;
+				selectedItem.setPosition(itemSelectedX, itemSelectedY);
 			}
 		}
 	}
@@ -62,6 +104,8 @@ void Inventory::findNextSelectorPosition(){
 				if (items[i][j] != NULL){
 					selectorInventoryYIndex = j;
 					selectorInventoryXIndex = i;
+					selectedItem = items[i][j]->sprite;
+					selectedItem.setPosition(itemSelectedX, itemSelectedY);
 				}
 			}
 		}
@@ -78,6 +122,7 @@ void Inventory::transitionBackToGame(PlayerBar* playerBar){
 	keyWasReleased = false;
 }
 void Inventory::drawInventoryItems(sf::RenderWindow& mainWindow){
+	mainWindow.draw(selectedItem);
 	for (int i = 0; i < Static::inventoryRows; i++){
 		for (int j = 0; j < Static::inventoryCols; j++){
 			if (items[i][j] != NULL)
@@ -85,11 +130,25 @@ void Inventory::drawInventoryItems(sf::RenderWindow& mainWindow){
 		}
 	}
 }
+void Inventory::drawInventoryText(sf::RenderWindow& mainWindow){
+	txt.setCharacterSize(14);
+	txt.setColor(sf::Color::Red);
+	txt.setPosition(inventoryTextX, inventoryTextY);
+	txt.setString("INVENTORY");
+	mainWindow.draw(txt);
+
+	txt.setColor(sf::Color::White);
+	txt.setPosition(itemUseButtonTextX, itemUseButtonTextY);
+	txt.setString("USE S BUTTON\n FOR THIS");
+	mainWindow.draw(txt);
+}
 void Inventory::draw(sf::RenderWindow& mainWindow,PlayerBar* playerBar){
 	mainWindow.setKeyRepeatEnabled(false);
 	mainWindow.draw(inventoryRect);
 	playerBar->draw(mainWindow);
 	drawInventoryItems(mainWindow);
+	mainWindow.draw(itemSelected);
 	mainWindow.draw(selector);
+	drawInventoryText(mainWindow);
 	mainWindow.display();
 }

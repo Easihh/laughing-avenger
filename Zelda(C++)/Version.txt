@@ -1,3 +1,10 @@
+Version 0.028
+
+-Player no longer take damage/pushed back while in screen transition.
+-Inventory Text has been added.
+-Current selected Item on use is now showing while in inventory.
+-Current selected Item on use change upon selecting a different item in inventory.
+
 Version 0.027
 
 -Sword hit detection now apply to the full size of the monster.

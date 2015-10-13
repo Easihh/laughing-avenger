@@ -153,7 +153,7 @@
 	 return isColliding;
  }
  void Player::takeDamage(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
-	 if (!isInvincible){
+	 if (!isInvincible && !isScreenTransitioning){
 		 playerBar->decreaseCurrentHP(collidingMonster->strength);
 		 walkAnimationIndex = 1;
 		 attackAnimationIndex = 1;

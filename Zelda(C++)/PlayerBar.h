@@ -21,7 +21,8 @@ public:
 private:
 	float barX, barY, mapX, mapY, healthBarStartX, healthBarStartY,itemSlotStartX,itemSlotStartY,
 		diamondStartX, diamondStartY, itemSlotTextStartX,itemSlotTextStartY,bombStartX,bombStartY,bombTextStartX,
-		bombTextStartY, diamondTextStartX, diamondTextStartY, keyTextStartX, keyTextStartY, keyStartX, keyStartY;
+		bombTextStartY, diamondTextStartX, diamondTextStartY, keyTextStartX, keyTextStartY, keyStartX, keyStartY,
+		itemSelectionX,itemSelectionY;
 	sf::Texture fullHeartTexture,halfHeartTexture,emptyHeartTexture,itemSlotTexture,bombIconTexture,diamondIconTexture,
 		keyIconTexture;
 	sf::Sprite sprite;

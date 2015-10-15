@@ -1,3 +1,13 @@
+Version 0.030
+
+-
+
+Version 0.029
+
+-Player current sword owned is now shown on player bar.
+-Player bar now display the last item selected in inventory as item on use.
+-Some early work on class for useable Item.
+
 Version 0.028
 
 -Player no longer take damage/pushed back while in screen transition.

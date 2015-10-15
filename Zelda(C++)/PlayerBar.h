@@ -18,13 +18,14 @@ public:
 	void movePlayerBarToTopScreen();
 	sf::RectangleShape playerMarker, playerBar, overworldMap;
 	float markerX, markerY;
+	sf::Sprite itemSlotS;
 private:
 	float barX, barY, mapX, mapY, healthBarStartX, healthBarStartY,itemSlotStartX,itemSlotStartY,
 		diamondStartX, diamondStartY, itemSlotTextStartX,itemSlotTextStartY,bombStartX,bombStartY,bombTextStartX,
 		bombTextStartY, diamondTextStartX, diamondTextStartY, keyTextStartX, keyTextStartY, keyStartX, keyStartY,
-		itemSelectionX,itemSelectionY;
+		itemSelectionX, itemSelectionY, swordSlotX, swordSlotY,itemSlotImageX,itemSlotImageY;
 	sf::Texture fullHeartTexture,halfHeartTexture,emptyHeartTexture,itemSlotTexture,bombIconTexture,diamondIconTexture,
-		keyIconTexture;
+		keyIconTexture,woodSwordTexture;
 	sf::Sprite sprite;
 	void drawHearts(sf::RenderWindow& mainWindow);
 	void drawPlayerBar(sf::RenderWindow& mainWindow);

@@ -25,6 +25,10 @@ PlayerBar::PlayerBar(){
 	keyStartY = 56;
 	keyTextStartX = 170;
 	keyTextStartY = 54;
+	swordSlotX = 268;
+	swordSlotY = 50;
+	itemSlotImageX = 220;
+	itemSlotImageY = 50;
 	loadImages();
 	setupPlayerBar();
 }
@@ -36,6 +40,7 @@ void PlayerBar::loadImages(){
 	diamondIconTexture.loadFromFile("Tileset/rupees_icon.png");
 	bombIconTexture.loadFromFile("Tileset/bomb_icon.png");
 	keyIconTexture.loadFromFile("Tileset/keys_icon.png");
+	woodSwordTexture.loadFromFile("Tileset/weapon1.png");
 	font.loadFromFile("zelda.ttf");
 }
 int PlayerBar::getCurrentHP(){
@@ -91,6 +96,10 @@ void PlayerBar::setBarNextPosition(float stepX,float stepY){
 	keyStartY += stepY;
 	keyTextStartX += stepX;
 	keyTextStartY += stepY;
+	swordSlotX += stepX;
+	swordSlotY += stepY;
+	itemSlotImageX += stepX;
+	itemSlotImageY += stepY;
 }
 void PlayerBar::movePlayerBarToBottomScreen(){
 	healthBarStartY += Global::SCREEN_HEIGHT-Global::inventoryHeight;
@@ -105,6 +114,8 @@ void PlayerBar::movePlayerBarToBottomScreen(){
 	barY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 	mapY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 	markerY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	swordSlotY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	itemSlotImageY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 }
 void PlayerBar::movePlayerBarToTopScreen(){
 	healthBarStartY =healthBarStartY-Global::SCREEN_HEIGHT + Global::inventoryHeight;
@@ -118,7 +129,9 @@ void PlayerBar::movePlayerBarToTopScreen(){
 	keyTextStartY = keyTextStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 	barY = barY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 	markerY = markerY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	swordSlotY = swordSlotY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 	mapY = mapY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	itemSlotImageY = itemSlotImageY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 }
 void PlayerBar::drawHearts(sf::RenderWindow& mainWindow){
 	int totalHearts = maxHealthPoint / 2;
@@ -184,6 +197,14 @@ void PlayerBar::drawItemsSlot(sf::RenderWindow& mainWindow){
 	txt.setPosition(itemSlotTextStartX+spaceBetweenBothItemSlot+itemSlotTexture.getSize().x, itemSlotTextStartY);
 	txt.setString("A");
 	mainWindow.draw(txt);
+
+	sprite.setTexture(woodSwordTexture,true);
+	sprite.setPosition(swordSlotX, swordSlotY);
+	mainWindow.draw(sprite);
+	if (itemSlotS.getTexture() != NULL){
+		itemSlotS.setPosition(itemSlotImageX, itemSlotImageY);
+		mainWindow.draw(itemSlotS);
+	}
 }
 void PlayerBar::drawBombInfo(sf::RenderWindow& mainWindow){
 	txt.setCharacterSize(14);

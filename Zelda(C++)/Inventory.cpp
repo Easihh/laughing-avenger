@@ -119,6 +119,7 @@ void Inventory::update(sf::Event& event, PlayerBar* playerBar){
 void Inventory::transitionBackToGame(PlayerBar* playerBar){
 	Static::gameState = Static::GameState::Playing;
 	playerBar->movePlayerBarToTopScreen();
+	playerBar->itemSlotS.setTexture(*selectedItem.getTexture());
 	keyWasReleased = false;
 }
 void Inventory::drawInventoryItems(sf::RenderWindow& mainWindow){

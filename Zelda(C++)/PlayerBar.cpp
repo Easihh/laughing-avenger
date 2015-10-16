@@ -29,6 +29,7 @@ PlayerBar::PlayerBar(){
 	swordSlotY = 50;
 	itemSlotImageX = 220;
 	itemSlotImageY = 50;
+	keysAmount = bombAmount = diamondAmount = 0;
 	loadImages();
 	setupPlayerBar();
 }
@@ -207,32 +208,38 @@ void PlayerBar::drawItemsSlot(sf::RenderWindow& mainWindow){
 	}
 }
 void PlayerBar::drawBombInfo(sf::RenderWindow& mainWindow){
+	ss.str("");
+	ss << "X" << bombAmount;
 	txt.setCharacterSize(14);
 	txt.setColor(sf::Color::White);
 	txt.setPosition(bombTextStartX, bombTextStartY);
-	txt.setString("X99");
+	txt.setString(ss.str());
 	mainWindow.draw(txt);
 	sprite.setTexture(bombIconTexture,true);
 	sprite.setPosition(bombStartX, bombStartY - bombIconTexture.getSize().y);
 	mainWindow.draw(sprite);
 }
 void PlayerBar::drawKeyInfo(sf::RenderWindow& mainWindow){
+	ss.str("");
+	ss << "X" << keysAmount;
 	txt.setCharacterSize(14);
 	txt.setColor(sf::Color::White);
 	txt.setPosition(keyTextStartX, keyTextStartY);
-	txt.setString("X99");
+	txt.setString(ss.str());
 	mainWindow.draw(txt);
 	sprite.setTexture(keyIconTexture,true);
 	sprite.setPosition(keyStartX, keyStartY);
 	mainWindow.draw(sprite);
 }
 void PlayerBar::drawDiamondInfo(sf::RenderWindow& mainWindow){
+	ss.str("");
+	ss << diamondAmount;
 	sprite.setTexture(diamondIconTexture, true);
 	sprite.setPosition(diamondStartX, diamondStartY);
 	mainWindow.draw(sprite);
 
 	txt.setColor(sf::Color::White);
-	txt.setString("999");
+	txt.setString(ss.str());
 	txt.setCharacterSize(14);
 	txt.setPosition(diamondTextStartX + diamondIconTexture.getSize().x, diamondTextStartY);
 	mainWindow.draw(txt);

@@ -1,6 +1,8 @@
 Version 0.030
 
--
+-Improved logic for item select with upcoming item on use.
+-PlayerBar now display diamond,key,bomb owned instead of dummy text.
+-Player can now select bomb item and press S to have a bomb appear on screen(other effect Not yet implemented).
 
 Version 0.029
 

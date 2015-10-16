@@ -33,8 +33,8 @@ void Inventory::loadInventoryRectangle(){
 	inventoryRect.setSize(size);
 }
 void Inventory::loadSelector(){
-	selectorInventoryXIndex = 0;
-	selectorInventoryYIndex = 0;
+	selectorInventoryXIndex = -1;
+	selectorInventoryYIndex = -1;
 	if (!texture.loadFromFile("Tileset/Selector.png"))
 		std::cout << "Failed to load Selector";
 	selector.setTexture(texture);
@@ -50,6 +50,9 @@ void Inventory::updateInventoryPosition(float stepX,float stepY){
 	inventoryTextY += stepY;
 	itemUseButtonTextX += stepX;
 	itemUseButtonTextY += stepY;
+}
+Item* Inventory::getCurrentItem(){
+	return items[selectorInventoryXIndex][selectorInventoryYIndex];
 }
 void Inventory::transitionToInventory(PlayerBar* playerBar){
 	playerBar->movePlayerBarToBottomScreen();
@@ -119,7 +122,7 @@ void Inventory::update(sf::Event& event, PlayerBar* playerBar){
 void Inventory::transitionBackToGame(PlayerBar* playerBar){
 	Static::gameState = Static::GameState::Playing;
 	playerBar->movePlayerBarToTopScreen();
-	playerBar->itemSlotS.setTexture(*selectedItem.getTexture());
+	playerBar->itemSlotS=selectedItem;
 	keyWasReleased = false;
 }
 void Inventory::drawInventoryItems(sf::RenderWindow& mainWindow){

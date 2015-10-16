@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 Item::~Item(){}
+Item::Item(){}
 Item::Item(float x,float y,std::string item){
 	x = xPosition;
 	y = yPosition;
@@ -18,4 +19,7 @@ void Item::update(GameObject* worldMap[Static::WorldRows][Static::WorldColumns])
 }
 void Item::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(sprite);
+}
+void Item::onUse(float x,float y){
+	std::cout << "Item Used";
 }

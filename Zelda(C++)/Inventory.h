@@ -14,6 +14,8 @@ public:
 	bool keyWasReleased;
 	Item* items[Static::inventoryRows][Static::inventoryCols];
 	void updateInventoryPosition(float stepX, float stepY);
+	int selectorInventoryXIndex, selectorInventoryYIndex;
+	Item* getCurrentItem();
 private:
 	sf::RectangleShape inventoryRect, itemSelected;
 	void getInput(sf::Event& event);
@@ -30,7 +32,6 @@ private:
 	void loadInventoryRectangle();
 	void loadInventoryCurrentSelection();
 	void selectFirstInventoryItemOwned();
-	int selectorInventoryXIndex, selectorInventoryYIndex;
 	float x, y, itemSelectedX, itemSelectedY, inventoryTextX, inventoryTextY,
 		itemUseButtonTextX, itemUseButtonTextY;
 	sf::Sprite selectedItem;

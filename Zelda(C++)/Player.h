@@ -47,6 +47,7 @@ private:
 	void checkMovementInput(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void checkAttackInput();
 	void checkInventoryInput();
+	void checkItemUseInput();
 	bool isOutsideMapBound(float x, float y);
 	Monster* collidingMonster;
 	Animation * walkingAnimation[3];

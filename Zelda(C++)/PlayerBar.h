@@ -1,7 +1,8 @@
 #ifndef PLAYER_BAR_H
 #define PLAYER_BAR_H
-
+#include "Item.h"
 #include "SFML\Graphics.hpp"
+#include <sstream>
 class PlayerBar{
 public:
 	PlayerBar();
@@ -19,6 +20,7 @@ public:
 	sf::RectangleShape playerMarker, playerBar, overworldMap;
 	float markerX, markerY;
 	sf::Sprite itemSlotS;
+	int diamondAmount, keysAmount, bombAmount;
 private:
 	float barX, barY, mapX, mapY, healthBarStartX, healthBarStartY,itemSlotStartX,itemSlotStartY,
 		diamondStartX, diamondStartY, itemSlotTextStartX,itemSlotTextStartY,bombStartX,bombStartY,bombTextStartX,
@@ -38,5 +40,6 @@ private:
 	sf::Font font;
 	sf::Text txt;
 	int currentHealthPoint, maxHealthPoint;
+	std::stringstream ss;
 };
 #endif

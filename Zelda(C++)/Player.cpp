@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <iostream>
 #include "Tile.h"
+#include "Bomb.h"
  Player::Player(float x,float y){
 	 xPosition = x;
 	 yPosition = y;
@@ -20,7 +21,7 @@
 	 playerBar = new PlayerBar();
 	 inventory = new Inventory();
 	 inventory->items[0][0] = new Item(0, 0,"MagicalBoomerang");
-	 inventory->items[2][2] = new Item(0, 0, "Bomb");
+	 inventory->items[2][2] = new Bomb(0, 0, "Bomb");
 	 inventoryKeyReleased = true;
 	 attackKeyReleased = true;
 }
@@ -40,6 +41,7 @@
 	 checkMovementInput(worldLayer);
 	 checkAttackInput();
 	 checkInventoryInput();
+	 checkItemUseInput();
 	 if (stepToMove != 0)
 		 completeMove();
 	 if (stepToAlign != 0)
@@ -132,6 +134,15 @@
 	 if (outsideBound){
 		 transitionStep = maxTransitionStep;
 		 isScreenTransitioning = true;
+	 }
+ }
+ void Player::checkItemUseInput(){
+	 int INVALID_INVENTORY_INDEX = -1;
+	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+		 int i = inventory->selectorInventoryXIndex;
+		 int j = inventory->selectorInventoryYIndex;
+		 if (i != INVALID_INVENTORY_INDEX && j != INVALID_INVENTORY_INDEX)
+			 inventory->items[i][j]->onUse(xPosition,yPosition);
 	 }
  }
  bool Player::isCollidingWithMonster(GameObject* worldMap[Static::WorldRows][Static::WorldColumns]){
@@ -428,6 +439,9 @@
 	 }
 	 drawText(mainWindow);
 	 mainWindow.draw(*fullMask);
+	 Item* tmp = inventory->getCurrentItem();
+	 if (tmp != NULL)
+		 tmp->draw(mainWindow);
  }
  void Player::drawText(sf::RenderWindow& mainWindow){
 	 sf::Font font;

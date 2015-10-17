@@ -12,7 +12,7 @@ class Player:public GameObject{
 public:
 	Player(float x,float y);
 	~Player();
-	void update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
+	void update(std::vector<GameObject*> worldMap);
 	void draw(sf::RenderWindow& mainWindow);
 	int worldX, worldY;
 	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased;
@@ -22,14 +22,14 @@ private:
 	unsigned int stepToMove;
 	Static::Direction dir;
 	void completeMove();
-	bool isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns], sf::RectangleShape* mask, float xOffset, float yOffset);
-	bool isCollidingWithMonster(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
+	bool isColliding(std::vector<GameObject*> worldLayer, sf::RectangleShape* mask, float xOffset, float yOffset);
+	bool isCollidingWithMonster(std::vector<GameObject*> worldLayer);
 	int xOffset, yOffset, stepToAlign, transitionStep,currentInvincibleFrame;
 	int const maxTransitionStep = 90, maxInvincibleFrame=60;
 	int getXOffset();
 	int getYOffset();
 	void loadImage();
-	void takeDamage(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
+	void takeDamage(std::vector<GameObject*> worldLayer);
 	void getUnalignedCount(Static::Direction nextDir);
 	void snapToGrid();
 	void drawPlayerBar(sf::RenderWindow& mainWindow);
@@ -43,8 +43,8 @@ private:
 	void screenTransition();
 	bool canAttack,isAttacking,stepIsNegative,isScreenTransitioning,isInvincible;
 	void checkInvincible();
-	void pushback(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
-	void checkMovementInput(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
+	void pushback(std::vector<GameObject*> worldLayer);
+	void checkMovementInput(std::vector<GameObject*> worldLayer);
 	void checkAttackInput();
 	void checkInventoryInput();
 	void checkItemUseInput();

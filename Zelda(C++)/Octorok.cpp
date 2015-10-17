@@ -28,7 +28,7 @@ void Octorok::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(*mask);
 	mainWindow.draw(*fullMask);
 }
-void Octorok::update(GameObject* worldMap[Static::WorldRows][Static::WorldColumns]){
+void Octorok::update(std::vector<GameObject*> worldMap){
 	if (healthPoint <= 0){
 		toBeDeleted = true;
 		std::cout << "Octorok Destroyed";

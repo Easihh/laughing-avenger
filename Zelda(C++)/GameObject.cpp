@@ -2,7 +2,7 @@
 #include "SFML\Graphics.hpp"
 GameObject::GameObject(){}
 GameObject::~GameObject(){}
-void GameObject::update(GameObject* worldMap[Static::WorldRows][Static::WorldColumns]){
+void GameObject::update(std::vector<GameObject*> worldMap){
 }
 void GameObject::draw(sf::RenderWindow& mainWindow){
 }

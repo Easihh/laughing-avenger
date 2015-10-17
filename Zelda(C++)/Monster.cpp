@@ -1,5 +1,4 @@
 #include "Monster.h"
-
 Monster::Monster(){}
 Monster::~Monster(){}
 void Monster::takeDamage(int damage){

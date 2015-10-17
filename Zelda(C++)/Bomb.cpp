@@ -26,10 +26,15 @@ void Bomb::onUse(PlayerInfo info){
 	if (*info.bombAmount >= 1){
 		*info.bombAmount -= 1;
 		isActive = true;
+		myBomb = new ThrownBomb(info.point.x, info.point.y);
 	}
 	else isActive = false;
 }
 void Bomb::draw(sf::RenderWindow& mainWindow){
 	if (isActive)
-		mainWindow.draw(sprite);
+		myBomb->draw(mainWindow);
+}
+void Bomb::update(std::vector<GameObject*> worldMap){
+	if (isActive)
+		myBomb->update(worldMap);
 }

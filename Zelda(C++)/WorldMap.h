@@ -13,19 +13,19 @@ public:
 	WorldMap();
 	~WorldMap();
 	void loadMap(std::string filename);
-	GameObject* worldLayer1[Static::WorldRows][Static::WorldColumns];
-	GameObject* worldLayer2[Static::WorldRows][Static::WorldColumns];
+	std::vector<GameObject*> worldLayer1;
+	std::vector<GameObject*> worldLayer2;
 	void update(sf::RenderWindow& mainWindow,sf::Event& event);
 	Player* player;
 private:
 	int lastWorldXIndex,lastWorldYIndex;
 	void createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType);
-	void drawBackgroundTile(sf::RenderWindow& mainWindow);
+	void drawScreen(sf::RenderWindow& mainWindow,float minX,float minY,float maxX,float maxY,std::vector<GameObject*> mapLayer);
 	void drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow);
-	void drawAndUpdateRightScreen(sf::RenderWindow& mainWindow);
-	void drawAndUpdateLeftScreen(sf::RenderWindow& mainWindow);
-	void drawAndUpdateDownScreen(sf::RenderWindow& mainWindow);
-	void drawAndUpdateUpScreen(sf::RenderWindow& mainWindow);
+	void drawRightScreen(sf::RenderWindow& mainWindow);
+	void drawLeftScreen(sf::RenderWindow& mainWindow);
+	void drawDownScreen(sf::RenderWindow& mainWindow);
+	void drawUpScreen(sf::RenderWindow& mainWindow);
 	std::vector<GameObject*> toDelete;
 	void freeSpace();
 };

@@ -14,7 +14,7 @@ void Item::loadImage(){
 		std::cout << "Failed to load:" << itemName << std::endl;
 	sprite.setTexture(texture);
 }
-void Item::update(GameObject* worldMap[Static::WorldRows][Static::WorldColumns]){
+void Item::update(std::vector<GameObject*> worldMap){
 
 }
 void Item::draw(sf::RenderWindow& mainWindow){

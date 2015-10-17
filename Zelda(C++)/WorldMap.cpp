@@ -45,15 +45,15 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 		break;
 	case 1:
 		tile = new Tile(x, y + Global::inventoryHeight, false, 1);
-		worldLayer1[lastWorldXIndex][lastWorldYIndex] = tile;
+		worldLayer1.push_back(tile);
 		break;
 	case 2:
 		tile = new Tile(x, y + Global::inventoryHeight, true, 2);
-		worldLayer2[lastWorldXIndex][lastWorldYIndex] = tile;
+		worldLayer2.push_back(tile);
 		break;
 	case 3:
 		tile = new Octorok(x, y + Global::inventoryHeight, false);
-		worldLayer2[lastWorldXIndex][lastWorldYIndex] = tile;
+		worldLayer2.push_back(tile);
 		break;
 	}
 }
@@ -65,96 +65,87 @@ void WorldMap::update(sf::RenderWindow& mainWindow,sf::Event& event){
 		player->attackKeyReleased = true;
 	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S)
 		player->itemKeyReleased = true;
-		drawBackgroundTile(mainWindow);
 		drawAndUpdateCurrentScreen(mainWindow);
-		drawAndUpdateRightScreen(mainWindow);
-		drawAndUpdateLeftScreen(mainWindow);
-		drawAndUpdateUpScreen(mainWindow);
-		drawAndUpdateDownScreen(mainWindow);
+		drawRightScreen(mainWindow);
+		drawLeftScreen(mainWindow);
+		drawUpScreen(mainWindow);
+		drawDownScreen(mainWindow);
 		player->update(worldLayer2);
 		player->draw(mainWindow);
 		mainWindow.display();
 }
-void WorldMap::drawBackgroundTile(sf::RenderWindow& mainWindow){
-	for (int i = 0; i < Static::WorldRows; i++){
-		for (int j = 0; j < Static::WorldColumns; j++){
-			if (worldLayer1[i][j] != NULL){
-				//worldLayer1[i][j]->update(worldLayer1);//background tile should not change
-				worldLayer1[i][j]->draw(mainWindow);
-			}
+void WorldMap::drawScreen(sf::RenderWindow& mainWindow,float minX,float minY,float maxX,float maxY,std::vector<GameObject*> Maplayer){
+	for each (GameObject* obj in Maplayer)
+	{
+		if (obj->xPosition >= minX && obj->xPosition <= maxX && obj->yPosition >= minY && obj->yPosition <= maxY){
+			obj->draw(mainWindow);
 		}
 	}
 }
 void WorldMap::freeSpace(){
-	for each (GameObject* obj in toDelete)
+	for each (GameObject* del in toDelete)
 	{
-		int row = obj->spawnRow;
-		int col = obj->spawnCol;
-		delete obj;
-		worldLayer2[row][col] = NULL;
+		for (int i = 0; i < worldLayer2.size(); i++){
+			if (worldLayer2.at(i) == del){
+				delete worldLayer2.at(i);
+				worldLayer2.erase(worldLayer2.begin()+i);
+			}
+		}
 	}
 	toDelete.clear();
 }
 void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 	freeSpace();
-	float startX = player->worldX*Global::roomRows;
-	float startY = player->worldY*Global::roomCols;
-	for (int i = startY; i < startY + Global::roomCols; i++){
-		for (int j = startX; j < startX + Global::roomRows; j++){
-			if (worldLayer2[i][j] != NULL){
-				worldLayer2[i][j]->update(worldLayer2);
-				worldLayer2[i][j]->draw(mainWindow);
-				if (worldLayer2[i][j]->toBeDeleted)
-					toDelete.push_back(worldLayer2[i][j]);
-			}
+	float minY = player->worldX*Global::roomHeight;
+	float minX = player->worldY*Global::roomWidth;
+	float maxY = minY + Global::roomHeight +Global::inventoryHeight;
+	float maxX = minX +Global::roomWidth;
+	drawScreen(mainWindow, minX, minY, maxX, maxY, worldLayer1);
+	for each (GameObject* obj in worldLayer2)
+	{
+		if (obj->xPosition >= minX && obj->xPosition <= maxX && obj->yPosition >= minY && obj->yPosition <= maxY){
+			obj->update(worldLayer2);
+			obj->draw(mainWindow);
+			if (obj->toBeDeleted)
+				toDelete.push_back(obj);
 		}
 	}
 }
-void WorldMap::drawAndUpdateRightScreen(sf::RenderWindow& mainWindow){
-	float startX = (player->worldX)*Global::roomRows;
-	float startY = (player->worldY+1)*Global::roomCols;
-	if ((player->worldY + 1) * Global::roomCols < Static::WorldColumns){
-		for (int i = startY; i < startY + Global::roomCols; i++){
-			for (int j = startX; j < startX + Global::roomRows; j++){
-				if (worldLayer2[i][j] != NULL)
-					worldLayer2[i][j]->draw(mainWindow);
-			}
-		}
-	}
+void WorldMap::drawRightScreen(sf::RenderWindow& mainWindow){
+	float minY = player->worldX*Global::roomHeight;
+	float minX = (player->worldY + 1)*Global::roomWidth;
+	float maxY = minY + Global::roomHeight + Global::inventoryHeight;
+	float maxX = minX + Global::roomWidth;
+	if (player->worldY== Global::WorldRoomWidth-1)return;
+	drawScreen(mainWindow, minX, minY, maxX, maxY, worldLayer1);
+	drawScreen(mainWindow, minX, minY, maxX, maxY, worldLayer2);
 }
-void WorldMap::drawAndUpdateLeftScreen(sf::RenderWindow& mainWindow){
-	float startX = (player->worldX)*Global::roomRows;
-	float startY = (player->worldY - 1)*Global::roomCols;
-	if (player->worldY	!=0){
-		for (int i = startY; i < startY + Global::roomCols; i++){
-			for (int j = startX; j < startX + Global::roomRows; j++){
-				if (worldLayer2[i][j] != NULL)
-					worldLayer2[i][j]->draw(mainWindow);
-			}
-		}
-	}
+void WorldMap::drawLeftScreen(sf::RenderWindow& mainWindow){
+	float minY = player->worldX*Global::roomHeight;
+	float minX = (player->worldY - 1)*Global::roomWidth;
+	float maxY = minY + Global::roomHeight + Global::inventoryHeight;
+	float maxX = minX + Global::roomWidth;
+
+	if (player->worldY== 0)return;
+	drawScreen(mainWindow, minX, minY, maxX, maxY, worldLayer1);
+	drawScreen(mainWindow, minX, minY, maxX, maxY, worldLayer2);
 }
-void WorldMap::drawAndUpdateUpScreen(sf::RenderWindow& mainWindow){
-	float startX = (player->worldX-1)*Global::roomRows;
-	float startY = (player->worldY)*Global::roomCols;
-	if (player->worldX != 0){
-		for (int i = startY; i < startY + Global::roomCols; i++){
-			for (int j = startX; j < startX + Global::roomRows; j++){
-				if (worldLayer2[i][j] != NULL)
-					worldLayer2[i][j]->draw(mainWindow);
-			}
-		}
-	}
+void WorldMap::drawUpScreen(sf::RenderWindow& mainWindow){
+	float minY = (player->worldX - 1)*Global::roomHeight;
+	float minX = player->worldY*Global::roomWidth;
+	float maxY = minY + Global::roomHeight + Global::inventoryHeight;
+	float maxX = minX + Global::roomWidth;
+
+	if (player->worldX == 0)return;
+	drawScreen(mainWindow, minX, minY, maxX, maxY, worldLayer1);
+	drawScreen(mainWindow, minX, minY, maxX, maxY, worldLayer2);
 }
-void WorldMap::drawAndUpdateDownScreen(sf::RenderWindow& mainWindow){
-	float startX = (player->worldX+1)*Global::roomRows;
-	float startY = (player->worldY)*Global::roomCols;
-	if ((player->worldX + 1) * Global::roomCols < Static::WorldColumns){
-		for (int i = startY; i < startY + Global::roomCols; i++){
-			for (int j = startX; j < startX + Global::roomRows; j++){
-				if (worldLayer2[i][j] != NULL)
-					worldLayer2[i][j]->draw(mainWindow);
-			}
-		}
-	}
+void WorldMap::drawDownScreen(sf::RenderWindow& mainWindow){
+	float minY = (player->worldX + 1)*Global::roomHeight;
+	float minX = player->worldY*Global::roomWidth;
+	float maxY = minY + Global::roomHeight + Global::inventoryHeight;
+	float maxX = minX + Global::roomWidth;
+	if (player->worldX == Global::WorldRoomHeight-1)return;
+	drawScreen(mainWindow, minX, minY, maxX, maxY, worldLayer1);
+	drawScreen(mainWindow, minX, minY, maxX, maxY, worldLayer2);
 }

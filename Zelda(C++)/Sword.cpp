@@ -41,10 +41,10 @@ void Sword::loadImage(Static::Direction dir){
 	height = sprite.getTextureRect().height;
 	sprite.setPosition(xPosition, yPosition);
 }
-void Sword::update(bool& isAttacking, bool& canAttack, GameObject* worldLayer[Static::WorldRows][Static::WorldColumns],Animation* walkAnimation[3]){
+void Sword::update(bool& isAttacking, bool& canAttack, std::vector<GameObject*> worldMap, Animation* walkAnimation[3]){
 	if (isAttacking){
 		swordCurrentFrame++;
-		if (isCollidingWithMonster(worldLayer));
+		if (isCollidingWithMonster(worldMap));
 			updateMonster();
 		if (swordCurrentFrame >= swordMaxFrame){
 			isAttacking = false;
@@ -63,22 +63,24 @@ void Sword::update(bool& isAttacking, bool& canAttack, GameObject* worldLayer[St
 		}
 	}
 }
-bool Sword::isCollidingWithMonster(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
+bool Sword::isCollidingWithMonster(std::vector<GameObject*> worldMap){
 	collidingMonsterList.clear();
 	bool isColliding = false;
-	int worldY=xPosition/Global::roomWidth;
-	int worldX=(yPosition-Global::inventoryHeight)/Global::roomHeight;
-	float startX = worldX*Global::roomRows;
-	float startY = worldY*Global::roomCols;
-	for (int i = startY; i < startY + Global::roomCols; i++){
-		for (int j = startX; j < startX + Global::roomRows; j++){
-			if (worldLayer[i][j] != NULL){
-				if (dynamic_cast<Monster*>(worldLayer[i][j]))
-					if (intersect(fullMask, ((Monster*)worldLayer[i][j])->fullMask, 0, 0)){
-						isColliding = true;
-						collidingMonsterList.push_back(worldLayer[i][j]);
-					}
-			}
+	int worldY = xPosition / Global::roomWidth;
+	int worldX = (yPosition - Global::inventoryHeight) / Global::roomHeight;
+	float minY = worldX*Global::roomRows;
+	float minX = worldY*Global::roomCols;
+	float maxY = minY + Global::roomHeight + Global::inventoryHeight;
+	float maxX = minX + Global::roomWidth;
+	
+	for each (GameObject* obj in worldMap)
+	{
+		if (obj->xPosition >= minX && obj->xPosition <= maxX && obj->yPosition >= minY && obj->yPosition <= maxY){
+			if (dynamic_cast<Monster*>(obj))
+				if (intersect(fullMask, ((Monster*)obj)->fullMask, 0, 0)){
+					isColliding = true;
+					collidingMonsterList.push_back(obj);					
+				}
 		}
 	}
 	return isColliding;

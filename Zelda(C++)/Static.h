@@ -23,6 +23,8 @@ namespace Global{
 	extern const int playerMarkerHeight;
 	extern const int overworldMapWidth;
 	extern const int overworldMapHeight;
+	extern const int WorldRoomWidth;
+	extern const int WorldRoomHeight;
 	extern sf::View gameView;
 };
 class Static{
@@ -31,8 +33,6 @@ public:
 	static enum Direction{ Right, Left, Up, Down };
 	static  GameState gameState;
 	const static std::string GAME_TITLE;
-	static const int WorldRows=32;
-	static const int WorldColumns=32;
 	static const int inventoryRows=3;
 	static const int inventoryCols=5;
 };

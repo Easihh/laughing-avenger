@@ -1,3 +1,11 @@
+Version 0.032
+
+-Some improvement to item use/update for bomb to determine update of the thrown item.
+-Step 1 of going from array to vector for objects on screen in order to
+allow easier adding any number of objects(monster,item etc) to current screen.
+-The above step currently read the whole gameObject vector and look at object position to
+determine whether to draw/update(bad for performance as game map size grows at minimum of 256 objects per room).
+
 Version 0.031
 
 -Holding the item use button no longer keep using the item.

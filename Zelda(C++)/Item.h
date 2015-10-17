@@ -8,7 +8,7 @@ public:
 	Item(float x,float y,std::string item);
 	Item();
 	~Item();
-	void update(GameObject* worldMap[Static::WorldRows][Static::WorldColumns]);
+	virtual void update(std::vector<GameObject*> worldMap);
 	void draw(sf::RenderWindow& mainWindow);
 	virtual void onUse(PlayerInfo info);
 	bool isActive;

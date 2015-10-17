@@ -39,9 +39,9 @@
 	attackAnimation[2] = new Animation("Link_Attack_Hit2", width, height, xPosition, yPosition, NULL);
 	attackAnimationIndex = 0;
  }
- void Player::update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
-	 sword->update(isAttacking, canAttack, worldLayer, walkingAnimation);
-	 checkMovementInput(worldLayer);
+ void Player::update(std::vector<GameObject*> worldMap){
+	 sword->update(isAttacking, canAttack, worldMap, walkingAnimation);
+	 checkMovementInput(worldMap);
 	 checkAttackInput();
 	 checkInventoryInput();
 	 checkItemUseInput();
@@ -52,11 +52,14 @@
 	 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir,xPosition,yPosition);
 	 if(isScreenTransitioning)
 		 screenTransition();
-	 if (isCollidingWithMonster(worldLayer))
-		 takeDamage(worldLayer);
+	 if (isCollidingWithMonster(worldMap))
+		 takeDamage(worldMap);
 	 checkInvincible();
 	 fullMask->setPosition(xPosition, yPosition);
 	 playerBar->update();
+	 if (inventory->getCurrentItem() != NULL){
+		 inventory->getCurrentItem()->update(worldMap);
+	 }
 
  }
  void Player::checkInventoryInput(){
@@ -77,7 +80,7 @@
 		 }
 	 }
  }
- void Player::checkMovementInput(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
+ void Player::checkMovementInput(std::vector<GameObject*> worldMap){
 	 bool movementKeyPressed = false;
 	 bool outsideBound = false;
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !isScreenTransitioning){
@@ -88,7 +91,7 @@
 				 dir = Static::Direction::Left;
 				 walkingAnimation[walkAnimationIndex]->reset();
 			 }
-			 if (!isColliding(worldLayer,fullMask,getXOffset(),getYOffset()) && stepToAlign == 0)
+			 if (!isColliding(worldMap,fullMask,getXOffset(),getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
 			 outsideBound = isOutsideMapBound(xPosition - stepToMove, yPosition);
 		 }
@@ -101,7 +104,7 @@
 				 dir = Static::Direction::Right;
 				 walkingAnimation[walkAnimationIndex]->reset();
 			 }
-			 if (!isColliding(worldLayer, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
+			 if (!isColliding(worldMap, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
 			 outsideBound = isOutsideMapBound(xPosition+width, yPosition);
 		 }
@@ -114,7 +117,7 @@
 				 dir = Static::Direction::Up;
 				 walkingAnimation[walkAnimationIndex]->reset();
 			 }
-			 if (!isColliding(worldLayer, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
+			 if (!isColliding(worldMap, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
 			 outsideBound = isOutsideMapBound(xPosition, yPosition-stepToMove);
 		 }
@@ -127,7 +130,7 @@
 				 dir = Static::Direction::Down;
 				 walkingAnimation[walkAnimationIndex]->reset();
 			 }
-			 if (!isColliding(worldLayer, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
+			 if (!isColliding(worldMap, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
 			 outsideBound = isOutsideMapBound(xPosition, yPosition+height);
 		 }
@@ -152,53 +155,58 @@
 		 }
 	 }
  }
- bool Player::isCollidingWithMonster(GameObject* worldMap[Static::WorldRows][Static::WorldColumns]){
+ bool Player::isCollidingWithMonster(std::vector<GameObject*> worldMap){
 	 bool isColliding = false;
-	 int startX = worldX*Global::roomRows;
-	 int startY = worldY*Global::roomCols;
-	 for (int i = startY; i < startY + Global::roomCols; i++){
-		 for (int j = startX; j < startX + Global::roomRows; j++){
-			 if (worldMap[i][j] != NULL){
-				 if (dynamic_cast<Monster*>(worldMap[i][j]))
-					 if (intersect(fullMask, ((Monster*)worldMap[i][j])->mask, 0, 0)){
-						 isColliding = true;
-						 collidingMonster = (Monster*)worldMap[i][j];
-						 break;
-					 }
-			 }
+	 float minY = worldX*Global::roomHeight;
+	 float minX = worldY*Global::roomWidth;
+	 float maxY = minY + Global::roomHeight + Global::inventoryHeight;
+	 float maxX = minX + Global::roomWidth;
+
+	 for each (GameObject* obj in worldMap)
+	 {
+		 if (obj->xPosition >= minX && obj->xPosition <= maxX && obj->yPosition >= minY && obj->yPosition <= maxY){
+			 if (dynamic_cast<Monster*>(obj))
+				 if (intersect(fullMask, ((Monster*)obj)->mask, xOffset, yOffset)){
+					 isColliding = true;
+					 collidingMonster = (Monster*)obj;
+					 break;
+				 }
 		 }
 	 }
 	 return isColliding;
  }
- void Player::takeDamage(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
+ void Player::takeDamage(std::vector<GameObject*> worldMap){
 	 if (!isInvincible && !isScreenTransitioning){
 		 playerBar->decreaseCurrentHP(collidingMonster->strength);
 		 walkAnimationIndex = 1;
 		 attackAnimationIndex = 1;
-		 pushback(worldLayer);
+		 pushback(worldMap);
 		 if (playerBar->getCurrentHP() <= 0)
 			 std::cout << "I'm Dead";
 		 else isInvincible = true;
 	 }
  }
- bool Player::isColliding(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns],sf::RectangleShape* mask,float xOffset,float yOffset){
-	 int startX = worldX*Global::roomRows;
-	 int startY = worldY*Global::roomCols;
+ bool Player::isColliding(std::vector<GameObject*> worldMap, sf::RectangleShape* mask, float xOffset, float yOffset){
+	 float minY = worldX*Global::roomHeight;
+	 float minX = worldY*Global::roomWidth;
+	 float maxY = minY + Global::roomHeight + Global::inventoryHeight;
+	 float maxX = minX + Global::roomWidth;
 	 bool collision = false;
-	 for (int i = startY; i <startY + Global::roomCols; i++){
-		 for (int j = startX; j < startX + Global::roomRows; j++){
-			 if (worldLayer[i][j] == NULL)continue;
-			 if (dynamic_cast<Tile*>(worldLayer[i][j]))
-				 if (intersect(mask, worldLayer[i][j]->fullMask, xOffset, yOffset)){
+
+	 for each (GameObject* obj in worldMap)
+	 {
+		 if (obj->xPosition >= minX && obj->xPosition <= maxX && obj->yPosition >= minY && obj->yPosition <= maxY){
+			 if (dynamic_cast<Tile*>(obj))
+				 if (intersect(mask, obj->fullMask, xOffset, yOffset)){
 					 collision = true;
-					 //std::cout << "CollisionX:" << worldLayer[i][j]->xPosition << std::endl;
-					 //std::cout << "CollisionY:" << worldLayer[i][j]->yPosition << std::endl;
+					 std::cout << "CollisionX:" << obj->xPosition << std::endl;
+					 std::cout << "CollisionY:" << obj->yPosition << std::endl;
 				 }
 		 }
 	 }
 	 return collision;
  }
- void Player::pushback(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]){
+ void Player::pushback(std::vector<GameObject*> worldMap){
 	 float intersectWidth;
 	 float intersectHeight=2 * Global::TileHeight;
 	 float pushBackDistance = 64;
@@ -210,24 +218,24 @@
 
 	 switch (dir){
 	 case Static::Direction::Down:
-		 if (!isColliding(worldLayer, pushbackLineCheck, 0, -intersectHeight))
+		 if (!isColliding(worldMap, pushbackLineCheck, 0, -intersectHeight))
 			 if (!isOutsideMapBound(xPosition, yPosition - pushBackDistance))
 				yPosition -= pushBackDistance;
 		 break;
 	 case Static::Direction::Up:
-		 if (!isColliding(worldLayer, pushbackLineCheck, 0, intersectHeight))
+		 if (!isColliding(worldMap, pushbackLineCheck, 0, intersectHeight))
 			 if (!isOutsideMapBound(xPosition, yPosition + pushBackDistance))
 				yPosition += pushBackDistance;
 		 break;
 	 case Static::Direction::Left:
 		 intersectWidth = 3 * Global::TileWidth;
-		 if (!isColliding(worldLayer, pushbackLineCheck, intersectWidth, 0))
+		 if (!isColliding(worldMap, pushbackLineCheck, intersectWidth, 0))
 			 if (!isOutsideMapBound(xPosition + pushBackDistance, yPosition))
 				 xPosition += pushBackDistance;
 		 break;
 	 case Static::Direction::Right:
 		 intersectWidth = 2 * Global::TileWidth;
-		 if (!isColliding(worldLayer, pushbackLineCheck, - intersectWidth, 0))
+		 if (!isColliding(worldMap, pushbackLineCheck, - intersectWidth, 0))
 			 if (!isOutsideMapBound(xPosition - pushBackDistance, yPosition))
 				xPosition -= pushBackDistance;
 		 break;

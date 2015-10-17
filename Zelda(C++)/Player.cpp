@@ -4,6 +4,8 @@
 #include <iostream>
 #include "Tile.h"
 #include "Bomb.h"
+#include "Point.h"
+#include"PlayerInfo.h"
  Player::Player(float x,float y){
 	 xPosition = x;
 	 yPosition = y;
@@ -23,6 +25,7 @@
 	 inventory->items[0][0] = new Item(0, 0,"MagicalBoomerang");
 	 inventory->items[2][2] = new Bomb(0, 0, "Bomb");
 	 inventoryKeyReleased = true;
+	 itemKeyReleased = true;
 	 attackKeyReleased = true;
 }
  Player::~Player(){}
@@ -138,11 +141,15 @@
  }
  void Player::checkItemUseInput(){
 	 int INVALID_INVENTORY_INDEX = -1;
-	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && itemKeyReleased){
 		 int i = inventory->selectorInventoryXIndex;
 		 int j = inventory->selectorInventoryYIndex;
-		 if (i != INVALID_INVENTORY_INDEX && j != INVALID_INVENTORY_INDEX)
-			 inventory->items[i][j]->onUse(xPosition,yPosition);
+		 if (i != INVALID_INVENTORY_INDEX && j != INVALID_INVENTORY_INDEX){
+			 Point pt(xPosition, yPosition);
+			 PlayerInfo info(pt,playerBar->bombPtr, playerBar->diamondPtr, playerBar->keysPtr,dir);
+			 inventory->items[i][j]->onUse(info);
+			 itemKeyReleased = false;
+		 }
 	 }
  }
  bool Player::isCollidingWithMonster(GameObject* worldMap[Static::WorldRows][Static::WorldColumns]){

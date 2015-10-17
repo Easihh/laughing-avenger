@@ -63,6 +63,8 @@ void WorldMap::update(sf::RenderWindow& mainWindow,sf::Event& event){
 		player->inventoryKeyReleased = true;
 	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
 		player->attackKeyReleased = true;
+	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S)
+		player->itemKeyReleased = true;
 		drawBackgroundTile(mainWindow);
 		drawAndUpdateCurrentScreen(mainWindow);
 		drawAndUpdateRightScreen(mainWindow);

@@ -15,7 +15,7 @@ public:
 	void update(GameObject* worldLayer[Static::WorldRows][Static::WorldColumns]);
 	void draw(sf::RenderWindow& mainWindow);
 	int worldX, worldY;
-	bool inventoryKeyReleased, attackKeyReleased;
+	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased;
 	Inventory* inventory;
 	PlayerBar* playerBar;
 private:

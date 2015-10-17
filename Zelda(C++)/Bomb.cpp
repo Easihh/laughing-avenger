@@ -3,12 +3,31 @@
 Bomb::~Bomb(){}
 Bomb::Bomb(float x,float y,std::string name):super(x,y,name){
 	isActive = false;
+	width = 32;
+	height = 32;
 }
-void Bomb::onUse(float x,float y){
+void Bomb::onUse(PlayerInfo info){
 	std::cout << "Throw Bomb";
-	sprite.setPosition(x, y);
-	//playerInfo.playerBar->bombAmount--;
-	isActive = true;
+	switch (info.dir)
+	{
+	case Static::Direction::Down:
+		sprite.setPosition(info.point.x, info.point.y + height);
+		break;
+	case Static::Direction::Up:
+		sprite.setPosition(info.point.x, info.point.y-height);
+		break;
+	case Static::Direction::Right:
+		sprite.setPosition(info.point.x + width, info.point.y);
+		break;
+	case Static::Direction::Left:
+		sprite.setPosition(info.point.x-width, info.point.y);
+		break;
+	}
+	if (*info.bombAmount >= 1){
+		*info.bombAmount -= 1;
+		isActive = true;
+	}
+	else isActive = false;
 }
 void Bomb::draw(sf::RenderWindow& mainWindow){
 	if (isActive)

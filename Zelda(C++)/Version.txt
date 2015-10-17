@@ -1,3 +1,10 @@
+Version 0.031
+
+-Holding the item use button no longer keep using the item.
+-Using bomb now decrease the amount owned.
+-Can no longer use bomb once bomb counter reach 0.
+-Bomb created now appear infront of the Player.
+
 Version 0.030
 
 -Improved logic for item select with upcoming item on use.

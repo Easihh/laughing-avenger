@@ -20,7 +20,9 @@ public:
 	sf::RectangleShape playerMarker, playerBar, overworldMap;
 	float markerX, markerY;
 	sf::Sprite itemSlotS;
-	int diamondAmount, keysAmount, bombAmount;
+	int* diamondPtr;
+	int* keysPtr;
+	int* bombPtr;
 private:
 	float barX, barY, mapX, mapY, healthBarStartX, healthBarStartY,itemSlotStartX,itemSlotStartY,
 		diamondStartX, diamondStartY, itemSlotTextStartX,itemSlotTextStartY,bombStartX,bombStartY,bombTextStartX,
@@ -29,6 +31,7 @@ private:
 	sf::Texture fullHeartTexture,halfHeartTexture,emptyHeartTexture,itemSlotTexture,bombIconTexture,diamondIconTexture,
 		keyIconTexture,woodSwordTexture;
 	sf::Sprite sprite;
+	int diamondAmount, keysAmount, bombAmount;
 	void drawHearts(sf::RenderWindow& mainWindow);
 	void drawPlayerBar(sf::RenderWindow& mainWindow);
 	void drawItemsSlot(sf::RenderWindow& mainWindow);

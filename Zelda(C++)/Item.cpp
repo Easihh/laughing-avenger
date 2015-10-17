@@ -20,6 +20,6 @@ void Item::update(GameObject* worldMap[Static::WorldRows][Static::WorldColumns])
 void Item::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(sprite);
 }
-void Item::onUse(float x,float y){
+void Item::onUse(PlayerInfo info){
 	std::cout << "Item Used";
 }

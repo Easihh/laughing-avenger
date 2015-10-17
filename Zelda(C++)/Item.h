@@ -2,6 +2,7 @@
 #define ITEM_H
 #include "SFML\Graphics.hpp"
 #include "GameObject.h"
+#include "PlayerInfo.h"
 class Item :public GameObject{
 public:
 	Item(float x,float y,std::string item);
@@ -9,7 +10,7 @@ public:
 	~Item();
 	void update(GameObject* worldMap[Static::WorldRows][Static::WorldColumns]);
 	void draw(sf::RenderWindow& mainWindow);
-	virtual void onUse(float x,float y);
+	virtual void onUse(PlayerInfo info);
 	bool isActive;
 private:
 	void loadImage();

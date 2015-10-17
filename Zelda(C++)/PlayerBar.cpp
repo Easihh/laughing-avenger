@@ -29,7 +29,10 @@ PlayerBar::PlayerBar(){
 	swordSlotY = 50;
 	itemSlotImageX = 220;
 	itemSlotImageY = 50;
-	keysAmount = bombAmount = diamondAmount = 0;
+	keysAmount = bombAmount = diamondAmount = 10;
+	keysPtr = &keysAmount;
+	bombPtr = &bombAmount;
+	diamondPtr= &diamondAmount;
 	loadImages();
 	setupPlayerBar();
 }

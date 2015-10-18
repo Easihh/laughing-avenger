@@ -157,21 +157,14 @@
  }
  bool Player::isCollidingWithMonster(std::vector<GameObject*> worldMap){
 	 bool isColliding = false;
-	 float minY = worldX*Global::roomHeight;
-	 float minX = worldY*Global::roomWidth;
-	 float maxY = minY + Global::roomHeight + Global::inventoryHeight;
-	 float maxX = minX + Global::roomWidth;
-
 	 for each (GameObject* obj in worldMap)
 	 {
-		 if (obj->xPosition >= minX && obj->xPosition <= maxX && obj->yPosition >= minY && obj->yPosition <= maxY){
 			 if (dynamic_cast<Monster*>(obj))
 				 if (intersect(fullMask, ((Monster*)obj)->mask, xOffset, yOffset)){
 					 isColliding = true;
 					 collidingMonster = (Monster*)obj;
 					 break;
-				 }
-		 }
+				}
 	 }
 	 return isColliding;
  }
@@ -187,22 +180,16 @@
 	 }
  }
  bool Player::isColliding(std::vector<GameObject*> worldMap, sf::RectangleShape* mask, float xOffset, float yOffset){
-	 float minY = worldX*Global::roomHeight;
-	 float minX = worldY*Global::roomWidth;
-	 float maxY = minY + Global::roomHeight + Global::inventoryHeight;
-	 float maxX = minX + Global::roomWidth;
 	 bool collision = false;
 
 	 for each (GameObject* obj in worldMap)
 	 {
-		 if (obj->xPosition >= minX && obj->xPosition <= maxX && obj->yPosition >= minY && obj->yPosition <= maxY){
 			 if (dynamic_cast<Tile*>(obj))
 				 if (intersect(mask, obj->fullMask, xOffset, yOffset)){
 					 collision = true;
 					 std::cout << "CollisionX:" << obj->xPosition << std::endl;
 					 std::cout << "CollisionY:" << obj->yPosition << std::endl;
 				 }
-		 }
 	 }
 	 return collision;
  }

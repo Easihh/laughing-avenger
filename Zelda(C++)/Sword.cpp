@@ -65,22 +65,13 @@ void Sword::update(bool& isAttacking, bool& canAttack, std::vector<GameObject*> 
 }
 bool Sword::isCollidingWithMonster(std::vector<GameObject*> worldMap){
 	collidingMonsterList.clear();
-	bool isColliding = false;
-	int worldY = xPosition / Global::roomWidth;
-	int worldX = (yPosition - Global::inventoryHeight) / Global::roomHeight;
-	float minY = worldX*Global::roomRows;
-	float minX = worldY*Global::roomCols;
-	float maxY = minY + Global::roomHeight + Global::inventoryHeight;
-	float maxX = minX + Global::roomWidth;
-	
+	bool isColliding = false;	
 	for each (GameObject* obj in worldMap)
 	{
-		if (obj->xPosition >= minX && obj->xPosition <= maxX && obj->yPosition >= minY && obj->yPosition <= maxY){
 			if (dynamic_cast<Monster*>(obj))
 				if (intersect(fullMask, ((Monster*)obj)->fullMask, 0, 0)){
 					isColliding = true;
-					collidingMonsterList.push_back(obj);					
-				}
+					collidingMonsterList.push_back(obj);
 		}
 	}
 	return isColliding;

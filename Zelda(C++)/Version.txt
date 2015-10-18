@@ -1,3 +1,11 @@
+Version 0.034
+
+-
+
+Version 0.033
+
+-Grealy improved game speed/logic for reading game objects of current room in constant time as the game grow in size.
+
 Version 0.032
 
 -Some improvement to item use/update for bomb to determine update of the thrown item.

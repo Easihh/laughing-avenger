@@ -13,14 +13,15 @@ public:
 	WorldMap();
 	~WorldMap();
 	void loadMap(std::string filename);
-	std::vector<GameObject*> worldLayer1;
-	std::vector<GameObject*> worldLayer2;
+	std::vector<std::vector<std::vector<GameObject*>>> gameMainVector,gameBackgroundVector;
+	std::vector<std::vector<GameObject*>> mainVectorColums,mainBackgroundColumns;
+	std::vector<GameObject*> roomGameObjects,roomBackGroundTile;
 	void update(sf::RenderWindow& mainWindow,sf::Event& event);
 	Player* player;
 private:
-	int lastWorldXIndex,lastWorldYIndex;
+	int lastWorldXIndex, lastWorldYIndex, vectorXindex, vectorYindex;
 	void createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType);
-	void drawScreen(sf::RenderWindow& mainWindow,float minX,float minY,float maxX,float maxY,std::vector<GameObject*> mapLayer);
+	void drawScreen(sf::RenderWindow& mainWindow,std::vector<GameObject*> mapLayer);
 	void drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow);
 	void drawRightScreen(sf::RenderWindow& mainWindow);
 	void drawLeftScreen(sf::RenderWindow& mainWindow);

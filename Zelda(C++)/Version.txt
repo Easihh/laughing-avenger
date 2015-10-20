@@ -1,10 +1,13 @@
 Version 0.034
 
--
+-Reworked logic for item use.
+-Fixed an issue where bomb would no longer appear infront of player with recent change from version 33.
+-Bombs now "explode" 2 seconds after use(visual cue not yet implemented).
+-Project folder restructuring.
 
 Version 0.033
 
--Grealy improved game speed/logic for reading game objects of current room in constant time as the game grow in size.
+-Greatly improved game speed/logic for reading game objects of current room in constant time as the game grow in size.
 
 Version 0.032
 

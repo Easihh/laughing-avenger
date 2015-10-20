@@ -1,0 +1,14 @@
+#ifndef THROWNBOMB_H
+#define THROWNBOMB_H
+#include "Misc\GameObject.h"
+class ThrownBomb :public GameObject{
+public:
+	~ThrownBomb();
+	ThrownBomb(float x, float y,Static::Direction direction);
+	void draw(sf::RenderWindow& mainWindow);
+	void update(std::vector<GameObject*>* worldMap);
+private:
+	int currentFrame, maxFrame = 2*Global::FPS_RATE;
+	void setup(Static::Direction direction);
+};
+#endif

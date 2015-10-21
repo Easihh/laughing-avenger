@@ -1,4 +1,5 @@
 #include "Monster\Octorok.h"
+#include "Utility\Static.h"
 #include <iostream>
 Octorok::Octorok(float x, float y, bool canBeCollidedWith){
 	spawnRow = x / Global::TileWidth;
@@ -30,7 +31,7 @@ void Octorok::draw(sf::RenderWindow& mainWindow){
 }
 void Octorok::update(std::vector<GameObject*>* worldMap){
 	if (healthPoint <= 0){
-		toBeDeleted = true;
+		Static::toDelete.push_back(this);
 		std::cout << "Octorok Destroyed";
 	}
 	else 

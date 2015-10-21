@@ -1,5 +1,5 @@
 #include "Misc\Tile.h"
-
+#include "Utility\Static.h"
 Tile::Tile(float x, float y,bool canBeCollidedWith,int type){
 	xPosition = x;
 	yPosition = y;

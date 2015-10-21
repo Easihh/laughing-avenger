@@ -3,6 +3,7 @@
 
 #include <string>
 #include "SFML\Graphics.hpp"
+#include "Misc\GameObject.h"
 namespace Global{
 	extern const unsigned int FPS_RATE;
 	extern const unsigned int SCREEN_WIDTH;
@@ -35,5 +36,7 @@ public:
 	const static std::string GAME_TITLE;
 	static const int inventoryRows=3;
 	static const int inventoryCols=5;
+	static std::vector<GameObject*> toAdd;
+	static std::vector<GameObject*> toDelete;
 };
 #endif

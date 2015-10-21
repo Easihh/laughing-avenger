@@ -25,4 +25,6 @@ namespace Global
 	 sf::View gameView;
 }
 Static::GameState Static::gameState=NotStarted;
+std::vector<GameObject*> Static::toAdd;
+std::vector<GameObject*> Static::toDelete;
 const std::string Static::GAME_TITLE = "Zelda: Last Quest ";

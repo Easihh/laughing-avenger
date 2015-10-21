@@ -1,5 +1,6 @@
 #include "Item\ThrownBomb.h"
 #include <iostream>
+#include "Utility\EffectType.h"
 ThrownBomb::~ThrownBomb(){}
 ThrownBomb::ThrownBomb(float x, float y, Static::Direction direction){
 	xPosition = x;
@@ -15,26 +16,43 @@ void ThrownBomb::setup(Static::Direction direction){
 	switch (direction)
 	{
 	case Static::Direction::Down:
-		sprite.setPosition(xPosition, yPosition + height);
+		yPosition += height;
 		break;
 	case Static::Direction::Up:
-		sprite.setPosition(xPosition, yPosition - height);
+		yPosition -= height;
 		break;
 	case Static::Direction::Right:
-		sprite.setPosition(xPosition + width, yPosition);
+		xPosition += width;
 		break;
 	case Static::Direction::Left:
-		sprite.setPosition(xPosition - width, yPosition);
+		xPosition -= width;
 		break;
 	}
+	sprite.setPosition(xPosition, yPosition);
 }
 void ThrownBomb::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(sprite);
 }
 void ThrownBomb::update(std::vector<GameObject*>* worldMap){
-	std::cout << "Update Thrown Bomb";
 	currentFrame++;
 	if (currentFrame > maxFrame){
-		toBeDeleted = true;
+		createBombEffect();
+		Static::toDelete.push_back(this);
 	}
+}
+void ThrownBomb::createBombEffect(){
+	effect = new BombEffect(xPosition, yPosition,EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
+	effect = new BombEffect(xPosition + width, yPosition, EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
+	effect = new BombEffect(xPosition - width, yPosition, EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
+	effect = new BombEffect(xPosition - (width / 2), yPosition - height, EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
+	effect = new BombEffect(xPosition + (width / 2), yPosition - height, EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
+	effect = new BombEffect(xPosition - (width / 2), yPosition + height, EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
+	effect = new BombEffect(xPosition + (width / 2), yPosition + height, EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
 }

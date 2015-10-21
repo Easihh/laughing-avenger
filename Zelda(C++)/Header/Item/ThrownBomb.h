@@ -1,6 +1,8 @@
 #ifndef THROWNBOMB_H
 #define THROWNBOMB_H
 #include "Misc\GameObject.h"
+#include "Item\BombEffect.h"
+#include "Utility\Static.h"
 class ThrownBomb :public GameObject{
 public:
 	~ThrownBomb();
@@ -10,5 +12,7 @@ public:
 private:
 	int currentFrame, maxFrame = 2*Global::FPS_RATE;
 	void setup(Static::Direction direction);
+	void createBombEffect();
+	BombEffect* effect;
 };
 #endif

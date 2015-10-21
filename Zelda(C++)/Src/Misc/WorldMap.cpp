@@ -99,7 +99,7 @@ void WorldMap::drawScreen(sf::RenderWindow& mainWindow,std::vector<GameObject*> 
 	}
 }
 void WorldMap::freeSpace(){
-	for each (GameObject* del in toDelete)
+	for each (GameObject* del in Static::toDelete)
 	{
 		for (int i = 0; i < gameMainVector[player->worldX][player->worldY].size(); i++){
 			if (gameMainVector[player->worldX][player->worldY].at(i) == del){
@@ -108,7 +108,14 @@ void WorldMap::freeSpace(){
 			}
 		}
 	}
-	toDelete.clear();
+	Static::toDelete.clear();
+}
+void WorldMap::addToGameVector(std::vector<GameObject*>* roomObjVector){
+	for each (GameObject* obj in Static::toAdd)
+	{
+		roomObjVector->push_back(obj);
+	}
+	Static::toAdd.clear();
 }
 void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 	freeSpace();
@@ -117,9 +124,8 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 	{
 			obj->update(&gameMainVector[player->worldX][player->worldY]);
 			obj->draw(mainWindow);
-			if (obj->toBeDeleted)
-				toDelete.push_back(obj);
 	}
+	addToGameVector(&gameMainVector[player->worldX][player->worldY]);
 }
 void WorldMap::drawRightScreen(sf::RenderWindow& mainWindow){
 	if (player->worldY== Global::WorldRoomWidth-1)return;

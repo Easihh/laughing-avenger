@@ -27,7 +27,7 @@ private:
 	void drawLeftScreen(sf::RenderWindow& mainWindow);
 	void drawDownScreen(sf::RenderWindow& mainWindow);
 	void drawUpScreen(sf::RenderWindow& mainWindow);
-	std::vector<GameObject*> toDelete;
 	void freeSpace();
+	void addToGameVector(std::vector<GameObject*>* roomObjVector);
 };
 #endif

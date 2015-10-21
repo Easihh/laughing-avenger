@@ -1,3 +1,8 @@
+Version 0.035
+
+-Bomb Effects/Visual cue has been added.
+-Reworked the way new game objects are added during game update loop to prevent iteration bugs.
+
 Version 0.034
 
 -Reworked logic for item use.

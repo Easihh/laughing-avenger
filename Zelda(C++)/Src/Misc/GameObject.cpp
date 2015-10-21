@@ -1,5 +1,6 @@
 #include "Misc\GameObject.h"
 #include "SFML\Graphics.hpp"
+#include<iostream>
 GameObject::GameObject(){}
 GameObject::~GameObject(){}
 void GameObject::update(std::vector<GameObject*>* worldMap){

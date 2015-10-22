@@ -5,7 +5,7 @@
 #include "Utility\PlayerInfo.h"
 class Item :public GameObject{
 public:
-	Item(float x,float y,std::string item);
+	Item(Point position,std::string item);
 	Item();
 	~Item();
 	virtual void update(std::vector<GameObject*> worldMap);

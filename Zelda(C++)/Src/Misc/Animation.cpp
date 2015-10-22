@@ -1,7 +1,7 @@
 #include "Misc\Animation.h"
 #include <fstream>
 #include <iostream>
-Animation::Animation(std::string filename, int recHeight, int recWidth, float rectX, float rectY, int framerate){
+Animation::Animation(std::string filename, int recHeight, int recWidth, Point position, int framerate){
 	fRate = framerate;
 	fCounter = 0;
 	currentIndex = 0;
@@ -10,8 +10,8 @@ Animation::Animation(std::string filename, int recHeight, int recWidth, float re
 	maxRow = texture.getSize().y / recHeight;
 	width = recWidth;
 	height = recHeight;
-	xPosition = rectX;
-	yPosition = rectY;
+	xPosition = position.x;
+	yPosition = position.y;
 	subRect.height = height;
 	subRect.width = width;
 	subRect.left = 0;
@@ -22,9 +22,9 @@ Animation::Animation(std::string filename, int recHeight, int recWidth, float re
 }
 Animation::Animation(){}
 Animation::~Animation(){}
-void Animation::updateAnimationFrame(Static::Direction dir,float x,float y){
-	xPosition = x;
-	yPosition = y;
+void Animation::updateAnimationFrame(Static::Direction dir,Point position){
+	xPosition = position.x;
+	yPosition = position.y;
 	sprite.setPosition(xPosition, yPosition);
 	fCounter++;
 	if (fRate!=NULL && fCounter >= fRate){

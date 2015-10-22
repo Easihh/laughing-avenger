@@ -1,11 +1,11 @@
 #include "Monster\Octorok.h"
 #include "Utility\Static.h"
 #include <iostream>
-Octorok::Octorok(float x, float y, bool canBeCollidedWith){
-	spawnRow = x / Global::TileWidth;
-	spawnCol = (y-Global::inventoryHeight) / Global::TileHeight;
-	xPosition = x;
-	yPosition = y;
+Octorok::Octorok(Point position, bool canBeCollidedWith){
+	spawnRow = position.x / Global::TileWidth;
+	spawnCol = (position.y - Global::inventoryHeight) / Global::TileHeight;
+	xPosition = position.x;
+	yPosition = position.y;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
 	isCollideable = canBeCollidedWith;

@@ -2,9 +2,9 @@
 #include <iostream>
 #include "Utility\EffectType.h"
 ThrownBomb::~ThrownBomb(){}
-ThrownBomb::ThrownBomb(float x, float y, Static::Direction direction){
-	xPosition = x;
-	yPosition = y;
+ThrownBomb::ThrownBomb(Point position, Static::Direction direction){
+	xPosition = position.x;
+	yPosition = position.y;
 	width = 32;
 	height = 32;
 	currentFrame = 0;
@@ -41,18 +41,11 @@ void ThrownBomb::update(std::vector<GameObject*>* worldMap){
 	}
 }
 void ThrownBomb::createBombEffect(){
-	effect = new BombEffect(xPosition, yPosition,EffectType::BombExplode);
-	Static::toAdd.push_back(effect);
-	effect = new BombEffect(xPosition + width, yPosition, EffectType::BombExplode);
-	Static::toAdd.push_back(effect);
-	effect = new BombEffect(xPosition - width, yPosition, EffectType::BombExplode);
-	Static::toAdd.push_back(effect);
-	effect = new BombEffect(xPosition - (width / 2), yPosition - height, EffectType::BombExplode);
-	Static::toAdd.push_back(effect);
-	effect = new BombEffect(xPosition + (width / 2), yPosition - height, EffectType::BombExplode);
-	Static::toAdd.push_back(effect);
-	effect = new BombEffect(xPosition - (width / 2), yPosition + height, EffectType::BombExplode);
-	Static::toAdd.push_back(effect);
-	effect = new BombEffect(xPosition + (width / 2), yPosition + height, EffectType::BombExplode);
-	Static::toAdd.push_back(effect);
+	Static::toAdd.push_back(new BombEffect(Point(xPosition, yPosition), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(xPosition + width, yPosition), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(xPosition - width, yPosition), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(xPosition - (width / 2), yPosition - height), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(xPosition + (width / 2), yPosition - height), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(xPosition - (width / 2), yPosition + height), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(xPosition + (width / 2), yPosition + height), EffectType::BombExplode));
 }

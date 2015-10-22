@@ -5,7 +5,7 @@
 class BombEffect:public GameObject{
 public:
 	~BombEffect();
-	BombEffect(float x,float y,EffectType type);
+	BombEffect(Point position,EffectType type);
 	virtual void update(std::vector<GameObject*>* worldMap);
 	virtual void draw(sf::RenderWindow& mainWindow);
 private:

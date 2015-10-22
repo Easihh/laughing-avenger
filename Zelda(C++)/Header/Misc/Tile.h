@@ -5,7 +5,7 @@
 
 class Tile :public GameObject{
 public:
-	Tile(float x, float y, bool canBeCollidedWith,int type);
+	Tile(Point position, bool canBeCollidedWith,int type);
 	~Tile();
 	void draw(sf::RenderWindow& mainWindow);
 	void update();

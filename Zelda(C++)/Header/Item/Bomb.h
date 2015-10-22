@@ -5,7 +5,7 @@
 class Bomb :public Item{
 public:
 	~Bomb();
-	Bomb(float x,float y,std::string name);
+	Bomb(Point position,std::string name);
 	typedef Item super;
 	void onUse(PlayerInfo info, std::vector<GameObject*>* worldMap);
 	ThrownBomb* myBomb;

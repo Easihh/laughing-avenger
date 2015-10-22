@@ -3,9 +3,9 @@
 #include <iostream>
 Item::~Item(){}
 Item::Item(){}
-Item::Item(float x,float y,std::string item){
-	x = xPosition;
-	y = yPosition;
+Item::Item(Point position,std::string item){
+	xPosition = position.x;
+	yPosition = position.y;
 	itemName=item;
 	loadImage();
 }

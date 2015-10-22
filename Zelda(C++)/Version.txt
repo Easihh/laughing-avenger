@@ -1,3 +1,7 @@
+Version 0.036
+
+-Clean up/Merge of x and y position in method parameter/call into a single class (point).
+
 Version 0.035
 
 -Bomb Effects/Visual cue has been added.

@@ -1,8 +1,8 @@
 #include "Misc\Tile.h"
 #include "Utility\Static.h"
-Tile::Tile(float x, float y,bool canBeCollidedWith,int type){
-	xPosition = x;
-	yPosition = y;
+Tile::Tile(Point position,bool canBeCollidedWith,int type){
+	xPosition = position.x;
+	yPosition = position.y;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
 	isCollideable = canBeCollidedWith;

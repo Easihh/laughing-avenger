@@ -6,7 +6,7 @@
 class ThrownBomb :public GameObject{
 public:
 	~ThrownBomb();
-	ThrownBomb(float x, float y,Static::Direction direction);
+	ThrownBomb(Point position,Static::Direction direction);
 	void draw(sf::RenderWindow& mainWindow);
 	void update(std::vector<GameObject*>* worldMap);
 private:

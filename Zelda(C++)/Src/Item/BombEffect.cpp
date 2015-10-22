@@ -1,9 +1,9 @@
 #include "Item\BombEffect.h"
 #include "Utility\Static.h"
 BombEffect::~BombEffect(){}
-BombEffect::BombEffect(float x, float y, EffectType type){
-	xPosition = x;
-	yPosition = y;
+BombEffect::BombEffect(Point position, EffectType type){
+	xPosition = position.x;
+	yPosition = position.y;
 	currentFrame = 0;
 	eType = type;
 	if (eType == EffectType::BombExplode)
@@ -18,8 +18,10 @@ BombEffect::BombEffect(float x, float y, EffectType type){
 void BombEffect::update(std::vector<GameObject*>* worldMap){
 	currentFrame++;
 	if (currentFrame == maxFrame){
-		if (eType == EffectType::BombExplode)
-			Static::toAdd.push_back(new BombEffect(xPosition, yPosition, EffectType::BombFinishExplode));
+		if (eType == EffectType::BombExplode){
+			Point pt(xPosition, yPosition);
+			Static::toAdd.push_back(new BombEffect(pt, EffectType::BombFinishExplode));
+		}
 		Static::toDelete.push_back(this);
 	}
 }

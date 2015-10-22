@@ -10,7 +10,7 @@
 #include "Player\Inventory.h"
 class Player:public GameObject{
 public:
-	Player(float x,float y);
+	Player(Point position);
 	~Player();
 	void update(std::vector<GameObject*>* worldMap);
 	void draw(sf::RenderWindow& mainWindow);

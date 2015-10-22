@@ -6,9 +6,9 @@
 #include "Item\Bomb.h"
 #include "Utility\Point.h"
 #include"Utility\PlayerInfo.h"
- Player::Player(float x,float y){
-	 xPosition = x;
-	 yPosition = y;
+ Player::Player(Point position){
+	 xPosition = position.x;
+	 yPosition = position.y;
 	 worldX = (int)(yPosition / Global::roomHeight);
 	 worldY = (int)(xPosition / Global::roomWidth);
 	 width = Global::TileWidth;
@@ -22,24 +22,27 @@
 	 setupFullMask();
 	 playerBar = new PlayerBar();
 	 inventory = new Inventory();
-	 inventory->items[0][0] = new Item(0, 0,"MagicalBoomerang");
-	 inventory->items[2][2] = new Bomb(0, 0, "Bomb");
+	 Point pt(0, 0);
+	 inventory->items[0][0] = new Item(pt, "MagicalBoomerang");
+	 inventory->items[2][2] = new Bomb(pt, "Bomb");
 	 inventoryKeyReleased = true;
 	 itemKeyReleased = true;
 	 attackKeyReleased = true;
 }
  Player::~Player(){}
  void Player::loadImage(){
-	walkingAnimation[0] = new Animation("Link_Movement", width, height, xPosition, yPosition, 6);
-	walkingAnimation[1] = new Animation("Link_Movement_Hit1", width, height, xPosition, yPosition, 6);
-	walkingAnimation[2] = new Animation("Link_Movement_Hit2", width, height, xPosition, yPosition, 6);
+	Point pt(xPosition,yPosition);
+	walkingAnimation[0] = new Animation("Link_Movement", width, height, pt, 6);
+	walkingAnimation[1] = new Animation("Link_Movement_Hit1", width, height, pt, 6);
+	walkingAnimation[2] = new Animation("Link_Movement_Hit2", width, height, pt, 6);
 	walkAnimationIndex = 0;
-	attackAnimation[0]=new Animation("Link_Attack", width, height, xPosition, yPosition, NULL);
-	attackAnimation[1] = new Animation("Link_Attack_Hit1", width, height, xPosition, yPosition, NULL);
-	attackAnimation[2] = new Animation("Link_Attack_Hit2", width, height, xPosition, yPosition, NULL);
+	attackAnimation[0] = new Animation("Link_Attack", width, height, pt, NULL);
+	attackAnimation[1] = new Animation("Link_Attack_Hit1", width, height, pt, NULL);
+	attackAnimation[2] = new Animation("Link_Attack_Hit2", width, height, pt, NULL);
 	attackAnimationIndex = 0;
  }
  void Player::update(std::vector<GameObject*>* worldMap){
+	 Point pt(xPosition, yPosition);
 	 sword->update(isAttacking, canAttack, worldMap, walkingAnimation);
 	 checkMovementInput(worldMap);
 	 checkAttackInput();
@@ -49,7 +52,7 @@
 		 completeMove();
 	 if (stepToAlign != 0)
 		 snapToGrid();
-	 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir,xPosition,yPosition);
+	 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, pt);
 	 if(isScreenTransitioning)
 		 screenTransition();
 	 if (isCollidingWithMonster(worldMap))
@@ -131,8 +134,10 @@
 			 outsideBound = isOutsideMapBound(xPosition, yPosition+height);
 		 }
 	 }
-	 if (movementKeyPressed)
-		 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir,xPosition,yPosition);
+	 if (movementKeyPressed){
+		 Point pt(xPosition, yPosition);
+		 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, pt);
+	 }
 	 if (outsideBound){
 		 transitionStep = maxTransitionStep;
 		 isScreenTransitioning = true;
@@ -153,10 +158,11 @@
  }
  bool Player::isCollidingWithMonster(const std::vector<GameObject*>* worldMap){
 	 bool isColliding = false;
+	 Point offset(xOffset, yOffset);
 	 for each (GameObject* obj in *worldMap)
 	 {
 			 if (dynamic_cast<Monster*>(obj))
-				 if (intersect(fullMask, ((Monster*)obj)->mask, xOffset, yOffset)){
+				 if (intersect(fullMask, ((Monster*)obj)->mask, offset)){
 					 isColliding = true;
 					 collidingMonster = (Monster*)obj;
 					 break;
@@ -177,11 +183,11 @@
  }
  bool Player::isColliding(const std::vector<GameObject*>* worldMap, sf::RectangleShape* mask, float xOffset, float yOffset){
 	 bool collision = false;
-
+	 Point offset(xOffset, yOffset);
 	 for each (GameObject* obj in *worldMap)
 	 {
 			 if (dynamic_cast<Tile*>(obj))
-				 if (intersect(mask, obj->fullMask, xOffset, yOffset)){
+				 if (intersect(mask, obj->fullMask, offset)){
 					 collision = true;
 					 std::cout << "CollisionX:" << obj->xPosition << std::endl;
 					 std::cout << "CollisionY:" << obj->yPosition << std::endl;
@@ -229,6 +235,7 @@
 	 attackAnimation[attackAnimationIndex]->sprite.setPosition(xPosition, yPosition);
  }
  void Player::checkInvincible(){
+	 Point pt(xPosition, yPosition);
 	 if (isInvincible){
 		 currentInvincibleFrame++;
 		 if (currentInvincibleFrame % 6 == 0){//switch image back and forth every 6 frames;
@@ -241,16 +248,16 @@
 				 walkAnimationIndex--;
 				 attackAnimationIndex--;
 			 }
-			walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir,xPosition,yPosition);
-			attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, xPosition, yPosition);
+			 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, pt);
+			 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, pt);
 		 }
 		 if (currentInvincibleFrame >= maxInvincibleFrame){
 			 isInvincible = false;
 			 currentInvincibleFrame = 0;
 			 walkAnimationIndex = 0;
 			 attackAnimationIndex = 0;
-			 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, xPosition, yPosition);
-			 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, xPosition, yPosition);
+			 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, pt);
+			 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, pt);
 		 }
 	 }
  }
@@ -292,6 +299,7 @@
 	 }
  }
  void Player::screenTransition(){
+	 Point pt(xPosition, yPosition);
 	 int minTransitionStep = 2;
 	 float increaseStep = (float)(maxTransitionStep / minTransitionStep);
 	 float viewX = Global::gameView.getCenter().x;
@@ -323,7 +331,7 @@
 	 }
 	 playerBar->setBarNextPosition(nextXPosition,nextYPosition);
 	 inventory->updateInventoryPosition(nextXPosition, nextYPosition);
-	 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir,xPosition,yPosition);
+	 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, pt);
 	 transitionStep -= minTransitionStep;
 	 if (transitionStep == 0){
 		 endScreenTransition();

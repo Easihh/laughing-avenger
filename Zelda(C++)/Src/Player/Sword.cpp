@@ -65,11 +65,12 @@ void Sword::update(bool& isAttacking, bool& canAttack,const std::vector<GameObje
 }
 bool Sword::isCollidingWithMonster(const std::vector<GameObject*>* worldMap){
 	collidingMonsterList.clear();
-	bool isColliding = false;	
+	bool isColliding = false;
+	Point offset(0, 0);
 	for each (GameObject* obj in *worldMap)
 	{
 			if (dynamic_cast<Monster*>(obj))
-				if (intersect(fullMask, ((Monster*)obj)->fullMask, 0, 0)){
+				if (intersect(fullMask, ((Monster*)obj)->fullMask, offset)){
 					isColliding = true;
 					collidingMonsterList.push_back(obj);
 		}

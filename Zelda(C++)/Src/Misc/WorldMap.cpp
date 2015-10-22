@@ -54,23 +54,24 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 	GameObject* tile;
 	float x = lastWorldXIndex*Global::TileWidth;
 	float y = lastWorldYIndex*Global::TileHeight;
+	Point pt(x, y + Global::inventoryHeight);
 	switch (tileType){
 	case -1:
 		//no tile;
 		break;
 	case 0:
-		player = new Player(x,y + Global::inventoryHeight);
+		player = new Player(pt);
 		break;
 	case 1:
-		tile = new Tile(x, y + Global::inventoryHeight, false, 1);
+		tile = new Tile(pt, false, 1);
 		gameBackgroundVector[vectorXindex][vectorYindex].push_back(tile);
 		break;
 	case 2:
-		tile = new Tile(x, y + Global::inventoryHeight, true, 2);
+		tile = new Tile(pt, true, 2);
 		gameMainVector[vectorXindex][vectorYindex].push_back(tile);
 		break;
 	case 3:
-		tile = new Octorok(x, y + Global::inventoryHeight, false);
+		tile = new Octorok(pt, false);
 		gameMainVector[vectorXindex][vectorYindex].push_back(tile);
 		break;
 	}

@@ -2,9 +2,8 @@
 #include <string>
 #include "Monster\Monster.h"
 #include <iostream>
-Sword::Sword(float playerX,float playerY,Static::Direction dir){
-	xPosition = playerX;
-	yPosition = playerY;
+Sword::Sword(Point pos,Static::Direction dir){
+	position = pos;
 	swordCurrentFrame = 0;
 	swordDelay = 0;
 	swordDir = dir;
@@ -17,29 +16,29 @@ void Sword::loadImage(Static::Direction dir){
 	switch (dir){
 	case Static::Direction::Left:
 		texture.loadFromFile("Tileset/WoodSword_Left.png");
-		xPosition = xPosition - (Global::minGridStep) - (Global::minGridStep / 2);
-		yPosition = yPosition + (Global::minGridStep/2);
+		position.x = position.x - (Global::minGridStep) - (Global::minGridStep / 2);
+		position.y = position.y + (Global::minGridStep / 2);
 		break;
 	case Static::Direction::Right:
 		texture.loadFromFile("Tileset/WoodSword_Right.png");
-		xPosition = xPosition + (Global::minGridStep) + (Global::minGridStep / 2);
-		yPosition = yPosition + (Global::minGridStep / 2);
+		position.x = position.x + (Global::minGridStep) + (Global::minGridStep / 2);
+		position.y = position.y + (Global::minGridStep / 2);
 		break;
 	case Static::Direction::Down:
 		texture.loadFromFile("Tileset/WoodSword_Down.png");
-		xPosition = xPosition + (Global::minGridStep / 2);
-		yPosition = yPosition + Global::minGridStep + (Global::minGridStep / 4);
+		position.x = position.x + (Global::minGridStep / 2);
+		position.y = position.y + Global::minGridStep + (Global::minGridStep / 4);
 		break;
 	case Static::Direction::Up:
 		texture.loadFromFile("Tileset/WoodSword_Up.png");
-		xPosition = xPosition + (Global::minGridStep / 4);
-		yPosition = yPosition - Global::minGridStep - (Global::minGridStep / 2);
+		position.x = position.x + (Global::minGridStep / 4);
+		position.y = position.y - Global::minGridStep - (Global::minGridStep / 2);
 		break;
 	}
 	sprite.setTexture(texture);
 	width = sprite.getTextureRect().width;
 	height = sprite.getTextureRect().height;
-	sprite.setPosition(xPosition, yPosition);
+	sprite.setPosition(position.x, position.y);
 }
 void Sword::update(bool& isAttacking, bool& canAttack,const std::vector<GameObject*>* worldMap, Animation* walkAnimation[3]){
 	if (isAttacking){

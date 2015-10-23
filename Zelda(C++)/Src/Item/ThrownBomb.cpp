@@ -2,9 +2,8 @@
 #include <iostream>
 #include "Utility\EffectType.h"
 ThrownBomb::~ThrownBomb(){}
-ThrownBomb::ThrownBomb(Point position, Static::Direction direction){
-	xPosition = position.x;
-	yPosition = position.y;
+ThrownBomb::ThrownBomb(Point pos, Static::Direction direction){
+	position = pos;
 	width = 32;
 	height = 32;
 	currentFrame = 0;
@@ -16,19 +15,19 @@ void ThrownBomb::setup(Static::Direction direction){
 	switch (direction)
 	{
 	case Static::Direction::Down:
-		yPosition += height;
+		position.y += height;
 		break;
 	case Static::Direction::Up:
-		yPosition -= height;
+		position.y -= height;
 		break;
 	case Static::Direction::Right:
-		xPosition += width;
+		position.x += width;
 		break;
 	case Static::Direction::Left:
-		xPosition -= width;
+		position.x -= width;
 		break;
 	}
-	sprite.setPosition(xPosition, yPosition);
+	sprite.setPosition(position.x, position.y);
 }
 void ThrownBomb::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(sprite);
@@ -41,11 +40,11 @@ void ThrownBomb::update(std::vector<GameObject*>* worldMap){
 	}
 }
 void ThrownBomb::createBombEffect(){
-	Static::toAdd.push_back(new BombEffect(Point(xPosition, yPosition), EffectType::BombExplode));
-	Static::toAdd.push_back(new BombEffect(Point(xPosition + width, yPosition), EffectType::BombExplode));
-	Static::toAdd.push_back(new BombEffect(Point(xPosition - width, yPosition), EffectType::BombExplode));
-	Static::toAdd.push_back(new BombEffect(Point(xPosition - (width / 2), yPosition - height), EffectType::BombExplode));
-	Static::toAdd.push_back(new BombEffect(Point(xPosition + (width / 2), yPosition - height), EffectType::BombExplode));
-	Static::toAdd.push_back(new BombEffect(Point(xPosition - (width / 2), yPosition + height), EffectType::BombExplode));
-	Static::toAdd.push_back(new BombEffect(Point(xPosition + (width / 2), yPosition + height), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(position.x, position.y), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(position.x + width, position.y), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(position.x - width, position.y), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(position.x - (width / 2), position.y - height), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(position.x + (width / 2), position.y - height), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(position.x - (width / 2), position.y + height), EffectType::BombExplode));
+	Static::toAdd.push_back(new BombEffect(Point(position.x + (width / 2), position.y + height), EffectType::BombExplode));
 }

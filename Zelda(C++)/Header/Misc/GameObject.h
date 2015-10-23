@@ -8,7 +8,7 @@ public:
 	~GameObject();
 	virtual void update(std::vector<GameObject*>* worldMap);
 	virtual void draw(sf::RenderWindow& mainWindow);
-	float xPosition,yPosition;
+	Point position;
 	unsigned int width,height,spawnCol,spawnRow;
 	bool isCollideable;
 	bool toBeDeleted;

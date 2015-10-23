@@ -6,11 +6,10 @@
 #include "Item\Bomb.h"
 #include "Utility\Point.h"
 #include"Utility\PlayerInfo.h"
- Player::Player(Point position){
-	 xPosition = position.x;
-	 yPosition = position.y;
-	 worldX = (int)(yPosition / Global::roomHeight);
-	 worldY = (int)(xPosition / Global::roomWidth);
+ Player::Player(Point pos){
+	 position = pos;
+	 worldX = (int)(position.y / Global::roomHeight);
+	 worldY = (int)(position.x / Global::roomWidth);
 	 width = Global::TileWidth;
 	 height = Global::TileHeight;
 	 dir = Static::Direction::Up;
@@ -31,18 +30,16 @@
 }
  Player::~Player(){}
  void Player::loadImage(){
-	Point pt(xPosition,yPosition);
-	walkingAnimation[0] = new Animation("Link_Movement", width, height, pt, 6);
-	walkingAnimation[1] = new Animation("Link_Movement_Hit1", width, height, pt, 6);
-	walkingAnimation[2] = new Animation("Link_Movement_Hit2", width, height, pt, 6);
+	 walkingAnimation[0] = new Animation("Link_Movement", width, height, position, 6);
+	 walkingAnimation[1] = new Animation("Link_Movement_Hit1", width, height, position, 6);
+	 walkingAnimation[2] = new Animation("Link_Movement_Hit2", width, height, position, 6);
 	walkAnimationIndex = 0;
-	attackAnimation[0] = new Animation("Link_Attack", width, height, pt, NULL);
-	attackAnimation[1] = new Animation("Link_Attack_Hit1", width, height, pt, NULL);
-	attackAnimation[2] = new Animation("Link_Attack_Hit2", width, height, pt, NULL);
+	attackAnimation[0] = new Animation("Link_Attack", width, height, position, NULL);
+	attackAnimation[1] = new Animation("Link_Attack_Hit1", width, height, position, NULL);
+	attackAnimation[2] = new Animation("Link_Attack_Hit2", width, height, position, NULL);
 	attackAnimationIndex = 0;
  }
  void Player::update(std::vector<GameObject*>* worldMap){
-	 Point pt(xPosition, yPosition);
 	 sword->update(isAttacking, canAttack, worldMap, walkingAnimation);
 	 checkMovementInput(worldMap);
 	 checkAttackInput();
@@ -52,13 +49,13 @@
 		 completeMove();
 	 if (stepToAlign != 0)
 		 snapToGrid();
-	 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, pt);
+	 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, position);
 	 if(isScreenTransitioning)
 		 screenTransition();
 	 if (isCollidingWithMonster(worldMap))
 		 takeDamage(worldMap);
 	 checkInvincible();
-	 fullMask->setPosition(xPosition, yPosition);
+	 fullMask->setPosition(position.x, position.y);
 	 playerBar->update();
  }
  void Player::checkInventoryInput(){
@@ -72,7 +69,7 @@
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
 		 if (canAttack && !isAttacking && attackKeyReleased){
 			 delete sword;
-			 sword = new Sword(xPosition, yPosition, dir);
+			 sword = new Sword(position, dir);
 			 isAttacking = true;
 			 canAttack = false;
 			 attackKeyReleased = false;
@@ -92,7 +89,7 @@
 			 }
 			 if (!isColliding(worldMap,fullMask,getXOffset(),getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
-			 outsideBound = isOutsideMapBound(xPosition - stepToMove, yPosition);
+			 outsideBound = isOutsideMapBound(position.x - stepToMove, position.y);
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !isScreenTransitioning){
@@ -105,7 +102,7 @@
 			 }
 			 if (!isColliding(worldMap, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
-			 outsideBound = isOutsideMapBound(xPosition+width, yPosition);
+			 outsideBound = isOutsideMapBound(position.x + width, position.y);
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !isScreenTransitioning){
@@ -118,7 +115,7 @@
 			 }
 			 if (!isColliding(worldMap, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
-			 outsideBound = isOutsideMapBound(xPosition, yPosition-stepToMove);
+			 outsideBound = isOutsideMapBound(position.x, position.y - stepToMove);
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !isScreenTransitioning){
@@ -131,12 +128,11 @@
 			 }
 			 if (!isColliding(worldMap, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
-			 outsideBound = isOutsideMapBound(xPosition, yPosition+height);
+			 outsideBound = isOutsideMapBound(position.x, position.y + height);
 		 }
 	 }
 	 if (movementKeyPressed){
-		 Point pt(xPosition, yPosition);
-		 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, pt);
+		 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, position);
 	 }
 	 if (outsideBound){
 		 transitionStep = maxTransitionStep;
@@ -149,8 +145,7 @@
 		 int i = inventory->selectorInventoryXIndex;
 		 int j = inventory->selectorInventoryYIndex;
 		 if (i != INVALID_INVENTORY_INDEX && j != INVALID_INVENTORY_INDEX){
-			 Point pt(xPosition, yPosition);
-			 PlayerInfo info(pt,playerBar->bombPtr, playerBar->diamondPtr, playerBar->keysPtr,dir);
+			 PlayerInfo info(position, playerBar->bombPtr, playerBar->diamondPtr, playerBar->keysPtr, dir);
 			 inventory->items[i][j]->onUse(info, worldMap);
 			 itemKeyReleased = false;
 		 }
@@ -189,8 +184,8 @@
 			 if (dynamic_cast<Tile*>(obj))
 				 if (intersect(mask, obj->fullMask, offset)){
 					 collision = true;
-					 std::cout << "CollisionX:" << obj->xPosition << std::endl;
-					 std::cout << "CollisionY:" << obj->yPosition << std::endl;
+					 std::cout << "CollisionX:" << obj->position.x << std::endl;
+					 std::cout << "CollisionY:" << obj->position.y << std::endl;
 				 }
 	 }
 	 return collision;
@@ -203,39 +198,38 @@
 
 	 sf::Vector2f size(width, height);
 	 pushbackLineCheck->setSize(size);
-	 pushbackLineCheck->setPosition(xPosition, yPosition);
+	 pushbackLineCheck->setPosition(position.x, position.y);
 
 	 switch (dir){
 	 case Static::Direction::Down:
 		 if (!isColliding(worldMap, pushbackLineCheck, 0, -intersectHeight))
-			 if (!isOutsideMapBound(xPosition, yPosition - pushBackDistance))
-				yPosition -= pushBackDistance;
+			 if (!isOutsideMapBound(position.x, position.y - pushBackDistance))
+				 position.y -= pushBackDistance;
 		 break;
 	 case Static::Direction::Up:
 		 if (!isColliding(worldMap, pushbackLineCheck, 0, intersectHeight))
-			 if (!isOutsideMapBound(xPosition, yPosition + pushBackDistance))
-				yPosition += pushBackDistance;
+			 if (!isOutsideMapBound(position.x, position.y + pushBackDistance))
+				 position.y += pushBackDistance;
 		 break;
 	 case Static::Direction::Left:
 		 intersectWidth = 3 * Global::TileWidth;
 		 if (!isColliding(worldMap, pushbackLineCheck, intersectWidth, 0))
-			 if (!isOutsideMapBound(xPosition + pushBackDistance, yPosition))
-				 xPosition += pushBackDistance;
+			 if (!isOutsideMapBound(position.x + pushBackDistance, position.y))
+				 position.x += pushBackDistance;
 		 break;
 	 case Static::Direction::Right:
 		 intersectWidth = 2 * Global::TileWidth;
 		 if (!isColliding(worldMap, pushbackLineCheck, - intersectWidth, 0))
-			 if (!isOutsideMapBound(xPosition - pushBackDistance, yPosition))
-				xPosition -= pushBackDistance;
+			 if (!isOutsideMapBound(position.x - pushBackDistance, position.y))
+				 position.x -= pushBackDistance;
 		 break;
 	 }
 	 if (isAttacking)
 		sword->endSword();
-	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(xPosition, yPosition);
-	 attackAnimation[attackAnimationIndex]->sprite.setPosition(xPosition, yPosition);
+	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(position.x, position.y);
+	 attackAnimation[attackAnimationIndex]->sprite.setPosition(position.x, position.y);
  }
  void Player::checkInvincible(){
-	 Point pt(xPosition, yPosition);
 	 if (isInvincible){
 		 currentInvincibleFrame++;
 		 if (currentInvincibleFrame % 6 == 0){//switch image back and forth every 6 frames;
@@ -248,16 +242,16 @@
 				 walkAnimationIndex--;
 				 attackAnimationIndex--;
 			 }
-			 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, pt);
-			 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, pt);
+			 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, position);
+			 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, position);
 		 }
 		 if (currentInvincibleFrame >= maxInvincibleFrame){
 			 isInvincible = false;
 			 currentInvincibleFrame = 0;
 			 walkAnimationIndex = 0;
 			 attackAnimationIndex = 0;
-			 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, pt);
-			 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, pt);
+			 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, position);
+			 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, position);
 		 }
 	 }
  }
@@ -299,7 +293,6 @@
 	 }
  }
  void Player::screenTransition(){
-	 Point pt(xPosition, yPosition);
 	 int minTransitionStep = 2;
 	 float increaseStep = (float)(maxTransitionStep / minTransitionStep);
 	 float viewX = Global::gameView.getCenter().x;
@@ -331,7 +324,7 @@
 	 }
 	 playerBar->setBarNextPosition(nextXPosition,nextYPosition);
 	 inventory->updateInventoryPosition(nextXPosition, nextYPosition);
-	 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, pt);
+	 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, position);
 	 transitionStep -= minTransitionStep;
 	 if (transitionStep == 0){
 		 endScreenTransition();
@@ -354,8 +347,8 @@
 	 return yOffset;
  }
  void Player::getUnalignedCount(Static::Direction nextDir){
-	 int x = (int)xPosition;
-	 int y = (int)yPosition;
+	 int x = (int)position.x;
+	 int y = (int)position.y;
 	 stepIsNegative = false;
 	 switch (nextDir){
 	 case Static::Direction::Right:
@@ -383,55 +376,55 @@
 	 case Static::Direction::Left:
 		 if (!stepIsNegative){
 			 if (stepToAlign<Global::minStep)
-				 yPosition += stepToAlign;
-			 else  yPosition += Global::minStep;
+				 position.y += stepToAlign;
+			 else  position.y += Global::minStep;
 		 }
 		 else 
 		 {
 			 if (stepToAlign<Global::minStep)
-				 yPosition -= stepToAlign;
-			 else  yPosition -= Global::minStep;
+				 position.y -= stepToAlign;
+			 else  position.y -= Global::minStep;
 		 }
 		 break;
 	 case Static::Direction::Up:
 	 case Static::Direction::Down:
 		 if (!stepIsNegative){
 			 if (stepToAlign < Global::minStep)
-				 xPosition += stepToAlign;
-			 else xPosition += Global::minStep;
+				 position.x += stepToAlign;
+			 else position.x += Global::minStep;
 		 }
 		 else
 		 {
 			 if (stepToAlign < Global::minStep)
-				 xPosition -= stepToAlign;
-			 else xPosition -= Global::minStep;
+				 position.x -= stepToAlign;
+			 else position.x -= Global::minStep;
 		 }
 		 break;
 	 }
 	 if (stepToAlign < Global::minStep)
 		 stepToAlign = 0;
 	 else stepToAlign -= Global::minStep;
-	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(xPosition, yPosition);
-	 attackAnimation[attackAnimationIndex]->sprite.setPosition(xPosition, yPosition);
+	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(position.x, position.y);
+	 attackAnimation[attackAnimationIndex]->sprite.setPosition(position.x, position.y);
  }
  void Player::completeMove(){
 	 stepToMove -= Global::minStep;
 	 switch (dir){
 	 case Static::Direction::Right:
-		 xPosition += Global::minStep;
+		 position.x += Global::minStep;
 			 break;
 	 case Static::Direction::Left:
-		 xPosition -= Global::minStep;
+		 position.x -= Global::minStep;
 			 break;
 	 case Static::Direction::Up:
-		 yPosition -= Global::minStep;
+		 position.y -= Global::minStep;
 			 break;
 	 case Static::Direction::Down:
-		 yPosition += Global::minStep;
+		 position.y += Global::minStep;
 			 break;
 	 }
-	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(xPosition, yPosition);
-	 attackAnimation[attackAnimationIndex]->sprite.setPosition(xPosition, yPosition);
+	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(position.x, position.y);
+	 attackAnimation[attackAnimationIndex]->sprite.setPosition(position.x, position.y);
  }
  void Player::draw(sf::RenderWindow& mainWindow){
 	 mainWindow.setView(Global::gameView);
@@ -448,13 +441,13 @@
  }
  void Player::drawText(sf::RenderWindow& mainWindow){
 	 sf::Font font;
-	 std::stringstream position;
-	 position << "X:" << xPosition << std::endl << "Y:" << yPosition <<std::endl 
+	 std::stringstream pos;
+	 pos << "X:" << position.x << std::endl << "Y:" << position.y << std::endl
 		 <<"WorldX:"<<worldX <<std::endl <<"WorldY:"<<worldY<<std::endl;
 	 font.loadFromFile("arial.ttf");
-	 sf::Text txt(position.str(), font);
+	 sf::Text txt(pos.str(), font);
 	 txt.setColor(sf::Color::Red);
-	 txt.setPosition(xPosition, yPosition-64);
+	 txt.setPosition(position.x, position.y - 64);
 	 txt.setCharacterSize(12);
 	 mainWindow.draw(txt);
  }

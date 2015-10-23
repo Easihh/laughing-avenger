@@ -1,3 +1,12 @@
+Version 0.038
+
+-
+
+Version 0.037
+
+-Monster now have a death-effect when destroyed.
+-More cleanup with merge of X/Y variables into a single point variable for coordinate.
+
 Version 0.036
 
 -Clean up/Merge of x and y position in method parameter/call into a single class (point).

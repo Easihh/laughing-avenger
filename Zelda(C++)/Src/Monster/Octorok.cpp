@@ -1,11 +1,11 @@
 #include "Monster\Octorok.h"
 #include "Utility\Static.h"
 #include <iostream>
-Octorok::Octorok(Point position, bool canBeCollidedWith){
+#include "Monster\DeathEffect.h"
+Octorok::Octorok(Point pos, bool canBeCollidedWith){
 	spawnRow = position.x / Global::TileWidth;
 	spawnCol = (position.y - Global::inventoryHeight) / Global::TileHeight;
-	xPosition = position.x;
-	yPosition = position.y;
+	position = pos;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
 	isCollideable = canBeCollidedWith;
@@ -21,7 +21,7 @@ Octorok::Octorok(Point position, bool canBeCollidedWith){
 	mask->setSize(size);
 	mask->setOutlineColor(sf::Color::Blue);
 	mask->setOutlineThickness(1);
-	mask->setPosition(xPosition + 8, yPosition + 8);
+	mask->setPosition(position.x + 8, position.y + 8);
 }
 Octorok::~Octorok(){}
 void Octorok::draw(sf::RenderWindow& mainWindow){
@@ -31,6 +31,8 @@ void Octorok::draw(sf::RenderWindow& mainWindow){
 }
 void Octorok::update(std::vector<GameObject*>* worldMap){
 	if (healthPoint <= 0){
+		Point pt(position.x + (width / 4), position.y + (height / 4));
+		Static::toAdd.push_back(new DeathEffect(pt));
 		Static::toDelete.push_back(this);
 		std::cout << "Octorok Destroyed";
 	}
@@ -42,5 +44,5 @@ void Octorok::update(std::vector<GameObject*>* worldMap){
 void Octorok::loadImage(std::string filename){
 	texture.loadFromFile(filename);
 	sprite.setTexture(texture);
-	sprite.setPosition(xPosition, yPosition);
+	sprite.setPosition(position.x, position.y);
 }

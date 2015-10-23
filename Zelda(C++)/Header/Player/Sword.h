@@ -6,7 +6,7 @@
 #include "Misc\Animation.h"
 class Sword :public GameObject{
 public:
-	Sword(float playerX, float playerY, Static::Direction dir);
+	Sword(Point pos, Static::Direction dir);
 	~Sword();
 	void loadImage(Static::Direction dir);
 	void endSword();

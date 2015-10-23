@@ -1,8 +1,7 @@
 #include "Misc\Tile.h"
 #include "Utility\Static.h"
-Tile::Tile(Point position,bool canBeCollidedWith,int type){
-	xPosition = position.x;
-	yPosition = position.y;
+Tile::Tile(Point pos,bool canBeCollidedWith,int type){
+	position = pos;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
 	isCollideable = canBeCollidedWith;
@@ -13,8 +12,7 @@ Tile::~Tile(){}
 void Tile::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(sprite);
 }
-void Tile::update(){
-}
+void Tile::update(){}
 void Tile::loadTileImage(int type){
 	switch (type){
 	case 1:
@@ -25,5 +23,5 @@ void Tile::loadTileImage(int type){
 		break;
 	}
 	sprite.setTexture(texture);
-	sprite.setPosition(xPosition, yPosition);
+	sprite.setPosition(position.x, position.y);
 }

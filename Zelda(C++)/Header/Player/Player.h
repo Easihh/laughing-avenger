@@ -48,7 +48,7 @@ private:
 	void checkAttackInput();
 	void checkInventoryInput();
 	void checkItemUseInput(std::vector<GameObject*>* worldMap);
-	bool isOutsideMapBound(float x, float y);
+	bool isOutsideMapBound(Point pos);
 	Monster* collidingMonster;
 	Animation * walkingAnimation[3];
 };

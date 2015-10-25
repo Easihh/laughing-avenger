@@ -76,6 +76,9 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 		break;
 	}
 }
+//Static::Direction getStartingDirection(){
+
+//}
 void WorldMap::update(sf::RenderWindow& mainWindow,sf::Event& event){
 	mainWindow.setKeyRepeatEnabled(true);
 	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Q)

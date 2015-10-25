@@ -1,6 +1,7 @@
 Version 0.038
 
--
+-Octorok monster animation has been added.
+-Octorok monster now move around the given room they are in.
 
 Version 0.037
 

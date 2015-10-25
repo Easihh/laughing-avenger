@@ -89,7 +89,7 @@
 			 }
 			 if (!isColliding(worldMap,fullMask,getXOffset(),getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
-			 outsideBound = isOutsideMapBound(position.x - stepToMove, position.y);
+			 outsideBound = isOutsideMapBound(Point(position.x - stepToMove, position.y));
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !isScreenTransitioning){
@@ -102,7 +102,7 @@
 			 }
 			 if (!isColliding(worldMap, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
-			 outsideBound = isOutsideMapBound(position.x + width, position.y);
+			 outsideBound = isOutsideMapBound(Point(position.x + width, position.y));
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !isScreenTransitioning){
@@ -115,7 +115,7 @@
 			 }
 			 if (!isColliding(worldMap, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
-			 outsideBound = isOutsideMapBound(position.x, position.y - stepToMove);
+			 outsideBound = isOutsideMapBound(Point(position.x, position.y - stepToMove));
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !isScreenTransitioning){
@@ -128,7 +128,7 @@
 			 }
 			 if (!isColliding(worldMap, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
-			 outsideBound = isOutsideMapBound(position.x, position.y + height);
+			 outsideBound = isOutsideMapBound(Point(position.x, position.y + height));
 		 }
 	 }
 	 if (movementKeyPressed){
@@ -203,24 +203,24 @@
 	 switch (dir){
 	 case Static::Direction::Down:
 		 if (!isColliding(worldMap, pushbackLineCheck, 0, -intersectHeight))
-			 if (!isOutsideMapBound(position.x, position.y - pushBackDistance))
+			 if (!isOutsideMapBound(Point(position.x, position.y - pushBackDistance)))
 				 position.y -= pushBackDistance;
 		 break;
 	 case Static::Direction::Up:
 		 if (!isColliding(worldMap, pushbackLineCheck, 0, intersectHeight))
-			 if (!isOutsideMapBound(position.x, position.y + pushBackDistance))
+			 if (!isOutsideMapBound(Point(position.x, position.y + pushBackDistance)))
 				 position.y += pushBackDistance;
 		 break;
 	 case Static::Direction::Left:
 		 intersectWidth = 3 * Global::TileWidth;
 		 if (!isColliding(worldMap, pushbackLineCheck, intersectWidth, 0))
-			 if (!isOutsideMapBound(position.x + pushBackDistance, position.y))
+			 if (!isOutsideMapBound(Point(position.x + pushBackDistance, position.y)))
 				 position.x += pushBackDistance;
 		 break;
 	 case Static::Direction::Right:
 		 intersectWidth = 2 * Global::TileWidth;
 		 if (!isColliding(worldMap, pushbackLineCheck, - intersectWidth, 0))
-			 if (!isOutsideMapBound(position.x - pushBackDistance, position.y))
+			 if (!isOutsideMapBound(Point(position.x - pushBackDistance, position.y)))
 				 position.x -= pushBackDistance;
 		 break;
 	 }
@@ -255,15 +255,15 @@
 		 }
 	 }
  }
- bool Player::isOutsideMapBound(float x, float y){
+ bool Player::isOutsideMapBound(Point pos){
 	 bool outsideBoundary = false;
-	 if (x > (Global::roomWidth*worldY) + Global::roomWidth)
+	 if (pos.x > (Global::roomWidth*worldY) + Global::roomWidth)
 		 outsideBoundary = true;
-	 else if (x < (Global::roomWidth*worldY))
+	 else if (pos.x < (Global::roomWidth*worldY))
 		 outsideBoundary = true;
-	 else if (y < (Global::roomHeight*worldX) + Global::inventoryHeight)
+	 else if (pos.y < (Global::roomHeight*worldX) + Global::inventoryHeight)
 		 outsideBoundary = true;
-	 else if (y > (Global::roomHeight*worldX) + Global::roomHeight + Global::inventoryHeight)
+	 else if (pos.y >(Global::roomHeight*worldX) + Global::roomHeight + Global::inventoryHeight)
 		 outsideBoundary = true;
 	 return outsideBoundary;
  }

@@ -9,7 +9,7 @@ public:
 	virtual void update(std::vector<GameObject*>* worldMap);
 	virtual void draw(sf::RenderWindow& mainWindow);
 	Point position;
-	unsigned int width,height,spawnCol,spawnRow;
+	unsigned int width,height;
 	bool isCollideable;
 	bool toBeDeleted;
 	void setupFullMask();

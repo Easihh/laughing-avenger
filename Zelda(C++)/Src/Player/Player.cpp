@@ -184,8 +184,8 @@
 			 if (dynamic_cast<Tile*>(obj))
 				 if (intersect(mask, obj->fullMask, offset)){
 					 collision = true;
-					 std::cout << "CollisionX:" << obj->position.x << std::endl;
-					 std::cout << "CollisionY:" << obj->position.y << std::endl;
+					 //std::cout << "CollisionX:" << obj->position.x << std::endl;
+					 //std::cout << "CollisionY:" << obj->position.y << std::endl;
 				 }
 	 }
 	 return collision;

@@ -40,11 +40,11 @@ void Sword::loadImage(Static::Direction dir){
 	height = sprite.getTextureRect().height;
 	sprite.setPosition(position.x, position.y);
 }
-void Sword::update(bool& isAttacking, bool& canAttack,const std::vector<GameObject*>* worldMap, Animation* walkAnimation[3]){
+void Sword::update(bool& isAttacking, bool& canAttack,std::vector<GameObject*>* worldMap, Animation* walkAnimation[3]){
 	if (isAttacking){
 		swordCurrentFrame++;
 		if (isCollidingWithMonster(worldMap));
-			updateMonster();
+			updateMonster(worldMap);
 		if (swordCurrentFrame >= swordMaxFrame){
 			isAttacking = false;
 			swordCurrentFrame = 0;
@@ -62,7 +62,7 @@ void Sword::update(bool& isAttacking, bool& canAttack,const std::vector<GameObje
 		}
 	}
 }
-bool Sword::isCollidingWithMonster(const std::vector<GameObject*>* worldMap){
+bool Sword::isCollidingWithMonster(std::vector<GameObject*>* worldMap){
 	collidingMonsterList.clear();
 	bool isColliding = false;
 	Point offset(0, 0);
@@ -72,15 +72,15 @@ bool Sword::isCollidingWithMonster(const std::vector<GameObject*>* worldMap){
 				if (intersect(fullMask, ((Monster*)obj)->fullMask, offset)){
 					isColliding = true;
 					collidingMonsterList.push_back(obj);
-		}
+				}
 	}
 	return isColliding;
 }
-void Sword::updateMonster(){
+void Sword::updateMonster(std::vector<GameObject*>* worldMap){
 	for each (GameObject* mstr in collidingMonsterList)
 	{
 		Monster* temp = (Monster*)mstr;
-		temp->takeDamage(strength);
+		temp->takeDamage(strength, worldMap, swordDir);
 		//std::cout << "Collision at X:" << temp->xPosition << " Y:" << temp->yPosition<<std::endl;
 	}
 }

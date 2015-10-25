@@ -1,3 +1,8 @@
+Version 0.039
+
+-Added visual cue to Octorok when being hit.
+-Monster Octorok is now pushedback after hit.
+
 Version 0.038
 
 -Octorok monster animation has been added.

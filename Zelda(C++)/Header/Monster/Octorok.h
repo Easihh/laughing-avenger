@@ -11,14 +11,17 @@ public:
 	void draw(sf::RenderWindow& mainWindow);
 	void update(std::vector<GameObject*>* worldMap);
 private:
-	void loadImage(std::string filename);
+	void loadAnimation();
 	void movement(std::vector<GameObject*>* worldMap);
-	bool isColliding(std::vector<GameObject*>* worldMap);
+	bool isColliding(std::vector<GameObject*>* worldMap, sf::RectangleShape* mask, Point offsets);
+	void pushBack(std::vector<GameObject*>* worldMap, Static::Direction swordDir);
+	void takeDamage(int damage, std::vector<GameObject*>* worldMap, Static::Direction swordDir);
 	int getXOffset();
 	int getYOffset();
+	void pushbackUpdate();
 	void getNextDirection(Static::Direction blockedDir);
 	bool isOutsideRoomBound(Point pos);
-	Animation* anim;
+	Animation * walkingAnimation[3];
 	Static::Direction dir;
 	const int minStep = 1;
 };

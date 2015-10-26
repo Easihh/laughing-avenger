@@ -8,7 +8,6 @@ public:
 	Bomb(Point position,std::string name);
 	typedef Item super;
 	void onUse(PlayerInfo info, std::vector<GameObject*>* worldMap);
-	ThrownBomb* myBomb;
 private:
 };
 #endif

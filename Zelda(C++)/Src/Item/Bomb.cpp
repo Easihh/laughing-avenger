@@ -9,7 +9,7 @@ void Bomb::onUse(PlayerInfo info, std::vector<GameObject*>* worldMap){
 	std::cout << "Throw Bomb";
 	if (*info.bombAmount >= 1){
 		*info.bombAmount -= 1;
-		myBomb = new ThrownBomb(info.point,info.dir);
+		ThrownBomb* myBomb = new ThrownBomb(info.point,info.dir);
 		Static::toAdd.push_back(myBomb);
 	}
 }

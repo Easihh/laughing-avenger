@@ -2,6 +2,7 @@
 #define GAME_OBJECT_H
 #include "SFML\Graphics.hpp"
 #include "Utility\Point.h"
+#include <memory>
 class GameObject{
 public:
 	GameObject();
@@ -15,8 +16,8 @@ public:
 	void setupFullMask();
 	sf::Texture texture;
 	sf::Sprite sprite;
-	sf::RectangleShape* fullMask;
-	static bool intersect(sf::RectangleShape* rectA, sf::RectangleShape* rectB, Point offset);
+	std::unique_ptr<sf::RectangleShape> fullMask;
+	static bool intersect(std::unique_ptr<sf::RectangleShape>& rectA, std::unique_ptr<sf::RectangleShape>& rectB, Point offset);
 private:
 };
 

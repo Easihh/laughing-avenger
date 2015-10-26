@@ -7,7 +7,7 @@ void GameObject::update(std::vector<GameObject*>* worldMap){
 }
 void GameObject::draw(sf::RenderWindow& mainWindow){
 }
-bool GameObject::intersect(sf::RectangleShape* rectA, sf::RectangleShape* rectB, Point offset){
+bool GameObject::intersect(std::unique_ptr<sf::RectangleShape>& rectA, std::unique_ptr<sf::RectangleShape>& rectB, Point offset){
 	float rectAx		= rectA->getPosition().x;
 	float rectAxSize	= rectA->getSize().x;
 	float rectAySize	= rectA->getSize().y;
@@ -23,7 +23,7 @@ return(
 	rectAy + rectAySize + offset.y > rectBy);
 }
 void GameObject::setupFullMask(){
-	fullMask = new sf::RectangleShape();
+	fullMask = std::make_unique<sf::RectangleShape>();
 	sf::Vector2f size(width, height);
 	fullMask->setSize(size);
 	fullMask->setOutlineThickness(1);

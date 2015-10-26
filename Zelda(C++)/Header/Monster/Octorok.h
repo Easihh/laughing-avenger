@@ -13,7 +13,7 @@ public:
 private:
 	void loadAnimation();
 	void movement(std::vector<GameObject*>* worldMap);
-	bool isColliding(std::vector<GameObject*>* worldMap, sf::RectangleShape* mask, Point offsets);
+	bool isColliding(std::vector<GameObject*>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, Point offsets);
 	void pushBack(std::vector<GameObject*>* worldMap, Static::Direction swordDir);
 	void takeDamage(int damage, std::vector<GameObject*>* worldMap, Static::Direction swordDir);
 	int getXOffset();

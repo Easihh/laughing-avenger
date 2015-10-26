@@ -13,6 +13,5 @@ private:
 	int currentFrame, maxFrame = 2*Global::FPS_RATE;
 	void setup(Static::Direction direction);
 	void createBombEffect();
-	BombEffect* effect;
 };
 #endif

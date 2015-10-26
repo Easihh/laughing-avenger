@@ -22,7 +22,7 @@ private:
 	unsigned int stepToMove;
 	Static::Direction dir;
 	void completeMove();
-	bool isColliding(const std::vector<GameObject*>* worldLayer, sf::RectangleShape* mask, float xOffset, float yOffset);
+	bool isColliding(const std::vector<GameObject*>* worldLayer, std::unique_ptr<sf::RectangleShape>& mask, float xOffset, float yOffset);
 	bool isCollidingWithMonster(const std::vector<GameObject*>* worldLayer);
 	int xOffset, yOffset, stepToAlign, transitionStep,currentInvincibleFrame;
 	int const maxTransitionStep = 90, maxInvincibleFrame=60;

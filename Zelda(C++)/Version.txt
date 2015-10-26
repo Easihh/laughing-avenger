@@ -1,3 +1,10 @@
+Version 0.040
+
+-Fixed when player facing North could be pushed slightly off-Screen on the South side of a given room.
+-Increased pushback when monster get hit by Sword.
+-Improved Pushback system for case where the next collision in line is greater than 0 but less than maxPush distance.
+-Started Moving naked pointers to smart pointers.
+ 
 Version 0.039
 
 -Added visual cue to Octorok when being hit.

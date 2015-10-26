@@ -15,7 +15,7 @@ Octorok::Octorok(Point pos, bool canBeCollidedWith){
 	currentInvincibleFrame = 0;
 	pushbackStep = 0;
 	setupFullMask();
-	mask= new sf::RectangleShape();
+	mask = std::make_unique<sf::RectangleShape>();
 	mask->setFillColor(sf::Color::Transparent);
 	sf::Vector2f size(16, 16);
 	mask->setSize(size);
@@ -33,7 +33,7 @@ void Octorok::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(*fullMask);
 }
 void Octorok::update(std::vector<GameObject*>* worldMap){
-	if (pushbackStep==0)
+	if (pushbackStep == 0)
 		movement(worldMap);
 	else pushbackUpdate();
 	for (int i = 0; i < 3;i++)
@@ -51,32 +51,34 @@ void Octorok::update(std::vector<GameObject*>* worldMap){
 }
 void Octorok::pushbackUpdate(){
 	//positive pushback mean same direction as currently facing.
-	int stepPerUpdate = 4;
+	int step = stepPerPushBackUpdate;
+	if (std::abs(pushbackStep) < stepPerPushBackUpdate)
+		step = std::abs(pushbackStep);
 	switch (dir){
 	case Static::Direction::Down:
 		if (pushbackStep < 0)
-			position.y -= stepPerUpdate;
-		else position.y += stepPerUpdate;
+			position.y -= step;
+		else position.y += step;
 		break;
 	case Static::Direction::Up:
 		if (pushbackStep < 0)
-			position.y += stepPerUpdate;
-		else position.y -= stepPerUpdate;
+			position.y += step;
+		else position.y -= step;
 		break;
 	case Static::Direction::Left:
 		if (pushbackStep < 0)
-			position.x += stepPerUpdate;
-		else position.x -= stepPerUpdate;
+			position.x += step;
+		else position.x -= step;
 		break;
 	case Static::Direction::Right:
 		if (pushbackStep < 0)
-			position.x -= stepPerUpdate;
-		else position.x += stepPerUpdate;
+			position.x -= step;
+		else position.x += step;
 		break;
 	}
 	if (pushbackStep>0)
-		pushbackStep -= stepPerUpdate;
-	else pushbackStep += stepPerUpdate;
+		pushbackStep -= step;
+	else pushbackStep += step;
 	updateMasks();
 }
 void Octorok::takeDamage(int damage, std::vector<GameObject*>* worldMap, Static::Direction swordDir){
@@ -89,65 +91,71 @@ void Octorok::takeDamage(int damage, std::vector<GameObject*>* worldMap, Static:
 	}
 }
 void Octorok::pushBack(std::vector<GameObject*>* worldMap, Static::Direction swordDir){
-	float intersectWidth;
-	float intersectHeight = 2 * Global::TileHeight;
-	float pushBackDistance = 64;
-	sf::RectangleShape* pushbackLineCheck = new sf::RectangleShape();
-
+	float pushBackMinDistance = 0;
 	sf::Vector2f size(width, height);
-	pushbackLineCheck->setSize(size);
+	std::unique_ptr<sf::RectangleShape> pushbackLineCheck = std::make_unique<sf::RectangleShape>();
 	pushbackLineCheck->setPosition(position.x, position.y);
-
+	pushbackLineCheck->setSize(size);
 	switch (swordDir){
 	case Static::Direction::Up:{
-		Point pt(0, -intersectHeight);
-		if (!isColliding(worldMap, pushbackLineCheck, pt))
-			if (!isOutsideRoomBound(Point(position.x, position.y - pushBackDistance))){
+		for (pushBackMinDistance = 0; pushBackMinDistance < pushBackMaxDistance; pushBackMinDistance++){
+			Point pt(0, -pushBackMinDistance);
+			if (isColliding(worldMap, pushbackLineCheck, pt))
+				break;
+		}
+		if (!isOutsideRoomBound(Point(position.x, position.y - pushBackMinDistance))){
 				if (dir==Static::Up)
-					pushbackStep += pushBackDistance;
+					pushbackStep += pushBackMinDistance;
 				else if (dir==Static::Down)
-					pushbackStep -= pushBackDistance;
+					pushbackStep -= pushBackMinDistance;
 			}
 		break;
 	}
 	case Static::Direction::Down:{
-		Point pt(0, intersectHeight);
-		if (!isColliding(worldMap, pushbackLineCheck, pt))
-			if (!isOutsideRoomBound(Point(position.x, position.y + pushBackDistance))){
-				if (dir == Static::Up)
-					pushbackStep -= pushBackDistance;
-				else if (dir == Static::Down)
-					pushbackStep += pushBackDistance;
-			}
-		break;
-	}
+		for (pushBackMinDistance = 0; pushBackMinDistance < pushBackMaxDistance; pushBackMinDistance++){
+			Point pt(0, pushBackMinDistance);
+			if (isColliding(worldMap, pushbackLineCheck, pt))
+				break;
+		}
+		if (!isOutsideRoomBound(Point(position.x, position.y + pushBackMinDistance))){
+			if (dir == Static::Up)
+				pushbackStep -= pushBackMinDistance;
+			else if (dir == Static::Down)
+				pushbackStep += pushBackMinDistance;
+		}
+	break;
+}
 	case Static::Direction::Right:{
-		intersectWidth = 3 * Global::TileWidth;
-		Point pt(intersectWidth, 0);
-		if (!isColliding(worldMap, pushbackLineCheck, pt))
-			if (!isOutsideRoomBound(Point(position.x + pushBackDistance, position.y))){
+		for (pushBackMinDistance = 0; pushBackMinDistance < pushBackMaxDistance; pushBackMinDistance++){
+			Point pt(pushBackMinDistance, 0);
+			if (isColliding(worldMap, pushbackLineCheck, pt))
+				break;
+		}
+		if (!isOutsideRoomBound(Point(position.x + pushBackMinDistance, position.y))){
 				if (dir == Static::Left)
-					pushbackStep -= pushBackDistance;
+					pushbackStep -= pushBackMinDistance;
 				else if (dir == Static::Right)
-					pushbackStep += pushBackDistance;
+					pushbackStep += pushBackMinDistance;
 			}
 		break;
 	}
 	case Static::Direction::Left:{
-		intersectWidth = 2 * Global::TileWidth;
-		Point pt(-intersectWidth, 0);
-		if (!isColliding(worldMap, pushbackLineCheck, pt))
-			if (!isOutsideRoomBound(Point(position.x - pushBackDistance, position.y))){
+		for (pushBackMinDistance = 0; pushBackMinDistance < pushBackMaxDistance; pushBackMinDistance++){
+			Point pt(-pushBackMinDistance, 0);
+			if (isColliding(worldMap, pushbackLineCheck, pt))
+				break;
+		}
+			if (!isOutsideRoomBound(Point(position.x - pushBackMinDistance, position.y))){
 				if (dir == Static::Left)
-					pushbackStep += pushBackDistance;
+					pushbackStep += pushBackMinDistance;
 				else if (dir == Static::Right)
-					pushbackStep -= pushBackDistance;
+					pushbackStep -= pushBackMinDistance;
 			}
 		break;
 	}
 	}
 }
-bool Octorok::isColliding(std::vector<GameObject*>* worldMap, sf::RectangleShape* mask,Point offsets){
+bool Octorok::isColliding(std::vector<GameObject*>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, Point offsets){
 	bool collision = false;
 	for each (GameObject* obj in *worldMap)
 	{

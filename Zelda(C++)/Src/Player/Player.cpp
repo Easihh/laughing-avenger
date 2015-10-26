@@ -176,7 +176,7 @@
 		 else isInvincible = true;
 	 }
  }
- bool Player::isColliding(const std::vector<GameObject*>* worldMap, sf::RectangleShape* mask, float xOffset, float yOffset){
+ bool Player::isColliding(const std::vector<GameObject*>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, float xOffset, float yOffset){
 	 bool collision = false;
 	 Point offset(xOffset, yOffset);
 	 for each (GameObject* obj in *worldMap)
@@ -192,10 +192,9 @@
  }
  void Player::pushback(const std::vector<GameObject*>* worldMap){
 	 float intersectWidth;
-	 float intersectHeight=2 * Global::TileHeight;
+	 float intersectHeight = 2 * Global::TileHeight;;
 	 float pushBackDistance = 64;
-	 sf::RectangleShape* pushbackLineCheck = new sf::RectangleShape();
-
+	 std::unique_ptr<sf::RectangleShape> pushbackLineCheck = std::make_unique<sf::RectangleShape>();
 	 sf::Vector2f size(width, height);
 	 pushbackLineCheck->setSize(size);
 	 pushbackLineCheck->setPosition(position.x, position.y);
@@ -208,7 +207,7 @@
 		 break;
 	 case Static::Direction::Up:
 		 if (!isColliding(worldMap, pushbackLineCheck, 0, intersectHeight))
-			 if (!isOutsideMapBound(Point(position.x, position.y + pushBackDistance)))
+			 if (!isOutsideMapBound(Point(position.x, position.y + pushBackDistance+Global::TileHeight)))
 				 position.y += pushBackDistance;
 		 break;
 	 case Static::Direction::Left:

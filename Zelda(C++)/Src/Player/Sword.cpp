@@ -43,7 +43,7 @@ void Sword::loadImage(Static::Direction dir){
 void Sword::update(bool& isAttacking, bool& canAttack,std::vector<GameObject*>* worldMap, Animation* walkAnimation[3]){
 	if (isAttacking){
 		swordCurrentFrame++;
-		if (isCollidingWithMonster(worldMap));
+		if (isCollidingWithMonster(worldMap))
 			updateMonster(worldMap);
 		if (swordCurrentFrame >= swordMaxFrame){
 			isAttacking = false;

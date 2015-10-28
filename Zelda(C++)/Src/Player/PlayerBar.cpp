@@ -2,33 +2,22 @@
 #include "Utility\Static.h"
 PlayerBar::~PlayerBar(){}
 PlayerBar::PlayerBar(){
-	markerX = mapX = 16;
-	markerY = mapY = 32;
-	barX = barY = 0;
-	healthBarStartX = 320;
-	healthBarStartY = 80;
+	marker.setPoint(16, 32);
+	map.setPoint(16, 32);
+	bar.setPoint(0, 0);
+	healthBarStart.setPoint(320, 80);
 	currentHealthPoint = 16;
 	maxHealthPoint = 32;
-	itemSlotStartX = 216;
-	itemSlotStartY = 36;
-	diamondStartX = 152;
-	diamondStartY = 32;
-	diamondTextStartX = 155;
-	diamondTextStartY = 30;
-	itemSlotTextStartX = 228;
-	itemSlotTextStartY = 26;
-	bombStartX = 150;
-	bombStartY = 96;
-	bombTextStartX = 170;
-	bombTextStartY = 78;
-	keyStartX = 150;
-	keyStartY = 56;
-	keyTextStartX = 170;
-	keyTextStartY = 54;
-	swordSlotX = 268;
-	swordSlotY = 50;
-	itemSlotImageX = 220;
-	itemSlotImageY = 50;
+	itemSlotStart.setPoint(216, 36);
+	diamondStart.setPoint(152, 32);
+	diamondTextStart.setPoint(155, 30);
+	itemSlotTextStart.setPoint(228, 26);
+	bombStart.setPoint(150, 96);
+	bombTextStart.setPoint(170, 78);
+	keyStart.setPoint(150, 56);
+	keyTextStart.setPoint(170, 54);
+	swordSlot.setPoint(268, 50);
+	itemSlotImage.setPoint(220, 50);
 	keysAmount = bombAmount = diamondAmount = 10;
 	keysPtr = &keysAmount;
 	bombPtr = &bombAmount;
@@ -58,13 +47,13 @@ void PlayerBar::setupMap(){
 	overworldMap.setFillColor(sf::Color(128, 128, 128));
 	sf::Vector2f size(Global::overworldMapWidth, Global::overworldMapHeight);
 	overworldMap.setSize(size);
-	overworldMap.setPosition(mapX, mapY);
+	overworldMap.setPosition(map.x, map.y);
 }
 void PlayerBar::setupPlayerBar(){
 	playerBar.setFillColor(sf::Color::Black);
 	sf::Vector2f size(Global::roomWidth, Global::inventoryHeight);
 	playerBar.setSize(size);
-	playerBar.setPosition(barX, barY);
+	playerBar.setPosition(bar.x, bar.y);
 	setupMap();
 	setupPlayerMarker();
 	txt.setFont(font);
@@ -73,69 +62,55 @@ void PlayerBar::setupPlayerMarker(){
 	playerMarker.setFillColor(sf::Color::Green);
 	sf::Vector2f size(Global::playerMarkerWidth, Global::playerMarkerHeight);
 	playerMarker.setSize(size);
-	playerMarker.setPosition(markerX, markerY);
+	playerMarker.setPosition(marker.x, marker.y);
 }
-void PlayerBar::setBarNextPosition(float stepX,float stepY){
-	barX += stepX;
-	barY += stepY;
-	markerX += stepX;
-	markerY += stepY;
-	mapX += stepX;
-	mapY += stepY;
-	healthBarStartX += stepX;
-	healthBarStartY += stepY;
-	itemSlotStartX += stepX;
-	itemSlotStartY += stepY;
-	diamondStartX += stepX;
-	diamondStartY += stepY;
-	itemSlotTextStartX += stepX;
-	itemSlotTextStartY += stepY;
-	bombStartX += stepX;
-	bombStartY += stepY;
-	bombTextStartX += stepX;
-	bombTextStartY += stepY;
-	diamondTextStartX += stepX;
-	diamondTextStartY += stepY;
-	keyStartX += stepX;
-	keyStartY += stepY;
-	keyTextStartX += stepX;
-	keyTextStartY += stepY;
-	swordSlotX += stepX;
-	swordSlotY += stepY;
-	itemSlotImageX += stepX;
-	itemSlotImageY += stepY;
+void PlayerBar::setBarNextPosition(Point step){
+	bar.addToPoint(step);
+	marker.addToPoint(step);
+	map.addToPoint(step);
+	healthBarStart.addToPoint(step);
+	itemSlotStart.addToPoint(step);
+	diamondStart.addToPoint(step);
+	itemSlotTextStart.addToPoint(step);
+	bombStart.addToPoint(step);
+	bombTextStart.addToPoint(step);
+	diamondTextStart.addToPoint(step);
+	keyStart.addToPoint(step);
+	keyTextStart.addToPoint(step);
+	swordSlot.addToPoint(step);
+	itemSlotImage.addToPoint(step);
 }
 void PlayerBar::movePlayerBarToBottomScreen(){
-	healthBarStartY += Global::SCREEN_HEIGHT-Global::inventoryHeight;
-	itemSlotStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	itemSlotTextStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	diamondStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	diamondTextStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	bombStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	bombTextStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	keyStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	keyTextStartY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	barY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	mapY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	markerY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	swordSlotY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
-	itemSlotImageY += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	healthBarStart.y += Global::SCREEN_HEIGHT-Global::inventoryHeight;
+	itemSlotStart.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	itemSlotTextStart.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	diamondStart.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	diamondTextStart.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	bombStart.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	bombTextStart.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	keyStart.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	keyTextStart.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	bar.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	map.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	marker.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	swordSlot.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	itemSlotImage.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 }
 void PlayerBar::movePlayerBarToTopScreen(){
-	healthBarStartY =healthBarStartY-Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	itemSlotStartY = itemSlotStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	itemSlotTextStartY = itemSlotTextStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	diamondStartY = diamondStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	diamondTextStartY = diamondTextStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	bombStartY = bombStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	bombTextStartY = bombTextStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	keyStartY = keyStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	keyTextStartY = keyTextStartY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	barY = barY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	markerY = markerY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	swordSlotY = swordSlotY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	mapY = mapY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
-	itemSlotImageY = itemSlotImageY - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	healthBarStart.y =healthBarStart.y-Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	itemSlotStart.y = itemSlotStart.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	itemSlotTextStart.y = itemSlotTextStart.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	diamondStart.y = diamondStart.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	diamondTextStart.y = diamondTextStart.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	bombStart.y = bombStart.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	bombTextStart.y = bombTextStart.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	keyStart.y = keyStart.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	keyTextStart.y = keyTextStart.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	bar.y = bar.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	marker.y = marker.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	swordSlot.y = swordSlot.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	map.y = map.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	itemSlotImage.y = itemSlotImage.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 }
 void PlayerBar::drawHearts(sf::RenderWindow& mainWindow){
 	int totalHearts = maxHealthPoint / 2;
@@ -143,8 +118,8 @@ void PlayerBar::drawHearts(sf::RenderWindow& mainWindow){
 	int fullHearthAmount = currentHealthPoint / 2;
 	int halfHeartAmount = (maxHealthPoint - currentHealthPoint) % 2;
 	int emptyHeartAmount = totalHearts - fullHearthAmount - halfHeartAmount;
-	float tmpHealthBarStartX = healthBarStartX;
-	float tmpHealthBarStartY = healthBarStartY;
+	float tmpHealthBarStartX = healthBarStart.x;
+	float tmpHealthBarStartY = healthBarStart.y;
 	//Draw Full Hearts
 	for (int i = 0; i < fullHearthAmount; i++){
 		sprite.setTexture(fullHeartTexture,true);
@@ -154,7 +129,7 @@ void PlayerBar::drawHearts(sf::RenderWindow& mainWindow){
 		heartsDrawn++;
 		if (heartsDrawn == maxHeartPerRow){
 			tmpHealthBarStartY -= heartHeight;
-			tmpHealthBarStartX = healthBarStartX;
+			tmpHealthBarStartX = healthBarStart.x;
 			heartsDrawn = 0;
 		}
 	}
@@ -167,7 +142,7 @@ void PlayerBar::drawHearts(sf::RenderWindow& mainWindow){
 		heartsDrawn++;
 		if (heartsDrawn == maxHeartPerRow){
 			tmpHealthBarStartY -= heartHeight;
-			tmpHealthBarStartX = healthBarStartX;
+			tmpHealthBarStartX = healthBarStart.x;
 			heartsDrawn = 0;
 		}
 	}
@@ -180,7 +155,7 @@ void PlayerBar::drawHearts(sf::RenderWindow& mainWindow){
 		heartsDrawn++;
 		if (heartsDrawn == maxHeartPerRow){
 			tmpHealthBarStartY -= heartHeight;
-			tmpHealthBarStartX = healthBarStartX;
+			tmpHealthBarStartX = healthBarStart.x;
 			heartsDrawn = 0;
 		}
 	}
@@ -188,25 +163,25 @@ void PlayerBar::drawHearts(sf::RenderWindow& mainWindow){
 void PlayerBar::drawItemsSlot(sf::RenderWindow& mainWindow){
 	int spaceBetweenBothItemSlot = 8;
 	sprite.setTexture(itemSlotTexture,true);
-	sprite.setPosition(itemSlotStartX, itemSlotStartY);
+	sprite.setPosition(itemSlotStart.x, itemSlotStart.y);
 	mainWindow.draw(sprite);
-	sprite.setPosition(itemSlotStartX + spaceBetweenBothItemSlot + itemSlotTexture.getSize().x, itemSlotStartY);
+	sprite.setPosition(itemSlotStart.x + spaceBetweenBothItemSlot + itemSlotTexture.getSize().x, itemSlotStart.y);
 	mainWindow.draw(sprite);
 
 	txt.setColor(sf::Color::White);
 	txt.setCharacterSize(14);
-	txt.setPosition(itemSlotTextStartX, itemSlotTextStartY);
+	txt.setPosition(itemSlotTextStart.x, itemSlotTextStart.y);
 	txt.setString("S");
 	mainWindow.draw(txt);
-	txt.setPosition(itemSlotTextStartX+spaceBetweenBothItemSlot+itemSlotTexture.getSize().x, itemSlotTextStartY);
+	txt.setPosition(itemSlotTextStart.x+spaceBetweenBothItemSlot+itemSlotTexture.getSize().x, itemSlotTextStart.y);
 	txt.setString("A");
 	mainWindow.draw(txt);
 
 	sprite.setTexture(woodSwordTexture,true);
-	sprite.setPosition(swordSlotX, swordSlotY);
+	sprite.setPosition(swordSlot.x, swordSlot.y);
 	mainWindow.draw(sprite);
 	if (itemSlotS.getTexture() != NULL){
-		itemSlotS.setPosition(itemSlotImageX, itemSlotImageY);
+		itemSlotS.setPosition(itemSlotImage.x, itemSlotImage.y);
 		mainWindow.draw(itemSlotS);
 	}
 }
@@ -215,11 +190,11 @@ void PlayerBar::drawBombInfo(sf::RenderWindow& mainWindow){
 	ss << "X" << bombAmount;
 	txt.setCharacterSize(14);
 	txt.setColor(sf::Color::White);
-	txt.setPosition(bombTextStartX, bombTextStartY);
+	txt.setPosition(bombTextStart.x, bombTextStart.y);
 	txt.setString(ss.str());
 	mainWindow.draw(txt);
 	sprite.setTexture(bombIconTexture,true);
-	sprite.setPosition(bombStartX, bombStartY - bombIconTexture.getSize().y);
+	sprite.setPosition(bombStart.x, bombStart.y - bombIconTexture.getSize().y);
 	mainWindow.draw(sprite);
 }
 void PlayerBar::drawKeyInfo(sf::RenderWindow& mainWindow){
@@ -227,30 +202,30 @@ void PlayerBar::drawKeyInfo(sf::RenderWindow& mainWindow){
 	ss << "X" << keysAmount;
 	txt.setCharacterSize(14);
 	txt.setColor(sf::Color::White);
-	txt.setPosition(keyTextStartX, keyTextStartY);
+	txt.setPosition(keyTextStart.x, keyTextStart.y);
 	txt.setString(ss.str());
 	mainWindow.draw(txt);
 	sprite.setTexture(keyIconTexture,true);
-	sprite.setPosition(keyStartX, keyStartY);
+	sprite.setPosition(keyStart.x, keyStart.y);
 	mainWindow.draw(sprite);
 }
 void PlayerBar::drawDiamondInfo(sf::RenderWindow& mainWindow){
 	ss.str("");
 	ss << diamondAmount;
 	sprite.setTexture(diamondIconTexture, true);
-	sprite.setPosition(diamondStartX, diamondStartY);
+	sprite.setPosition(diamondStart.x, diamondStart.y);
 	mainWindow.draw(sprite);
 
 	txt.setColor(sf::Color::White);
 	txt.setString(ss.str());
 	txt.setCharacterSize(14);
-	txt.setPosition(diamondTextStartX + diamondIconTexture.getSize().x, diamondTextStartY);
+	txt.setPosition(diamondTextStart.x + diamondIconTexture.getSize().x, diamondTextStart.y);
 	mainWindow.draw(txt);
 }
 void PlayerBar::drawPlayerBar(sf::RenderWindow& mainWindow){
 	txt.setString("- L I F E -");
 	txt.setColor(sf::Color::Red);
-	txt.setPosition(healthBarStartX, overworldMap.getPosition().y);
+	txt.setPosition(healthBarStart.x, overworldMap.getPosition().y);
 	txt.setCharacterSize(12);
 	mainWindow.draw(txt);
 	drawHearts(mainWindow);
@@ -266,7 +241,7 @@ void PlayerBar::draw(sf::RenderWindow& mainWindow){
 	drawPlayerBar(mainWindow);
 }
 void PlayerBar::update(){
-	playerBar.setPosition(barX, barY);
-	overworldMap.setPosition(mapX, mapY);
-	playerMarker.setPosition(markerX, markerY);
+	playerBar.setPosition(bar.x, bar.y);
+	overworldMap.setPosition(map.x, map.y);
+	playerMarker.setPosition(marker.x, marker.y);
 }

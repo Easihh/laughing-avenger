@@ -1,9 +1,15 @@
+Version 0.041
+
+-Fixed pushback issue with improved pushback system and pushing near room bounds.
+-Refactored part of the pushback method for Octorok class.
+-Some refactoring of playerbar class.
+
 Version 0.040
 
 -Fixed when player facing North could be pushed slightly off-Screen on the South side of a given room.
 -Increased pushback when monster get hit by Sword.
--Improved Pushback system for case where the next collision in line is greater than 0 but less than maxPush distance.
--Started Moving naked pointers to smart pointers.
+-Improved pushback system for case where the next collision in line is greater than 0 but less than maxPush distance.
+-Started moving from naked pointers to smart pointers.
  
 Version 0.039
 

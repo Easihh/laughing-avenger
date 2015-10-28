@@ -81,78 +81,135 @@ void Octorok::pushbackUpdate(){
 	else pushbackStep += step;
 	updateMasks();
 }
-void Octorok::takeDamage(int damage, std::vector<GameObject*>* worldMap, Static::Direction swordDir){
+void Octorok::takeDamage(int damage, std::vector<GameObject*>* worldMap, Static::Direction attackDir){
 	if (!isInvincible){
 		healthPoint -= damage;
 		if (healthPoint >= 1)
-			pushBack(worldMap,swordDir);
+			pushBack(worldMap, attackDir);
 		isInvincible = true;
 		walkAnimIndex = 1;
 	}
 }
-void Octorok::pushBack(std::vector<GameObject*>* worldMap, Static::Direction swordDir){
+void Octorok::pushBack(std::vector<GameObject*>* worldMap, Static::Direction attackDir){
 	float pushBackMinDistance = 0;
-	sf::Vector2f size(width, height);
-	std::unique_ptr<sf::RectangleShape> pushbackLineCheck = std::make_unique<sf::RectangleShape>();
-	pushbackLineCheck->setPosition(position.x, position.y);
-	pushbackLineCheck->setSize(size);
-	switch (swordDir){
+	switch (attackDir){
 	case Static::Direction::Up:{
-		for (pushBackMinDistance = 0; pushBackMinDistance < pushBackMaxDistance; pushBackMinDistance++){
-			Point pt(0, -pushBackMinDistance);
-			if (isColliding(worldMap, pushbackLineCheck, pt))
-				break;
-		}
+		pushBackMinDistance = getMinimumLineCollisionDistance(Static::Up, worldMap);
 		if (!isOutsideRoomBound(Point(position.x, position.y - pushBackMinDistance))){
 				if (dir==Static::Up)
 					pushbackStep += pushBackMinDistance;
 				else if (dir==Static::Down)
 					pushbackStep -= pushBackMinDistance;
-			}
+		}
+		else//the maximum pushback is beyond the room bounds
+		{
+			if (dir == Static::Up)
+				pushbackStep += getDistanceToMapBoundary(Static::Up);
+			else if (dir == Static::Down)
+				pushbackStep -= getDistanceToMapBoundary(Static::Up);
+		}
 		break;
 	}
 	case Static::Direction::Down:{
-		for (pushBackMinDistance = 0; pushBackMinDistance < pushBackMaxDistance; pushBackMinDistance++){
-			Point pt(0, pushBackMinDistance);
-			if (isColliding(worldMap, pushbackLineCheck, pt))
-				break;
-		}
+		pushBackMinDistance = getMinimumLineCollisionDistance(Static::Down, worldMap);
 		if (!isOutsideRoomBound(Point(position.x, position.y + pushBackMinDistance))){
 			if (dir == Static::Up)
 				pushbackStep -= pushBackMinDistance;
 			else if (dir == Static::Down)
 				pushbackStep += pushBackMinDistance;
 		}
-	break;
-}
-	case Static::Direction::Right:{
-		for (pushBackMinDistance = 0; pushBackMinDistance < pushBackMaxDistance; pushBackMinDistance++){
-			Point pt(pushBackMinDistance, 0);
-			if (isColliding(worldMap, pushbackLineCheck, pt))
-				break;
+		else
+		{
+			if (dir == Static::Up)
+				pushbackStep -= getDistanceToMapBoundary(Static::Down);
+			else if (dir == Static::Down)
+				pushbackStep += getDistanceToMapBoundary(Static::Down);
 		}
+		break;
+	}	
+	case Static::Direction::Right:{
+		pushBackMinDistance = getMinimumLineCollisionDistance(Static::Right, worldMap);
 		if (!isOutsideRoomBound(Point(position.x + pushBackMinDistance, position.y))){
 				if (dir == Static::Left)
 					pushbackStep -= pushBackMinDistance;
 				else if (dir == Static::Right)
 					pushbackStep += pushBackMinDistance;
-			}
+		}
+		else
+		{
+			if (dir == Static::Left)
+				pushbackStep -= getDistanceToMapBoundary(Static::Right);
+			else if (dir == Static::Right)
+				pushbackStep += getDistanceToMapBoundary(Static::Right);
+		}
 		break;
 	}
 	case Static::Direction::Left:{
-		for (pushBackMinDistance = 0; pushBackMinDistance < pushBackMaxDistance; pushBackMinDistance++){
-			Point pt(-pushBackMinDistance, 0);
-			if (isColliding(worldMap, pushbackLineCheck, pt))
-				break;
-		}
+		pushBackMinDistance = getMinimumLineCollisionDistance(Static::Left, worldMap);
 			if (!isOutsideRoomBound(Point(position.x - pushBackMinDistance, position.y))){
 				if (dir == Static::Left)
 					pushbackStep += pushBackMinDistance;
 				else if (dir == Static::Right)
 					pushbackStep -= pushBackMinDistance;
 			}
+			else
+			{
+				if (dir == Static::Left)
+					pushbackStep += getDistanceToMapBoundary(Static::Left);
+				else if (dir == Static::Right)
+					pushbackStep -= getDistanceToMapBoundary(Static::Left);
+			}
 		break;
 	}
+	}
+}
+int Octorok::getMinimumLineCollisionDistance(Static::Direction pushbackDir, std::vector<GameObject*>* worldMap){
+	float pushBackMinDistance = 0;
+	sf::Vector2f size(width, height);
+	std::unique_ptr<sf::RectangleShape> pushbackLineCheck = std::make_unique<sf::RectangleShape>();
+	pushbackLineCheck->setPosition(position.x, position.y);
+	pushbackLineCheck->setSize(size);
+	std::unique_ptr<Point> pt;
+	for (pushBackMinDistance = 0; pushBackMinDistance < pushBackMaxDistance; pushBackMinDistance++){
+		if (pushbackDir==Static::Up)
+			pt = std::make_unique<Point>(0, -pushBackMinDistance);
+		else if (pushbackDir == Static::Down)
+			pt = std::make_unique<Point>(0, pushBackMinDistance);
+		else if (pushbackDir == Static::Right)
+			pt = std::make_unique<Point>(pushBackMinDistance, 0);
+		else if(pushbackDir == Static::Left)
+			pt = std::make_unique<Point>(-pushBackMinDistance, 0);
+		if (isColliding(worldMap, pushbackLineCheck, *pt))
+			break;
+	}
+	return pushBackMinDistance;
+}
+/*
+Used to determine the distance to pushback in the case where there is no object in line such 
+as map boundaries, otherwise the pushback return false because the max  pushback distance is 
+outside the map boundaries.
+*/
+int Octorok::getDistanceToMapBoundary(Static::Direction direction){
+	int worldX = (position.y-Global::inventoryHeight) / Global::roomHeight;
+	int worldY = position.x / Global::roomWidth;
+	int boundary;
+	switch (direction){
+	case Static::Direction::Left:
+		boundary = worldY*Global::roomWidth;
+		return position.x - boundary;
+		break;
+	case Static::Direction::Right:
+		boundary = worldY*Global::roomWidth + Global::roomWidth -Global::TileWidth;
+		return boundary - position.x;
+		break;
+	case Static::Direction::Down:
+		boundary = worldX*Global::roomHeight +Global::roomHeight+Global::inventoryHeight- Global::TileHeight;
+		return  boundary - position.y;
+		break;
+	case Static::Direction::Up:
+		boundary = worldX*Global::roomHeight + Global::inventoryHeight;
+		return position.y-boundary;
+		break;
 	}
 }
 bool Octorok::isColliding(std::vector<GameObject*>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, Point offsets){

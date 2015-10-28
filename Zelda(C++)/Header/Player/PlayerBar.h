@@ -12,22 +12,20 @@ public:
 	void setupPlayerMarker();
 	void draw(sf::RenderWindow& mainWindow);
 	void update();
-	void setBarNextPosition(float stepX, float stepY);
+	void setBarNextPosition(Point step);
 	void decreaseCurrentHP(int amount);
 	int getCurrentHP();
 	void movePlayerBarToBottomScreen();
 	void movePlayerBarToTopScreen();
 	sf::RectangleShape playerMarker, playerBar, overworldMap;
-	float markerX, markerY;
+	Point marker;
 	sf::Sprite itemSlotS;
 	int* diamondPtr;
 	int* keysPtr;
 	int* bombPtr;
 private:
-	float barX, barY, mapX, mapY, healthBarStartX, healthBarStartY,itemSlotStartX,itemSlotStartY,
-		diamondStartX, diamondStartY, itemSlotTextStartX,itemSlotTextStartY,bombStartX,bombStartY,bombTextStartX,
-		bombTextStartY, diamondTextStartX, diamondTextStartY, keyTextStartX, keyTextStartY, keyStartX, keyStartY,
-		itemSelectionX, itemSelectionY, swordSlotX, swordSlotY,itemSlotImageX,itemSlotImageY;
+	Point bar, map, healthBarStart, itemSlotStart, diamondStart, itemSlotTextStart, bombStart, bombTextStart,
+		diamondTextStart, keyTextStart, keyStart, itemSelection, swordSlot, itemSlotImage;
 	sf::Texture fullHeartTexture,halfHeartTexture,emptyHeartTexture,itemSlotTexture,bombIconTexture,diamondIconTexture,
 		keyIconTexture,woodSwordTexture;
 	sf::Sprite sprite;

@@ -15,7 +15,7 @@ private:
 	void movement(std::vector<GameObject*>* worldMap);
 	bool isColliding(std::vector<GameObject*>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, Point offsets);
 	void pushBack(std::vector<GameObject*>* worldMap, Static::Direction swordDir);
-	void takeDamage(int damage, std::vector<GameObject*>* worldMap, Static::Direction swordDir);
+	void takeDamage(int damage, std::vector<GameObject*>* worldMap, Static::Direction attackDir);
 	int getXOffset();
 	int getYOffset();
 	void pushbackUpdate();
@@ -24,5 +24,7 @@ private:
 	Animation * walkingAnimation[3];
 	Static::Direction dir;
 	const int minStep = 1;
+	int getDistanceToMapBoundary(Static::Direction direction);
+	int getMinimumLineCollisionDistance(Static::Direction direction, std::vector<GameObject*>* worldMap);
 };
 #endif

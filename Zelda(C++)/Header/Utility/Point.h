@@ -6,5 +6,7 @@ struct Point{
 
 	Point(float x, float y);
 	Point();
+	void addToPoint(Point add);
+	void setPoint(float x, float y);
 };
 #endif

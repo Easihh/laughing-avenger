@@ -275,19 +275,19 @@
 	 switch (dir){
 	 case Static::Direction::Down:
 		worldX++;
-		playerBar->markerY += Global::playerMarkerHeight;
+		playerBar->marker.y += Global::playerMarkerHeight;
 		break;
 	 case Static::Direction::Up:
 		 worldX--;
-		 playerBar->markerY -= Global::playerMarkerHeight;
+		 playerBar->marker.y -= Global::playerMarkerHeight;
 		 break;
 	 case Static::Direction::Right:
 		 worldY++;
-		 playerBar->markerX += Global::playerMarkerWidth;
+		 playerBar->marker.x += Global::playerMarkerWidth;
 		 break;
 	 case Static::Direction::Left:
 		 worldY--;
-		 playerBar->markerX -= Global::playerMarkerWidth;
+		 playerBar->marker.x -= Global::playerMarkerWidth;
 		 break;
 	 }
  }
@@ -321,7 +321,8 @@
 		 nextYPosition = -((float)minTransitionStep*Global::roomHeight / maxTransitionStep);
 		 break;
 	 }
-	 playerBar->setBarNextPosition(nextXPosition,nextYPosition);
+	 Point nextPosition(nextXPosition, nextYPosition);
+	 playerBar->setBarNextPosition(nextPosition);
 	 inventory->updateInventoryPosition(nextXPosition, nextYPosition);
 	 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, position);
 	 transitionStep -= minTransitionStep;

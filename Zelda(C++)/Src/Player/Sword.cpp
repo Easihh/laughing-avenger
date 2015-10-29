@@ -31,7 +31,7 @@ void Sword::loadImage(Static::Direction dir){
 		break;
 	case Static::Direction::Up:
 		texture.loadFromFile("Tileset/WoodSword_Up.png");
-		position.x = position.x + (Global::minGridStep / 4);
+		position.x = position.x + (Global::minGridStep / 2);
 		position.y = position.y - Global::minGridStep - (Global::minGridStep / 2);
 		break;
 	}
@@ -43,7 +43,7 @@ void Sword::loadImage(Static::Direction dir){
 void Sword::update(bool& isAttacking, bool& canAttack,std::vector<GameObject*>* worldMap, Animation* walkAnimation[3]){
 	if (isAttacking){
 		swordCurrentFrame++;
-		if (isCollidingWithMonster(worldMap))
+		if (isCollidingWithMonster(worldMap));
 			updateMonster(worldMap);
 		if (swordCurrentFrame >= swordMaxFrame){
 			isAttacking = false;
@@ -72,7 +72,7 @@ bool Sword::isCollidingWithMonster(std::vector<GameObject*>* worldMap){
 				if (intersect(fullMask, ((Monster*)obj)->fullMask, offset)){
 					isColliding = true;
 					collidingMonsterList.push_back(obj);
-				}
+		}
 	}
 	return isColliding;
 }
@@ -80,7 +80,7 @@ void Sword::updateMonster(std::vector<GameObject*>* worldMap){
 	for each (GameObject* mstr in collidingMonsterList)
 	{
 		Monster* temp = (Monster*)mstr;
-		temp->takeDamage(strength, worldMap, swordDir);
+		temp->takeDamage(strength, worldMap,swordDir);
 		//std::cout << "Collision at X:" << temp->xPosition << " Y:" << temp->yPosition<<std::endl;
 	}
 }

@@ -13,7 +13,7 @@ public:
 	void transitionBackToGame(PlayerBar* playerBar);
 	bool keyWasReleased;
 	Item* items[Static::inventoryRows][Static::inventoryCols];
-	void updateInventoryPosition(float stepX, float stepY);
+	void updateInventoryPosition(Point step);
 	int selectorInventoryXIndex, selectorInventoryYIndex;
 	Item* getCurrentItem();
 private:
@@ -32,8 +32,7 @@ private:
 	void loadInventoryRectangle();
 	void loadInventoryCurrentSelection();
 	void selectFirstInventoryItemOwned();
-	float x, y, itemSelectedX, itemSelectedY, inventoryTextX, inventoryTextY,
-		itemUseButtonTextX, itemUseButtonTextY;
+	Point inventoryRectPt, itemSelectedPt, inventoryText,itemUseButtonText;
 	sf::Sprite selectedItem;
 };
 #endif

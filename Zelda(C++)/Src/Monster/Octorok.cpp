@@ -169,17 +169,17 @@ int Octorok::getMinimumLineCollisionDistance(Static::Direction pushbackDir, std:
 	std::unique_ptr<sf::RectangleShape> pushbackLineCheck = std::make_unique<sf::RectangleShape>();
 	pushbackLineCheck->setPosition(position.x, position.y);
 	pushbackLineCheck->setSize(size);
-	std::unique_ptr<Point> pt;
+	Point pt;
 	for (pushBackMinDistance = 0; pushBackMinDistance < pushBackMaxDistance; pushBackMinDistance++){
 		if (pushbackDir==Static::Up)
-			pt = std::make_unique<Point>(0, -pushBackMinDistance);
+			pt.setPoint(0, -pushBackMinDistance);
 		else if (pushbackDir == Static::Down)
-			pt = std::make_unique<Point>(0, pushBackMinDistance);
+			pt.setPoint(0, pushBackMinDistance);
 		else if (pushbackDir == Static::Right)
-			pt = std::make_unique<Point>(pushBackMinDistance, 0);
+			pt.setPoint(pushBackMinDistance, 0);
 		else if(pushbackDir == Static::Left)
-			pt = std::make_unique<Point>(-pushBackMinDistance, 0);
-		if (isColliding(worldMap, pushbackLineCheck, *pt))
+			pt.setPoint(-pushBackMinDistance, 0);
+		if (isColliding(worldMap, pushbackLineCheck, pt))
 			break;
 	}
 	return pushBackMinDistance;
@@ -233,9 +233,9 @@ bool Octorok::isOutsideRoomBound(Point pos){
 	bool outsideBoundary = false;
 	if (pos.x+width > (Global::roomWidth*worldY) + Global::roomWidth)
 		outsideBoundary = true;
-	else if (pos.x-width < (Global::roomWidth*worldY))
+	else if (pos.x < (Global::roomWidth*worldY))
 		outsideBoundary = true;
-	else if (pos.y-height < (Global::roomHeight*worldX) + Global::inventoryHeight)
+	else if (pos.y< (Global::roomHeight*worldX) + Global::inventoryHeight)
 		outsideBoundary = true;
 	else if (pos.y+height >(Global::roomHeight*worldX) + Global::roomHeight + Global::inventoryHeight)
 		outsideBoundary = true;

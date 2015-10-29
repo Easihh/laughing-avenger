@@ -1,3 +1,12 @@
+Version 0.042
+
+-Fixed an issue where Monster would become unable to move when pushed at map boundary for north and west side
+-Removed uneeded naked pointers.
+-Cleaned some left over y/x variables/method that should have been Point class.
+-Bomb now go off after 1.5second down from 2 seconds.
+-Fixed an issue with player sword appearing slightly off when attacking north.
+-Player attacks now more fluid due to decreased cooldown/delay.
+
 Version 0.041
 
 -Fixed pushback issue with improved pushback system and pushing near room bounds.

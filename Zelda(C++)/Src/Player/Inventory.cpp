@@ -2,12 +2,9 @@
 #include "Utility\Static.h"
 #include <iostream>
 Inventory::Inventory(){
-	keyWasReleased = false;
-	hasBoomrang = false;
-	inventoryTextX = 52;
-	inventoryTextY = 52;
-	itemUseButtonTextX = 16;
-	itemUseButtonTextY = 136;
+	keyWasReleased = hasBoomrang = false;
+	inventoryText.setPoint(52,52);
+	itemUseButtonText.setPoint(16, 136);
 	font.loadFromFile("zelda.ttf");
 	txt.setFont(font);
 	loadInventoryCurrentSelection();
@@ -15,8 +12,7 @@ Inventory::Inventory(){
 	loadSelector();
 }
 void Inventory::loadInventoryCurrentSelection(){
-	itemSelectedX = 100;
-	itemSelectedY = 100;
+	itemSelectedPt.setPoint(100,100);
 	itemSelected.setOutlineColor(sf::Color(64, 0, 128));
 	itemSelected.setOutlineThickness(3);
 	itemSelected.setFillColor(sf::Color::Transparent);
@@ -24,8 +20,7 @@ void Inventory::loadInventoryCurrentSelection(){
 	itemSelected.setSize(size);
 }
 void Inventory::loadInventoryRectangle(){
-	x = 192;
-	y = 96;
+	inventoryRectPt.setPoint(192,96);
 	inventoryRect.setOutlineColor(sf::Color(64, 0, 128));
 	inventoryRect.setOutlineThickness(3);
 	inventoryRect.setFillColor(sf::Color::Transparent);
@@ -41,27 +36,23 @@ void Inventory::loadSelector(){
 	selector.setPosition(228, 180);
 }
 Inventory::~Inventory(){}
-void Inventory::updateInventoryPosition(float stepX,float stepY){
-	x += stepX;
-	y += stepY;
-	itemSelectedX += stepX;
-	itemSelectedY += stepY;
-	inventoryTextX += stepX;
-	inventoryTextY += stepY;
-	itemUseButtonTextX += stepX;
-	itemUseButtonTextY += stepY;
+void Inventory::updateInventoryPosition(Point step){
+	inventoryRectPt.addToPoint(step);
+	itemSelectedPt.addToPoint(step);
+	inventoryText.addToPoint(step);
+	itemUseButtonText.addToPoint(step);
 }
 Item* Inventory::getCurrentItem(){
 	return items[selectorInventoryXIndex][selectorInventoryYIndex];
 }
 void Inventory::transitionToInventory(PlayerBar* playerBar){
 	playerBar->movePlayerBarToBottomScreen();
-	inventoryRect.setPosition(x, y);
-	itemSelected.setPosition(itemSelectedX, itemSelectedY);
-	selector.setPosition(x,y);
+	inventoryRect.setPosition(inventoryRectPt.x, inventoryRectPt.y);
+	itemSelected.setPosition(itemSelectedPt.x, itemSelectedPt.y);
+	selector.setPosition(inventoryRectPt.x, inventoryRectPt.y);
 	selectFirstInventoryItemOwned();
-	items[0][0]->sprite.setPosition(x, y);
-	items[2][2]->sprite.setPosition(x + (2 * selectorWidth), y + (2*selectorHeight));
+	items[0][0]->sprite.setPosition(inventoryRectPt.x, inventoryRectPt.y);
+	items[2][2]->sprite.setPosition(inventoryRectPt.x + (2 * selectorWidth), inventoryRectPt.y + (2 * selectorHeight));
 }
 void Inventory::selectFirstInventoryItemOwned(){
 	for (int i = 0; i < Static::inventoryRows; i++){
@@ -70,7 +61,7 @@ void Inventory::selectFirstInventoryItemOwned(){
 				selectorInventoryYIndex = j;
 				selectorInventoryXIndex = i;
 				selectedItem = items[i][j]->sprite;
-				selectedItem.setPosition(itemSelectedX, itemSelectedY);
+				selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
 				return;
 			}
 		}
@@ -81,11 +72,11 @@ void Inventory::getInput(sf::Event& event){
 		keyWasReleased = true;
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right){
 		findNextSelectorPosition();
-		selector.setPosition(x + (selectorInventoryXIndex *selectorWidth),y+  (selectorInventoryYIndex*selectorHeight));
+		selector.setPosition(inventoryRectPt.x + (selectorInventoryXIndex *selectorWidth), inventoryRectPt.y + (selectorInventoryYIndex*selectorHeight));
 	}
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left){
 		findNextSelectorPosition();
-		selector.setPosition(x + (selectorInventoryXIndex *selectorWidth), y + (selectorInventoryYIndex*selectorHeight));
+		selector.setPosition(inventoryRectPt.x + (selectorInventoryXIndex *selectorWidth), inventoryRectPt.y + (selectorInventoryYIndex*selectorHeight));
 	}
 }
 void Inventory::findNextSelectorPosition(){
@@ -97,7 +88,7 @@ void Inventory::findNextSelectorPosition(){
 				selectorInventoryXIndex = i;
 				found = true;
 				selectedItem = items[i][j]->sprite;
-				selectedItem.setPosition(itemSelectedX, itemSelectedY);
+				selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
 			}
 		}
 	}
@@ -108,7 +99,7 @@ void Inventory::findNextSelectorPosition(){
 					selectorInventoryYIndex = j;
 					selectorInventoryXIndex = i;
 					selectedItem = items[i][j]->sprite;
-					selectedItem.setPosition(itemSelectedX, itemSelectedY);
+					selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
 				}
 			}
 		}
@@ -137,12 +128,12 @@ void Inventory::drawInventoryItems(sf::RenderWindow& mainWindow){
 void Inventory::drawInventoryText(sf::RenderWindow& mainWindow){
 	txt.setCharacterSize(14);
 	txt.setColor(sf::Color::Red);
-	txt.setPosition(inventoryTextX, inventoryTextY);
+	txt.setPosition(inventoryText.x, inventoryText.y);
 	txt.setString("INVENTORY");
 	mainWindow.draw(txt);
 
 	txt.setColor(sf::Color::White);
-	txt.setPosition(itemUseButtonTextX, itemUseButtonTextY);
+	txt.setPosition(itemUseButtonText.x, itemUseButtonText.y);
 	txt.setString("USE S BUTTON\n FOR THIS");
 	mainWindow.draw(txt);
 }

@@ -323,7 +323,7 @@
 	 }
 	 Point nextPosition(nextXPosition, nextYPosition);
 	 playerBar->setBarNextPosition(nextPosition);
-	 inventory->updateInventoryPosition(nextXPosition, nextYPosition);
+	 inventory->updateInventoryPosition(nextPosition);
 	 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, position);
 	 transitionStep -= minTransitionStep;
 	 if (transitionStep == 0){

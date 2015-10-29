@@ -13,7 +13,7 @@ public:
 	void update(bool& isAttacking, bool& canAttack,std::vector<GameObject*>* worldMap, Animation* walkAnimation[3]);
 private:
 	int swordCurrentFrame, swordDelay,strength;
-	const int swordMaxFrame=20, swordMaxDelay=16;
+	const int swordMaxFrame=12, swordMaxDelay=8;
 	bool isCollidingWithMonster(std::vector<GameObject*>* worldMap);
 	std::vector<GameObject*> collidingMonsterList;
 	Static::Direction swordDir;

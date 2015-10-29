@@ -10,7 +10,7 @@ public:
 	void draw(sf::RenderWindow& mainWindow);
 	void update(std::vector<GameObject*>* worldMap);
 private:
-	int currentFrame, maxFrame = 2*Global::FPS_RATE;
+	int currentFrame, maxFrame = 90;
 	void setup(Static::Direction direction);
 	void createBombEffect();
 };

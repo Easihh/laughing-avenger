@@ -10,7 +10,8 @@ public:
 	virtual void draw(sf::RenderWindow& mainWindow);
 private:
 	int currentFrame;
-	const int maxFrame = 20;
+	const int maxFrame = 20,bombDmg=1;
 	EffectType eType;
+	void collisionWithMonster(std::vector<GameObject*>* worldMap);
 };
 #endif

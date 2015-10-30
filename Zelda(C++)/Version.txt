@@ -1,3 +1,12 @@
+Version 0.044
+
+-
+
+Version 0.043
+
+-Bomb explosion now damage monsters.
+-Pressing inventory button now put the selector over the current selected Inventory Item.
+
 Version 0.042
 
 -Fixed an issue where Monster would become unable to move when pushed at map boundary for north and west side

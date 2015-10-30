@@ -31,7 +31,7 @@ private:
 	void findNextSelectorPosition();
 	void loadInventoryRectangle();
 	void loadInventoryCurrentSelection();
-	void selectFirstInventoryItemOwned();
+	void selectInventoryItem();
 	Point inventoryRectPt, itemSelectedPt, inventoryText,itemUseButtonText;
 	sf::Sprite selectedItem;
 };

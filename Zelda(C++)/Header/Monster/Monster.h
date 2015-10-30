@@ -16,6 +16,7 @@ public:
 	Monster();
 	~Monster();
 	virtual void takeDamage(int damage,std::vector<GameObject*>* worldMap,Static::Direction swordDir);
+	virtual void takeDamage(int damage);
 	int strength, walkAnimIndex;
 	const float pushBackMaxDistance = 96;
 	const int stepPerPushBackUpdate = 4;

@@ -16,6 +16,7 @@ private:
 	bool isColliding(std::vector<GameObject*>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, Point offsets);
 	void pushBack(std::vector<GameObject*>* worldMap, Static::Direction swordDir);
 	void takeDamage(int damage, std::vector<GameObject*>* worldMap, Static::Direction attackDir);
+	void takeDamage(int damage);
 	int getXOffset();
 	int getYOffset();
 	void pushbackUpdate();

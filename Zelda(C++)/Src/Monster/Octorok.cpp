@@ -10,7 +10,7 @@ Octorok::Octorok(Point pos, bool canBeCollidedWith){
 	isCollideable = canBeCollidedWith;
 	loadAnimation();
 	isInvincible = false;
-	healthPoint = 20;
+	healthPoint = 2;
 	strength = 1;
 	currentInvincibleFrame = 0;
 	pushbackStep = 0;
@@ -34,7 +34,8 @@ void Octorok::draw(sf::RenderWindow& mainWindow){
 }
 void Octorok::update(std::vector<GameObject*>* worldMap){
 	if (pushbackStep == 0)
-		movement(worldMap);
+		int test = 0;
+		//movement(worldMap);
 	else pushbackUpdate();
 	for (int i = 0; i < 3;i++)
 		walkingAnimation[i]->updateAnimationFrame(dir, position);
@@ -86,6 +87,13 @@ void Octorok::takeDamage(int damage, std::vector<GameObject*>* worldMap, Static:
 		healthPoint -= damage;
 		if (healthPoint >= 1)
 			pushBack(worldMap, attackDir);
+		isInvincible = true;
+		walkAnimIndex = 1;
+	}
+}
+void Octorok::takeDamage(int damage){
+	if (!isInvincible){
+		healthPoint -= damage;
 		isInvincible = true;
 		walkAnimIndex = 1;
 	}

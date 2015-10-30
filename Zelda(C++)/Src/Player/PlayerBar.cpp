@@ -65,20 +65,20 @@ void PlayerBar::setupPlayerMarker(){
 	playerMarker.setPosition(marker.x, marker.y);
 }
 void PlayerBar::setBarNextPosition(Point step){
-	bar.addToPoint(step);
-	marker.addToPoint(step);
-	map.addToPoint(step);
-	healthBarStart.addToPoint(step);
-	itemSlotStart.addToPoint(step);
-	diamondStart.addToPoint(step);
-	itemSlotTextStart.addToPoint(step);
-	bombStart.addToPoint(step);
-	bombTextStart.addToPoint(step);
-	diamondTextStart.addToPoint(step);
-	keyStart.addToPoint(step);
-	keyTextStart.addToPoint(step);
-	swordSlot.addToPoint(step);
-	itemSlotImage.addToPoint(step);
+	bar +=step;
+	marker+=step;
+	map+=(step);
+	healthBarStart+=(step);
+	itemSlotStart+=(step);
+	diamondStart+=(step);
+	itemSlotTextStart+=(step);
+	bombStart+=(step);
+	bombTextStart+=(step);
+	diamondTextStart+=(step);
+	keyStart+=(step);
+	keyTextStart+=(step);
+	swordSlot+=(step);
+	itemSlotImage+=(step);
 }
 void PlayerBar::movePlayerBarToBottomScreen(){
 	healthBarStart.y += Global::SCREEN_HEIGHT-Global::inventoryHeight;

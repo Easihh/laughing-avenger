@@ -37,10 +37,10 @@ void Inventory::loadSelector(){
 }
 Inventory::~Inventory(){}
 void Inventory::updateInventoryPosition(Point step){
-	inventoryRectPt.addToPoint(step);
-	itemSelectedPt.addToPoint(step);
-	inventoryText.addToPoint(step);
-	itemUseButtonText.addToPoint(step);
+	inventoryRectPt+=(step);
+	itemSelectedPt+=(step);
+	inventoryText+=(step);
+	itemUseButtonText+=(step);
 }
 Item* Inventory::getCurrentItem(){
 	return items[selectorInventoryXIndex][selectorInventoryYIndex];
@@ -49,23 +49,15 @@ void Inventory::transitionToInventory(PlayerBar* playerBar){
 	playerBar->movePlayerBarToBottomScreen();
 	inventoryRect.setPosition(inventoryRectPt.x, inventoryRectPt.y);
 	itemSelected.setPosition(itemSelectedPt.x, itemSelectedPt.y);
-	selector.setPosition(inventoryRectPt.x, inventoryRectPt.y);
-	selectFirstInventoryItemOwned();
 	items[0][0]->sprite.setPosition(inventoryRectPt.x, inventoryRectPt.y);
 	items[2][2]->sprite.setPosition(inventoryRectPt.x + (2 * selectorWidth), inventoryRectPt.y + (2 * selectorHeight));
+	selectInventoryItem();
 }
-void Inventory::selectFirstInventoryItemOwned(){
-	for (int i = 0; i < Static::inventoryRows; i++){
-		for (int j = 0; j < Static::inventoryCols; j++){
-			if (items[i][j] != NULL){
-				selectorInventoryYIndex = j;
-				selectorInventoryXIndex = i;
-				selectedItem = items[i][j]->sprite;
-				selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
-				return;
-			}
-		}
-	}
+void Inventory::selectInventoryItem(){
+	Item* current = getCurrentItem();
+	if (current != NULL)
+		selector.setPosition(current->sprite.getPosition().x, current->sprite.getPosition().y);
+	else selector.setPosition(inventoryRectPt.x, inventoryRectPt.y);
 }
 void Inventory::getInput(sf::Event& event){
 	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Q)

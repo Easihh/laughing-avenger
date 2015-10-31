@@ -16,6 +16,7 @@ public:
 	void updateInventoryPosition(Point step);
 	int selectorInventoryXIndex, selectorInventoryYIndex;
 	Item* getCurrentItem();
+	void findNextSelectorPosition();
 private:
 	sf::RectangleShape inventoryRect, itemSelected;
 	void getInput(sf::Event& event);
@@ -27,8 +28,7 @@ private:
 	void loadSelector();
 	void drawInventoryItems(sf::RenderWindow& mainWindow);
 	void drawInventoryText(sf::RenderWindow& mainWindow);
-	bool hasBoomrang;
-	void findNextSelectorPosition();
+	bool hasBoomrang,hasBomb;
 	void loadInventoryRectangle();
 	void loadInventoryCurrentSelection();
 	void selectInventoryItem();

@@ -4,6 +4,7 @@ Bomb::~Bomb(){}
 Bomb::Bomb(Point position,std::string name):super(position,name){
 	width = 32;
 	height = 32;
+	isActive = true;
 }
 void Bomb::onUse(PlayerInfo info, std::vector<GameObject*>* worldMap){
 	std::cout << "Throw Bomb";
@@ -12,4 +13,5 @@ void Bomb::onUse(PlayerInfo info, std::vector<GameObject*>* worldMap){
 		ThrownBomb* myBomb = new ThrownBomb(info.point,info.dir);
 		Static::toAdd.push_back(myBomb);
 	}
+	if (*info.bombAmount==0) isActive = false;
 }

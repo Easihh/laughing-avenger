@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Misc\Tile.h"
 #include "Item\Bomb.h"
+#include "Item\Boomrang.h"
 #include "Utility\Point.h"
 #include"Utility\PlayerInfo.h"
  Player::Player(Point pos){
@@ -22,7 +23,7 @@
 	 playerBar = new PlayerBar();
 	 inventory = new Inventory();
 	 Point pt(0, 0);
-	 inventory->items[0][0] = new Item(pt, "MagicalBoomerang");
+	 inventory->items[0][0] = new Boomrang(pt, "MagicalBoomerang");
 	 inventory->items[2][2] = new Bomb(pt, "Bomb");
 	 inventoryKeyReleased = true;
 	 itemKeyReleased = true;
@@ -147,6 +148,11 @@
 		 if (i != INVALID_INVENTORY_INDEX && j != INVALID_INVENTORY_INDEX){
 			 PlayerInfo info(position, playerBar->bombPtr, playerBar->diamondPtr, playerBar->keysPtr, dir);
 			 inventory->items[i][j]->onUse(info, worldMap);
+			 if (!inventory->items[i][j]->isActive){
+				 inventory->items[i][j] = NULL;
+				 inventory->findNextSelectorPosition();
+				 playerBar->itemSlotS = inventory->getCurrentItem()->sprite;
+			 }
 			 itemKeyReleased = false;
 		 }
 	 }

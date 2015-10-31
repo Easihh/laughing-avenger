@@ -35,7 +35,7 @@ public:
 	static  GameState gameState;
 	const static std::string GAME_TITLE;
 	static const int inventoryRows=3;
-	static const int inventoryCols=5;
+	static const int inventoryCols=6;
 	static std::vector<GameObject*> toAdd;
 	static std::vector<GameObject*> toDelete;
 };

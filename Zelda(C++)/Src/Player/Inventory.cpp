@@ -2,7 +2,8 @@
 #include "Utility\Static.h"
 #include <iostream>
 Inventory::Inventory(){
-	keyWasReleased = hasBoomrang = false;
+	keyWasReleased = hasBoomrang=false;
+	hasBomb = true;
 	inventoryText.setPoint(52,52);
 	itemUseButtonText.setPoint(16, 136);
 	font.loadFromFile("zelda.ttf");
@@ -49,8 +50,12 @@ void Inventory::transitionToInventory(PlayerBar* playerBar){
 	playerBar->movePlayerBarToBottomScreen();
 	inventoryRect.setPosition(inventoryRectPt.x, inventoryRectPt.y);
 	itemSelected.setPosition(itemSelectedPt.x, itemSelectedPt.y);
-	items[0][0]->sprite.setPosition(inventoryRectPt.x, inventoryRectPt.y);
-	items[2][2]->sprite.setPosition(inventoryRectPt.x + (2 * selectorWidth), inventoryRectPt.y + (2 * selectorHeight));
+	for (int i = 0; i < Static::inventoryRows; i++){
+		for (int j = 0; j < Static::inventoryCols; j++){
+			if (items[i][j] != NULL)
+				items[i][j]->sprite.setPosition(inventoryRectPt.x + (i*selectorWidth), inventoryRectPt.y + (j*selectorWidth));
+		}
+	}
 	selectInventoryItem();
 }
 void Inventory::selectInventoryItem(){

@@ -1,6 +1,7 @@
 Version 0.044
 
--
+-Item on use like bomb now vanish from selection and inventory when amounts reaches 0.
+-When On use items vanish from current item selection ,the next inventory item is automatically selected.
 
 Version 0.043
 

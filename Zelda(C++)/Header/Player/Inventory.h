@@ -7,16 +7,18 @@ class Inventory{
 public:
 	~Inventory();
 	Inventory();
-	void draw(sf::RenderWindow& mainWindow,PlayerBar* playerBar);
-	void update(sf::Event& event, PlayerBar* playerBar);
-	void transitionToInventory(PlayerBar* playerBar);
-	void transitionBackToGame(PlayerBar* playerBar);
+	void draw(sf::RenderWindow& mainWindow);
+	void update(sf::Event& event);
+	void transitionToInventory();
+	void transitionBackToGame();
 	bool keyWasReleased;
 	Item* items[Static::inventoryRows][Static::inventoryCols];
 	void updateInventoryPosition(Point step);
 	int selectorInventoryXIndex, selectorInventoryYIndex;
 	Item* getCurrentItem();
+	void itemUse(Point position, Static::Direction dir, std::vector<GameObject*>* worldMap);
 	void findNextSelectorPosition();
+	PlayerBar* playerBar;
 private:
 	sf::RectangleShape inventoryRect, itemSelected;
 	void getInput(sf::Event& event);

@@ -39,6 +39,22 @@ void PlayerBar::loadImages(){
 int PlayerBar::getCurrentHP(){
 	return currentHealthPoint;
 }
+void PlayerBar::updatePlayerMapMarker(Static::Direction direction){
+	switch (direction){
+	case Static::Direction::Down:
+		marker.y += Global::playerMarkerHeight;
+		break;
+	case Static::Direction::Up:
+		marker.y -= Global::playerMarkerHeight;
+		break;
+	case Static::Direction::Right:
+		marker.x += Global::playerMarkerWidth;
+		break;
+	case Static::Direction::Left:
+		marker.x -= Global::playerMarkerWidth;
+		break;
+	}
+}
 void PlayerBar::decreaseCurrentHP(int amount){
 	if (currentHealthPoint >= amount)
 		currentHealthPoint -= amount;

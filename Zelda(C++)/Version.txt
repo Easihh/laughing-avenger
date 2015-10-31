@@ -1,3 +1,7 @@
+Version 0.045
+
+-Some refactoring/moving methods to their proper place for better clarity.
+
 Version 0.044
 
 -Item on use like bomb now vanish from selection and inventory when amounts reaches 0.

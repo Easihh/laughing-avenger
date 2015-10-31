@@ -11,8 +11,8 @@ void Game::GameLoop(){
 		world.update(mainWindow,event);
 		break;
 	case Static::Inventory:
-		world.player->inventory->update(event,world.player->playerBar);
-		world.player->inventory->draw(mainWindow,world.player->playerBar);
+		world.player->inventory->update(event);
+		world.player->inventory->draw(mainWindow);
 		break;
 	}
 }

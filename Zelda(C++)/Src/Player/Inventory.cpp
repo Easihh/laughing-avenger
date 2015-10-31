@@ -7,6 +7,7 @@ Inventory::Inventory(){
 	inventoryText.setPoint(52,52);
 	itemUseButtonText.setPoint(16, 136);
 	font.loadFromFile("zelda.ttf");
+	playerBar = new PlayerBar();
 	txt.setFont(font);
 	loadInventoryCurrentSelection();
 	loadInventoryRectangle();
@@ -46,7 +47,20 @@ void Inventory::updateInventoryPosition(Point step){
 Item* Inventory::getCurrentItem(){
 	return items[selectorInventoryXIndex][selectorInventoryYIndex];
 }
-void Inventory::transitionToInventory(PlayerBar* playerBar){
+void Inventory::itemUse(Point position, Static::Direction dir, std::vector<GameObject*>* worldMap){
+	int i = selectorInventoryXIndex;
+	int j = selectorInventoryYIndex;
+	if (getCurrentItem()!=NULL){
+		PlayerInfo info(position, playerBar->bombPtr, playerBar->diamondPtr, playerBar->keysPtr, dir);
+		items[i][j]->onUse(info, worldMap);
+		if (!items[i][j]->isActive){
+			items[i][j] = NULL;
+			findNextSelectorPosition();
+			playerBar->itemSlotS = getCurrentItem()->sprite;
+		}
+	}
+}
+void Inventory::transitionToInventory(){
 	playerBar->movePlayerBarToBottomScreen();
 	inventoryRect.setPosition(inventoryRectPt.x, inventoryRectPt.y);
 	itemSelected.setPosition(itemSelectedPt.x, itemSelectedPt.y);
@@ -102,12 +116,12 @@ void Inventory::findNextSelectorPosition(){
 		}
 	}
 }
-void Inventory::update(sf::Event& event, PlayerBar* playerBar){
+void Inventory::update(sf::Event& event){
 	getInput(event);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && keyWasReleased)
-		transitionBackToGame(playerBar);
+		transitionBackToGame();
 }
-void Inventory::transitionBackToGame(PlayerBar* playerBar){
+void Inventory::transitionBackToGame(){
 	Static::gameState = Static::GameState::Playing;
 	playerBar->movePlayerBarToTopScreen();
 	playerBar->itemSlotS=selectedItem;
@@ -134,7 +148,7 @@ void Inventory::drawInventoryText(sf::RenderWindow& mainWindow){
 	txt.setString("USE S BUTTON\n FOR THIS");
 	mainWindow.draw(txt);
 }
-void Inventory::draw(sf::RenderWindow& mainWindow,PlayerBar* playerBar){
+void Inventory::draw(sf::RenderWindow& mainWindow){
 	mainWindow.setKeyRepeatEnabled(false);
 	mainWindow.draw(inventoryRect);
 	playerBar->draw(mainWindow);

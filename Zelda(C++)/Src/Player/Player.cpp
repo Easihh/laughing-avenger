@@ -14,20 +14,14 @@
 	 width = Global::TileWidth;
 	 height = Global::TileHeight;
 	 dir = Static::Direction::Up;
-	 canAttack = true;
-	 isAttacking = false;
-	 isScreenTransitioning = false;
-	 isInvincible = false;
+	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased = true;
+	 isAttacking = isScreenTransitioning = isInvincible = false;
 	 loadImage();
 	 setupFullMask();
-	 playerBar = new PlayerBar();
 	 inventory = new Inventory();
 	 Point pt(0, 0);
 	 inventory->items[0][0] = new Boomrang(pt, "MagicalBoomerang");
 	 inventory->items[2][2] = new Bomb(pt, "Bomb");
-	 inventoryKeyReleased = true;
-	 itemKeyReleased = true;
-	 attackKeyReleased = true;
 }
  Player::~Player(){}
  void Player::loadImage(){
@@ -57,13 +51,13 @@
 		 takeDamage(worldMap);
 	 checkInvincible();
 	 fullMask->setPosition(position.x, position.y);
-	 playerBar->update();
+	 inventory->playerBar->update();
  }
  void Player::checkInventoryInput(){
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && inventoryKeyReleased){
 		 Static::gameState = Static::GameState::Inventory;
 		 inventoryKeyReleased = false;
-		 inventory->transitionToInventory(playerBar);
+		 inventory->transitionToInventory();
 	 }
  }
  void Player::checkAttackInput(){
@@ -141,20 +135,9 @@
 	 }
  }
  void Player::checkItemUseInput(std::vector<GameObject*>* worldMap){
-	 int INVALID_INVENTORY_INDEX = -1;
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && itemKeyReleased){
-		 int i = inventory->selectorInventoryXIndex;
-		 int j = inventory->selectorInventoryYIndex;
-		 if (i != INVALID_INVENTORY_INDEX && j != INVALID_INVENTORY_INDEX){
-			 PlayerInfo info(position, playerBar->bombPtr, playerBar->diamondPtr, playerBar->keysPtr, dir);
-			 inventory->items[i][j]->onUse(info, worldMap);
-			 if (!inventory->items[i][j]->isActive){
-				 inventory->items[i][j] = NULL;
-				 inventory->findNextSelectorPosition();
-				 playerBar->itemSlotS = inventory->getCurrentItem()->sprite;
-			 }
-			 itemKeyReleased = false;
-		 }
+		 inventory->itemUse(position, dir, worldMap);
+		 itemKeyReleased = false;
 	 }
  }
  bool Player::isCollidingWithMonster(const std::vector<GameObject*>* worldMap){
@@ -162,22 +145,22 @@
 	 Point offset(xOffset, yOffset);
 	 for each (GameObject* obj in *worldMap)
 	 {
-			 if (dynamic_cast<Monster*>(obj))
-				 if (intersect(fullMask, ((Monster*)obj)->mask, offset)){
-					 isColliding = true;
-					 collidingMonster = (Monster*)obj;
-					 break;
-				}
+		if (dynamic_cast<Monster*>(obj))
+			 if (intersect(fullMask, ((Monster*)obj)->mask, offset)){
+				isColliding = true;
+				collidingMonster = (Monster*)obj;
+				break;
+			}
 	 }
 	 return isColliding;
  }
  void  Player::takeDamage(const std::vector<GameObject*>* worldMap){
 	 if (!isInvincible && !isScreenTransitioning){
-		 playerBar->decreaseCurrentHP(collidingMonster->strength);
+		 inventory->playerBar->decreaseCurrentHP(collidingMonster->strength);
 		 walkAnimationIndex = 1;
 		 attackAnimationIndex = 1;
 		 pushback(worldMap);
-		 if (playerBar->getCurrentHP() <= 0)
+		 if (inventory->playerBar->getCurrentHP() <= 0)
 			 std::cout << "I'm Dead";
 		 else isInvincible = true;
 	 }
@@ -187,12 +170,12 @@
 	 Point offset(xOffset, yOffset);
 	 for each (GameObject* obj in *worldMap)
 	 {
-			 if (dynamic_cast<Tile*>(obj))
-				 if (intersect(mask, obj->fullMask, offset)){
-					 collision = true;
-					 //std::cout << "CollisionX:" << obj->position.x << std::endl;
-					 //std::cout << "CollisionY:" << obj->position.y << std::endl;
-				 }
+		if (dynamic_cast<Tile*>(obj))
+			if (intersect(mask, obj->fullMask, offset)){
+				collision = true;
+				//std::cout << "CollisionX:" << obj->position.x << std::endl;
+				//std::cout << "CollisionY:" << obj->position.y << std::endl;
+			 }
 	 }
 	 return collision;
  }
@@ -275,27 +258,21 @@
  void Player::endScreenTransition(){
 	 stepToMove = Global::TileHeight + 1;
 	 isScreenTransitioning = false;
-	 float markerX = playerBar->playerMarker.getPosition().x;
-	 float markerY = playerBar->playerMarker.getPosition().y;
-
 	 switch (dir){
 	 case Static::Direction::Down:
 		worldX++;
-		playerBar->marker.y += Global::playerMarkerHeight;
 		break;
 	 case Static::Direction::Up:
 		 worldX--;
-		 playerBar->marker.y -= Global::playerMarkerHeight;
 		 break;
 	 case Static::Direction::Right:
 		 worldY++;
-		 playerBar->marker.x += Global::playerMarkerWidth;
 		 break;
 	 case Static::Direction::Left:
 		 worldY--;
-		 playerBar->marker.x -= Global::playerMarkerWidth;
 		 break;
 	 }
+	 inventory->playerBar->updatePlayerMapMarker(dir);
  }
  void Player::screenTransition(){
 	 int minTransitionStep = 2;
@@ -307,14 +284,12 @@
 	 switch (dir){
 
 	 case Static::Direction::Right:
-		 Global::gameView.setCenter(viewX + (float)((Global::roomWidth / (increaseStep))),
-			 (float)(Global::roomHeight*worldX) +(Global::inventoryHeight/2) + (Global::roomHeight /  2));
+		 Global::gameView.setCenter(viewX + (float)((Global::roomWidth / (increaseStep))),viewY);
 		 nextXPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
 		 break;
 
 	 case Static::Direction::Left:
-		 Global::gameView.setCenter(viewX - (float)(Global::roomWidth / (increaseStep)),
-			 (float)(Global::roomHeight*worldX) + (Global::inventoryHeight/2) + Global::roomHeight / 2);
+		 Global::gameView.setCenter(viewX - (float)(Global::roomWidth / (increaseStep)),viewY);
 		 nextXPosition = -((float)minTransitionStep*Global::roomWidth / maxTransitionStep);
 		 break;
 
@@ -328,7 +303,7 @@
 		 break;
 	 }
 	 Point nextPosition(nextXPosition, nextYPosition);
-	 playerBar->setBarNextPosition(nextPosition);
+	 inventory->playerBar->setBarNextPosition(nextPosition);
 	 inventory->updateInventoryPosition(nextPosition);
 	 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, position);
 	 transitionStep -= minTransitionStep;
@@ -434,10 +409,11 @@
  }
  void Player::draw(sf::RenderWindow& mainWindow){
 	 mainWindow.setView(Global::gameView);
-	 playerBar->draw(mainWindow);
+	 inventory->playerBar->draw(mainWindow);
 	 if (!isAttacking)
 		 mainWindow.draw(walkingAnimation[walkAnimationIndex]->sprite);
-	 else {
+	 else 
+	 {
 		 mainWindow.draw(attackAnimation[attackAnimationIndex]->sprite);
 		 mainWindow.draw(sword->sprite);
 		 mainWindow.draw(*(sword->fullMask));
@@ -454,6 +430,6 @@
 	 sf::Text txt(pos.str(), font);
 	 txt.setColor(sf::Color::Red);
 	 txt.setPosition(position.x, position.y - 64);
-	 txt.setCharacterSize(12);
+	 txt.setCharacterSize(textSize);
 	 mainWindow.draw(txt);
  }

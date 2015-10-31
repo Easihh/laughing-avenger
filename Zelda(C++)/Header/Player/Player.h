@@ -17,7 +17,6 @@ public:
 	int worldX, worldY;
 	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased;
 	Inventory* inventory;
-	PlayerBar* playerBar;
 private:
 	unsigned int stepToMove;
 	Static::Direction dir;
@@ -51,5 +50,6 @@ private:
 	bool isOutsideMapBound(Point pos);
 	Monster* collidingMonster;
 	Animation * walkingAnimation[3];
+	const int textSize = 12;
 };
 #endif

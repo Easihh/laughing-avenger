@@ -17,6 +17,7 @@ public:
 	int getCurrentHP();
 	void movePlayerBarToBottomScreen();
 	void movePlayerBarToTopScreen();
+	void updatePlayerMapMarker(Static::Direction direction);
 	sf::RectangleShape playerMarker, playerBar, overworldMap;
 	Point marker;
 	sf::Sprite itemSlotS;

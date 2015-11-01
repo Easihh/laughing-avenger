@@ -1,13 +1,20 @@
 #include "Misc\GameObject.h"
 #include "SFML\Graphics.hpp"
 #include<iostream>
+#include"Utility\Static.h"
 GameObject::GameObject(){}
 GameObject::~GameObject(){}
-void GameObject::update(std::vector<GameObject*>* worldMap){
+void GameObject::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {}
+void GameObject::draw(sf::RenderWindow& mainWindow){}
+void GameObject::destroyGameObject(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
+	std::shared_ptr<GameObject> del;
+	for(auto& obj : *Worldmap){
+		if(obj.get() == this)
+			del = obj;
+	}
+	Static::toDelete.push_back(del);
 }
-void GameObject::draw(sf::RenderWindow& mainWindow){
-}
-bool GameObject::intersect(std::unique_ptr<sf::RectangleShape>& rectA, std::unique_ptr<sf::RectangleShape>& rectB, Point offset){
+bool GameObject::intersect(std::unique_ptr<sf::RectangleShape>& rectA, std::unique_ptr<sf::RectangleShape>& rectB, Point offset) {
 	float rectAx		= rectA->getPosition().x;
 	float rectAxSize	= rectA->getSize().x;
 	float rectAySize	= rectA->getSize().y;

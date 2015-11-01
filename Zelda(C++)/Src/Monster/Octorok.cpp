@@ -32,17 +32,17 @@ void Octorok::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(*mask);
 	mainWindow.draw(*fullMask);
 }
-void Octorok::update(std::vector<GameObject*>* worldMap){
+void Octorok::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	if (pushbackStep == 0)
-		int test = 0;
-		//movement(worldMap);
+		movement(worldMap);
 	else pushbackUpdate();
 	for (int i = 0; i < 3;i++)
 		walkingAnimation[i]->updateAnimationFrame(dir, position);
 	if (healthPoint <= 0){
 		Point pt(position.x + (width / 4), position.y + (height / 4));
-		Static::toAdd.push_back(new DeathEffect(pt));
-		Static::toDelete.push_back(this);
+		std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
+		Static::toAdd.push_back(add);
+		destroyGameObject(worldMap);
 		std::cout << "Octorok Destroyed";
 	}
 	else 
@@ -82,7 +82,7 @@ void Octorok::pushbackUpdate(){
 	else pushbackStep += step;
 	updateMasks();
 }
-void Octorok::takeDamage(int damage, std::vector<GameObject*>* worldMap, Static::Direction attackDir){
+void Octorok::takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap, Static::Direction attackDir) {
 	if (!isInvincible){
 		healthPoint -= damage;
 		if (healthPoint >= 1)
@@ -98,7 +98,7 @@ void Octorok::takeDamage(int damage){
 		walkAnimIndex = 1;
 	}
 }
-void Octorok::pushBack(std::vector<GameObject*>* worldMap, Static::Direction attackDir){
+void Octorok::pushBack(std::vector<std::shared_ptr<GameObject>>* worldMap, Static::Direction attackDir) {
 	float pushBackMinDistance = 0;
 	switch (attackDir){
 	case Static::Direction::Up:{
@@ -171,7 +171,7 @@ void Octorok::pushBack(std::vector<GameObject*>* worldMap, Static::Direction att
 	}
 	}
 }
-int Octorok::getMinimumLineCollisionDistance(Static::Direction pushbackDir, std::vector<GameObject*>* worldMap){
+int Octorok::getMinimumLineCollisionDistance(Static::Direction pushbackDir, std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	float pushBackMinDistance = 0;
 	sf::Vector2f size(width, height);
 	std::unique_ptr<sf::RectangleShape> pushbackLineCheck = std::make_unique<sf::RectangleShape>();
@@ -220,11 +220,11 @@ int Octorok::getDistanceToMapBoundary(Static::Direction direction){
 		break;
 	}
 }
-bool Octorok::isColliding(std::vector<GameObject*>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, Point offsets){
+bool Octorok::isColliding(std::vector<std::shared_ptr<GameObject>>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, Point offsets) {
 	bool collision = false;
-	for each (GameObject* obj in *worldMap)
+	for(auto& obj : *worldMap)
 	{
-		if (dynamic_cast<Tile*>(obj))
+		if (dynamic_cast<Tile*>(obj.get()))
 			if (intersect(fullMask, obj->fullMask, offsets)){
 				collision = true;
 				std::cout << "CollisionX:" << obj->position.x << std::endl;
@@ -263,7 +263,7 @@ int Octorok::getYOffset(){
 		return minStep;
 	else return 0;
 }
-void Octorok::movement(std::vector<GameObject*>* worldMap){
+void Octorok::movement(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	Point offsets(getXOffset(), getYOffset());
 	switch (dir){
 	case Static::Direction::Down:
@@ -322,7 +322,7 @@ void Octorok::getNextDirection(Static::Direction blockedDir){
 	}
 }
 void Octorok::loadAnimation(){
-	walkingAnimation[0] = new Animation("RedOctorok_Movement", height, width, position, 8);
-	walkingAnimation[1] = new Animation("RedOctorok_Hit1", height, width, position, 8);
-	walkingAnimation[2] = new Animation("RedOctorok_Hit2", height, width, position, 8);
+	walkingAnimation.push_back(std::make_unique<Animation>("RedOctorok_Movement", height, width, position, 8));
+	walkingAnimation.push_back(std::make_unique<Animation>("RedOctorok_Hit1", height, width, position, 8));
+	walkingAnimation.push_back(std::make_unique<Animation>("RedOctorok_Hit2", height, width, position, 8));
 }

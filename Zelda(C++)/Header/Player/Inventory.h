@@ -12,13 +12,13 @@ public:
 	void transitionToInventory();
 	void transitionBackToGame();
 	bool keyWasReleased;
-	Item* items[Static::inventoryRows][Static::inventoryCols];
+	std::vector<std::unique_ptr<Item>> items;
 	void updateInventoryPosition(Point step);
-	int selectorInventoryXIndex, selectorInventoryYIndex;
+	int selectorInventoryIndex;
 	Item* getCurrentItem();
-	void itemUse(Point position, Static::Direction dir, std::vector<GameObject*>* worldMap);
+	void itemUse(Point position, Static::Direction dir, std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void findNextSelectorPosition();
-	PlayerBar* playerBar;
+	std::unique_ptr<PlayerBar> playerBar;
 private:
 	sf::RectangleShape inventoryRect, itemSelected;
 	void getInput(sf::Event& event);

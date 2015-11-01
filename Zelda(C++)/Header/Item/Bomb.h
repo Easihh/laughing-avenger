@@ -7,7 +7,7 @@ public:
 	~Bomb();
 	Bomb(Point position,std::string name);
 	typedef Item super;
-	void onUse(PlayerInfo info, std::vector<GameObject*>* worldMap);
+	void onUse(PlayerInfo info, std::vector<std::shared_ptr<GameObject>>* worldMap);
 private:
 };
 #endif

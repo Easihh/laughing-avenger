@@ -40,17 +40,18 @@ void Sword::loadImage(Static::Direction dir){
 	height = sprite.getTextureRect().height;
 	sprite.setPosition(position.x, position.y);
 }
-void Sword::update(bool& isAttacking, bool& canAttack,std::vector<GameObject*>* worldMap, Animation* walkAnimation[3]){
+void Sword::update(bool& isAttacking, bool& canAttack, std::vector<std::shared_ptr<GameObject>>* worldMap, std::vector<std::unique_ptr<Animation>>* walkAnimation) {
 	if (isAttacking){
 		swordCurrentFrame++;
-		if (isCollidingWithMonster(worldMap));
+		if (isCollidingWithMonster(worldMap))
 			updateMonster(worldMap);
 		if (swordCurrentFrame >= swordMaxFrame){
 			isAttacking = false;
 			swordCurrentFrame = 0;
-			for (int i = 0; i < 3; i++){
-				walkAnimation[i]->reset();
-				walkAnimation[i]->setSubRectangle(swordDir);
+			//reset the attack frame to standing ;used when player attack during a non-standing frame
+			for(auto& obj : *walkAnimation){
+				obj->reset();
+				obj->setSubRectangle(swordDir);
 			}
 		}
 	}
@@ -62,24 +63,24 @@ void Sword::update(bool& isAttacking, bool& canAttack,std::vector<GameObject*>* 
 		}
 	}
 }
-bool Sword::isCollidingWithMonster(std::vector<GameObject*>* worldMap){
+bool Sword::isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	collidingMonsterList.clear();
 	bool isColliding = false;
 	Point offset(0, 0);
-	for each (GameObject* obj in *worldMap)
+	for(auto& obj:*worldMap)
 	{
-			if (dynamic_cast<Monster*>(obj))
-				if (intersect(fullMask, ((Monster*)obj)->fullMask, offset)){
-					isColliding = true;
-					collidingMonsterList.push_back(obj);
+		if (dynamic_cast<Monster*>(obj.get()))
+			if (intersect(fullMask, ((Monster*)obj.get())->fullMask, offset)){
+				isColliding = true;
+				collidingMonsterList.push_back(obj);
 		}
 	}
 	return isColliding;
 }
-void Sword::updateMonster(std::vector<GameObject*>* worldMap){
-	for each (GameObject* mstr in collidingMonsterList)
+void Sword::updateMonster(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	for(auto& mstr : collidingMonsterList)
 	{
-		Monster* temp = (Monster*)mstr;
+		Monster* temp = (Monster*)mstr.get();
 		temp->takeDamage(strength, worldMap,swordDir);
 		//std::cout << "Collision at X:" << temp->xPosition << " Y:" << temp->yPosition<<std::endl;
 	}

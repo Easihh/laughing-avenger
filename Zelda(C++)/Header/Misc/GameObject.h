@@ -7,8 +7,9 @@ class GameObject{
 public:
 	GameObject();
 	~GameObject();
-	virtual void update(std::vector<GameObject*>* worldMap);
+	virtual void update(std::vector<std::shared_ptr<GameObject>>* Worldmap);
 	virtual void draw(sf::RenderWindow& mainWindow);
+	void destroyGameObject(std::vector<std::shared_ptr<GameObject>>* Worldmap);
 	Point position;
 	unsigned int width,height;
 	bool isCollideable;

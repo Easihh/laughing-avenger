@@ -1,3 +1,7 @@
+Version 0.046
+
+-The project now use smart pointers in place of naked pointer everywhere that was needed.
+
 Version 0.045
 
 -Some refactoring/moving methods to their proper place for better clarity.

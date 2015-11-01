@@ -6,6 +6,6 @@ Boomrang::Boomrang(Point position, std::string name) :super(position, name){
 	height = 32;
 	isActive = true;
 }
-void Boomrang::onUse(PlayerInfo info, std::vector<GameObject*>* worldMap){
+void Boomrang::onUse(PlayerInfo info, std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	std::cout << "Throw Boomrang";
 }

@@ -7,7 +7,7 @@ Inventory::Inventory(){
 	inventoryText.setPoint(52,52);
 	itemUseButtonText.setPoint(16, 136);
 	font.loadFromFile("zelda.ttf");
-	playerBar = new PlayerBar();
+	playerBar = std::make_unique<PlayerBar>();
 	txt.setFont(font);
 	loadInventoryCurrentSelection();
 	loadInventoryRectangle();
@@ -30,8 +30,8 @@ void Inventory::loadInventoryRectangle(){
 	inventoryRect.setSize(size);
 }
 void Inventory::loadSelector(){
-	selectorInventoryXIndex = -1;
-	selectorInventoryYIndex = -1;
+	//selectorInventoryXIndex = -1;
+	//selectorInventoryYIndex = -1;
 	if (!texture.loadFromFile("Tileset/Selector.png"))
 		std::cout << "Failed to load Selector";
 	selector.setTexture(texture);
@@ -44,17 +44,16 @@ void Inventory::updateInventoryPosition(Point step){
 	inventoryText+=(step);
 	itemUseButtonText+=(step);
 }
-Item* Inventory::getCurrentItem(){
-	return items[selectorInventoryXIndex][selectorInventoryYIndex];
+Item* Inventory::getCurrentItem() {
+	return items[selectorInventoryIndex].get();
 }
-void Inventory::itemUse(Point position, Static::Direction dir, std::vector<GameObject*>* worldMap){
-	int i = selectorInventoryXIndex;
-	int j = selectorInventoryYIndex;
+void Inventory::itemUse(Point position, Static::Direction dir, std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	int i = selectorInventoryIndex;
 	if (getCurrentItem()!=NULL){
 		PlayerInfo info(position, playerBar->bombPtr, playerBar->diamondPtr, playerBar->keysPtr, dir);
-		items[i][j]->onUse(info, worldMap);
-		if (!items[i][j]->isActive){
-			items[i][j] = NULL;
+		items[i]->onUse(info, worldMap);
+		if (!items[i]->isActive){
+			items[i] = NULL;
 			findNextSelectorPosition();
 			playerBar->itemSlotS = getCurrentItem()->sprite;
 		}
@@ -64,10 +63,12 @@ void Inventory::transitionToInventory(){
 	playerBar->movePlayerBarToBottomScreen();
 	inventoryRect.setPosition(inventoryRectPt.x, inventoryRectPt.y);
 	itemSelected.setPosition(itemSelectedPt.x, itemSelectedPt.y);
-	for (int i = 0; i < Static::inventoryRows; i++){
-		for (int j = 0; j < Static::inventoryCols; j++){
-			if (items[i][j] != NULL)
-				items[i][j]->sprite.setPosition(inventoryRectPt.x + (i*selectorWidth), inventoryRectPt.y + (j*selectorWidth));
+	int maxItemPerRow = Static::inventoryCols;
+	int row = 0;
+	for (int i = 0; i < items.size(); i++){
+		if(items[i] != NULL){
+			row = i/maxItemPerRow;
+			items[i]->sprite.setPosition(inventoryRectPt.x + (i*selectorWidth), inventoryRectPt.y + (row*selectorWidth));
 		}
 	}
 	selectInventoryItem();
@@ -81,37 +82,29 @@ void Inventory::selectInventoryItem(){
 void Inventory::getInput(sf::Event& event){
 	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Q)
 		keyWasReleased = true;
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right){
+	if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Right || 
+		event.key.code==sf::Keyboard::Left)){
 		findNextSelectorPosition();
-		selector.setPosition(inventoryRectPt.x + (selectorInventoryXIndex *selectorWidth), inventoryRectPt.y + (selectorInventoryYIndex*selectorHeight));
-	}
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left){
-		findNextSelectorPosition();
-		selector.setPosition(inventoryRectPt.x + (selectorInventoryXIndex *selectorWidth), inventoryRectPt.y + (selectorInventoryYIndex*selectorHeight));
 	}
 }
 void Inventory::findNextSelectorPosition(){
 	bool found = false;
-	for (int i = selectorInventoryXIndex; i < Static::inventoryRows; i++){
-		for (int j = selectorInventoryYIndex; j < Static::inventoryCols; j++){
-			if (items[i][j] != NULL && i != selectorInventoryXIndex && j != selectorInventoryYIndex){
-				selectorInventoryYIndex = j;
-				selectorInventoryXIndex = i;
-				found = true;
-				selectedItem = items[i][j]->sprite;
-				selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
-			}
+	for (int i = selectorInventoryIndex; i < items.size(); i++){
+		if (items[i] != NULL && i!=selectorInventoryIndex){
+			selectorInventoryIndex = i;
+			found = true;
+			selectedItem = items[i]->sprite;
+			selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
+			selector.setPosition(items[i]->sprite.getPosition().x,items[i]->sprite.getPosition().y);
 		}
 	}
 	if (!found){
-		for (int i = 0; i < selectorInventoryXIndex; i++){
-			for (int j = 0; j < selectorInventoryYIndex; j++){
-				if (items[i][j] != NULL){
-					selectorInventoryYIndex = j;
-					selectorInventoryXIndex = i;
-					selectedItem = items[i][j]->sprite;
-					selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
-				}
+		for (int i = 0; i < selectorInventoryIndex; i++){
+			if (items[i] != NULL){
+				selectorInventoryIndex = i;
+				selectedItem = items[i]->sprite;
+				selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
+				selector.setPosition(items[i]->sprite.getPosition().x,items[i]->sprite.getPosition().y);
 			}
 		}
 	}
@@ -129,11 +122,9 @@ void Inventory::transitionBackToGame(){
 }
 void Inventory::drawInventoryItems(sf::RenderWindow& mainWindow){
 	mainWindow.draw(selectedItem);
-	for (int i = 0; i < Static::inventoryRows; i++){
-		for (int j = 0; j < Static::inventoryCols; j++){
-			if (items[i][j] != NULL)
-				mainWindow.draw(items[i][j]->sprite);
-		}
+	for (int i = 0; i < items.size(); i++){
+		if (items[i] != NULL)
+			mainWindow.draw(items[i]->sprite);
 	}
 }
 void Inventory::drawInventoryText(sf::RenderWindow& mainWindow){

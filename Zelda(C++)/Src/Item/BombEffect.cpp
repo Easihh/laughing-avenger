@@ -19,24 +19,25 @@ BombEffect::BombEffect(Point pos, EffectType type){
 	sprite.setTexture(texture);
 	sprite.setPosition(position.x, position.y);
 }
-void BombEffect::collisionWithMonster(std::vector<GameObject*>* worldMap){
-	for each (GameObject* monst in *worldMap)
+void BombEffect::collisionWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	for(auto& monst :*worldMap)
 	{
-		if (dynamic_cast<Monster*>(monst))
+		if (dynamic_cast<Monster*>(monst.get()))
 			if (intersect(fullMask, monst->fullMask, Point(0, 0))){
-				((Monster*)monst)->takeDamage(bombDmg);
+				((Monster*)monst.get())->takeDamage(bombDmg);
 			}
 	}
 }
-void BombEffect::update(std::vector<GameObject*>* worldMap){
+void BombEffect::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	currentFrame++;
 	if (eType == EffectType::BombFinishExplode)
 		collisionWithMonster(worldMap);
 	if (currentFrame == maxFrame){
 		if (eType == EffectType::BombExplode){
-			Static::toAdd.push_back(new BombEffect(position, EffectType::BombFinishExplode));
+			std::shared_ptr<GameObject> effect = std::make_shared<BombEffect>(position, EffectType::BombFinishExplode);
+			Static::toAdd.push_back(effect);
 		}
-		Static::toDelete.push_back(this);
+		destroyGameObject(worldMap);
 	}
 }
 void BombEffect::draw(sf::RenderWindow& mainWindow){

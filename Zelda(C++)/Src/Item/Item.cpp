@@ -13,12 +13,10 @@ void Item::loadImage(){
 		std::cout << "Failed to load:" << itemName << std::endl;
 	sprite.setTexture(texture);
 }
-void Item::update(std::vector<GameObject*> worldMap){
-
-}
+void Item::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {}
 void Item::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(sprite);
 }
-void Item::onUse(PlayerInfo info, std::vector<GameObject*>* worldMap){
+void Item::onUse(PlayerInfo info, std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	std::cout << "Item Used";
 }

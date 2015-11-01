@@ -10,13 +10,13 @@ public:
 	~Sword();
 	void loadImage(Static::Direction dir);
 	void endSword();
-	void update(bool& isAttacking, bool& canAttack,std::vector<GameObject*>* worldMap, Animation* walkAnimation[3]);
+	void update(bool& isAttacking, bool& canAttack, std::vector<std::shared_ptr<GameObject>>* worldMap, std::vector<std::unique_ptr<Animation>>* walkAnimation);
 private:
 	int swordCurrentFrame, swordDelay,strength;
 	const int swordMaxFrame=12, swordMaxDelay=8;
-	bool isCollidingWithMonster(std::vector<GameObject*>* worldMap);
-	std::vector<GameObject*> collidingMonsterList;
+	bool isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap);
+	std::vector<std::shared_ptr<GameObject>> collidingMonsterList;
 	Static::Direction swordDir;
-	void updateMonster(std::vector<GameObject*>* worldMap);
+	void updateMonster(std::vector<std::shared_ptr<GameObject>>* worldMap);
 };
 #endif

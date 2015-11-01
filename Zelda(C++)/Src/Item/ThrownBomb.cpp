@@ -32,19 +32,26 @@ void ThrownBomb::setup(Static::Direction direction){
 void ThrownBomb::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(sprite);
 }
-void ThrownBomb::update(std::vector<GameObject*>* worldMap){
+void ThrownBomb::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	currentFrame++;
 	if (currentFrame > maxFrame){
 		createBombEffect();
-		Static::toDelete.push_back(this);
+		destroyGameObject(worldMap);
 	}
 }
 void ThrownBomb::createBombEffect(){
-	Static::toAdd.push_back(new BombEffect(Point(position.x, position.y), EffectType::BombExplode));
-	Static::toAdd.push_back(new BombEffect(Point(position.x + width, position.y), EffectType::BombExplode));
-	Static::toAdd.push_back(new BombEffect(Point(position.x - width, position.y), EffectType::BombExplode));
-	Static::toAdd.push_back(new BombEffect(Point(position.x - (width / 2), position.y - height), EffectType::BombExplode));
-	Static::toAdd.push_back(new BombEffect(Point(position.x + (width / 2), position.y - height), EffectType::BombExplode));
-	Static::toAdd.push_back(new BombEffect(Point(position.x - (width / 2), position.y + height), EffectType::BombExplode));
-	Static::toAdd.push_back(new BombEffect(Point(position.x + (width / 2), position.y + height), EffectType::BombExplode));
+	std::shared_ptr<GameObject> effect = std::make_shared<BombEffect>(Point(position.x, position.y), EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
+	effect = std::make_shared<BombEffect>(Point(position.x + width, position.y), EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
+	effect = std::make_shared<BombEffect>(Point(position.x - width, position.y), EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
+	effect = std::make_shared<BombEffect>(Point(position.x - (width / 2), position.y - height), EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
+	effect = std::make_shared<BombEffect>(Point(position.x + (width / 2), position.y - height), EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
+	effect = std::make_shared<BombEffect>(Point(position.x - (width / 2), position.y + height), EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
+	effect = std::make_shared<BombEffect>(Point(position.x + (width / 2), position.y + height), EffectType::BombExplode);
+	Static::toAdd.push_back(effect);
 }

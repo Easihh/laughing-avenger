@@ -18,24 +18,24 @@
 	 isAttacking = isScreenTransitioning = isInvincible = false;
 	 loadImage();
 	 setupFullMask();
-	 inventory = new Inventory();
+	 inventory = std::make_unique<Inventory>();
 	 Point pt(0, 0);
-	 inventory->items[0][0] = new Boomrang(pt, "MagicalBoomerang");
-	 inventory->items[2][2] = new Bomb(pt, "Bomb");
+	 inventory->items.push_back(std::make_unique<Boomrang>(pt, "MagicalBoomerang"));
+	 inventory->items.push_back(std::make_unique<Bomb>(pt, "Bomb"));
 }
  Player::~Player(){}
  void Player::loadImage(){
-	 walkingAnimation[0] = new Animation("Link_Movement", width, height, position, 6);
-	 walkingAnimation[1] = new Animation("Link_Movement_Hit1", width, height, position, 6);
-	 walkingAnimation[2] = new Animation("Link_Movement_Hit2", width, height, position, 6);
+	walkingAnimation.push_back(std::make_unique<Animation>("Link_Movement", width, height, position, 6));
+	walkingAnimation.push_back(std::make_unique<Animation>("Link_Movement_Hit1", width, height, position, 6));
+	walkingAnimation.push_back(std::make_unique<Animation>("Link_Movement_Hit2", width, height, position, 6));
 	walkAnimationIndex = 0;
-	attackAnimation[0] = new Animation("Link_Attack", width, height, position, NULL);
-	attackAnimation[1] = new Animation("Link_Attack_Hit1", width, height, position, NULL);
-	attackAnimation[2] = new Animation("Link_Attack_Hit2", width, height, position, NULL);
+	attackAnimation.push_back(std::make_unique<Animation>("Link_Attack", width, height, position, NULL));
+	attackAnimation.push_back(std::make_unique<Animation>("Link_Attack_Hit1", width, height, position, NULL));
+	attackAnimation.push_back(std::make_unique<Animation>("Link_Attack_Hit2", width, height, position, NULL));
 	attackAnimationIndex = 0;
  }
- void Player::update(std::vector<GameObject*>* worldMap){
-	 sword->update(isAttacking, canAttack, worldMap, walkingAnimation);
+ void Player::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	 sword->update(isAttacking, canAttack, worldMap, &walkingAnimation);
 	 checkMovementInput(worldMap);
 	 checkAttackInput();
 	 checkInventoryInput();
@@ -63,15 +63,14 @@
  void Player::checkAttackInput(){
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
 		 if (canAttack && !isAttacking && attackKeyReleased){
-			 delete sword;
-			 sword = new Sword(position, dir);
+			 sword =std::make_unique<Sword>(position, dir);
 			 isAttacking = true;
 			 canAttack = false;
 			 attackKeyReleased = false;
 		 }
 	 }
  }
- void Player::checkMovementInput(const std::vector<GameObject*>* worldMap){
+ void Player::checkMovementInput(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 bool movementKeyPressed = false;
 	 bool outsideBound = false;
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !isScreenTransitioning){
@@ -134,29 +133,30 @@
 		 isScreenTransitioning = true;
 	 }
  }
- void Player::checkItemUseInput(std::vector<GameObject*>* worldMap){
+ void Player::checkItemUseInput(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && itemKeyReleased){
 		 inventory->itemUse(position, dir, worldMap);
 		 itemKeyReleased = false;
 	 }
  }
- bool Player::isCollidingWithMonster(const std::vector<GameObject*>* worldMap){
+ bool Player::isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 bool isColliding = false;
 	 Point offset(xOffset, yOffset);
-	 for each (GameObject* obj in *worldMap)
+	 for(auto& obj : *worldMap)
 	 {
-		if (dynamic_cast<Monster*>(obj))
-			 if (intersect(fullMask, ((Monster*)obj)->mask, offset)){
+		if (dynamic_cast<Monster*>(obj.get()))
+			 if (intersect(fullMask, ((Monster*)obj.get())->mask, offset)){
 				isColliding = true;
-				collidingMonster = (Monster*)obj;
+				collidingMonster = obj;
 				break;
 			}
 	 }
 	 return isColliding;
  }
- void  Player::takeDamage(const std::vector<GameObject*>* worldMap){
+ void  Player::takeDamage(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 if (!isInvincible && !isScreenTransitioning){
-		 inventory->playerBar->decreaseCurrentHP(collidingMonster->strength);
+		 Monster* monster = (Monster*)collidingMonster.get();
+		 inventory->playerBar->decreaseCurrentHP(monster->strength);
 		 walkAnimationIndex = 1;
 		 attackAnimationIndex = 1;
 		 pushback(worldMap);
@@ -165,12 +165,12 @@
 		 else isInvincible = true;
 	 }
  }
- bool Player::isColliding(const std::vector<GameObject*>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, float xOffset, float yOffset){
+ bool Player::isColliding(std::vector<std::shared_ptr<GameObject>>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, float xOffset, float yOffset) {
 	 bool collision = false;
 	 Point offset(xOffset, yOffset);
-	 for each (GameObject* obj in *worldMap)
+	 for(auto& obj : *worldMap)
 	 {
-		if (dynamic_cast<Tile*>(obj))
+		if (dynamic_cast<Tile*>(obj.get()))
 			if (intersect(mask, obj->fullMask, offset)){
 				collision = true;
 				//std::cout << "CollisionX:" << obj->position.x << std::endl;
@@ -179,7 +179,7 @@
 	 }
 	 return collision;
  }
- void Player::pushback(const std::vector<GameObject*>* worldMap){
+ void Player::pushback(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 float intersectWidth;
 	 float intersectHeight = 2 * Global::TileHeight;;
 	 float pushBackDistance = 64;

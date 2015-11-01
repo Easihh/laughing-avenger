@@ -8,9 +8,9 @@ public:
 	Item(Point position,std::string item);
 	Item();
 	~Item();
-	virtual void update(std::vector<GameObject*> worldMap);
+	virtual void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void draw(sf::RenderWindow& mainWindow);
-	virtual void onUse(PlayerInfo info, std::vector<GameObject*>* worldMap);
+	virtual void onUse(PlayerInfo info, std::vector<std::shared_ptr<GameObject>>* worldMap);
 	bool isActive;
 private:
 	void loadImage();

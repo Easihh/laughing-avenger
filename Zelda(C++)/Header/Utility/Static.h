@@ -36,7 +36,7 @@ public:
 	const static std::string GAME_TITLE;
 	static const int inventoryRows=3;
 	static const int inventoryCols=6;
-	static std::vector<GameObject*> toAdd;
-	static std::vector<GameObject*> toDelete;
+	static std::vector<std::shared_ptr<GameObject>>  toAdd;
+	static std::vector<std::shared_ptr<GameObject>>  toDelete;
 };
 #endif

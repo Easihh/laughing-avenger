@@ -15,7 +15,7 @@ public:
 	void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void draw(sf::RenderWindow& mainWindow);
 	int worldX, worldY;
-	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased;
+	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased,isInsideShop;
 	std::unique_ptr<Inventory> inventory;
 private:
 	unsigned int stepToMove;

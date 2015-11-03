@@ -2,14 +2,14 @@
 #define TILE_H
 
 #include "GameObject.h"
-
+#include"Utility\TileType.h"
 class Tile :public GameObject{
 public:
-	Tile(Point position, bool canBeCollidedWith,int type);
+	Tile(Point position, bool canBeCollidedWith, TileType type);
 	~Tile();
 	void draw(sf::RenderWindow& mainWindow);
 	void update();
-	void loadTileImage(int type);
+	void loadTileImage(TileType type);
 };
 
 #endif

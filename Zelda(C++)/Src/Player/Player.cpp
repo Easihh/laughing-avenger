@@ -15,7 +15,7 @@
 	 height = Global::TileHeight;
 	 dir = Static::Direction::Up;
 	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased = true;
-	 isAttacking = isScreenTransitioning = isInvincible = false;
+	 isAttacking = isScreenTransitioning = isInvincible=isInsideShop = false;
 	 loadImage();
 	 setupFullMask();
 	 inventory = std::make_unique<Inventory>();

@@ -1,26 +1,35 @@
 #include "Misc\WorldMap.h"
 #include "Misc\Tile.h"
 #include "Monster\Octorok.h"
+#include "Utility\TileType.h"
+#include "Utility\Identifier.h"
 WorldMap::WorldMap(){
-	loadMap("Map/Zelda-Worldmap_Layer 1.csv");
-	loadMap("Map/Zelda-Worldmap_Layer 2.csv");
+	setupVectors();
+	loadMap("Map/Zelda-Worldmap_Layer 1.csv", gameBackgroundVector);
+	loadMap("Map/Zelda-Worldmap_Layer 2.csv", gameMainVector);
+	loadMap("Map/Zelda-Shop_Layer 1.csv", secretRoomBackgroundVector);
+	loadMap("Map/Zelda-Shop_Layer 2.csv", secretRoomVector);
 }
-WorldMap::~WorldMap(){
+WorldMap::~WorldMap(){}
+void WorldMap::setupVectors() {
+	/*pre populate vector of vectors with empty vectors*/
+	for(int i = 0; i < Global::WorldRoomWidth; i++){
+		mainBackgroundColumns.push_back(roomBackGroundTile);
+		secretRoomBackgroundColumns.push_back(secretRoomTile);
+		mainVectorColums.push_back(roomGameObjects);
+		secretRoomColumns.push_back(secretRoomGameObjects);
+	}
+	for(int i = 0; i < Global::WorldRoomHeight; i++){
+		gameMainVector.push_back(mainVectorColums);
+		secretRoomVector.push_back(secretRoomColumns);
+		gameBackgroundVector.push_back(mainBackgroundColumns);
+		secretRoomBackgroundVector.push_back(secretRoomBackgroundColumns);
+	}
 }
-void WorldMap::loadMap(std::string filename){
+void WorldMap::loadMap(std::string filename,tripleVector& objectVector){
 	std::ifstream in;
 	std::string line;
 	std::vector<std::string> strs;
-	/*pre populate vector of vectors with empty vectors*/
-	for (int i = 0; i < Global::WorldRoomWidth; i++){
-		mainBackgroundColumns.push_back(roomBackGroundTile);
-		mainVectorColums.push_back(roomGameObjects);
-	}
-	for (int i = 0; i < Global::WorldRoomHeight; i++){
-		gameMainVector.push_back(mainVectorColums);
-		gameBackgroundVector.push_back(mainBackgroundColumns);
-	}
-	std::vector<std::shared_ptr<GameObject>> test;
 	vectorXindex = 0;
 	vectorYindex = 0;
 	lastWorldXIndex = 0;
@@ -34,7 +43,7 @@ void WorldMap::loadMap(std::string filename){
 		for (std::vector<std::string>::iterator it = strs.begin(); it < strs.end(); it++){
 			//std::cout <<"Row:"<<lastWorldXIndex <<" Col:"<<lastWorldYIndex << " Value:" << *it << std::endl;
 			std::string val = *it;
-			createTile(lastWorldXIndex, lastWorldYIndex, atoi(val.c_str()));
+			createTile(lastWorldXIndex, lastWorldYIndex, atoi(val.c_str()), objectVector);
 			lastWorldXIndex++;
 			if (lastWorldXIndex % 16 == 0){
 				vectorYindex++;
@@ -51,7 +60,7 @@ void WorldMap::loadMap(std::string filename){
 	in.close();
 	
 }
-void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType){
+void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector) {
 	std::shared_ptr<GameObject> tile;
 	float x = lastWorldXIndex*Global::TileWidth;
 	float y = lastWorldYIndex*Global::TileHeight;
@@ -60,21 +69,24 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 	case -1:
 		//no tile;
 		break;
-	case 0:
+	case Identifier::Player_ID:
 		player = std::make_unique<Player>(pt);
 		break;
-	case 1:
-		tile =std::make_shared<Tile>(pt, false, 1);
-		gameBackgroundVector[vectorXindex][vectorYindex].push_back(tile);
+	case Identifier::Sand_ID:
+		tile =std::make_shared<Tile>(pt, false, TileType::Sand);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
 		break;
-	case 2:
-		tile = std::make_shared<Tile>(pt, true, 2);
-		gameMainVector[vectorXindex][vectorYindex].push_back(tile);
+	case Identifier::GreenTree_ID:
+		tile = std::make_shared<Tile>(pt, true, TileType::GreenTree);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
 		break;
-	case 3:
+	case Identifier::RedOctorok_ID:
 		tile = std::make_shared<Octorok>(pt, false);
-		gameMainVector[vectorXindex][vectorYindex].push_back(tile);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
 		break;
+	case Identifier::BlackTile_ID:
+		tile = std::make_shared<Tile>(pt, false,TileType::BlackTile);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
 	}
 }
 void WorldMap::update(sf::RenderWindow& mainWindow,sf::Event& event){
@@ -90,7 +102,9 @@ void WorldMap::update(sf::RenderWindow& mainWindow,sf::Event& event){
 		drawLeftScreen(mainWindow);
 		drawUpScreen(mainWindow);
 		drawDownScreen(mainWindow);
-		player->update(&gameMainVector[player->worldX][player->worldY]);
+		if(!player->isInsideShop)
+			player->update(&gameMainVector[player->worldX][player->worldY]);
+		else player->update(&secretRoomVector[player->worldX][player->worldY]);
 		player->draw(mainWindow);
 		mainWindow.display();
 }
@@ -123,11 +137,22 @@ void WorldMap::addToGameVector(std::vector<std::shared_ptr<GameObject>>* roomObj
 }
 void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 	freeSpace();
-	drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY]);
-	for(auto& obj:gameMainVector[player->worldX][player->worldY])
-	{
+	if(!player->isInsideShop){
+		drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY]);
+		for(auto& obj : gameMainVector[player->worldX][player->worldY])
+		{
 			obj->update(&gameMainVector[player->worldX][player->worldY]);
 			obj->draw(mainWindow);
+		}
+	}
+	else
+	{
+		drawScreen(mainWindow, &secretRoomBackgroundVector[player->worldX][player->worldY]);
+		for(auto& obj : secretRoomVector[player->worldX][player->worldY])
+		{
+			obj->update(&secretRoomVector[player->worldX][player->worldY]);
+			obj->draw(mainWindow);
+		}
 	}
 	addToGameVector(&gameMainVector[player->worldX][player->worldY]);
 }

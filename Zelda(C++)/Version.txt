@@ -1,3 +1,11 @@
+Version 0.047
+
+-Created file for the Shop/Secret layer.
+-Reworked loading file method to be reusable with Shop/Secret Layer
+-Changed the magic numbers for file loader/tile id to more descriptive enum.
+-Can change between Shop/Secret room layer to overworld map layer without actually moving on the gamemap.
+-Automatic transition to and from Shop/Secret to overworld is currently not implemented in this version.
+
 Version 0.046
 
 -The project now use smart pointers in place of naked pointer everywhere that was needed.

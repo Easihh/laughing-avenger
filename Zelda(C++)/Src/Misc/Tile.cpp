@@ -1,6 +1,6 @@
 #include "Misc\Tile.h"
 #include "Utility\Static.h"
-Tile::Tile(Point pos,bool canBeCollidedWith,int type){
+Tile::Tile(Point pos, bool canBeCollidedWith, TileType type) {
 	position = pos;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
@@ -13,13 +13,16 @@ void Tile::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(sprite);
 }
 void Tile::update(){}
-void Tile::loadTileImage(int type){
+void Tile::loadTileImage(TileType type) {
 	switch (type){
-	case 1:
+	case TileType::Sand:
 		texture.loadFromFile("Tileset/Sand.png");
 		break;
-	case 2:
+	case TileType::GreenTree:
 		texture.loadFromFile("Tileset/Tree.png");
+		break;
+	case TileType::BlackTile:
+		texture.loadFromFile("Tileset/BlackTile.png");
 		break;
 	}
 	sprite.setTexture(texture);

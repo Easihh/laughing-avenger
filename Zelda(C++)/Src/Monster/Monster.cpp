@@ -1,5 +1,7 @@
 #include "Monster\Monster.h"
-Monster::Monster(){}
+Monster::Monster(){
+	depth = 1;
+}
 Monster::~Monster(){}
 void Monster::checkInvincibility(){
 	if (isInvincible){

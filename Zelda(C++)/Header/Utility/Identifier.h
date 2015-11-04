@@ -6,7 +6,9 @@ enum Identifier {
 	Sand_ID = 1,
 	GreenTree_ID = 2,
 	RedOctorok_ID = 3,
-	BlackTile_ID = 4
+	BlackTile_ID = 4,
+	ShopMarker_ID = 5,
+	BrownBlock1_ID = 6
 };
 
 #endif

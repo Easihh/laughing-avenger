@@ -21,6 +21,7 @@ private:
 	unsigned int stepToMove;
 	Static::Direction dir;
 	void completeMove();
+	bool isCollidingShopMarker(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	bool isColliding(std::vector<std::shared_ptr<GameObject>>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, float xOffset, float yOffset);
 	bool isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	int xOffset, yOffset, stepToAlign, transitionStep,currentInvincibleFrame;
@@ -50,6 +51,7 @@ private:
 	bool isOutsideMapBound(Point pos);
 	std::shared_ptr<GameObject> collidingMonster;
 	std::vector<std::unique_ptr<Animation>> walkingAnimation;
+	std::unique_ptr<Point> pointBeforeTeleport;
 	const int textSize = 12;
 };
 #endif

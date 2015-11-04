@@ -1,3 +1,10 @@
+Version 0.048
+
+-Fixed an issue where used items such as bomb would not display while in shop layer
+-Automatic transition to/from shop room to overworld is now implemented when player move over the curent black marker.
+-Some starting work with sorting the gameObjects by depth so they are drawn by they depth and not depending on when they
+were added to the vectors/arrays.
+
 Version 0.047
 
 -Created file for the Shop/Secret layer.

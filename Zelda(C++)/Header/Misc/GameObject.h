@@ -13,7 +13,7 @@ public:
 	Point position;
 	unsigned int width,height;
 	bool isCollideable;
-	bool toBeDeleted;
+	int depth;
 	void setupFullMask();
 	sf::Texture texture;
 	sf::Sprite sprite;

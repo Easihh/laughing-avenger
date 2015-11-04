@@ -3,6 +3,7 @@
 #include "Monster\Monster.h"
 #include <iostream>
 Sword::Sword(Point pos,Static::Direction dir){
+	depth = 0;
 	position = pos;
 	swordCurrentFrame = 0;
 	swordDelay = 0;

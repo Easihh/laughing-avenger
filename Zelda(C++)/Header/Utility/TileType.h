@@ -4,6 +4,7 @@
 enum class TileType{
 	Sand,
 	GreenTree,
-	BlackTile
+	BlackTile,
+	BrownBlockType1,
 };
 #endif

@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" nextobjectid="1">
- <tileset firstgid="1" name="Zelda-World" tilewidth="32" tileheight="32" tilecount="4">
-  <tile id="0">
-   <image width="32" height="32" source="Hero.png"/>
-  </tile>
-  <tile id="1">
-   <image width="32" height="32" source="Sand.png"/>
-  </tile>
-  <tile id="2">
-   <image width="32" height="32" source="Tree.png"/>
-  </tile>
-  <tile id="3">
-   <image width="32" height="32" source="redOctorok.png"/>
-  </tile>
+ <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="6">
+  <image source="tileset.png" width="192" height="32"/>
  </tileset>
- <layer name="Layer 1" width="32" height="32" visible="0">
+ <layer name="Layer 1" width="32" height="32">
   <data encoding="base64" compression="zlib">
    eJztwwEJAAAMBKHj+4dej6HgqqmqqqqvHyPACAE=
   </data>
  </layer>
  <layer name="Layer 2" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztldsKACEIRF3s/795n3qRMsWmdauB6AJ6mJJkIuI73IrEyvisfC23hV+CfE1I/3VfGmcr+COVzjyLz2KW6xmy+H+MuVD+tbOd6z8L33p/M/ijnvBFT5L/D3J4Fbl7b55WHSD5vbprvQeCj4z7O7++wan+0XxrL93V/+WfyV/VN7PxX5nyA6k=
+   eJztldEKwCAIRR3F/v+T9ySEVNPc3VwlSGTo4ZZkIqK03WyeXJkfld+rreFnJ79nSP28z5UYkn8qc3Nj9fLLMxLxUZ0jfLZDWQulvxebuf+j8LX39wT/biZ8MZPk/4N0q3nu3lqn1gdIfqvvau+B4CPz/s7nN1hVP5qvnaWz6t/8Nflvzc1o/AvkqgOv
   </data>
  </layer>
 </map>

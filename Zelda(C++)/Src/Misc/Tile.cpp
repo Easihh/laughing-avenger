@@ -24,6 +24,9 @@ void Tile::loadTileImage(TileType type) {
 	case TileType::BlackTile:
 		texture.loadFromFile("Tileset/BlackTile.png");
 		break;
+	case TileType::BrownBlockType1:
+		texture.loadFromFile("Tileset/type1BrownBlock.png");
+		break;
 	}
 	sprite.setTexture(texture);
 	sprite.setPosition(position.x, position.y);

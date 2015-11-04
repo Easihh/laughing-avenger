@@ -7,6 +7,7 @@
 #include "Item\Boomrang.h"
 #include "Utility\Point.h"
 #include"Utility\PlayerInfo.h"
+#include "Misc\ShopMarker.h"
  Player::Player(Point pos){
 	 position = pos;
 	 worldX = (int)(position.y / Global::roomHeight);
@@ -35,6 +36,8 @@
 	attackAnimationIndex = 0;
  }
  void Player::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	 if(isCollidingShopMarker(worldMap))
+		 isInsideShop = true;
 	 sword->update(isAttacking, canAttack, worldMap, &walkingAnimation);
 	 checkMovementInput(worldMap);
 	 checkAttackInput();
@@ -128,9 +131,13 @@
 	 if (movementKeyPressed){
 		 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, position);
 	 }
-	 if (outsideBound){
+	 if (outsideBound && !isInsideShop){
 		 transitionStep = maxTransitionStep;
 		 isScreenTransitioning = true;
+	 }
+	 if(outsideBound && isInsideShop){
+		 isInsideShop = false;
+		 position = *pointBeforeTeleport.get();
 	 }
  }
  void Player::checkItemUseInput(std::vector<std::shared_ptr<GameObject>>* worldMap) {
@@ -138,6 +145,23 @@
 		 inventory->itemUse(position, dir, worldMap);
 		 itemKeyReleased = false;
 	 }
+ }
+ bool Player::isCollidingShopMarker(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	 bool isColliding=false;
+	 Point offset(getXOffset(), getYOffset());
+	 for(auto& obj : *worldMap)
+	 {
+		 if(dynamic_cast<ShopMarker*>(obj.get()))
+			 if(intersect(fullMask, ((ShopMarker*)obj.get())->fullMask, offset)){
+				 pointBeforeTeleport = std::make_unique<Point>(obj->position);
+				 float teleportX=worldY*Global::roomWidth+(0.5*Global::roomWidth);
+				 float teleportY = worldX*Global::roomHeight+Global::roomHeight+Global::inventoryHeight-2*Global::TileHeight;
+				 position = Point(teleportX, teleportY);
+				 isColliding = true;
+				 break;
+			 }
+	 }
+	 return isColliding;
  }
  bool Player::isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 bool isColliding = false;

@@ -14,7 +14,7 @@ public:
 	WorldMap();
 	~WorldMap();
 	void loadMap(std::string filename,tripleVector& triple);
-	std::vector<std::vector<std::vector<std::shared_ptr<GameObject>>>> gameMainVector, gameBackgroundVector,secretRoomVector,secretRoomBackgroundVector;
+	tripleVector gameMainVector, gameBackgroundVector, secretRoomVector, secretRoomBackgroundVector;
 	std::vector<std::vector<std::shared_ptr<GameObject>>> mainVectorColums, mainBackgroundColumns,secretRoomColumns,secretRoomBackgroundColumns;
 	std::vector<std::shared_ptr<GameObject>> roomGameObjects, roomBackGroundTile,secretRoomTile,secretRoomGameObjects;
 	void update(sf::RenderWindow& mainWindow,sf::Event& event);
@@ -28,8 +28,10 @@ private:
 	void drawLeftScreen(sf::RenderWindow& mainWindow);
 	void drawDownScreen(sf::RenderWindow& mainWindow);
 	void drawUpScreen(sf::RenderWindow& mainWindow);
-	void freeSpace();
+	void freeSpace(tripleVector&);
 	void addToGameVector(std::vector<std::shared_ptr<GameObject>>* roomVector);
 	void setupVectors();
+	void sort(tripleVector& objectVector);
+	//bool sortByDepth(GameObject* object1, GameObject* object2);
 };
 #endif

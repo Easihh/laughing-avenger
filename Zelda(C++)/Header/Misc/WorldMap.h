@@ -18,7 +18,8 @@ public:
 	std::vector<std::vector<std::shared_ptr<GameObject>>> mainVectorColums, mainBackgroundColumns,secretRoomColumns,secretRoomBackgroundColumns;
 	std::vector<std::shared_ptr<GameObject>> roomGameObjects, roomBackGroundTile,secretRoomTile,secretRoomGameObjects;
 	void update(sf::RenderWindow& mainWindow,sf::Event& event);
-	std::unique_ptr<Player> player;
+	std::shared_ptr<Player> player;
+	void movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int newWorldX, int newWorldY);
 private:
 	int lastWorldXIndex, lastWorldYIndex, vectorXindex, vectorYindex;
 	void createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector);
@@ -32,6 +33,5 @@ private:
 	void addToGameVector(std::vector<std::shared_ptr<GameObject>>* roomVector);
 	void setupVectors();
 	void sort(tripleVector& objectVector);
-	//bool sortByDepth(GameObject* object1, GameObject* object2);
 };
 #endif

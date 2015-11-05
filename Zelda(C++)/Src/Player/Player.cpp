@@ -8,10 +8,17 @@
 #include "Utility\Point.h"
 #include"Utility\PlayerInfo.h"
 #include "Misc\ShopMarker.h"
+#include "Misc\WorldMap.h"
  Player::Player(Point pos){
+	 depth = 999;
+	 stepToMove = 0;
+	 stepToAlign = currentInvincibleFrame = transitionStep = xOffset = yOffset = 0;
+	 movePlayerToNewVector=stepIsNegative = false;
 	 position = pos;
 	 worldX = (int)(position.y / Global::roomHeight);
 	 worldY = (int)(position.x / Global::roomWidth);
+	 prevWorldX = worldX;
+	 prevWorldY = worldY;
 	 width = Global::TileWidth;
 	 height = Global::TileHeight;
 	 dir = Static::Direction::Up;
@@ -36,8 +43,12 @@
 	attackAnimationIndex = 0;
  }
  void Player::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
-	 if(isCollidingShopMarker(worldMap))
+	 if(isCollidingShopMarker(worldMap)){
 		 isInsideShop = true;
+		 prevWorldX = worldX;
+		 prevWorldY = worldY;
+		 movePlayerToNewVector = true;
+	 }
 	 sword->update(isAttacking, canAttack, worldMap, &walkingAnimation);
 	 checkMovementInput(worldMap);
 	 checkAttackInput();
@@ -138,6 +149,7 @@
 	 if(outsideBound && isInsideShop){
 		 isInsideShop = false;
 		 position = *pointBeforeTeleport.get();
+		 movePlayerToNewVector = true;
 	 }
  }
  void Player::checkItemUseInput(std::vector<std::shared_ptr<GameObject>>* worldMap) {
@@ -157,6 +169,10 @@
 				 float teleportX=worldY*Global::roomWidth+(0.5*Global::roomWidth);
 				 float teleportY = worldX*Global::roomHeight+Global::roomHeight+Global::inventoryHeight-2*Global::TileHeight;
 				 position = Point(teleportX, teleportY);
+				 for(int i = 0; i < walkingAnimation.size(); i++){
+					 walkingAnimation[i]->sprite.setPosition(position.x, position.y);
+					 attackAnimation[i]->sprite.setPosition(position.x, position.y);
+				 }
 				 isColliding = true;
 				 break;
 			 }
@@ -282,6 +298,9 @@
  void Player::endScreenTransition(){
 	 stepToMove = Global::TileHeight + 1;
 	 isScreenTransitioning = false;
+	 movePlayerToNewVector = true;
+	 prevWorldX = worldX;
+	 prevWorldY = worldY;
 	 switch (dir){
 	 case Static::Direction::Down:
 		worldX++;

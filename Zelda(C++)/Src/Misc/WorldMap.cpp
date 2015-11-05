@@ -83,7 +83,8 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 		//no tile;
 		break;
 	case Identifier::Player_ID:
-		player = std::make_unique<Player>(pt);
+		player = std::make_shared<Player>(pt);
+		objectVector[vectorXindex][vectorYindex].push_back(player);
 		break;
 	case Identifier::Sand_ID:
 		tile =std::make_shared<Tile>(pt, false, TileType::Sand);
@@ -119,16 +120,50 @@ void WorldMap::update(sf::RenderWindow& mainWindow,sf::Event& event){
 		player->attackKeyReleased = true;
 	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S)
 		player->itemKeyReleased = true;
-		drawAndUpdateCurrentScreen(mainWindow);
 		drawRightScreen(mainWindow);
 		drawLeftScreen(mainWindow);
 		drawUpScreen(mainWindow);
 		drawDownScreen(mainWindow);
-		if(!player->isInsideShop)
+		drawAndUpdateCurrentScreen(mainWindow);
+		/*if(!player->isInsideShop)
 			player->update(&gameMainVector[player->worldX][player->worldY]);
 		else player->update(&secretRoomVector[player->worldX][player->worldY]);
-		player->draw(mainWindow);
+		player->draw(mainWindow);*/
 		mainWindow.display();
+}
+void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int newWorldX, int newWorldY) {
+
+	if(player->isInsideShop){
+		secretRoomVector[newWorldX][newWorldY].push_back(player);
+		for(int i = 0; i < gameMainVector[oldWorldX][oldWorldY].size(); i++){
+			std::shared_ptr<GameObject> tmp = gameMainVector[oldWorldX][oldWorldY].at(i);
+			if(tmp == player){
+				tmp.reset();
+				gameMainVector[oldWorldX][oldWorldY].erase(gameMainVector[oldWorldX][oldWorldY].begin() + i);
+			}
+		}
+	}
+	if(!player->isInsideShop){
+		//check if the player previous room was a secret room and delete it from the room vector objects
+		for(int i = 0; i < secretRoomVector[oldWorldX][oldWorldY].size(); i++){
+			std::shared_ptr<GameObject> tmp = secretRoomVector[oldWorldX][oldWorldY].at(i);
+			if(tmp == player){
+				tmp.reset();
+				secretRoomVector[oldWorldX][oldWorldY].erase(secretRoomVector[oldWorldX][oldWorldY].begin() + i);
+				gameMainVector[newWorldX][newWorldY].push_back(player);
+			}
+		}
+		//both previous and current room could be non-secret room so do the same as above.
+		for(int i = 0; i < gameMainVector[oldWorldX][oldWorldY].size(); i++){
+			std::shared_ptr<GameObject> tmp = gameMainVector[oldWorldX][oldWorldY].at(i);
+			if(tmp == player){
+				tmp.reset();
+				gameMainVector[oldWorldX][oldWorldY].erase(gameMainVector[oldWorldX][oldWorldY].begin() + i);
+				gameMainVector[newWorldX][newWorldY].push_back(player);
+			}
+		}
+	}
+	player->movePlayerToNewVector = false;
 }
 void WorldMap::drawScreen(sf::RenderWindow& mainWindow, std::vector<std::shared_ptr<GameObject>>* Maplayer) {
 	for(auto& obj: *Maplayer)
@@ -159,6 +194,8 @@ void WorldMap::addToGameVector(std::vector<std::shared_ptr<GameObject>>* roomObj
 }
 void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 	if(!player->isInsideShop){
+		if(player->movePlayerToNewVector)
+			movePlayerToDifferentRoomVector(player->prevWorldX, player->prevWorldY, player->worldX, player->worldY);
 		freeSpace(gameMainVector);
 		drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY]);
 		for(auto& obj : gameMainVector[player->worldX][player->worldY])
@@ -170,6 +207,8 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 	}
 	else
 	{
+		if(player->movePlayerToNewVector)
+			movePlayerToDifferentRoomVector(player->prevWorldX, player->prevWorldY, player->worldX, player->worldY);
 		freeSpace(secretRoomVector);
 		drawScreen(mainWindow, &secretRoomBackgroundVector[player->worldX][player->worldY]);
 		for(auto& obj : secretRoomVector[player->worldX][player->worldY])

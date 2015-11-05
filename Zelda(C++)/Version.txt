@@ -1,3 +1,10 @@
+Version 0.049
+
+-Fixed an issue where sometime entering shop, the player sprite would be first drawn at an incorrect position.
+-Player object is now part of the current room object vector in order for specific object to handle the different collision 
+with the player instead of the player class handling all type of collisions.
+-Moving different collision code to their rightful class will be done in the next Version.
+
 Version 0.048
 
 -Fixed an issue where used items such as bomb would not display while in shop layer

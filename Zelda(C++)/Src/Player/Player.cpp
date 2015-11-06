@@ -43,12 +43,6 @@
 	attackAnimationIndex = 0;
  }
  void Player::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
-	 if(isCollidingShopMarker(worldMap)){
-		 isInsideShop = true;
-		 prevWorldX = worldX;
-		 prevWorldY = worldY;
-		 movePlayerToNewVector = true;
-	 }
 	 sword->update(isAttacking, canAttack, worldMap, &walkingAnimation);
 	 checkMovementInput(worldMap);
 	 checkAttackInput();
@@ -157,27 +151,6 @@
 		 inventory->itemUse(position, dir, worldMap);
 		 itemKeyReleased = false;
 	 }
- }
- bool Player::isCollidingShopMarker(std::vector<std::shared_ptr<GameObject>>* worldMap) {
-	 bool isColliding=false;
-	 Point offset(getXOffset(), getYOffset());
-	 for(auto& obj : *worldMap)
-	 {
-		 if(dynamic_cast<ShopMarker*>(obj.get()))
-			 if(intersect(fullMask, ((ShopMarker*)obj.get())->fullMask, offset)){
-				 pointBeforeTeleport = std::make_unique<Point>(obj->position);
-				 float teleportX=worldY*Global::roomWidth+(0.5*Global::roomWidth);
-				 float teleportY = worldX*Global::roomHeight+Global::roomHeight+Global::inventoryHeight-2*Global::TileHeight;
-				 position = Point(teleportX, teleportY);
-				 for(int i = 0; i < walkingAnimation.size(); i++){
-					 walkingAnimation[i]->sprite.setPosition(position.x, position.y);
-					 attackAnimation[i]->sprite.setPosition(position.x, position.y);
-				 }
-				 isColliding = true;
-				 break;
-			 }
-	 }
-	 return isColliding;
  }
  bool Player::isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 bool isColliding = false;

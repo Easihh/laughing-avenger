@@ -36,5 +36,5 @@ void GameObject::setupFullMask(){
 	fullMask->setOutlineThickness(1);
 	fullMask->setFillColor(sf::Color::Transparent);
 	fullMask->setPosition(position.x, position.y);
-	fullMask->setOutlineColor(sf::Color::Black);
+	fullMask->setOutlineColor(sf::Color::Magenta);
 }

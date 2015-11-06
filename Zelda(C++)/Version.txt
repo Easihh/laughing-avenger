@@ -1,3 +1,9 @@
+Version 0.050
+
+-Fixed an issue where entering a shop in certain direction it would cause the player leaving it to be teleport back
+to the shop again.
+-Moved teleporToShop type collision logic outside the player class and to the ShopMarker class.
+
 Version 0.049
 
 -Fixed an issue where sometime entering shop, the player sprite would be first drawn at an incorrect position.

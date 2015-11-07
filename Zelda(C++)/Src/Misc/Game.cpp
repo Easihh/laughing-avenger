@@ -1,4 +1,5 @@
 #include "Misc\Game.h"
+#include "Misc\Sound.h"
 Game::Game(){}
 Game::~Game(){}
 void Game::GameLoop(){
@@ -25,6 +26,7 @@ void Game::Start(){
 	mainWindow.setView(Global::gameView);
 	mainWindow.setFramerateLimit(Global::FPS_RATE);
 	Static::gameState = Static::Playing;
+	Sound gameSound;
 	while (Static::gameState != Static::Exiting){
 		timeSinceLastUpdate += timerClock.restart();
 		fpsTimer += fpsClock.restart();

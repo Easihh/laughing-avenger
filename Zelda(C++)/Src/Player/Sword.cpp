@@ -11,6 +11,7 @@ Sword::Sword(Point pos,Static::Direction dir){
 	loadImage(dir);
 	setupFullMask();
 	strength = 1;
+	Sound::playSound(SoundType::SwordAttack);
 }
 Sword::~Sword(){}
 void Sword::loadImage(Static::Direction dir){

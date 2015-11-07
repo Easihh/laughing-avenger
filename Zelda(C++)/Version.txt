@@ -1,3 +1,11 @@
+Version 0.051
+
+-Added game Sound support.
+-Sword attack sound has been added.
+-Monster hit sound has been added.
+-Bomb Drop and Bomb explose sound has been added.
+
+
 Version 0.050
 
 -Fixed an issue where entering a shop in certain direction it would cause the player leaving it to be teleport back

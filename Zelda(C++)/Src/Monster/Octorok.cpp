@@ -85,14 +85,18 @@ void Octorok::pushbackUpdate(){
 void Octorok::takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap, Static::Direction attackDir) {
 	if (!isInvincible){
 		healthPoint -= damage;
-		if (healthPoint >= 1)
+		if(healthPoint >= 1){
+			Sound::playSound(EnemyHit);
 			pushBack(worldMap, attackDir);
+		}
 		isInvincible = true;
 		walkAnimIndex = 1;
 	}
 }
 void Octorok::takeDamage(int damage){
 	if (!isInvincible){
+		if(healthPoint > damage)
+			Sound::playSound(EnemyHit);
 		healthPoint -= damage;
 		isInvincible = true;
 		walkAnimIndex = 1;

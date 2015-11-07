@@ -3,6 +3,7 @@
 #include "Misc\GameObject.h"
 #include "Item\BombEffect.h"
 #include "Utility\Static.h"
+#include <SFML/Audio.hpp>
 class ThrownBomb :public GameObject{
 public:
 	~ThrownBomb();
@@ -13,5 +14,7 @@ private:
 	int currentFrame, maxFrame = 90;
 	void setup(Static::Direction direction);
 	void createBombEffect();
+	sf::SoundBuffer buffer;
+	sf::Sound bombBlow;
 };
 #endif

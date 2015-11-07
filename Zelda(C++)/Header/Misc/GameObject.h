@@ -3,6 +3,8 @@
 #include "SFML\Graphics.hpp"
 #include "Utility\Point.h"
 #include <memory>
+#include "Misc\Sound.h"
+#include "Misc\SoundType.h"
 class GameObject{
 public:
 	GameObject();

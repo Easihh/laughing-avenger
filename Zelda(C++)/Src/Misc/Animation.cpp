@@ -22,6 +22,20 @@ Animation::Animation(std::string filename, int recHeight, int recWidth, Point po
 }
 Animation::Animation(){}
 Animation::~Animation(){}
+void Animation::updateAnimationFrame(Point position) {
+	xPosition = position.x;
+	yPosition = position.y;
+	sprite.setPosition(xPosition, yPosition);
+	fCounter++;
+	if(fRate != NULL && fCounter >= fRate){
+		fCounter = 0;
+		currentIndex++;
+		if(currentIndex >= maxCol)
+			currentIndex = 0;
+	}
+	subRect.left = currentIndex*width;
+	sprite.setTextureRect(subRect);
+}
 void Animation::updateAnimationFrame(Static::Direction dir,Point position){
 	xPosition = position.x;
 	yPosition = position.y;

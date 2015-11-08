@@ -15,6 +15,7 @@ public:
 	void setBarNextPosition(Point step);
 	void decreaseCurrentHP(int amount);
 	int getCurrentHP();
+	bool isFullHP();
 	void movePlayerBarToBottomScreen();
 	void movePlayerBarToTopScreen();
 	void updatePlayerMapMarker(Static::Direction direction);

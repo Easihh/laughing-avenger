@@ -2,6 +2,8 @@
 #include "SFML\Graphics.hpp"
 #include<iostream>
 #include"Utility\Static.h"
+#include "Player\MovingSword.h"
+#include "Player\Player.h"
 GameObject::GameObject(){}
 GameObject::~GameObject(){}
 void GameObject::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {}
@@ -37,4 +39,18 @@ void GameObject::setupFullMask(){
 	fullMask->setFillColor(sf::Color::Transparent);
 	fullMask->setPosition(position.x, position.y);
 	fullMask->setOutlineColor(sf::Color::Magenta);
+}
+bool GameObject::isOutsideRoomBound(Point pos) {
+	int worldX = (position.y - Global::inventoryHeight) / Global::roomHeight;
+	int worldY = position.x / Global::roomWidth;
+	bool outsideBoundary = false;
+	if(pos.x + width > (Global::roomWidth*worldY) + Global::roomWidth)
+		outsideBoundary = true;
+	else if(pos.x < (Global::roomWidth*worldY))
+		outsideBoundary = true;
+	else if(pos.y< (Global::roomHeight*worldX) + Global::inventoryHeight)
+		outsideBoundary = true;
+	else if(pos.y + height >(Global::roomHeight*worldX) + Global::roomHeight + Global::inventoryHeight)
+		outsideBoundary = true;
+	return outsideBoundary;
 }

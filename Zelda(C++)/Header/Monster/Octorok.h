@@ -21,7 +21,6 @@ private:
 	int getYOffset();
 	void pushbackUpdate();
 	void getNextDirection(Static::Direction blockedDir);
-	bool isOutsideRoomBound(Point pos);
 	std::vector<std::unique_ptr<Animation>> walkingAnimation;
 	Static::Direction dir;
 	const int minStep = 1;

@@ -91,6 +91,7 @@ void Inventory::findNextSelectorPosition(){
 	bool found = false;
 	for (int i = selectorInventoryIndex; i < items.size(); i++){
 		if (items[i] != NULL && i!=selectorInventoryIndex){
+			Sound::playSound(SoundType::Selector);
 			selectorInventoryIndex = i;
 			found = true;
 			selectedItem = items[i]->sprite;
@@ -101,6 +102,7 @@ void Inventory::findNextSelectorPosition(){
 	if (!found){
 		for (int i = 0; i < selectorInventoryIndex; i++){
 			if (items[i] != NULL){
+				Sound::playSound(SoundType::Selector);
 				selectorInventoryIndex = i;
 				selectedItem = items[i]->sprite;
 				selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);

@@ -178,6 +178,8 @@ void WorldMap::freeSpace(tripleVector&  objVector) {
 			for(int i = 0; i < objVector[player->worldX][player->worldY].size(); i++){
 				std::shared_ptr<GameObject> tmp = objVector[player->worldX][player->worldY].at(i);
 				if(tmp == del){
+					if(dynamic_cast<MovingSword*>(del.get()))
+						player->movingSwordIsActive = false;
 					del.reset();
 					objVector[player->worldX][player->worldY].erase(objVector[player->worldX][player->worldY].begin() + i);
 				}

@@ -43,6 +43,7 @@ void Octorok::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
 		Static::toAdd.push_back(add);
 		destroyGameObject(worldMap);
+		Sound::playSound(SoundType::EnemyKill);
 		std::cout << "Octorok Destroyed";
 	}
 	else 
@@ -238,20 +239,6 @@ bool Octorok::isColliding(std::vector<std::shared_ptr<GameObject>>* worldMap, st
 			}
 	}
 	return collision;
-}
-bool Octorok::isOutsideRoomBound(Point pos){
-	int worldX = (position.y-Global::inventoryHeight)/Global::roomHeight;
-	int worldY = position.x/Global::roomWidth;
-	bool outsideBoundary = false;
-	if (pos.x+width > (Global::roomWidth*worldY) + Global::roomWidth)
-		outsideBoundary = true;
-	else if (pos.x < (Global::roomWidth*worldY))
-		outsideBoundary = true;
-	else if (pos.y< (Global::roomHeight*worldX) + Global::inventoryHeight)
-		outsideBoundary = true;
-	else if (pos.y+height >(Global::roomHeight*worldX) + Global::roomHeight + Global::inventoryHeight)
-		outsideBoundary = true;
-	return outsideBoundary;
 }
 int Octorok::getXOffset(){
 	if (dir == Static::Direction::Left)

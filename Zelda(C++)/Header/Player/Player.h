@@ -8,6 +8,7 @@
 #include "Monster\Monster.h"
 #include "Player\PlayerBar.h"
 #include "Player\Inventory.h"
+#include "Player\MovingSword.h"
 class Player:public GameObject{
 public:
 	Player(Point position);
@@ -15,7 +16,7 @@ public:
 	void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void draw(sf::RenderWindow& mainWindow);
 	int worldX, worldY,prevWorldX,prevWorldY;
-	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased,isInsideShop,movePlayerToNewVector;
+	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased, isInsideShop, movePlayerToNewVector, movingSwordIsActive;
 	std::unique_ptr<Inventory> inventory;
 	std::unique_ptr<Point> pointBeforeTeleport;
 	std::vector<std::unique_ptr<Animation>> walkingAnimation;
@@ -40,6 +41,7 @@ private:
 	int walkAnimationIndex;
 	int attackAnimationIndex;
 	std::unique_ptr<Sword> sword;
+	std::shared_ptr<MovingSword> movingSword;
 	void endScreenTransition();
 	void screenTransition();
 	bool canAttack,isAttacking,stepIsNegative,isScreenTransitioning,isInvincible;

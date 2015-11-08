@@ -4,6 +4,9 @@ enum SoundType {
 	BombDrop,
 	BombExplose,
 	SwordAttack,
-	EnemyHit
+	EnemyHit,
+	EnemyKill,
+	Selector,
+	SwordCombineAttack
 };
 #endif

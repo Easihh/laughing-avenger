@@ -20,6 +20,7 @@ public:
 	sf::Texture texture;
 	sf::Sprite sprite;
 	std::unique_ptr<sf::RectangleShape> fullMask;
+	bool isOutsideRoomBound(Point pos);
 	static bool intersect(std::unique_ptr<sf::RectangleShape>& rectA, std::unique_ptr<sf::RectangleShape>& rectB, Point offset);
 private:
 };

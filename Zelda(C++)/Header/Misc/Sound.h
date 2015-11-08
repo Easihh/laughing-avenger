@@ -14,5 +14,8 @@ private:
 	static sf::Sound* bombBlow;
 	static sf::Sound* swordAttack;
 	static sf::Sound* enemyTakeHit;
+	static sf::Sound* enemyKilled;
+	static sf::Sound* selectorSound;
+	static sf::Sound* swordCombine;
 };
 #endif

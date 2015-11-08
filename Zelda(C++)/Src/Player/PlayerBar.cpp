@@ -6,7 +6,7 @@ PlayerBar::PlayerBar(){
 	map.setPoint(16, 32);
 	bar.setPoint(0, 0);
 	healthBarStart.setPoint(320, 80);
-	currentHealthPoint = 16;
+	currentHealthPoint = 32;
 	maxHealthPoint = 32;
 	itemSlotStart.setPoint(216, 36);
 	diamondStart.setPoint(152, 32);
@@ -38,6 +38,9 @@ void PlayerBar::loadImages(){
 }
 int PlayerBar::getCurrentHP(){
 	return currentHealthPoint;
+}
+bool PlayerBar::isFullHP() {
+	return currentHealthPoint == maxHealthPoint;
 }
 void PlayerBar::updatePlayerMapMarker(Static::Direction direction){
 	switch (direction){

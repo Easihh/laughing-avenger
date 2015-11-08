@@ -13,7 +13,7 @@
 	 depth = 999;
 	 stepToMove = 0;
 	 stepToAlign = currentInvincibleFrame = transitionStep = xOffset = yOffset = 0;
-	 movePlayerToNewVector=stepIsNegative = false;
+	 movePlayerToNewVector = stepIsNegative = movingSwordIsActive = false;
 	 position = pos;
 	 worldX = (int)(position.y / Global::roomHeight);
 	 worldY = (int)(position.x / Global::roomWidth);
@@ -72,6 +72,14 @@
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
 		 if (canAttack && !isAttacking && attackKeyReleased){
 			 sword =std::make_unique<Sword>(position, dir);
+			 if(!inventory->playerBar->isFullHP())
+				 Sound::playSound(SoundType::SwordAttack);
+			 if(!movingSwordIsActive && inventory->playerBar->isFullHP()){
+				 Sound::playSound(SoundType::SwordCombineAttack);
+				 movingSword = std::make_shared<MovingSword>(position, dir);
+				 Static::toAdd.push_back(movingSword);
+				 movingSwordIsActive = true;
+			 }
 			 isAttacking = true;
 			 canAttack = false;
 			 attackKeyReleased = false;

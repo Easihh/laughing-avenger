@@ -12,6 +12,7 @@ public:
 	sf::Sprite sprite;
 	void updateAnimationFrame(Static::Direction dir, Point position);
 	void setSubRectangle(Static::Direction dir);
+	void updateAnimationFrame(Point position);
 	void reset();
 	int currentIndex;
 private:

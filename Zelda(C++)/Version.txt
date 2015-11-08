@@ -1,3 +1,11 @@
+Version 0.052
+
+-Monster killed sound has been added.
+-Inventory selector sound has been added.
+-Player at Full HP now throw a moving sword in the attacking direction aswell.
+-Moving sword attack sound has been added.
+-Moving Sword damage on hit and effect on destroy is not yet implemented.
+
 Version 0.051
 
 -Added game Sound support.

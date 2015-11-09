@@ -5,6 +5,7 @@
 #include "Misc\Tile.h"
 #include "Item\Bomb.h"
 #include "Item\Boomrang.h"
+#include "Item\Arrow.h"
 #include "Utility\Point.h"
 #include"Utility\PlayerInfo.h"
 #include "Misc\ShopMarker.h"
@@ -30,6 +31,7 @@
 	 Point pt(0, 0);
 	 inventory->items.push_back(std::make_unique<Boomrang>(pt, "MagicalBoomerang"));
 	 inventory->items.push_back(std::make_unique<Bomb>(pt, "Bomb"));
+	 inventory->items.push_back(std::make_unique<Arrow>(pt, "Arrow"));
 }
  Player::~Player(){}
  void Player::loadImage(){
@@ -76,7 +78,7 @@
 				 Sound::playSound(SoundType::SwordAttack);
 			 if(!movingSwordIsActive && inventory->playerBar->isFullHP()){
 				 Sound::playSound(SoundType::SwordCombineAttack);
-				 movingSword = std::make_shared<MovingSword>(position, dir);
+				 movingSword = std::make_shared<MovingSword>(position, dir,sword->strength);
 				 Static::toAdd.push_back(movingSword);
 				 movingSwordIsActive = true;
 			 }
@@ -159,20 +161,6 @@
 		 inventory->itemUse(position, dir, worldMap);
 		 itemKeyReleased = false;
 	 }
- }
- bool Player::isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap) {
-	 bool isColliding = false;
-	 Point offset(xOffset, yOffset);
-	 for(auto& obj : *worldMap)
-	 {
-		if (dynamic_cast<Monster*>(obj.get()))
-			 if (intersect(fullMask, ((Monster*)obj.get())->mask, offset)){
-				isColliding = true;
-				collidingMonster = obj;
-				break;
-			}
-	 }
-	 return isColliding;
  }
  void  Player::takeDamage(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 if (!isInvincible && !isScreenTransitioning){

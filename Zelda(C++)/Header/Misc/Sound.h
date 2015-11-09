@@ -17,5 +17,6 @@ private:
 	static sf::Sound* enemyKilled;
 	static sf::Sound* selectorSound;
 	static sf::Sound* swordCombine;
+	static sf::Sound* arrow;
 };
 #endif

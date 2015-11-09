@@ -21,6 +21,8 @@ public:
 	sf::Sprite sprite;
 	std::unique_ptr<sf::RectangleShape> fullMask;
 	bool isOutsideRoomBound(Point pos);
+	std::shared_ptr<GameObject> collidingMonster;
+	bool isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	static bool intersect(std::unique_ptr<sf::RectangleShape>& rectA, std::unique_ptr<sf::RectangleShape>& rectB, Point offset);
 private:
 };

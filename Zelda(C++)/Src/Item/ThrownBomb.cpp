@@ -8,9 +8,6 @@ ThrownBomb::ThrownBomb(Point pos, Static::Direction direction){
 	height = 32;
 	currentFrame = 0;
 	setup(direction);
-	if(!buffer.loadFromFile("Sound/bombBlow.wav"))
-		std::cout << "Failed to load bombBlow.wav";
-	bombBlow.setBuffer(buffer);
 }
 void ThrownBomb::setup(Static::Direction direction){
 	texture.loadFromFile("tileset/Bomb.png");

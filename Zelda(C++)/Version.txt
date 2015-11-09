@@ -1,3 +1,11 @@
+Version 0.053
+
+-Moving Sword now damage/pushback enemies on hit.
+-Added Moving Sword effect on object destruction.
+-Fixed an issue with inventory selection item when possessing more than 2 Inventory item.
+-Selector sound no longer play when depleting an item qty while not in inventory.
+-Arrow Inventory Item has been fully added.
+
 Version 0.052
 
 -Monster killed sound has been added.

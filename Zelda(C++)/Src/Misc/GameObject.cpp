@@ -40,6 +40,20 @@ void GameObject::setupFullMask(){
 	fullMask->setPosition(position.x, position.y);
 	fullMask->setOutlineColor(sf::Color::Magenta);
 }
+bool GameObject::isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	bool isColliding = false;
+	Point offset(0, 0);
+	for(auto& obj : *worldMap)
+	{
+		if(dynamic_cast<Monster*>(obj.get()))
+			if(intersect(fullMask, ((Monster*)obj.get())->mask, offset)){
+				isColliding = true;
+				collidingMonster = obj;
+				break;
+			}
+	}
+	return isColliding;
+}
 bool GameObject::isOutsideRoomBound(Point pos) {
 	int worldX = (position.y - Global::inventoryHeight) / Global::roomHeight;
 	int worldY = position.x / Global::roomWidth;

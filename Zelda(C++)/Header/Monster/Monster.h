@@ -7,12 +7,12 @@
 class Monster :public GameObject{
 protected:
 	int healthPoint;
-	bool isInvincible;
 	const int maxInvincibleFrame = 20;
 	int currentInvincibleFrame, pushbackStep;
 	void checkInvincibility();
 	void updateMasks();
 public:
+	bool isInvincible;
 	Monster();
 	~Monster();
 	virtual void takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap, Static::Direction swordDir);

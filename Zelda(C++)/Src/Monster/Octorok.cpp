@@ -33,7 +33,7 @@ void Octorok::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(*fullMask);
 }
 void Octorok::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
-	if (pushbackStep == 0)
+	if(pushbackStep == 0)
 		movement(worldMap);
 	else pushbackUpdate();
 	for (int i = 0; i < 3;i++)

@@ -14,7 +14,5 @@ private:
 	int currentFrame, maxFrame = 90;
 	void setup(Static::Direction direction);
 	void createBombEffect();
-	sf::SoundBuffer buffer;
-	sf::Sound bombBlow;
 };
 #endif

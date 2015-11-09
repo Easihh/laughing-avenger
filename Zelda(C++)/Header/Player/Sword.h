@@ -10,9 +10,10 @@ public:
 	~Sword();
 	void loadImage(Static::Direction dir);
 	void endSword();
+	int strength;
 	void update(bool& isAttacking, bool& canAttack, std::vector<std::shared_ptr<GameObject>>* worldMap, std::vector<std::unique_ptr<Animation>>* walkAnimation);
 private:
-	int swordCurrentFrame, swordDelay,strength;
+	int swordCurrentFrame, swordDelay;
 	const int swordMaxFrame=12, swordMaxDelay=8;
 	bool isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	std::vector<std::shared_ptr<GameObject>> collidingMonsterList;

@@ -31,7 +31,7 @@ namespace Global{
 class Static{
 public:
 	static enum GameState{ NotStarted, Paused, Playing, Inventory, Exiting }; 
-	static enum Direction{ Right, Left, Up, Down,None };
+	static enum Direction{ Right, Left, Up, Down,None,TopLeft,TopRight,BottomLeft,BottomRight };
 	static  GameState gameState;
 	const static std::string GAME_TITLE;
 	static const int inventoryRows=3;

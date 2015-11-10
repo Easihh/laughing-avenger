@@ -6,9 +6,9 @@
 #include "Misc\Animation.h"
 class Sword :public GameObject{
 public:
-	Sword(Point pos, Static::Direction dir);
+	Sword(Point pos, Direction dir);
 	~Sword();
-	void loadImage(Static::Direction dir);
+	void loadImage(Direction dir);
 	void endSword();
 	int strength;
 	void update(bool& isAttacking, bool& canAttack, std::vector<std::shared_ptr<GameObject>>* worldMap, std::vector<std::unique_ptr<Animation>>* walkAnimation);
@@ -17,7 +17,7 @@ private:
 	const int swordMaxFrame=12, swordMaxDelay=8;
 	bool isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	std::vector<std::shared_ptr<GameObject>> collidingMonsterList;
-	Static::Direction swordDir;
+	Direction swordDir;
 	void updateMonster(std::vector<std::shared_ptr<GameObject>>* worldMap);
 };
 #endif

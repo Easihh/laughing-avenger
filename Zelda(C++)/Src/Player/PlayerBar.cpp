@@ -42,18 +42,18 @@ int PlayerBar::getCurrentHP(){
 bool PlayerBar::isFullHP() {
 	return currentHealthPoint == maxHealthPoint;
 }
-void PlayerBar::updatePlayerMapMarker(Static::Direction direction){
+void PlayerBar::updatePlayerMapMarker(Direction direction){
 	switch (direction){
-	case Static::Direction::Down:
+	case Direction::Down:
 		marker.y += Global::playerMarkerHeight;
 		break;
-	case Static::Direction::Up:
+	case Direction::Up:
 		marker.y -= Global::playerMarkerHeight;
 		break;
-	case Static::Direction::Right:
+	case Direction::Right:
 		marker.x += Global::playerMarkerWidth;
 		break;
-	case Static::Direction::Left:
+	case Direction::Left:
 		marker.x -= Global::playerMarkerWidth;
 		break;
 	}

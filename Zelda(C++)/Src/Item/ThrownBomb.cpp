@@ -2,28 +2,28 @@
 #include <iostream>
 #include "Utility\EffectType.h"
 ThrownBomb::~ThrownBomb(){}
-ThrownBomb::ThrownBomb(Point pos, Static::Direction direction){
+ThrownBomb::ThrownBomb(Point pos,Direction direction){
 	position = pos;
 	width = 32;
 	height = 32;
 	currentFrame = 0;
 	setup(direction);
 }
-void ThrownBomb::setup(Static::Direction direction){
+void ThrownBomb::setup(Direction direction){
 	texture.loadFromFile("tileset/Bomb.png");
 	sprite.setTexture(texture);
 	switch (direction)
 	{
-	case Static::Direction::Down:
+	case Direction::Down:
 		position.y += height;
 		break;
-	case Static::Direction::Up:
+	case Direction::Up:
 		position.y -= height;
 		break;
-	case Static::Direction::Right:
+	case Direction::Right:
 		position.x += width;
 		break;
-	case Static::Direction::Left:
+	case Direction::Left:
 		position.x -= width;
 		break;
 	}

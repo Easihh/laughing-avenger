@@ -36,7 +36,7 @@ void Animation::updateAnimationFrame(Point position) {
 	subRect.left = currentIndex*width;
 	sprite.setTextureRect(subRect);
 }
-void Animation::updateAnimationFrame(Static::Direction dir,Point position){
+void Animation::updateAnimationFrame(Direction dir,Point position){
 	xPosition = position.x;
 	yPosition = position.y;
 	sprite.setPosition(xPosition, yPosition);
@@ -52,20 +52,20 @@ void Animation::updateAnimationFrame(Static::Direction dir,Point position){
 void Animation::reset(){
 		currentIndex = 0;
 }
-void Animation::setSubRectangle(Static::Direction dir){
+void Animation::setSubRectangle(Direction dir){
 	subRect.left = currentIndex*width;
 	switch (dir)
 	{
-	case Static::Direction::Right:
+	case Direction::Right:
 		subRect.top = height * 3;
 		break;
-	case Static::Direction::Left:
+	case Direction::Left:
 		subRect.top = height * 2;
 		break;
-	case Static::Direction::Up:
+	case Direction::Up:
 		subRect.top = 0;
 		break;
-	case Static::Direction::Down:
+	case Direction::Down:
 		subRect.top = height;
 		break;
 	}

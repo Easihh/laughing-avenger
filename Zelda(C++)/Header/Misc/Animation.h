@@ -3,15 +3,16 @@
 
 #include "SFML\Graphics.hpp"
 #include <string>
-#include "Utility\Static.h"
+#include "Utility\Direction.h"
+#include "Utility\Point.h"
 class Animation{
 public:
 	Animation();
 	Animation(std::string filename, int recHeight, int recWidth, Point position,const int framerate);
 	~Animation();
 	sf::Sprite sprite;
-	void updateAnimationFrame(Static::Direction dir, Point position);
-	void setSubRectangle(Static::Direction dir);
+	void updateAnimationFrame(Direction dir, Point position);
+	void setSubRectangle(Direction dir);
 	void updateAnimationFrame(Point position);
 	void reset();
 	int currentIndex;

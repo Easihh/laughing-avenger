@@ -13,18 +13,12 @@ public:
 private:
 	void loadAnimation();
 	void movement(std::vector<std::shared_ptr<GameObject>>* worldMap);
-	bool isColliding(std::vector<std::shared_ptr<GameObject>>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, Point offsets);
-	void pushBack(std::vector<std::shared_ptr<GameObject>>* worldMap, Static::Direction swordDir);
-	void takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap, Static::Direction attackDir);
+	void takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap,Direction attackDir);
 	void takeDamage(int damage);
 	int getXOffset();
 	int getYOffset();
-	void pushbackUpdate();
-	void getNextDirection(Static::Direction blockedDir);
+	void getNextDirection(Direction blockedDir);
 	std::vector<std::unique_ptr<Animation>> walkingAnimation;
-	Static::Direction dir;
 	const int minStep = 1;
-	int getDistanceToMapBoundary(Static::Direction direction);
-	int getMinimumLineCollisionDistance(Static::Direction direction, std::vector<std::shared_ptr<GameObject>>* worldMap);
 };
 #endif

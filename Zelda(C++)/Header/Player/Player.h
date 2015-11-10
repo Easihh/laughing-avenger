@@ -23,7 +23,6 @@ public:
 	std::vector<std::unique_ptr<Animation>> attackAnimation;
 private:
 	unsigned int stepToMove;
-	Static::Direction dir;
 	void completeMove();
 	bool isColliding(std::vector<std::shared_ptr<GameObject>>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, float xOffset, float yOffset);
 	int xOffset, yOffset, stepToAlign, transitionStep,currentInvincibleFrame;
@@ -32,7 +31,7 @@ private:
 	int getYOffset();
 	void loadImage();
 	void takeDamage(std::vector<std::shared_ptr<GameObject>>* worldMap);
-	void getUnalignedCount(Static::Direction nextDir);
+	void getUnalignedCount(Direction nextDir);
 	void snapToGrid();
 	void drawPlayerBar(sf::RenderWindow& mainWindow);
 	void drawText(sf::RenderWindow& mainWindow);
@@ -45,12 +44,12 @@ private:
 	void screenTransition();
 	bool canAttack,isAttacking,stepIsNegative,isScreenTransitioning,isInvincible;
 	void checkInvincible();
-	void pushback(std::vector<std::shared_ptr<GameObject>>* worldMap);
+	void playerPushbackUpdate();
+	void playerPushBack(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void checkMovementInput(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void checkAttackInput();
 	void checkInventoryInput();
 	void checkItemUseInput(std::vector<std::shared_ptr<GameObject>>* worldMap);
-	bool isOutsideMapBound(Point pos);
 	const int textSize = 12;
 };
 #endif

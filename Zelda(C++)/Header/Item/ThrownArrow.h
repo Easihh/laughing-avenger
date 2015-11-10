@@ -7,12 +7,12 @@
 class ThrownArrow :public GameObject {
 public:
 	~ThrownArrow();
-	ThrownArrow(Point pos, Static::Direction direction);
+	ThrownArrow(Point pos,Direction direction);
 	void draw(sf::RenderWindow& mainWindow);
 	void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
 private:
 	void setup();
-	Static::Direction arrowDir;
+	Direction arrowDir;
 	void arrowMovement();
 	const int arrowSpeed = 6,arrowStrength=1;
 };

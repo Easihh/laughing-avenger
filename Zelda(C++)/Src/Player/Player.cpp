@@ -22,7 +22,7 @@
 	 prevWorldY = worldY;
 	 width = Global::TileWidth;
 	 height = Global::TileHeight;
-	 dir = Static::Direction::Up;
+	 dir = Direction::Up;
 	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased = true;
 	 isAttacking = isScreenTransitioning = isInvincible=isInsideShop = false;
 	 loadImage();
@@ -46,7 +46,9 @@
  }
  void Player::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 sword->update(isAttacking, canAttack, worldMap, &walkingAnimation);
-	 checkMovementInput(worldMap);
+	 if(pushbackStep == 0)
+		 checkMovementInput(worldMap);
+	 else playerPushbackUpdate();
 	 checkAttackInput();
 	 checkInventoryInput();
 	 checkItemUseInput(worldMap);
@@ -62,6 +64,61 @@
 	 checkInvincible();
 	 fullMask->setPosition(position.x, position.y);
 	 inventory->playerBar->update();
+ }
+ void Player::playerPushBack(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	 float pushBackMinDistance = 0;
+	 switch(dir){
+	 case Direction::Up:
+		 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Down, worldMap);
+		 if(!isOutsideRoomBound(Point(position.x, position.y + pushBackMinDistance)))
+			 pushbackStep = pushBackMinDistance;
+		 else pushbackStep = getDistanceToMapBoundary(Direction::Down);
+		 break;
+	 case Direction::Down:
+		 if(dir == Direction::Down){
+			 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Up, worldMap);
+			 if(!isOutsideRoomBound(Point(position.x, position.y - pushBackMinDistance)))
+				 pushbackStep = pushBackMinDistance;
+			 // the maximum pushback is beyond the room bounds
+			 else pushbackStep = getDistanceToMapBoundary(Direction::Up);
+		 }
+		 break;
+	 case Direction::Right:
+		 if(dir == Direction::Right){
+			 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Left, worldMap);
+			 if(!isOutsideRoomBound(Point(position.x - pushBackMinDistance, position.y)))
+				 pushbackStep = pushBackMinDistance;
+			 else pushbackStep = getDistanceToMapBoundary(Direction::Left);
+		 }
+		 break;
+	 case Direction::Left:
+		 if(dir == Direction::Left){
+			 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Right, worldMap);
+			 if(!isOutsideRoomBound(Point(position.x + pushBackMinDistance, position.y)))
+				 pushbackStep = pushBackMinDistance;
+			 // the maximum pushback is beyond the room bounds
+			 else pushbackStep = getDistanceToMapBoundary(Direction::Right);
+		 }
+		 break;
+	 }
+ }
+ void Player::playerPushbackUpdate() {
+	 int step = std::abs(pushbackStep);
+	 switch(dir){
+	 case Direction::Down:
+		 position.y -= step;
+		 break;
+	 case Direction::Up:
+		 position.y += step;
+		 break;
+	 case Direction::Left:
+		 position.x += step;
+		 break;
+	 case Direction::Right:
+		 position.x -= step;
+		 break;
+	 }
+	 pushbackStep = 0;
  }
  void Player::checkInventoryInput(){
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && inventoryKeyReleased){
@@ -94,53 +151,53 @@
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !isScreenTransitioning){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
-			 if (dir != Static::Direction::Left){
-				 getUnalignedCount(Static::Direction::Left);
-				 dir = Static::Direction::Left;
+			 if (dir != Direction::Left){
+				 getUnalignedCount(Direction::Left);
+				 dir = Direction::Left;
 				 walkingAnimation[walkAnimationIndex]->reset();
 			 }
 			 if (!isColliding(worldMap,fullMask,getXOffset(),getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
-			 outsideBound = isOutsideMapBound(Point(position.x - stepToMove, position.y));
+			 outsideBound = isOutsideRoomBound(Point(position.x - stepToMove, position.y));
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !isScreenTransitioning){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
-			 if (dir != Static::Direction::Right){
-				 getUnalignedCount(Static::Direction::Right);
-				 dir = Static::Direction::Right;
+			 if (dir != Direction::Right){
+				 getUnalignedCount(Direction::Right);
+				 dir = Direction::Right;
 				 walkingAnimation[walkAnimationIndex]->reset();
 			 }
 			 if (!isColliding(worldMap, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
-			 outsideBound = isOutsideMapBound(Point(position.x + width, position.y));
+			 outsideBound = isOutsideRoomBound(Point(position.x+stepToMove, position.y));
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !isScreenTransitioning){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
-			 if (dir != Static::Direction::Up){
-				 getUnalignedCount(Static::Direction::Up);
-				 dir = Static::Direction::Up;
+			 if (dir != Direction::Up){
+				 getUnalignedCount(Direction::Up);
+				 dir = Direction::Up;
 				 walkingAnimation[walkAnimationIndex]->reset();
 			 }
 			 if (!isColliding(worldMap, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
-			 outsideBound = isOutsideMapBound(Point(position.x, position.y - stepToMove));
+			 outsideBound = isOutsideRoomBound(Point(position.x, position.y - stepToMove));
 		 }
 	 }
 	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !isScreenTransitioning){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
-			 if (dir != Static::Direction::Down){
-				 getUnalignedCount(Static::Direction::Down);
-				 dir = Static::Direction::Down;
+			 if (dir != Direction::Down){
+				 getUnalignedCount(Direction::Down);
+				 dir = Direction::Down;
 				 walkingAnimation[walkAnimationIndex]->reset();
 			 }
 			 if (!isColliding(worldMap, fullMask, getXOffset(), getYOffset()) && stepToAlign == 0)
 				 stepToMove = Global::minStep;
-			 outsideBound = isOutsideMapBound(Point(position.x, position.y + height));
+			 outsideBound = isOutsideRoomBound(Point(position.x, position.y+stepToMove));
 		 }
 	 }
 	 if (movementKeyPressed){
@@ -168,7 +225,11 @@
 		 inventory->playerBar->decreaseCurrentHP(monster->strength);
 		 walkAnimationIndex = 1;
 		 attackAnimationIndex = 1;
-		 pushback(worldMap);
+		 playerPushBack(worldMap);
+		 if(isAttacking)
+			 sword->endSword();
+		 walkingAnimation[walkAnimationIndex]->sprite.setPosition(position.x, position.y);
+		 attackAnimation[attackAnimationIndex]->sprite.setPosition(position.x, position.y);
 		 if (inventory->playerBar->getCurrentHP() <= 0)
 			 std::cout << "I'm Dead";
 		 else isInvincible = true;
@@ -187,44 +248,6 @@
 			 }
 	 }
 	 return collision;
- }
- void Player::pushback(std::vector<std::shared_ptr<GameObject>>* worldMap) {
-	 float intersectWidth;
-	 float intersectHeight = 2 * Global::TileHeight;;
-	 float pushBackDistance = 64;
-	 std::unique_ptr<sf::RectangleShape> pushbackLineCheck = std::make_unique<sf::RectangleShape>();
-	 sf::Vector2f size(width, height);
-	 pushbackLineCheck->setSize(size);
-	 pushbackLineCheck->setPosition(position.x, position.y);
-
-	 switch (dir){
-	 case Static::Direction::Down:
-		 if (!isColliding(worldMap, pushbackLineCheck, 0, -intersectHeight))
-			 if (!isOutsideMapBound(Point(position.x, position.y - pushBackDistance)))
-				 position.y -= pushBackDistance;
-		 break;
-	 case Static::Direction::Up:
-		 if (!isColliding(worldMap, pushbackLineCheck, 0, intersectHeight))
-			 if (!isOutsideMapBound(Point(position.x, position.y + pushBackDistance+Global::TileHeight)))
-				 position.y += pushBackDistance;
-		 break;
-	 case Static::Direction::Left:
-		 intersectWidth = 3 * Global::TileWidth;
-		 if (!isColliding(worldMap, pushbackLineCheck, intersectWidth, 0))
-			 if (!isOutsideMapBound(Point(position.x + pushBackDistance, position.y)))
-				 position.x += pushBackDistance;
-		 break;
-	 case Static::Direction::Right:
-		 intersectWidth = 2 * Global::TileWidth;
-		 if (!isColliding(worldMap, pushbackLineCheck, - intersectWidth, 0))
-			 if (!isOutsideMapBound(Point(position.x - pushBackDistance, position.y)))
-				 position.x -= pushBackDistance;
-		 break;
-	 }
-	 if (isAttacking)
-		sword->endSword();
-	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(position.x, position.y);
-	 attackAnimation[attackAnimationIndex]->sprite.setPosition(position.x, position.y);
  }
  void Player::checkInvincible(){
 	 if (isInvincible){
@@ -252,18 +275,6 @@
 		 }
 	 }
  }
- bool Player::isOutsideMapBound(Point pos){
-	 bool outsideBoundary = false;
-	 if (pos.x > (Global::roomWidth*worldY) + Global::roomWidth)
-		 outsideBoundary = true;
-	 else if (pos.x < (Global::roomWidth*worldY))
-		 outsideBoundary = true;
-	 else if (pos.y < (Global::roomHeight*worldX) + Global::inventoryHeight)
-		 outsideBoundary = true;
-	 else if (pos.y >(Global::roomHeight*worldX) + Global::roomHeight + Global::inventoryHeight)
-		 outsideBoundary = true;
-	 return outsideBoundary;
- }
  void Player::endScreenTransition(){
 	 stepToMove = Global::TileHeight + 1;
 	 isScreenTransitioning = false;
@@ -271,16 +282,16 @@
 	 prevWorldX = worldX;
 	 prevWorldY = worldY;
 	 switch (dir){
-	 case Static::Direction::Down:
+	 case Direction::Down:
 		worldX++;
 		break;
-	 case Static::Direction::Up:
+	 case Direction::Up:
 		 worldX--;
 		 break;
-	 case Static::Direction::Right:
+	 case Direction::Right:
 		 worldY++;
 		 break;
-	 case Static::Direction::Left:
+	 case Direction::Left:
 		 worldY--;
 		 break;
 	 }
@@ -295,21 +306,21 @@
 	 float nextYPosition = 0;
 	 switch (dir){
 
-	 case Static::Direction::Right:
+	 case Direction::Right:
 		 Global::gameView.setCenter(viewX + (float)((Global::roomWidth / (increaseStep))),viewY);
 		 nextXPosition = (float)minTransitionStep*Global::roomWidth / maxTransitionStep;
 		 break;
 
-	 case Static::Direction::Left:
+	 case Direction::Left:
 		 Global::gameView.setCenter(viewX - (float)(Global::roomWidth / (increaseStep)),viewY);
 		 nextXPosition = -((float)minTransitionStep*Global::roomWidth / maxTransitionStep);
 		 break;
 
-	 case Static::Direction::Down:
+	 case Direction::Down:
 		 Global::gameView.setCenter(viewX, viewY + (Global::roomHeight / (increaseStep)));
 		 nextYPosition = (float)minTransitionStep*Global::roomHeight / maxTransitionStep;
 		 break;
-	 case Static::Direction::Up:
+	 case Direction::Up:
 		 Global::gameView.setCenter(viewX, viewY - (Global::roomHeight / (increaseStep)));
 		 nextYPosition = -((float)minTransitionStep*Global::roomHeight / maxTransitionStep);
 		 break;
@@ -325,35 +336,35 @@
  }
  int Player::getXOffset(){
 	 xOffset = 0;
-	if (dir == Static::Direction::Left)
+	if (dir == Direction::Left)
 		 xOffset = -Global::minStep;
-	 else if (dir == Static::Direction::Right)
+	 else if (dir == Direction::Right)
 		 xOffset = Global::minStep;
 	 return xOffset;
  }
  int Player::getYOffset(){
 	 yOffset = 0;
-	 if (dir == Static::Direction::Up)
+	 if (dir == Direction::Up)
 		 yOffset = -Global::minStep;
-	 else if (dir == Static::Direction::Down)
+	 else if (dir == Direction::Down)
 		 yOffset = Global::minStep;
 	 return yOffset;
  }
- void Player::getUnalignedCount(Static::Direction nextDir){
+ void Player::getUnalignedCount(Direction nextDir){
 	 int x = (int)position.x;
 	 int y = (int)position.y;
 	 stepIsNegative = false;
 	 switch (nextDir){
-	 case Static::Direction::Right:
+	 case Direction::Right:
 		 stepToAlign = Global::HalfTileHeight -( y %Global::HalfTileHeight);
 		 break;
-	 case Static::Direction::Left:
+	 case Direction::Left:
 		 stepToAlign = Global::HalfTileHeight - (y %Global::HalfTileHeight);
 		 break;
-	 case Static::Direction::Up:
+	 case Direction::Up:
 		 stepToAlign = Global::HalfTileWidth - (x %Global::HalfTileWidth);
 		 break;
-	 case Static::Direction::Down:
+	 case Direction::Down:
 		 stepToAlign = Global::HalfTileWidth - (x %Global::HalfTileWidth);
 		 break;
 	 }
@@ -365,8 +376,8 @@
  }
  void Player::snapToGrid(){
 	 switch (dir){
-	 case Static::Direction::Right:
-	 case Static::Direction::Left:
+	 case Direction::Right:
+	 case Direction::Left:
 		 if (!stepIsNegative){
 			 if (stepToAlign<Global::minStep)
 				 position.y += stepToAlign;
@@ -379,8 +390,8 @@
 			 else  position.y -= Global::minStep;
 		 }
 		 break;
-	 case Static::Direction::Up:
-	 case Static::Direction::Down:
+	 case Direction::Up:
+	 case Direction::Down:
 		 if (!stepIsNegative){
 			 if (stepToAlign < Global::minStep)
 				 position.x += stepToAlign;
@@ -403,16 +414,16 @@
  void Player::completeMove(){
 	 stepToMove -= Global::minStep;
 	 switch (dir){
-	 case Static::Direction::Right:
+	 case Direction::Right:
 		 position.x += Global::minStep;
 			 break;
-	 case Static::Direction::Left:
+	 case Direction::Left:
 		 position.x -= Global::minStep;
 			 break;
-	 case Static::Direction::Up:
+	 case Direction::Up:
 		 position.y -= Global::minStep;
 			 break;
-	 case Static::Direction::Down:
+	 case Direction::Down:
 		 position.y += Global::minStep;
 			 break;
 	 }

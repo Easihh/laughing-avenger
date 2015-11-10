@@ -1,9 +1,8 @@
 #ifndef STATIC_H
 #define STATIC_H
-
+#include "Misc\GameObject.h"
 #include <string>
 #include "SFML\Graphics.hpp"
-#include "Misc\GameObject.h"
 namespace Global{
 	extern const unsigned int FPS_RATE;
 	extern const unsigned int SCREEN_WIDTH;
@@ -31,7 +30,6 @@ namespace Global{
 class Static{
 public:
 	static enum GameState{ NotStarted, Paused, Playing, Inventory, Exiting }; 
-	static enum Direction{ Right, Left, Up, Down,None,TopLeft,TopRight,BottomLeft,BottomRight };
 	static  GameState gameState;
 	const static std::string GAME_TITLE;
 	static const int inventoryRows=3;

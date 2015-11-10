@@ -2,10 +2,11 @@
 #define SWORDDESTROYEFFECT_H
 #include "Misc\GameObject.h"
 #include "Misc\Animation.h"
+#include "Utility\Direction.h"
 class SwordDestroyEffect :public GameObject {
 public:
 	~SwordDestroyEffect();
-	SwordDestroyEffect(Point pos, Static::Direction dir);
+	SwordDestroyEffect(Point pos, Direction dir);
 	void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void draw(sf::RenderWindow& mainWindow);
 private:
@@ -14,6 +15,6 @@ private:
 	int currentFrame;
 	int const maxFrame = 14, movingSpeed = 2;
 	void movement();
-	Static::Direction direction;
+	Direction direction;
 };
 #endif

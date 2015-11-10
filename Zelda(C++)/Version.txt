@@ -1,3 +1,10 @@
+Version 0.054
+
+-Fixed an issue where attacking could cause monster knockback to get stuck because of double
+knockback from normal hit +moving sword.
+-Monster can no longer be knocked back if they are already being knocked back.
+-Code refactoring for commonly reused function/likely to be reused.
+
 Version 0.053
 
 -Moving Sword now damage/pushback enemies on hit.

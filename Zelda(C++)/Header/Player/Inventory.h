@@ -16,7 +16,7 @@ public:
 	void updateInventoryPosition(Point step);
 	int selectorInventoryIndex;
 	Item* getCurrentItem();
-	void itemUse(Point position, Static::Direction dir, std::vector<std::shared_ptr<GameObject>>* worldMap);
+	void itemUse(Point position,Direction dir, std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void findNextSelectorPosition();
 	std::unique_ptr<PlayerBar> playerBar;
 private:

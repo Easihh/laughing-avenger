@@ -1,6 +1,7 @@
 #include "Player\SwordDestroyEffect.h"
+#include "Utility\Static.h"
 SwordDestroyEffect::~SwordDestroyEffect() {}
-SwordDestroyEffect::SwordDestroyEffect(Point pos, Static::Direction dir) {
+SwordDestroyEffect::SwordDestroyEffect(Point pos,Direction dir) {
 	position = pos;
 	height = Global::HalfTileHeight;
 	width = Global::HalfTileWidth;
@@ -10,35 +11,35 @@ SwordDestroyEffect::SwordDestroyEffect(Point pos, Static::Direction dir) {
 }
 void SwordDestroyEffect::setAnimation() {
 	switch(direction){
-	case Static::BottomLeft:
+	case Direction::BottomLeft:
 		swordEffectAnimation = std::make_unique<Animation>("sword_effect_bottomleft", height, width, position, 6);
 		break;
-	case Static::BottomRight:
+	case Direction::BottomRight:
 		swordEffectAnimation = std::make_unique<Animation>("sword_effect_bottomright", height, width, position, 6);
 	break;
-	case Static::TopRight:
+	case Direction::TopRight:
 		swordEffectAnimation = std::make_unique<Animation>("sword_effect_topright", height, width, position, 6);
 		break;
-	case Static::TopLeft:
+	case Direction::TopLeft:
 		swordEffectAnimation = std::make_unique<Animation>("sword_effect_topleft", height, width, position, 6);
 		break;
 	}
 }
 void SwordDestroyEffect::movement() {
 	switch(direction){
-	case Static::BottomLeft:
+	case Direction::BottomLeft:
 		position.x -= movingSpeed;
 		position.y += movingSpeed;
 		break;
-	case Static::BottomRight:
+	case Direction::BottomRight:
 		position.x += movingSpeed;
 		position.y += movingSpeed;
 		break;
-	case Static::TopLeft:
+	case Direction::TopLeft:
 		position.x -= movingSpeed;
 		position.y -= movingSpeed;
 		break;
-	case Static::TopRight:
+	case Direction::TopRight:
 		position.x += movingSpeed;
 		position.y -= movingSpeed;
 		break;

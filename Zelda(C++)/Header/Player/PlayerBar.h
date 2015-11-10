@@ -18,7 +18,7 @@ public:
 	bool isFullHP();
 	void movePlayerBarToBottomScreen();
 	void movePlayerBarToTopScreen();
-	void updatePlayerMapMarker(Static::Direction direction);
+	void updatePlayerMapMarker(Direction direction);
 	sf::RectangleShape playerMarker, playerBar, overworldMap;
 	Point marker;
 	sf::Sprite itemSlotS;

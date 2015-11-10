@@ -2,7 +2,7 @@
 #include <string>
 #include "Monster\Monster.h"
 #include <iostream>
-Sword::Sword(Point pos,Static::Direction dir){
+Sword::Sword(Point pos,Direction dir){
 	depth = 0;
 	position = pos;
 	swordCurrentFrame = 0;
@@ -13,24 +13,24 @@ Sword::Sword(Point pos,Static::Direction dir){
 	strength = 1;
 }
 Sword::~Sword(){}
-void Sword::loadImage(Static::Direction dir){
+void Sword::loadImage(Direction dir){
 	switch (dir){
-	case Static::Direction::Left:
+	case Direction::Left:
 		texture.loadFromFile("Tileset/WoodSword_Left.png");
 		position.x = position.x - (Global::minGridStep) - (Global::minGridStep / 2);
 		position.y = position.y + (Global::minGridStep / 2);
 		break;
-	case Static::Direction::Right:
+	case Direction::Right:
 		texture.loadFromFile("Tileset/WoodSword_Right.png");
 		position.x = position.x + (Global::minGridStep) + (Global::minGridStep / 2);
 		position.y = position.y + (Global::minGridStep / 2);
 		break;
-	case Static::Direction::Down:
+	case Direction::Down:
 		texture.loadFromFile("Tileset/WoodSword_Down.png");
 		position.x = position.x + (Global::minGridStep / 2);
 		position.y = position.y + Global::minGridStep + (Global::minGridStep / 4);
 		break;
-	case Static::Direction::Up:
+	case Direction::Up:
 		texture.loadFromFile("Tileset/WoodSword_Up.png");
 		position.x = position.x + (Global::minGridStep / 2);
 		position.y = position.y - Global::minGridStep - (Global::minGridStep / 2);

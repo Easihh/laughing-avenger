@@ -1,7 +1,7 @@
 #include "Item\ThrownArrow.h"
 #include "Monster\Monster.h"
 ThrownArrow::~ThrownArrow() {}
-ThrownArrow::ThrownArrow(Point pos, Static::Direction direction) {
+ThrownArrow::ThrownArrow(Point pos,Direction direction) {
 	position = pos;
 	arrowDir = direction;
 	width = Global::TileWidth;
@@ -12,28 +12,28 @@ ThrownArrow::ThrownArrow(Point pos, Static::Direction direction) {
 void ThrownArrow::setup() {
 	switch(arrowDir)
 	{
-	case Static::Direction::Down:
+	case Direction::Down:
 		width = 16;
 		height = 32;
 		position.y += height;
 		position.x += float(0.5)*Global::HalfTileWidth;
 		texture.loadFromFile("Tileset/Arrow_Down.png");
 		break;
-	case Static::Direction::Up:
+	case Direction::Up:
 		width = 16;
 		height = 32;
 		position.y -= height;
 		position.x += float(0.5)*Global::HalfTileWidth;
 		texture.loadFromFile("Tileset/Arrow_Up.png");
 		break;
-	case Static::Direction::Right:
+	case Direction::Right:
 		width = 32;
 		height = 16;
 		position.x += width;
 		position.y += float(0.5)*Global::HalfTileHeight;
 		texture.loadFromFile("Tileset/Arrow_Right.png");
 		break;
-	case Static::Direction::Left:
+	case Direction::Left:
 		width = 32;
 		height = 16;
 		position.x -= width;
@@ -46,16 +46,16 @@ void ThrownArrow::setup() {
 }
 void ThrownArrow::arrowMovement() {
 	switch(arrowDir){
-	case Static::Right:
+	case Direction::Right:
 		position.x += arrowSpeed;
 		break;
-	case Static::Left:
+	case Direction::Left:
 		position.x -= arrowSpeed;
 		break;
-	case Static::Up:
+	case Direction::Up:
 		position.y -= arrowSpeed;
 		break;
-	case Static::Down:
+	case Direction::Down:
 		position.y += arrowSpeed;
 		break;
 	}

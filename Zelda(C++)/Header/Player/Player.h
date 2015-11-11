@@ -45,7 +45,7 @@ private:
 	bool canAttack,isAttacking,stepIsNegative,isScreenTransitioning,isInvincible;
 	void checkInvincible();
 	void playerPushbackUpdate();
-	void playerPushBack(std::vector<std::shared_ptr<GameObject>>* worldMap);
+	void playerPushBack(std::vector<std::shared_ptr<GameObject>>* worldMap,Point monsterPosition);
 	void checkMovementInput(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void checkAttackInput();
 	void checkInventoryInput();

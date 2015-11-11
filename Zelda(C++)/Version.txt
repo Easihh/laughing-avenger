@@ -1,3 +1,9 @@
+Version 0.055
+
+-Fixed an issue where pushback direction would be incorrect depending on monster axis position vs player.
+-Fixed an issue where incorrect invincible sprite direction would appear briefly before the correct one 
+when being pushed back.
+
 Version 0.054
 
 -Fixed an issue where attacking could cause monster knockback to get stuck because of double

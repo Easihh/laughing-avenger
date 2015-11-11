@@ -65,57 +65,92 @@
 	 fullMask->setPosition(position.x, position.y);
 	 inventory->playerBar->update();
  }
- void Player::playerPushBack(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+ void Player::playerPushBack(std::vector<std::shared_ptr<GameObject>>* worldMap,Point monsterPosition) {
 	 float pushBackMinDistance = 0;
 	 switch(dir){
 	 case Direction::Up:
-		 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Down, worldMap);
-		 if(!isOutsideRoomBound(Point(position.x, position.y + pushBackMinDistance)))
-			 pushbackStep = pushBackMinDistance;
-		 else pushbackStep = getDistanceToMapBoundary(Direction::Down);
-		 break;
-	 case Direction::Down:
-		 if(dir == Direction::Down){
+		 if(monsterPosition.y < position.y){
+			 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Down, worldMap);
+			 if(!isOutsideRoomBound(Point(position.x, position.y + pushBackMinDistance)))
+				 pushbackStep = -pushBackMinDistance;
+			 // the maximum pushback is beyond the room bounds
+			 else pushbackStep = -getDistanceToMapBoundary(Direction::Down);
+		 }
+		 else if(monsterPosition.y > position.y){
 			 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Up, worldMap);
 			 if(!isOutsideRoomBound(Point(position.x, position.y - pushBackMinDistance)))
 				 pushbackStep = pushBackMinDistance;
-			 // the maximum pushback is beyond the room bounds
 			 else pushbackStep = getDistanceToMapBoundary(Direction::Up);
 		 }
 		 break;
+	 case Direction::Down:
+		 if(monsterPosition.y < position.y){
+			 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Down, worldMap);
+			 if(!isOutsideRoomBound(Point(position.x, position.y + pushBackMinDistance)))
+				 pushbackStep = pushBackMinDistance;
+			 // the maximum pushback is beyond the room bounds
+			 else pushbackStep = getDistanceToMapBoundary(Direction::Down);
+		 }
+		 else if(monsterPosition.y > position.y){
+			 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Up, worldMap);
+			 if(!isOutsideRoomBound(Point(position.x, position.y - pushBackMinDistance)))
+				 pushbackStep = -pushBackMinDistance;
+			 else pushbackStep = -getDistanceToMapBoundary(Direction::Up);
+		 }
+		 break;
 	 case Direction::Right:
-		 if(dir == Direction::Right){
+		if(monsterPosition.x < position.x){
+			 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Right, worldMap);
+			 if(!isOutsideRoomBound(Point(position.x + pushBackMinDistance, position.y)))
+				 pushbackStep = pushBackMinDistance;
+			 else pushbackStep = getDistanceToMapBoundary(Direction::Right);
+		 }
+		else if(monsterPosition.x > position.x){
+			pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Left, worldMap);
+			if(!isOutsideRoomBound(Point(position.x - pushBackMinDistance, position.y)))
+				pushbackStep = -pushBackMinDistance;
+			else pushbackStep = -getDistanceToMapBoundary(Direction::Left);
+		}
+		 break;
+	 case Direction::Left:
+		 if(monsterPosition.x < position.x){
+			 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Right, worldMap);
+			 if(!isOutsideRoomBound(Point(position.x + pushBackMinDistance, position.y)))
+				 pushbackStep = -pushBackMinDistance;
+			 else pushbackStep = -getDistanceToMapBoundary(Direction::Right);
+		 }
+		 else if(monsterPosition.x > position.x){
 			 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Left, worldMap);
 			 if(!isOutsideRoomBound(Point(position.x - pushBackMinDistance, position.y)))
 				 pushbackStep = pushBackMinDistance;
 			 else pushbackStep = getDistanceToMapBoundary(Direction::Left);
 		 }
 		 break;
-	 case Direction::Left:
-		 if(dir == Direction::Left){
-			 pushBackMinDistance = getMinimumLineCollisionDistance(Direction::Right, worldMap);
-			 if(!isOutsideRoomBound(Point(position.x + pushBackMinDistance, position.y)))
-				 pushbackStep = pushBackMinDistance;
-			 // the maximum pushback is beyond the room bounds
-			 else pushbackStep = getDistanceToMapBoundary(Direction::Right);
-		 }
-		 break;
 	 }
  }
  void Player::playerPushbackUpdate() {
+	 //positive step mean moving in same direction as current direction.
 	 int step = std::abs(pushbackStep);
 	 switch(dir){
 	 case Direction::Down:
-		 position.y -= step;
+		 if(pushbackStep<0)
+			 position.y -= step;
+		 else position.y += step;
 		 break;
 	 case Direction::Up:
-		 position.y += step;
+		 if(pushbackStep<0)
+			position.y += step;
+		 else position.y -= step;
 		 break;
 	 case Direction::Left:
+		if(pushbackStep<0)
 		 position.x += step;
-		 break;
+		else position.x -= step;
+		break;
 	 case Direction::Right:
-		 position.x -= step;
+		 if(pushbackStep<0)
+			 position.x -= step;
+		 else position.x += step;
 		 break;
 	 }
 	 pushbackStep = 0;
@@ -201,7 +236,8 @@
 		 }
 	 }
 	 if (movementKeyPressed){
-		 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, position);
+		 for(int i = 0; i < 3; i++)
+			 walkingAnimation[i]->updateAnimationFrame(dir, position);
 	 }
 	 if (outsideBound && !isInsideShop){
 		 transitionStep = maxTransitionStep;
@@ -225,7 +261,7 @@
 		 inventory->playerBar->decreaseCurrentHP(monster->strength);
 		 walkAnimationIndex = 1;
 		 attackAnimationIndex = 1;
-		 playerPushBack(worldMap);
+		 playerPushBack(worldMap, monster->position);
 		 if(isAttacking)
 			 sword->endSword();
 		 walkingAnimation[walkAnimationIndex]->sprite.setPosition(position.x, position.y);
@@ -262,16 +298,20 @@
 				 walkAnimationIndex--;
 				 attackAnimationIndex--;
 			 }
-			 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, position);
-			 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, position);
+			 for(int i = 0; i < 3; i++){
+				 walkingAnimation[i]->updateAnimationFrame(dir, position);
+				 attackAnimation[i]->updateAnimationFrame(dir, position);
+			 }
 		 }
 		 if (currentInvincibleFrame >= maxInvincibleFrame){
 			 isInvincible = false;
 			 currentInvincibleFrame = 0;
 			 walkAnimationIndex = 0;
 			 attackAnimationIndex = 0;
-			 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, position);
-			 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, position);
+			 for(int i = 0; i < 3; i++){
+				 walkingAnimation[i]->updateAnimationFrame(dir, position);
+				 attackAnimation[i]->updateAnimationFrame(dir, position);
+			 }
 		 }
 	 }
  }

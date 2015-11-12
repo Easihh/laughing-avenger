@@ -1,6 +1,5 @@
 #include "Monster\DeathEffect.h"
 #include "Utility\Static.h"
-DeathEffect::~DeathEffect(){}
 DeathEffect::DeathEffect(Point pos){
 	position = pos;
 	texture.loadFromFile("Tileset/kill_effect.png");

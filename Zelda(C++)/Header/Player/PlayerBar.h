@@ -3,10 +3,10 @@
 #include "Item\Item.h"
 #include "SFML\Graphics.hpp"
 #include <sstream>
+#include "Type\SwordType.h"
 class PlayerBar{
 public:
 	PlayerBar();
-	~PlayerBar();
 	void setupPlayerBar();
 	void setupMap();
 	void setupPlayerMarker();
@@ -16,6 +16,7 @@ public:
 	void decreaseCurrentHP(int amount);
 	int getCurrentHP();
 	bool isFullHP();
+	SwordType mySword;
 	void movePlayerBarToBottomScreen();
 	void movePlayerBarToTopScreen();
 	void updatePlayerMapMarker(Direction direction);

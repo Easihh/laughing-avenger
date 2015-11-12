@@ -26,7 +26,6 @@ Octorok::Octorok(Point pos, bool canBeCollidedWith){
 	getNextDirection(Direction::None);
 	walkAnimIndex = 0;
 }
-Octorok::~Octorok(){}
 void Octorok::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(walkingAnimation[walkAnimIndex]->sprite);
 	mainWindow.draw(*mask);

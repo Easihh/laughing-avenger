@@ -12,7 +12,6 @@ Sword::Sword(Point pos,Direction dir){
 	setupFullMask();
 	strength = 1;
 }
-Sword::~Sword(){}
 void Sword::loadImage(Direction dir){
 	switch (dir){
 	case Direction::Left:

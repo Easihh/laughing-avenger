@@ -4,7 +4,6 @@
 #include "Misc\Animation.h"
 class MovingSword :public GameObject {
 public:
-	~MovingSword();
 	MovingSword(Point pos,Direction attackDir, int power);
 	void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void draw(sf::RenderWindow& mainWindow);

@@ -12,7 +12,6 @@ class WorldMap{
 public:
 	typedef std::vector<std::vector<std::vector<std::shared_ptr<GameObject>>>> tripleVector;
 	WorldMap();
-	~WorldMap();
 	void loadMap(std::string filename,tripleVector& triple);
 	tripleVector gameMainVector, gameBackgroundVector, secretRoomVector, secretRoomBackgroundVector;
 	std::vector<std::vector<std::shared_ptr<GameObject>>> mainVectorColums, mainBackgroundColumns,secretRoomColumns,secretRoomBackgroundColumns;
@@ -32,6 +31,7 @@ private:
 	void freeSpace(tripleVector&);
 	void addToGameVector(std::vector<std::shared_ptr<GameObject>>* roomVector);
 	void setupVectors();
+	void deleteOutstandingPlayerObjects(std::vector<std::shared_ptr<GameObject>>*);
 	void sort(tripleVector& objectVector);
 };
 #endif

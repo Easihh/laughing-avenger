@@ -1,7 +1,6 @@
 #include "Item\Item.h"
 #include <string>
 #include <iostream>
-Item::~Item(){}
 Item::Item(){}
 Item::Item(Point pos,std::string item){
 	position = pos;

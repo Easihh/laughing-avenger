@@ -1,7 +1,6 @@
 #include "Item\Arrow.h"
 #include "Item\ThrownArrow.h"
 #include <iostream>
-Arrow::~Arrow() {}
 Arrow::Arrow(Point position, std::string name) :super(position, name){
 	width = 32;
 	height = 32;

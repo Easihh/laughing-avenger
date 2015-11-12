@@ -24,7 +24,7 @@ namespace Global
 	 const int WorldRoomHeight=2;
 	 sf::View gameView;
 }
-Static::GameState Static::gameState=NotStarted;
+GameState Static::gameState=NotStarted;
 std::vector<std::shared_ptr<GameObject>>  Static::toAdd;
 std::vector<std::shared_ptr<GameObject>>  Static::toDelete;
 const std::string Static::GAME_TITLE = "Zelda: Last Quest ";

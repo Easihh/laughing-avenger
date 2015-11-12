@@ -1,6 +1,5 @@
 #include "Item\Boomrang.h"
 #include <iostream>
-Boomrang::~Boomrang(){}
 Boomrang::Boomrang(Point position, std::string name) :super(position, name){
 	width = 32;
 	height = 32;

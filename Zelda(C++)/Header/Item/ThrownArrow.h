@@ -6,7 +6,6 @@
 #include <SFML/Audio.hpp>
 class ThrownArrow :public GameObject {
 public:
-	~ThrownArrow();
 	ThrownArrow(Point pos,Direction direction);
 	void draw(sf::RenderWindow& mainWindow);
 	void update(std::vector<std::shared_ptr<GameObject>>* worldMap);

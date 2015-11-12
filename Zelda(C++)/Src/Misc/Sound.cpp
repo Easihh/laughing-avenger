@@ -9,7 +9,8 @@ sf::Sound* Sound::enemyKilled;
 sf::Sound* Sound::selectorSound;
 sf::Sound* Sound::swordCombine;
 sf::Sound* Sound::arrow;
-Sound::~Sound() {}
+sf::Sound* Sound::itemNew;
+sf::Sound* Sound::itemInventoryNew;
 Sound::Sound() {
 	buffer = new sf::SoundBuffer();
 	if(!buffer->loadFromFile("Sound/bombDrop.wav"))
@@ -51,6 +52,16 @@ Sound::Sound() {
 		std::cout << "Failed to load arrow.wav";
 	arrow = new sf::Sound();
 	arrow->setBuffer(*buffer);
+	buffer = new sf::SoundBuffer();
+	if(!buffer->loadFromFile("Sound/newItem.wav"))
+		std::cout << "Failed to load newItem.wav";
+	itemNew = new sf::Sound();
+	itemNew->setBuffer(*buffer);
+	buffer = new sf::SoundBuffer();
+	if(!buffer->loadFromFile("Sound/newInventItem.wav"))
+		std::cout << "Failed to load newInventItem.wav";
+	itemInventoryNew = new sf::Sound();
+	itemInventoryNew->setBuffer(*buffer);
 }
 void Sound::playSound(SoundType sound) {
 	if(sound == BombDrop)
@@ -69,4 +80,8 @@ void Sound::playSound(SoundType sound) {
 		swordCombine->play();
 	else if(sound == ArrowThrown)
 		arrow->play();
+	else if(sound == NewItem)
+		itemNew->play();
+	else if(sound == NewInventoryItem)
+		itemInventoryNew->play();
 }

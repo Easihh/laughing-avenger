@@ -4,7 +4,6 @@
 #include "ThrownBomb.h"
 class Bomb :public Item{
 public:
-	~Bomb();
 	Bomb(Point position,std::string name);
 	typedef Item super;
 	void onUse(PlayerInfo info, std::vector<std::shared_ptr<GameObject>>* worldMap);

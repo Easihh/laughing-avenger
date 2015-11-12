@@ -1,6 +1,5 @@
 #include "Item\Bomb.h"
 #include <iostream>
-Bomb::~Bomb(){}
 Bomb::Bomb(Point position,std::string name):super(position,name){
 	width = 32;
 	height = 32;

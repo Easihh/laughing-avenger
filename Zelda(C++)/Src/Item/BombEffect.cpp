@@ -1,7 +1,6 @@
 #include "Item\BombEffect.h"
 #include "Utility\Static.h"
 #include "Monster\Monster.h"
-BombEffect::~BombEffect(){}
 BombEffect::BombEffect(Point pos, EffectType type){
 	position = pos;
 	currentFrame = 0;

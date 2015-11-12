@@ -21,7 +21,6 @@ Animation::Animation(std::string filename, int recHeight, int recWidth, Point po
 	sprite.setPosition(xPosition, yPosition);
 }
 Animation::Animation(){}
-Animation::~Animation(){}
 void Animation::updateAnimationFrame(Point position) {
 	xPosition = position.x;
 	yPosition = position.y;

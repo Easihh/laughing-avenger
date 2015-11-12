@@ -7,7 +7,6 @@
 class Sword :public GameObject{
 public:
 	Sword(Point pos, Direction dir);
-	~Sword();
 	void loadImage(Direction dir);
 	void endSword();
 	int strength;

@@ -8,7 +8,10 @@ enum Identifier {
 	RedOctorok_ID = 3,
 	BlackTile_ID = 4,
 	ShopMarker_ID = 5,
-	BrownBlock1_ID = 6
+	BrownBlock1_ID = 6,
+	WoodSword = 7,
+	FlameObj = 8,
+	BrownBlock2_ID = 9
 };
 
 #endif

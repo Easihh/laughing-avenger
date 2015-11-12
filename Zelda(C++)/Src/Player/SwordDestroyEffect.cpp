@@ -1,6 +1,5 @@
 #include "Player\SwordDestroyEffect.h"
 #include "Utility\Static.h"
-SwordDestroyEffect::~SwordDestroyEffect() {}
 SwordDestroyEffect::SwordDestroyEffect(Point pos,Direction dir) {
 	position = pos;
 	height = Global::HalfTileHeight;

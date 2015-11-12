@@ -1,5 +1,6 @@
 #include "Misc\Tile.h"
 #include "Utility\Static.h"
+Tile::Tile() {}//used for Sub Class
 Tile::Tile(Point pos, bool canBeCollidedWith, TileType type) {
 	position = pos;
 	width = Global::TileWidth;
@@ -8,7 +9,6 @@ Tile::Tile(Point pos, bool canBeCollidedWith, TileType type) {
 	loadTileImage(type);
 	setupFullMask();
 }
-Tile::~Tile(){}
 void Tile::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(sprite);
 }
@@ -26,6 +26,9 @@ void Tile::loadTileImage(TileType type) {
 		break;
 	case TileType::BrownBlockType1:
 		texture.loadFromFile("Tileset/type1BrownBlock.png");
+		break;
+	case TileType::BrownBlockType2:
+		texture.loadFromFile("Tileset/type2BrownBlock.png");
 		break;
 	}
 	sprite.setTexture(texture);

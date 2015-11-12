@@ -1,9 +1,14 @@
 #include "Misc\WorldMap.h"
 #include "Misc\Tile.h"
 #include "Monster\Octorok.h"
-#include "Utility\TileType.h"
-#include "Utility\Identifier.h"
+#include "Type\TileType.h"
+#include "Type\Identifier.h"
 #include "Misc\ShopMarker.h"
+#include "Item\WoodSwordPickUp.h"
+#include "Misc\Flame.h"
+#include "Item\ThrownArrow.h"
+#include "Item\ThrownBomb.h"
+#include "Item\BombEffect.h"
 WorldMap::WorldMap(){
 	setupVectors();
 	loadMap("Map/Zelda-Worldmap_Layer 1.csv", gameBackgroundVector);
@@ -13,7 +18,6 @@ WorldMap::WorldMap(){
 	sort(gameMainVector);
 	sort(secretRoomVector);
 }
-WorldMap::~WorldMap(){}
 bool sortByDepth(std::shared_ptr<GameObject> object1, std::shared_ptr<GameObject> object2) {
 	return object1.get()->depth<object2.get()->depth;
 }
@@ -110,6 +114,18 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 		tile = std::make_shared<Tile>(pt, true, TileType::BrownBlockType1);
 		objectVector[vectorXindex][vectorYindex].push_back(tile);
 		break;
+	case Identifier::WoodSword:
+		tile = std::make_shared<WoodSwordPickUp>(pt);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
+		break;
+	case Identifier::FlameObj:
+		tile = std::make_shared<Flame>(pt,true);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
+		break;
+		case Identifier::BrownBlock2_ID:
+		tile = std::make_shared<Tile>(pt, true, TileType::BrownBlockType2);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
+		break;
 	}
 }
 void WorldMap::update(sf::RenderWindow& mainWindow,sf::Event& event){
@@ -125,14 +141,10 @@ void WorldMap::update(sf::RenderWindow& mainWindow,sf::Event& event){
 		drawUpScreen(mainWindow);
 		drawDownScreen(mainWindow);
 		drawAndUpdateCurrentScreen(mainWindow);
-		/*if(!player->isInsideShop)
-			player->update(&gameMainVector[player->worldX][player->worldY]);
-		else player->update(&secretRoomVector[player->worldX][player->worldY]);
-		player->draw(mainWindow);*/
 		mainWindow.display();
 }
 void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int newWorldX, int newWorldY) {
-
+	player->movingSwordIsActive = false;
 	if(player->isInsideShop){
 		secretRoomVector[newWorldX][newWorldY].push_back(player);
 		for(int i = 0; i < gameMainVector[oldWorldX][oldWorldY].size(); i++){
@@ -140,6 +152,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 			if(tmp == player){
 				tmp.reset();
 				gameMainVector[oldWorldX][oldWorldY].erase(gameMainVector[oldWorldX][oldWorldY].begin() + i);
+				deleteOutstandingPlayerObjects(&gameMainVector[oldWorldX][oldWorldY]);
 			}
 		}
 	}
@@ -151,6 +164,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 				tmp.reset();
 				secretRoomVector[oldWorldX][oldWorldY].erase(secretRoomVector[oldWorldX][oldWorldY].begin() + i);
 				gameMainVector[newWorldX][newWorldY].push_back(player);
+				deleteOutstandingPlayerObjects(&secretRoomVector[oldWorldX][oldWorldY]);
 			}
 		}
 		//both previous and current room could be non-secret room so do the same as above.
@@ -160,10 +174,25 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 				tmp.reset();
 				gameMainVector[oldWorldX][oldWorldY].erase(gameMainVector[oldWorldX][oldWorldY].begin() + i);
 				gameMainVector[newWorldX][newWorldY].push_back(player);
+				deleteOutstandingPlayerObjects(&gameMainVector[oldWorldX][oldWorldY]);
 			}
 		}
 	}
 	player->movePlayerToNewVector = false;
+}
+void WorldMap::deleteOutstandingPlayerObjects(std::vector<std::shared_ptr<GameObject>>* roomObjVector) {
+	//used to delete outstanding objects when player move from one room to another such as moving sword,bomb etc
+	for(int i = 0; i < roomObjVector->size(); i++){
+		std::shared_ptr<GameObject> tmp = roomObjVector->at(i);
+		if(dynamic_cast<MovingSword*>(tmp.get())
+			|| dynamic_cast<ThrownBomb*>(tmp.get())
+			|| dynamic_cast<ThrownArrow*>(tmp.get())
+			|| dynamic_cast<BombEffect*>(tmp.get())
+			){
+			tmp.reset();
+			roomObjVector->erase(roomObjVector->begin() + i);
+		}
+	}
 }
 void WorldMap::drawScreen(sf::RenderWindow& mainWindow, std::vector<std::shared_ptr<GameObject>>* Maplayer) {
 	for(auto& obj: *Maplayer)

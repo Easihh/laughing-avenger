@@ -14,7 +14,6 @@ protected:
 public:
 	bool isInvincible;
 	Monster();
-	~Monster();
 	virtual void takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction swordDir);
 	virtual void takeDamage(int damage);
 	int strength, walkAnimIndex;

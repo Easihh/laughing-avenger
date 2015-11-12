@@ -3,7 +3,6 @@
 #include "Misc\GameObject.h"
 class DeathEffect :public GameObject{
 public:
-	~DeathEffect();
 	DeathEffect(Point position);
 	void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void draw(sf::RenderWindow& mainWindow);

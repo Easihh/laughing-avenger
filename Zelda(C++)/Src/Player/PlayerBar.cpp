@@ -1,7 +1,7 @@
 #include "Player\PlayerBar.h"
 #include "Utility\Static.h"
-PlayerBar::~PlayerBar(){}
 PlayerBar::PlayerBar(){
+	mySword = SwordType::None;
 	marker.setPoint(16, 32);
 	map.setPoint(16, 32);
 	bar.setPoint(0, 0);
@@ -196,8 +196,10 @@ void PlayerBar::drawItemsSlot(sf::RenderWindow& mainWindow){
 	txt.setString("A");
 	mainWindow.draw(txt);
 
-	sprite.setTexture(woodSwordTexture,true);
-	sprite.setPosition(swordSlot.x, swordSlot.y);
+	if(mySword == SwordType::WoodSword){
+		sprite.setTexture(woodSwordTexture, true);
+		sprite.setPosition(swordSlot.x, swordSlot.y);
+	}
 	mainWindow.draw(sprite);
 	if (itemSlotS.getTexture() != NULL){
 		itemSlotS.setPosition(itemSlotImage.x, itemSlotImage.y);

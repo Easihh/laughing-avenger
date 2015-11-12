@@ -1,7 +1,6 @@
 #include "Player\MovingSword.h"
 #include "Monster\Monster.h"
 #include "Player\SwordDestroyEffect.h"
-MovingSword::~MovingSword() {}
 MovingSword::MovingSword(Point pos,Direction attackDir,int power) {
 	swordPower = power;
 	position = pos;

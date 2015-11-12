@@ -37,7 +37,6 @@ void Inventory::loadSelector(){
 	selector.setTexture(texture);
 	selector.setPosition(228, 180);
 }
-Inventory::~Inventory(){}
 void Inventory::updateInventoryPosition(Point step){
 	inventoryRectPt+=(step);
 	itemSelectedPt+=(step);
@@ -91,7 +90,7 @@ void Inventory::findNextSelectorPosition(){
 	bool found = false;
 	for (int i = selectorInventoryIndex; i < items.size(); i++){
 		if (items[i] != NULL && i!=selectorInventoryIndex && !found){
-			if(Static::gameState == Static::Inventory)
+			if(Static::gameState == GameState::InventoryMenu)
 				Sound::playSound(SoundType::Selector);
 			selectorInventoryIndex = i;
 			found = true;
@@ -103,7 +102,7 @@ void Inventory::findNextSelectorPosition(){
 	if (!found){
 		for (int i = 0; i < selectorInventoryIndex; i++){
 			if (items[i] != NULL){
-				if(Static::gameState==Static::Inventory)
+				if(Static::gameState == GameState::InventoryMenu)
 					Sound::playSound(SoundType::Selector);
 				selectorInventoryIndex = i;
 				selectedItem = items[i]->sprite;
@@ -119,7 +118,7 @@ void Inventory::update(sf::Event& event){
 		transitionBackToGame();
 }
 void Inventory::transitionBackToGame(){
-	Static::gameState = Static::GameState::Playing;
+	Static::gameState = GameState::Playing;
 	playerBar->movePlayerBarToTopScreen();
 	playerBar->itemSlotS=selectedItem;
 	keyWasReleased = false;

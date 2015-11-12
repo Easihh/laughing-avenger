@@ -1,6 +1,5 @@
 #include "Item\ThrownArrow.h"
 #include "Monster\Monster.h"
-ThrownArrow::~ThrownArrow() {}
 ThrownArrow::ThrownArrow(Point pos,Direction direction) {
 	position = pos;
 	arrowDir = direction;

@@ -1,7 +1,6 @@
 #include "Item\ThrownBomb.h"
 #include <iostream>
-#include "Utility\EffectType.h"
-ThrownBomb::~ThrownBomb(){}
+#include "Type\EffectType.h"
 ThrownBomb::ThrownBomb(Point pos,Direction direction){
 	position = pos;
 	width = 32;

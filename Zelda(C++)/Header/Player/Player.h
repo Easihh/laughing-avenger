@@ -12,11 +12,11 @@
 class Player:public GameObject{
 public:
 	Player(Point position);
-	~Player();
 	void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void draw(sf::RenderWindow& mainWindow);
 	int worldX, worldY,prevWorldX,prevWorldY;
-	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased, isInsideShop, movePlayerToNewVector, movingSwordIsActive;
+	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased, isInsideShop, movePlayerToNewVector, 
+		movingSwordIsActive,isObtainingItem;
 	std::unique_ptr<Inventory> inventory;
 	std::unique_ptr<Point> pointBeforeTeleport;
 	std::vector<std::unique_ptr<Animation>> walkingAnimation;

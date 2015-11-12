@@ -8,9 +8,9 @@
 GameObject::GameObject(){
 	pushbackStep = 0;
 }
-GameObject::~GameObject(){}
 void GameObject::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {}
 void GameObject::draw(sf::RenderWindow& mainWindow){}
+
 void GameObject::destroyGameObject(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	std::shared_ptr<GameObject> del;
 	for(auto& obj : *Worldmap){
@@ -33,6 +33,18 @@ return(
 	rectAx + rectAxSize + offset.x > rectBx &&
 	rectAy + offset.y < rectBy + rectBySize &&
 	rectAy + rectAySize + offset.y > rectBy);
+}
+bool GameObject::isCollidingWithPlayer(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	bool isColliding = false;
+	Point offset(0, 0);
+	if(player == NULL){
+		for(auto& obj : *worldMap)
+			if(dynamic_cast<Player*>(obj.get()))
+				player = obj;
+	}
+	if(intersect(player->fullMask, fullMask, offset))
+		isColliding = true;
+	return isColliding;
 }
 void GameObject::pushBack(std::vector<std::shared_ptr<GameObject>>* worldMap, Direction attackDir) {
 	float pushBackMinDistance = 0;

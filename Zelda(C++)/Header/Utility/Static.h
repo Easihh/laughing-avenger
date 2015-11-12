@@ -3,6 +3,7 @@
 #include "Misc\GameObject.h"
 #include <string>
 #include "SFML\Graphics.hpp"
+#include "Type\GameState.h"
 namespace Global{
 	extern const unsigned int FPS_RATE;
 	extern const unsigned int SCREEN_WIDTH;
@@ -29,7 +30,6 @@ namespace Global{
 };
 class Static{
 public:
-	static enum GameState{ NotStarted, Paused, Playing, Inventory, Exiting }; 
 	static  GameState gameState;
 	const static std::string GAME_TITLE;
 	static const int inventoryRows=3;

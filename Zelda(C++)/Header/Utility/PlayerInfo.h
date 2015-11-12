@@ -1,7 +1,7 @@
 #ifndef PLAYERINFO_H
 #define PLAYERINFO_H
 #include "Point.h"
-#include "Utility\Direction.h"
+#include "Type\Direction.h"
 struct PlayerInfo
 {
 	int* bombAmount;

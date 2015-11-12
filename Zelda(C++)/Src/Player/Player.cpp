@@ -14,7 +14,9 @@
 	 depth = 999;
 	 stepToMove = 0;
 	 stepToAlign = currentInvincibleFrame = transitionStep = xOffset = yOffset = 0;
-	 movePlayerToNewVector = stepIsNegative = movingSwordIsActive = false;
+	 movePlayerToNewVector = stepIsNegative = movingSwordIsActive = isObtainingItem = false;
+	 isAttacking = isScreenTransitioning = isInvincible = isInsideShop = false;
+	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased = true;
 	 position = pos;
 	 worldX = (int)(position.y / Global::roomHeight);
 	 worldY = (int)(position.x / Global::roomWidth);
@@ -23,8 +25,6 @@
 	 width = Global::TileWidth;
 	 height = Global::TileHeight;
 	 dir = Direction::Up;
-	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased = true;
-	 isAttacking = isScreenTransitioning = isInvincible=isInsideShop = false;
 	 loadImage();
 	 setupFullMask();
 	 inventory = std::make_unique<Inventory>();
@@ -33,7 +33,6 @@
 	 inventory->items.push_back(std::make_unique<Bomb>(pt, "Bomb"));
 	 inventory->items.push_back(std::make_unique<Arrow>(pt, "Arrow"));
 }
- Player::~Player(){}
  void Player::loadImage(){
 	walkingAnimation.push_back(std::make_unique<Animation>("Link_Movement", width, height, position, 6));
 	walkingAnimation.push_back(std::make_unique<Animation>("Link_Movement_Hit1", width, height, position, 6));
@@ -43,9 +42,13 @@
 	attackAnimation.push_back(std::make_unique<Animation>("Link_Attack_Hit1", width, height, position, NULL));
 	attackAnimation.push_back(std::make_unique<Animation>("Link_Attack_Hit2", width, height, position, NULL));
 	attackAnimationIndex = 0;
+	texture.loadFromFile("Tileset/Link_ObtainItem.png");
+	sprite.setTexture(texture);
+	sprite.setPosition(position.x, position.y);
  }
  void Player::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
-	 sword->update(isAttacking, canAttack, worldMap, &walkingAnimation);
+	 if(sword!=NULL)
+		sword->update(isAttacking, canAttack, worldMap, &walkingAnimation);
 	 if(pushbackStep == 0)
 		 checkMovementInput(worldMap);
 	 else playerPushbackUpdate();
@@ -157,14 +160,14 @@
  }
  void Player::checkInventoryInput(){
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && inventoryKeyReleased){
-		 Static::gameState = Static::GameState::Inventory;
+		 Static::gameState = GameState::InventoryMenu;
 		 inventoryKeyReleased = false;
 		 inventory->transitionToInventory();
 	 }
  }
  void Player::checkAttackInput(){
 	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
-		 if (canAttack && !isAttacking && attackKeyReleased){
+		 if (canAttack && !isAttacking && attackKeyReleased && inventory->playerBar->mySword!=SwordType::None && !isObtainingItem){
 			 sword =std::make_unique<Sword>(position, dir);
 			 if(!inventory->playerBar->isFullHP())
 				 Sound::playSound(SoundType::SwordAttack);
@@ -183,7 +186,7 @@
  void Player::checkMovementInput(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 bool movementKeyPressed = false;
 	 bool outsideBound = false;
-	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !isScreenTransitioning){
+	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !isScreenTransitioning && !isObtainingItem){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Direction::Left){
@@ -196,7 +199,7 @@
 			 outsideBound = isOutsideRoomBound(Point(position.x - stepToMove, position.y));
 		 }
 	 }
-	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !isScreenTransitioning){
+	 else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !isScreenTransitioning && !isObtainingItem){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Direction::Right){
@@ -209,7 +212,7 @@
 			 outsideBound = isOutsideRoomBound(Point(position.x+stepToMove, position.y));
 		 }
 	 }
-	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !isScreenTransitioning){
+	 else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !isScreenTransitioning && !isObtainingItem){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Direction::Up){
@@ -222,7 +225,7 @@
 			 outsideBound = isOutsideRoomBound(Point(position.x, position.y - stepToMove));
 		 }
 	 }
-	 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !isScreenTransitioning){
+	 else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !isScreenTransitioning && !isObtainingItem){
 		 movementKeyPressed = true;
 		 if (stepToMove == 0 && !isAttacking){
 			 if (dir != Direction::Down){
@@ -473,26 +476,27 @@
  void Player::draw(sf::RenderWindow& mainWindow){
 	 mainWindow.setView(Global::gameView);
 	 inventory->playerBar->draw(mainWindow);
-	 if (!isAttacking)
+	 if (!isAttacking && !isObtainingItem)
 		 mainWindow.draw(walkingAnimation[walkAnimationIndex]->sprite);
-	 else 
-	 {
+	 else if(isAttacking && !isObtainingItem){
 		 mainWindow.draw(attackAnimation[attackAnimationIndex]->sprite);
 		 mainWindow.draw(sword->sprite);
 		 mainWindow.draw(*(sword->fullMask));
 	 }
+	 if(isObtainingItem)
+		 mainWindow.draw(sprite);
 	 drawText(mainWindow);
 	 mainWindow.draw(*fullMask);
  }
  void Player::drawText(sf::RenderWindow& mainWindow){
-	 sf::Font font;
+	 /*sf::Font font;
 	 std::stringstream pos;
-	 pos << "X:" << position.x << std::endl << "Y:" << position.y << std::endl
+	 /*pos << "X:" << position.x << std::endl << "Y:" << position.y << std::endl
 		 <<"WorldX:"<<worldX <<std::endl <<"WorldY:"<<worldY<<std::endl;
 	 font.loadFromFile("arial.ttf");
 	 sf::Text txt(pos.str(), font);
 	 txt.setColor(sf::Color::Red);
 	 txt.setPosition(position.x, position.y - 64);
 	 txt.setCharacterSize(textSize);
-	 mainWindow.draw(txt);
+	 mainWindow.draw(txt);*/
  }

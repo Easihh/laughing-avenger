@@ -5,7 +5,6 @@
 #include "Item\Item.h"
 class Inventory{
 public:
-	~Inventory();
 	Inventory();
 	void draw(sf::RenderWindow& mainWindow);
 	void update(sf::Event& event);

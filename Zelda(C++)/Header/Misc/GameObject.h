@@ -4,12 +4,11 @@
 #include "Utility\Point.h"
 #include <memory>
 #include "Misc\Sound.h"
-#include "Misc\SoundType.h"
-#include "Utility\Direction.h"
+#include "Type\SoundType.h"
+#include "Type\Direction.h"
 class GameObject{
 public:
 	GameObject();
-	~GameObject();
 	virtual void update(std::vector<std::shared_ptr<GameObject>>* Worldmap);
 	virtual void draw(sf::RenderWindow& mainWindow);
 	void destroyGameObject(std::vector<std::shared_ptr<GameObject>>* Worldmap);
@@ -30,6 +29,8 @@ public:
 	Direction dir;
 	void pushBack(std::vector<std::shared_ptr<GameObject>>* worldMap,Direction attackDir);
 	int GameObject::getDistanceToMapBoundary(Direction direction);
+	std::shared_ptr<GameObject> player;
+	bool GameObject::isCollidingWithPlayer(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	bool GameObject::isColliding(std::vector<std::shared_ptr<GameObject>>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, Point offsets);
 	int getMinimumLineCollisionDistance(Direction pushbackDir, std::vector<std::shared_ptr<GameObject>>* worldMap);
 	static bool intersect(std::unique_ptr<sf::RectangleShape>& rectA, std::unique_ptr<sf::RectangleShape>& rectB, Point offset);

@@ -6,5 +6,6 @@ enum class TileType{
 	GreenTree,
 	BlackTile,
 	BrownBlockType1,
+	BrownBlockType2
 };
 #endif

@@ -8,6 +8,8 @@ enum SoundType {
 	EnemyKill,
 	Selector,
 	SwordCombineAttack,
-	ArrowThrown
+	ArrowThrown,
+	NewItem,
+	NewInventoryItem
 };
 #endif

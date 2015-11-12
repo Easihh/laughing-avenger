@@ -1,3 +1,15 @@
+Version 0.056
+
+-Removed unused Destructors.
+-Added Sound for new Inventory Item and new Item.
+-Player no longer start with a sword.
+-Player can now Obtain the Wooden Sword Item in the Starting Zone.
+-Added Flame obj to the Starting Zone.
+-Objects such as bomb/arrow/moving sword are now deleted from the room  when a player leaves it.
+-Fixed an issue where quickly shooting your sword and changing screen would make the player unable to shoot again.
+-Added Basic Load GameState Screen before entering game.functionality Not Yet Implemented.
+-Added 1 more brown tile type.
+
 Version 0.055
 
 -Fixed an issue where pushback direction would be incorrect depending on monster axis position vs player.

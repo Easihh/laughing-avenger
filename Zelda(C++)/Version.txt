@@ -1,3 +1,8 @@
+Version 0.057
+
+-Improved the way object access player diamond,bomb,key data from item use such as arrow/bomb
+-Added support for obtaining recuring item such as shop items that reappear every time you enter the room.
+
 Version 0.056
 
 -Removed unused Destructors.

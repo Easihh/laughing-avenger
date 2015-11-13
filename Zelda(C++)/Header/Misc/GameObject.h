@@ -24,6 +24,8 @@ public:
 	sf::Sprite sprite;
 	std::unique_ptr<sf::RectangleShape> fullMask;
 	bool isOutsideRoomBound(Point pos);
+	std::shared_ptr<GameObject> tmpPlayer;
+	std::shared_ptr<GameObject> findPlayer(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	std::shared_ptr<GameObject> collidingMonster;
 	bool isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	Direction dir;

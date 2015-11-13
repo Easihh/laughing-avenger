@@ -33,5 +33,6 @@ private:
 	void setupVectors();
 	void deleteOutstandingPlayerObjects(std::vector<std::shared_ptr<GameObject>>*);
 	void sort(tripleVector& objectVector);
+	void WorldMap::enableShopObjects(std::vector<std::shared_ptr<GameObject>>* roomObjVector);
 };
 #endif

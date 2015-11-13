@@ -11,7 +11,8 @@ enum Identifier {
 	BrownBlock1_ID = 6,
 	WoodSword = 7,
 	FlameObj = 8,
-	BrownBlock2_ID = 9
+	BrownBlock2_ID = 9,
+	ItemShopBomb = 10
 };
 
 #endif

@@ -9,6 +9,7 @@
 #include "Item\ThrownArrow.h"
 #include "Item\ThrownBomb.h"
 #include "Item\BombEffect.h"
+#include "Misc\ShopBomb.h"
 WorldMap::WorldMap(){
 	setupVectors();
 	loadMap("Map/Zelda-Worldmap_Layer 1.csv", gameBackgroundVector);
@@ -122,8 +123,12 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 		tile = std::make_shared<Flame>(pt,true);
 		objectVector[vectorXindex][vectorYindex].push_back(tile);
 		break;
-		case Identifier::BrownBlock2_ID:
+	case Identifier::BrownBlock2_ID:
 		tile = std::make_shared<Tile>(pt, true, TileType::BrownBlockType2);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
+		break;
+	case Identifier::ItemShopBomb:
+		tile = std::make_shared<ShopBomb>(pt);
 		objectVector[vectorXindex][vectorYindex].push_back(tile);
 		break;
 	}
@@ -143,10 +148,20 @@ void WorldMap::update(sf::RenderWindow& mainWindow,sf::Event& event){
 		drawAndUpdateCurrentScreen(mainWindow);
 		mainWindow.display();
 }
+void WorldMap::enableShopObjects(std::vector<std::shared_ptr<GameObject>>* roomObjVector) {
+	for(int i = 0; i < roomObjVector->size(); i++){
+		if(dynamic_cast<ShopObject*>(roomObjVector->at(i).get())){
+			ShopObject* tmp = ((ShopObject*)roomObjVector->at(i).get());
+			tmp->isVisible = true;
+		}
+
+	}
+}
 void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int newWorldX, int newWorldY) {
 	player->movingSwordIsActive = false;
 	if(player->isInsideShop){
 		secretRoomVector[newWorldX][newWorldY].push_back(player);
+		enableShopObjects(&secretRoomVector[newWorldX][newWorldY]);
 		for(int i = 0; i < gameMainVector[oldWorldX][oldWorldY].size(); i++){
 			std::shared_ptr<GameObject> tmp = gameMainVector[oldWorldX][oldWorldY].at(i);
 			if(tmp == player){

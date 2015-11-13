@@ -1,6 +1,7 @@
 #include "Player\PlayerBar.h"
 #include "Utility\Static.h"
 PlayerBar::PlayerBar(){
+	maxBombAmount = 8;
 	mySword = SwordType::None;
 	marker.setPoint(16, 32);
 	map.setPoint(16, 32);
@@ -19,9 +20,6 @@ PlayerBar::PlayerBar(){
 	swordSlot.setPoint(268, 50);
 	itemSlotImage.setPoint(220, 50);
 	keysAmount = bombAmount = diamondAmount = 10;
-	keysPtr = &keysAmount;
-	bombPtr = &bombAmount;
-	diamondPtr= &diamondAmount;
 	loadImages();
 	setupPlayerBar();
 }
@@ -38,6 +36,11 @@ void PlayerBar::loadImages(){
 }
 int PlayerBar::getCurrentHP(){
 	return currentHealthPoint;
+}
+void PlayerBar::increaseBombAmount(int amount) {
+	if(bombAmount + amount > maxBombAmount){
+		bombAmount = maxBombAmount;
+	}
 }
 bool PlayerBar::isFullHP() {
 	return currentHealthPoint == maxHealthPoint;

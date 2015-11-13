@@ -6,7 +6,7 @@ class Bomb :public Item{
 public:
 	Bomb(Point position,std::string name);
 	typedef Item super;
-	void onUse(PlayerInfo info, std::vector<std::shared_ptr<GameObject>>* worldMap);
+	void onUse(Point pos, std::vector<std::shared_ptr<GameObject>>* worldMap,Direction dir);
 private:
 };
 #endif

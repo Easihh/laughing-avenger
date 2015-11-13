@@ -9,7 +9,7 @@ public:
 	Item();
 	virtual void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void draw(sf::RenderWindow& mainWindow);
-	virtual void onUse(PlayerInfo info, std::vector<std::shared_ptr<GameObject>>* worldMap);
+	virtual void onUse(Point pos, std::vector<std::shared_ptr<GameObject>>* worldMap,Direction dir);
 	bool isActive;
 private:
 	void loadImage();

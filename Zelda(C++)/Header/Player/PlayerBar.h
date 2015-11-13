@@ -15,6 +15,7 @@ public:
 	void setBarNextPosition(Point step);
 	void decreaseCurrentHP(int amount);
 	int getCurrentHP();
+	void increaseBombAmount(int amount);
 	bool isFullHP();
 	SwordType mySword;
 	void movePlayerBarToBottomScreen();
@@ -23,16 +24,13 @@ public:
 	sf::RectangleShape playerMarker, playerBar, overworldMap;
 	Point marker;
 	sf::Sprite itemSlotS;
-	int* diamondPtr;
-	int* keysPtr;
-	int* bombPtr;
+	int diamondAmount, keysAmount, bombAmount;
 private:
 	Point bar, map, healthBarStart, itemSlotStart, diamondStart, itemSlotTextStart, bombStart, bombTextStart,
 		diamondTextStart, keyTextStart, keyStart, itemSelection, swordSlot, itemSlotImage;
 	sf::Texture fullHeartTexture,halfHeartTexture,emptyHeartTexture,itemSlotTexture,bombIconTexture,diamondIconTexture,
 		keyIconTexture,woodSwordTexture;
 	sf::Sprite sprite;
-	int diamondAmount, keysAmount, bombAmount;
 	void drawHearts(sf::RenderWindow& mainWindow);
 	void drawPlayerBar(sf::RenderWindow& mainWindow);
 	void drawItemsSlot(sf::RenderWindow& mainWindow);
@@ -43,7 +41,7 @@ private:
 	void loadImages();
 	sf::Font font;
 	sf::Text txt;
-	int currentHealthPoint, maxHealthPoint;
+	int currentHealthPoint, maxHealthPoint,maxBombAmount;
 	std::stringstream ss;
 };
 #endif

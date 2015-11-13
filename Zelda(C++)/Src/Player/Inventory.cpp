@@ -46,11 +46,10 @@ void Inventory::updateInventoryPosition(Point step){
 Item* Inventory::getCurrentItem() {
 	return items[selectorInventoryIndex].get();
 }
-void Inventory::itemUse(Point position,Direction dir, std::vector<std::shared_ptr<GameObject>>* worldMap) {
+void Inventory::itemUse(Point pos,Direction dir, std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	int i = selectorInventoryIndex;
 	if (getCurrentItem()!=NULL){
-		PlayerInfo info(position, playerBar->bombPtr, playerBar->diamondPtr, playerBar->keysPtr, dir);
-		items[i]->onUse(info, worldMap);
+		items[i]->onUse(pos, worldMap,dir);
 		if (!items[i]->isActive){
 			items[i] = NULL;
 			findNextSelectorPosition();

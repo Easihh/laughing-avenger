@@ -251,3 +251,9 @@ bool GameObject::isOutsideRoomBound(Point pos) {
 		outsideBoundary = true;
 	return outsideBoundary;
 }
+std::shared_ptr<GameObject> GameObject::findPlayer(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	for(int i = 0; i < worldMap->size(); i++){
+		if(dynamic_cast<Player*>(worldMap->at(i).get()))
+			return worldMap->at(i);
+	}
+}

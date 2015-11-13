@@ -6,7 +6,7 @@ class Arrow :public Item {
 public:
 	Arrow(Point position, std::string name);
 	typedef Item super;
-	void onUse(PlayerInfo info, std::vector<std::shared_ptr<GameObject>>* worldMap);
+	void onUse(Point pos, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction dir);
 private:
 };
 #endif

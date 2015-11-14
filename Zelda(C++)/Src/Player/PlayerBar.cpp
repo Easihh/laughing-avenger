@@ -19,7 +19,8 @@ PlayerBar::PlayerBar(){
 	keyTextStart.setPoint(170, 54);
 	swordSlot.setPoint(268, 50);
 	itemSlotImage.setPoint(220, 50);
-	keysAmount = bombAmount = diamondAmount = 10;
+	keysAmount = bombAmount = 99;
+	diamondAmount = 255;
 	loadImages();
 	setupPlayerBar();
 }

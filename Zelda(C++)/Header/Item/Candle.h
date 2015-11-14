@@ -1,9 +1,9 @@
-#ifndef ARROW_H
-#define ARROW_H
+#ifndef CANDLE_H
+#define CANDLE_H
 #include "Item.h"
-class Arrow :public Item {
+class Candle :public Item {
 public:
-	Arrow(Point position, std::string name);
+	Candle(Point position, std::string name);
 	typedef Item super;
 	void onUse(Point pos, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction dir);
 private:

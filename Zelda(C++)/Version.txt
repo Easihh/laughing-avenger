@@ -1,3 +1,10 @@
+Version 0.058
+
+-Item now cost money to buy at shop.
+-Buying one of the Shop Items now makes the other disapears until you re-enter the shop.
+-Fixed display position bug when player own more than 1 row of inventory items.
+-Inventory can now display new Items(Food,Candle,Magical Rod,Whistle but functionality Not Yet Implemented).
+
 Version 0.057
 
 -Improved the way object access player diamond,bomb,key data from item use such as arrow/bomb

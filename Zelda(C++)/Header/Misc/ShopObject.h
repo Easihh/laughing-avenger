@@ -8,6 +8,7 @@ public:
 	const int maxFrame = 75;
 	Point origin;
 	void resetShopItem();
+	void hideOtherShopItems(std::vector<std::shared_ptr<GameObject>>* Worldmap);
 private:
 };
 #endif

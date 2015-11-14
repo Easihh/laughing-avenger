@@ -7,6 +7,6 @@ public:
 	void update(std::vector<std::shared_ptr<GameObject>>* Worldmap);
 	void draw(sf::RenderWindow& mainWindow);
 private:
-	const int bombPerPurchase = 8;
+	const int bombPerPurchase = 8,bombPrice=20;
 };
 #endif

@@ -1,6 +1,7 @@
 #include "Misc\Animation.h"
 #include <fstream>
 #include <iostream>
+Animation::~Animation() {}
 Animation::Animation(std::string filename, int recHeight, int recWidth, Point position, int framerate){
 	fRate = framerate;
 	fCounter = 0;

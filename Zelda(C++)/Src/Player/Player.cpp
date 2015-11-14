@@ -6,6 +6,7 @@
 #include "Item\Bomb.h"
 #include "Item\Boomrang.h"
 #include "Item\Arrow.h"
+#include "Item\Candle.h"
 #include "Utility\Point.h"
 #include"Utility\PlayerInfo.h"
 #include "Misc\ShopMarker.h"
@@ -32,6 +33,11 @@
 	 inventory->items.push_back(std::make_unique<Boomrang>(pt, "MagicalBoomerang"));
 	 inventory->items.push_back(std::make_unique<Bomb>(pt, "Bomb"));
 	 inventory->items.push_back(std::make_unique<Arrow>(pt, "Arrow"));
+	 inventory->items.push_back(std::make_unique<Candle>(pt, "Candle"));
+	 inventory->items.push_back(std::make_unique<Candle>(pt, "Food"));
+	 inventory->items.push_back(std::make_unique<Candle>(pt, "BluePotion"));
+	 inventory->items.push_back(std::make_unique<Candle>(pt, "Whistle"));
+	 inventory->items.push_back(std::make_unique<Candle>(pt, "MagicalRod"));
 }
  void Player::loadImage(){
 	walkingAnimation.push_back(std::make_unique<Animation>("Link_Movement", width, height, position, 6));

@@ -7,6 +7,7 @@
 #include "Utility\Point.h"
 class Animation{
 public:
+	~Animation();
 	Animation();
 	Animation(std::string filename, int recHeight, int recWidth, Point position,const int framerate);
 	sf::Sprite sprite;

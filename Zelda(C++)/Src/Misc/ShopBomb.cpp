@@ -18,14 +18,18 @@
 	 sprite.setPosition(position.x, position.y);
 	 if(isCollidingWithPlayer(Worldmap) && !isObtained && isVisible) {
 		 Player* tmp = ((Player*)player.get());
-		 position.y = tmp->position.y - Global::TileHeight;
-		 position.x = tmp->position.x;
-		 tmp->isObtainingItem = true;
-		 tmp->sprite.setPosition(tmp->position.x, tmp->position.y);
-		 Sound::playSound(SoundType::NewItem);
-		 Sound::playSound(SoundType::NewInventoryItem);
-		 tmp->inventory->playerBar->increaseBombAmount(bombPerPurchase);
-		 isObtained = true;
+		 if(tmp->inventory->playerBar->diamondAmount >= bombPrice){
+			 position.y = tmp->position.y - Global::TileHeight;
+			 position.x = tmp->position.x;
+			 tmp->isObtainingItem = true;
+			 tmp->sprite.setPosition(tmp->position.x, tmp->position.y);
+			 Sound::playSound(SoundType::NewItem);
+			 Sound::playSound(SoundType::NewInventoryItem);
+			 tmp->inventory->playerBar->increaseBombAmount(bombPerPurchase);
+			 tmp->inventory->playerBar->diamondAmount -= bombPrice;
+			 isObtained = true;
+			 hideOtherShopItems(Worldmap);
+		 }
 	 }
 	 if(isObtained){
 		 currentFrame++;

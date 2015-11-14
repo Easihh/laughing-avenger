@@ -63,10 +63,12 @@ void Inventory::transitionToInventory(){
 	itemSelected.setPosition(itemSelectedPt.x, itemSelectedPt.y);
 	int maxItemPerRow = Static::inventoryCols;
 	int row = 0;
+	int col = 0;
 	for (int i = 0; i < items.size(); i++){
 		if(items[i] != NULL){
 			row = i/maxItemPerRow;
-			items[i]->sprite.setPosition(inventoryRectPt.x + (i*selectorWidth), inventoryRectPt.y + (row*selectorWidth));
+			col = i%maxItemPerRow;
+			items[i]->sprite.setPosition(inventoryRectPt.x + (col*selectorWidth), inventoryRectPt.y + (row*selectorWidth));
 		}
 	}
 	selectInventoryItem();

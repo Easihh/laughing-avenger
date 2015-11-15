@@ -52,7 +52,7 @@ void Inventory::itemUse(Point pos,Direction dir, std::vector<std::shared_ptr<Gam
 		items[i]->onUse(pos, worldMap,dir);
 		if (!items[i]->isActive){
 			items[i] = NULL;
-			findNextSelectorPosition();
+			findNextSelectorPositionRight();
 			playerBar->itemSlotS = getCurrentItem()->sprite;
 		}
 	}
@@ -82,12 +82,36 @@ void Inventory::selectInventoryItem(){
 void Inventory::getInput(sf::Event& event){
 	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Q)
 		keyWasReleased = true;
-	if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Right || 
-		event.key.code==sf::Keyboard::Left)){
-		findNextSelectorPosition();
+	if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Right))
+		findNextSelectorPositionRight();
+	if(event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Left))
+		findNextSelectorPositionLeft();
+}
+void Inventory::findNextSelectorPositionLeft() {
+	bool found = false;
+	for(int i = selectorInventoryIndex; i >= 0; i--){
+		if(items[i] != NULL && i != selectorInventoryIndex && !found){
+			selectorInventoryIndex = i;
+			found = true;
+		}
+	}
+	if(!found){
+		for(int i = items.size()-1; i > selectorInventoryIndex; i--)
+			if(items[i] != NULL){
+				found = true;
+				selectorInventoryIndex = i;
+			}
+	}
+	if(found){
+		if(Static::gameState == GameState::InventoryMenu)
+			Sound::playSound(SoundType::Selector);
+		int i = selectorInventoryIndex;
+		selectedItem = items[i]->sprite;
+		selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
+		selector.setPosition(items[i]->sprite.getPosition().x, items[i]->sprite.getPosition().y);
 	}
 }
-void Inventory::findNextSelectorPosition(){
+void Inventory::findNextSelectorPositionRight(){
 	bool found = false;
 	for (int i = selectorInventoryIndex; i < items.size(); i++){
 		if (items[i] != NULL && i!=selectorInventoryIndex && !found){
@@ -95,22 +119,22 @@ void Inventory::findNextSelectorPosition(){
 				Sound::playSound(SoundType::Selector);
 			selectorInventoryIndex = i;
 			found = true;
-			selectedItem = items[i]->sprite;
-			selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
-			selector.setPosition(items[i]->sprite.getPosition().x,items[i]->sprite.getPosition().y);
 		}
 	}
-	if (!found){
-		for (int i = 0; i < selectorInventoryIndex; i++){
-			if (items[i] != NULL){
+	if(!found){
+		for(int i = 0; i < selectorInventoryIndex; i++)
+			if(items[i] != NULL){
 				if(Static::gameState == GameState::InventoryMenu)
 					Sound::playSound(SoundType::Selector);
 				selectorInventoryIndex = i;
-				selectedItem = items[i]->sprite;
-				selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
-				selector.setPosition(items[i]->sprite.getPosition().x,items[i]->sprite.getPosition().y);
+				found = true;
 			}
-		}
+	}
+	if(found){
+		int i = selectorInventoryIndex;
+		selectedItem = items[i]->sprite;
+		selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
+		selector.setPosition(items[i]->sprite.getPosition().x, items[i]->sprite.getPosition().y);
 	}
 }
 void Inventory::update(sf::Event& event){

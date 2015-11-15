@@ -1,3 +1,9 @@
+Version 0.059
+
+-Fixed an issue with Inventory item selection: left arrow would select the next right item instead of left.
+-Using Candle inventory item now create a fire infront of you that can damage enemies.
+-Added Diamond displayer inside Shops to clearly show that shop item cost Diamonds.
+
 Version 0.058
 
 -Item now cost money to buy at shop.

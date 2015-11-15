@@ -2,6 +2,7 @@
 #include "Utility\Static.h"
 #include "Player\Player.h"
  ShopBomb::ShopBomb(Point pos){
+	 itemPrice = 20;
 	 position = pos;
 	 origin = pos;
 	 currentFrame = 0;
@@ -11,6 +12,8 @@
 	 isVisible = true;
 	 isObtained = false;
 	 texture.loadFromFile("Tileset/Bomb.png");
+	 font.loadFromFile("zelda.ttf");
+	 txt.setFont(font);
 	 sprite.setTexture(texture);
 	 sprite.setPosition(position.x, position.y);
 }
@@ -18,7 +21,7 @@
 	 sprite.setPosition(position.x, position.y);
 	 if(isCollidingWithPlayer(Worldmap) && !isObtained && isVisible) {
 		 Player* tmp = ((Player*)player.get());
-		 if(tmp->inventory->playerBar->diamondAmount >= bombPrice){
+		 if(tmp->inventory->playerBar->diamondAmount >= itemPrice){
 			 position.y = tmp->position.y - Global::TileHeight;
 			 position.x = tmp->position.x;
 			 tmp->isObtainingItem = true;
@@ -26,7 +29,7 @@
 			 Sound::playSound(SoundType::NewItem);
 			 Sound::playSound(SoundType::NewInventoryItem);
 			 tmp->inventory->playerBar->increaseBombAmount(bombPerPurchase);
-			 tmp->inventory->playerBar->diamondAmount -= bombPrice;
+			 tmp->inventory->playerBar->diamondAmount -= itemPrice;
 			 isObtained = true;
 			 hideOtherShopItems(Worldmap);
 		 }
@@ -42,6 +45,8 @@
 	 }
  }
  void ShopBomb::draw(sf::RenderWindow& mainWindow) {
-	 if(isVisible)
-		mainWindow.draw(sprite);
+	 if(isVisible){
+		 mainWindow.draw(sprite);
+		 drawCost(mainWindow,itemPrice);
+	 }
  }

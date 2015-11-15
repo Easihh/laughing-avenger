@@ -10,6 +10,8 @@
 #include "Item\ThrownBomb.h"
 #include "Item\BombEffect.h"
 #include "Misc\ShopBomb.h"
+#include "Misc\ShopRupeeDisplayer.h"
+#include "Misc\CandleFlame.h"
 WorldMap::WorldMap(){
 	setupVectors();
 	loadMap("Map/Zelda-Worldmap_Layer 1.csv", gameBackgroundVector);
@@ -131,6 +133,30 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 		tile = std::make_shared<ShopBomb>(pt);
 		objectVector[vectorXindex][vectorYindex].push_back(tile);
 		break;
+	case Identifier::ItemShopCandle:
+		//tile = std::make_shared<ShopCandle>(pt);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
+		break;
+	case Identifier::ItemShopFood:
+		//tile = std::make_shared<ShopFood>(pt);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
+		break;
+	case Identifier::ItemShopPotion:
+		//tile = std::make_shared<ShopPotion>(pt);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
+		break;
+	case Identifier::ItemMagicalRod:
+		//tile = std::make_shared<ShopMagicalRod>(pt);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
+		break;
+	case Identifier::ItemFlute:
+		//tile = std::make_shared<ShopMagicalRod>(pt);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
+		break;
+	case Identifier::ShopDiamondDisplay:
+		tile = std::make_shared<ShopRupeeDisplayer>(pt);
+		objectVector[vectorXindex][vectorYindex].push_back(tile);
+		break;
 	}
 }
 void WorldMap::update(sf::RenderWindow& mainWindow,sf::Event& event){
@@ -203,6 +229,7 @@ void WorldMap::deleteOutstandingPlayerObjects(std::vector<std::shared_ptr<GameOb
 			|| dynamic_cast<ThrownBomb*>(tmp.get())
 			|| dynamic_cast<ThrownArrow*>(tmp.get())
 			|| dynamic_cast<BombEffect*>(tmp.get())
+			|| dynamic_cast<CandleFlame*>(tmp.get())
 			){
 			tmp.reset();
 			roomObjVector->erase(roomObjVector->begin() + i);

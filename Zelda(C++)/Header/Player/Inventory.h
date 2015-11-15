@@ -16,7 +16,8 @@ public:
 	int selectorInventoryIndex;
 	Item* getCurrentItem();
 	void itemUse(Point position,Direction dir, std::vector<std::shared_ptr<GameObject>>* worldMap);
-	void findNextSelectorPosition();
+	void findNextSelectorPositionRight();
+	void findNextSelectorPositionLeft();
 	std::unique_ptr<PlayerBar> playerBar;
 private:
 	sf::RectangleShape inventoryRect, itemSelected;

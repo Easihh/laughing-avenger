@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" nextobjectid="1">
- <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="6">
-  <image source="tileset.png" width="192" height="32"/>
+ <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="112">
+  <image source="tileset.png" width="256" height="448"/>
  </tileset>
  <layer name="Layer 1" width="32" height="32">
   <data encoding="base64" compression="zlib">
@@ -10,7 +10,7 @@
  </layer>
  <layer name="Layer 2" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztldEKwCAIRR3F/v+T9ySEVNPc3VwlSGTo4ZZkIqK03WyeXJkfld+rreFnJ79nSP28z5UYkn8qc3Nj9fLLMxLxUZ0jfLZDWQulvxebuf+j8LX39wT/biZ8MZPk/4N0q3nu3lqn1gdIfqvvau+B4CPz/s7nN1hVP5qvnaWz6t/8Nflvzc1o/AvkqgOv
+   eJztlesKwCAIhR3J3v+R9ysYYU2zs7lKkMjQDy9kIqK01Swe39I/Kr8VW8NnJ78lyPzznQWb5H8O4mvjcOX08u9vVNh769zDz3IoY6Hyb9lmnv8ofG39RvCfdsIXO6n8f5BqFU/trXGkOUDya3Mn9QPBR/r9nZ97sGr+aL52l86a/+avyX9rb0bjXzEhA7U=
   </data>
  </layer>
 </map>

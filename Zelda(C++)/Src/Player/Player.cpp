@@ -286,7 +286,7 @@
 	 for(auto& obj : *worldMap)
 	 {
 		if (dynamic_cast<Tile*>(obj.get()))
-			if (intersect(mask, obj->fullMask, offset)){
+			if (intersect(mask, obj->fullMask, offset) && obj->isCollideable){
 				collision = true;
 				//std::cout << "CollisionX:" << obj->position.x << std::endl;
 				//std::cout << "CollisionY:" << obj->position.y << std::endl;

@@ -1,19 +1,14 @@
 #include "Misc\WorldMap.h"
 #include "Misc\Tile.h"
-#include "Monster\Octorok.h"
-#include "Type\TileType.h"
-#include "Type\Identifier.h"
-#include "Misc\ShopMarker.h"
-#include "Item\WoodSwordPickUp.h"
-#include "Misc\Flame.h"
 #include "Item\ThrownArrow.h"
 #include "Item\ThrownBomb.h"
 #include "Item\BombEffect.h"
-#include "Misc\ShopBomb.h"
-#include "Misc\ShopRupeeDisplayer.h"
+#include "Misc\ShopObject.h"
 #include "Misc\CandleFlame.h"
+#include "Type\Identifier.h"
 WorldMap::WorldMap(){
 	setupVectors();
+	parser = std::make_unique<TileParser>();
 	loadMap("Map/Zelda-Worldmap_Layer 1.csv", gameBackgroundVector);
 	loadMap("Map/Zelda-Worldmap_Layer 2.csv", gameMainVector);
 	loadMap("Map/Zelda-Shop_Layer 1.csv", secretRoomBackgroundVector);
@@ -81,81 +76,18 @@ void WorldMap::loadMap(std::string filename,tripleVector& objectVector){
 	
 }
 void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector) {
-	std::shared_ptr<GameObject> tile;
 	float x = lastWorldXIndex*Global::TileWidth;
 	float y = lastWorldYIndex*Global::TileHeight;
 	Point pt(x, y + Global::inventoryHeight);
-	switch (tileType){
+	switch(tileType){
 	case -1:
 		//no tile;
 		break;
 	case Identifier::Player_ID:
 		player = std::make_shared<Player>(pt);
 		objectVector[vectorXindex][vectorYindex].push_back(player);
-		break;
-	case Identifier::Sand_ID:
-		tile =std::make_shared<Tile>(pt, false, TileType::Sand);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::GreenTree_ID:
-		tile = std::make_shared<Tile>(pt, true, TileType::GreenTree);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::RedOctorok_ID:
-		tile = std::make_shared<Octorok>(pt, false);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::BlackTile_ID:
-		tile = std::make_shared<Tile>(pt, false,TileType::BlackTile);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::ShopMarker_ID:
-		tile = std::make_shared<ShopMarker>(pt);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::BrownBlock1_ID:
-		tile = std::make_shared<Tile>(pt, true, TileType::BrownBlockType1);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::WoodSword:
-		tile = std::make_shared<WoodSwordPickUp>(pt);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::FlameObj:
-		tile = std::make_shared<Flame>(pt,true);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::BrownBlock2_ID:
-		tile = std::make_shared<Tile>(pt, true, TileType::BrownBlockType2);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::ItemShopBomb:
-		tile = std::make_shared<ShopBomb>(pt);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::ItemShopCandle:
-		//tile = std::make_shared<ShopCandle>(pt);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::ItemShopFood:
-		//tile = std::make_shared<ShopFood>(pt);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::ItemShopPotion:
-		//tile = std::make_shared<ShopPotion>(pt);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::ItemMagicalRod:
-		//tile = std::make_shared<ShopMagicalRod>(pt);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::ItemFlute:
-		//tile = std::make_shared<ShopMagicalRod>(pt);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
-		break;
-	case Identifier::ShopDiamondDisplay:
-		tile = std::make_shared<ShopRupeeDisplayer>(pt);
-		objectVector[vectorXindex][vectorYindex].push_back(tile);
+	default:
+		parser->createTile(lastWorldXIndex, lastWorldYIndex, tileType, objectVector, vectorXindex, vectorYindex);
 		break;
 	}
 }
@@ -293,22 +225,22 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 	}
 }
 void WorldMap::drawRightScreen(sf::RenderWindow& mainWindow){
-	if (player->worldY== Global::WorldRoomWidth-1)return;
-	drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY+1]);
-	drawScreen(mainWindow, &gameMainVector[player->worldX][player->worldY+1]);
+	if(player->worldY == Global::WorldRoomWidth - 1)return;
+	drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY + 1]);
+	drawScreen(mainWindow, &gameMainVector[player->worldX][player->worldY + 1]);
 }
 void WorldMap::drawLeftScreen(sf::RenderWindow& mainWindow){
-	if (player->worldY== 0)return;
-	drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY-1]);
-	drawScreen(mainWindow, &gameMainVector[player->worldX][player->worldY -1]);
+	if(player->worldY == 0)return;
+	drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY - 1]);
+	drawScreen(mainWindow, &gameMainVector[player->worldX][player->worldY - 1]);
 }
 void WorldMap::drawUpScreen(sf::RenderWindow& mainWindow){
-	if (player->worldX == 0)return;
-	drawScreen(mainWindow, &gameBackgroundVector[player->worldX-1][player->worldY]);
-	drawScreen(mainWindow, &gameMainVector[player->worldX-1][player->worldY]);
+	if(player->worldX == 0)return;
+	drawScreen(mainWindow, &gameBackgroundVector[player->worldX - 1][player->worldY]);
+	drawScreen(mainWindow, &gameMainVector[player->worldX - 1][player->worldY]);
 }
 void WorldMap::drawDownScreen(sf::RenderWindow& mainWindow){
-	if (player->worldX == Global::WorldRoomHeight-1)return;
-	drawScreen(mainWindow, &gameBackgroundVector[player->worldX+1][player->worldY]);
+	if(player->worldX == Global::WorldRoomHeight - 1)return;
+	drawScreen(mainWindow, &gameBackgroundVector[player->worldX + 1][player->worldY]);
 	drawScreen(mainWindow, &gameMainVector[player->worldX + 1][player->worldY]);
 }

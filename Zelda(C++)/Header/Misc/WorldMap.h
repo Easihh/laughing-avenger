@@ -8,6 +8,7 @@
 #include <vector>
 #include <iostream>
 #include "Player\Player.h"
+#include "Misc\TileParser.h"
 class WorldMap{
 public:
 	typedef std::vector<std::vector<std::vector<std::shared_ptr<GameObject>>>> tripleVector;
@@ -18,6 +19,7 @@ public:
 	std::vector<std::shared_ptr<GameObject>> roomGameObjects, roomBackGroundTile,secretRoomTile,secretRoomGameObjects;
 	void update(sf::RenderWindow& mainWindow,sf::Event& event);
 	std::shared_ptr<Player> player;
+	std::unique_ptr<TileParser> parser;
 	void movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int newWorldX, int newWorldY);
 private:
 	int lastWorldXIndex, lastWorldYIndex, vectorXindex, vectorYindex;

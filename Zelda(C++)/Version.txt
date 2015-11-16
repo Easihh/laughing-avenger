@@ -1,3 +1,13 @@
+Version 0.061
+
+-
+
+Version 0.060
+
+-Fixed an issue where non-collidable tile could collide with player.
+-Added numerous tiles for upcoming Dungeons.
+-Moved Parsing CSV Ids to its own class.
+
 Version 0.059
 
 -Fixed an issue with Inventory item selection: left arrow would select the next right item instead of left.

@@ -9,18 +9,20 @@
 #include "Player\PlayerBar.h"
 #include "Player\Inventory.h"
 #include "Player\MovingSword.h"
+#include "Type\Layer.h"
 class Player:public GameObject{
 public:
 	Player(Point position);
 	void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void draw(sf::RenderWindow& mainWindow);
 	int worldX, worldY,prevWorldX,prevWorldY;
-	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased, isInsideShop, movePlayerToNewVector, 
+	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased, movePlayerToNewVector, 
 		movingSwordIsActive,isObtainingItem;
 	std::unique_ptr<Inventory> inventory;
 	std::unique_ptr<Point> pointBeforeTeleport;
 	std::vector<std::unique_ptr<Animation>> walkingAnimation;
 	std::vector<std::unique_ptr<Animation>> attackAnimation;
+	Layer currentLayer,prevLayer;
 private:
 	unsigned int stepToMove;
 	void completeMove();

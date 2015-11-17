@@ -1,6 +1,7 @@
 #include "Misc\ShopMarker.h"
 #include "Utility\Static.h"
 #include "Player\Player.h"
+#include "Type\Layer.h"
 ShopMarker::ShopMarker(Point pos) {
 	position = pos;
 	texture.loadFromFile("Tileset/BlackTile.png");
@@ -16,7 +17,8 @@ void ShopMarker::draw(sf::RenderWindow& window) {
 void ShopMarker::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	if(isCollidingWithPlayer(Worldmap)){
 		Player* temp = ((Player*)player.get());
-		temp->isInsideShop = true;
+		temp->currentLayer=Layer::InsideShop;
+		temp->prevLayer = Layer::OverWorld;
 		temp->prevWorldX = temp->worldX;
 		temp->prevWorldY = temp->worldY;
 		temp->pointBeforeTeleport = std::make_unique<Point>(position.x, position.y + Global::TileHeight);

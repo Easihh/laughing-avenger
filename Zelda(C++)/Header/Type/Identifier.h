@@ -19,6 +19,7 @@ enum Identifier {
 	ItemMagicalRod = 14,
 	ItemFlute = 15,
 	ShopDiamondDisplay = 16,
+	TeleportDungeon = 17,
 	DungeonTile1 = 24,
 	DungeonTile2 = 25,
 	DungeonTile3 = 26,

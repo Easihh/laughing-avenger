@@ -1,6 +1,9 @@
 Version 0.061
 
--
+-Added Dungeon Layer.
+-Dungeon will now be its own file and removed from Shop Layer.
+-Player can move from overworld to dungeon and back.
+
 
 Version 0.060
 

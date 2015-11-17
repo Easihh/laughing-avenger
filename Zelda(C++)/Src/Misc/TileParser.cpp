@@ -12,6 +12,7 @@
 #include "Misc\ShopBomb.h"
 #include "Misc\ShopRupeeDisplayer.h"
 #include "Misc\CandleFlame.h"
+#include "Misc\DungeonMarker.h"
 TileParser::TileParser() {}
 
 void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector, int vectorXindex, int vectorYindex) {
@@ -85,6 +86,10 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::ShopDiamondDisplay:
 	tile = std::make_shared<ShopRupeeDisplayer>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::TeleportDungeon:
+	tile = std::make_shared<DungeonMarker>(pt);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile1:

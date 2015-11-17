@@ -13,8 +13,11 @@ WorldMap::WorldMap(){
 	loadMap("Map/Zelda-Worldmap_Layer 2.csv", gameMainVector);
 	loadMap("Map/Zelda-Shop_Layer 1.csv", secretRoomBackgroundVector);
 	loadMap("Map/Zelda-Shop_Layer 2.csv", secretRoomVector);
+	loadMap("Map/Zelda-Dungeon_Layer 1.csv", dungeonBackgroundVector);
+	loadMap("Map/Zelda-Dungeon_Layer 2.csv", dungeonVector);
 	sort(gameMainVector);
 	sort(secretRoomVector);
+	sort(dungeonVector);
 }
 bool sortByDepth(std::shared_ptr<GameObject> object1, std::shared_ptr<GameObject> object2) {
 	return object1.get()->depth<object2.get()->depth;
@@ -33,12 +36,16 @@ void WorldMap::setupVectors() {
 		secretRoomBackgroundColumns.push_back(secretRoomTile);
 		mainVectorColums.push_back(roomGameObjects);
 		secretRoomColumns.push_back(secretRoomGameObjects);
+		dungeonColumns.push_back(dungeonGameObjects);
+		dungeonBackgroundColumns.push_back(dungeonTile);
 	}
 	for(int i = 0; i < Global::WorldRoomHeight; i++){
 		gameMainVector.push_back(mainVectorColums);
 		secretRoomVector.push_back(secretRoomColumns);
 		gameBackgroundVector.push_back(mainBackgroundColumns);
 		secretRoomBackgroundVector.push_back(secretRoomBackgroundColumns);
+		dungeonVector.push_back(dungeonColumns);
+		dungeonBackgroundVector.push_back(dungeonBackgroundColumns);
 	}
 }
 void WorldMap::loadMap(std::string filename,tripleVector& objectVector){
@@ -117,7 +124,7 @@ void WorldMap::enableShopObjects(std::vector<std::shared_ptr<GameObject>>* roomO
 }
 void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int newWorldX, int newWorldY) {
 	player->movingSwordIsActive = false;
-	if(player->isInsideShop){
+	if(player->currentLayer == InsideShop){
 		secretRoomVector[newWorldX][newWorldY].push_back(player);
 		enableShopObjects(&secretRoomVector[newWorldX][newWorldY]);
 		for(int i = 0; i < gameMainVector[oldWorldX][oldWorldY].size(); i++){
@@ -129,24 +136,50 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 			}
 		}
 	}
-	if(!player->isInsideShop){
+	if(player->currentLayer == OverWorld){
 		//check if the player previous room was a secret room and delete it from the room vector objects
-		for(int i = 0; i < secretRoomVector[oldWorldX][oldWorldY].size(); i++){
-			std::shared_ptr<GameObject> tmp = secretRoomVector[oldWorldX][oldWorldY].at(i);
-			if(tmp == player){
-				tmp.reset();
-				secretRoomVector[oldWorldX][oldWorldY].erase(secretRoomVector[oldWorldX][oldWorldY].begin() + i);
-				gameMainVector[newWorldX][newWorldY].push_back(player);
-				deleteOutstandingPlayerObjects(&secretRoomVector[oldWorldX][oldWorldY]);
+		if(player->prevLayer == Layer::InsideShop){
+			for(int i = 0; i < secretRoomVector[oldWorldX][oldWorldY].size(); i++){
+				std::shared_ptr<GameObject> tmp = secretRoomVector[oldWorldX][oldWorldY].at(i);
+				if(tmp == player){
+					tmp.reset();
+					secretRoomVector[oldWorldX][oldWorldY].erase(secretRoomVector[oldWorldX][oldWorldY].begin() + i);
+					gameMainVector[newWorldX][newWorldY].push_back(player);
+					deleteOutstandingPlayerObjects(&secretRoomVector[oldWorldX][oldWorldY]);
+				}
 			}
 		}
 		//both previous and current room could be non-secret room so do the same as above.
+		if(player->prevLayer == Layer::OverWorld){
+			for(int i = 0; i < gameMainVector[oldWorldX][oldWorldY].size(); i++){
+				std::shared_ptr<GameObject> tmp = gameMainVector[oldWorldX][oldWorldY].at(i);
+				if(tmp == player){
+					tmp.reset();
+					gameMainVector[oldWorldX][oldWorldY].erase(gameMainVector[oldWorldX][oldWorldY].begin() + i);
+					gameMainVector[newWorldX][newWorldY].push_back(player);
+					deleteOutstandingPlayerObjects(&gameMainVector[oldWorldX][oldWorldY]);
+				}
+			}
+		}
+		if(player->prevLayer == Layer::Dungeon){
+			for(int i = 0; i < dungeonVector[oldWorldX][oldWorldY].size(); i++){
+				std::shared_ptr<GameObject> tmp = dungeonVector[oldWorldX][oldWorldY].at(i);
+				if(tmp == player){
+					tmp.reset();
+					dungeonVector[oldWorldX][oldWorldY].erase(dungeonVector[oldWorldX][oldWorldY].begin() + i);
+					gameMainVector[newWorldX][newWorldY].push_back(player);
+					deleteOutstandingPlayerObjects(&dungeonVector[oldWorldX][oldWorldY]);
+				}
+			}
+		}
+	}
+	if(player->currentLayer == Dungeon){
+		dungeonVector[newWorldX][newWorldY].push_back(player);
 		for(int i = 0; i < gameMainVector[oldWorldX][oldWorldY].size(); i++){
 			std::shared_ptr<GameObject> tmp = gameMainVector[oldWorldX][oldWorldY].at(i);
 			if(tmp == player){
 				tmp.reset();
 				gameMainVector[oldWorldX][oldWorldY].erase(gameMainVector[oldWorldX][oldWorldY].begin() + i);
-				gameMainVector[newWorldX][newWorldY].push_back(player);
 				deleteOutstandingPlayerObjects(&gameMainVector[oldWorldX][oldWorldY]);
 			}
 		}
@@ -198,7 +231,7 @@ void WorldMap::addToGameVector(std::vector<std::shared_ptr<GameObject>>* roomObj
 	Static::toAdd.clear();
 }
 void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
-	if(!player->isInsideShop){
+	if(player->currentLayer==OverWorld){
 		if(player->movePlayerToNewVector)
 			movePlayerToDifferentRoomVector(player->prevWorldX, player->prevWorldY, player->worldX, player->worldY);
 		freeSpace(gameMainVector);
@@ -210,7 +243,7 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 		}
 		addToGameVector(&gameMainVector[player->worldX][player->worldY]);
 	}
-	else
+	else if(player->currentLayer == InsideShop)
 	{
 		if(player->movePlayerToNewVector)
 			movePlayerToDifferentRoomVector(player->prevWorldX, player->prevWorldY, player->worldX, player->worldY);
@@ -222,6 +255,19 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 			obj->draw(mainWindow);
 		}
 		addToGameVector(&secretRoomVector[player->worldX][player->worldY]);
+	}
+	else if(player->currentLayer == Dungeon)
+	{
+		if(player->movePlayerToNewVector)
+			movePlayerToDifferentRoomVector(player->prevWorldX, player->prevWorldY, player->worldX, player->worldY);
+		freeSpace(dungeonVector);
+		drawScreen(mainWindow, &dungeonBackgroundVector[player->worldX][player->worldY]);
+		for(auto& obj : dungeonVector[player->worldX][player->worldY])
+		{
+			obj->update(&dungeonVector[player->worldX][player->worldY]);
+			obj->draw(mainWindow);
+		}
+		addToGameVector(&dungeonVector[player->worldX][player->worldY]);
 	}
 }
 void WorldMap::drawRightScreen(sf::RenderWindow& mainWindow){

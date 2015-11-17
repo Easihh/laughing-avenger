@@ -14,9 +14,9 @@ public:
 	typedef std::vector<std::vector<std::vector<std::shared_ptr<GameObject>>>> tripleVector;
 	WorldMap();
 	void loadMap(std::string filename,tripleVector& triple);
-	tripleVector gameMainVector, gameBackgroundVector, secretRoomVector, secretRoomBackgroundVector;
-	std::vector<std::vector<std::shared_ptr<GameObject>>> mainVectorColums, mainBackgroundColumns,secretRoomColumns,secretRoomBackgroundColumns;
-	std::vector<std::shared_ptr<GameObject>> roomGameObjects, roomBackGroundTile,secretRoomTile,secretRoomGameObjects;
+	tripleVector gameMainVector, gameBackgroundVector, secretRoomVector, secretRoomBackgroundVector,dungeonVector,dungeonBackgroundVector;
+	std::vector<std::vector<std::shared_ptr<GameObject>>> mainVectorColums, mainBackgroundColumns,secretRoomColumns,secretRoomBackgroundColumns,dungeonColumns,dungeonBackgroundColumns;
+	std::vector<std::shared_ptr<GameObject>> roomGameObjects, roomBackGroundTile,secretRoomTile,secretRoomGameObjects,dungeonGameObjects,dungeonTile;
 	void update(sf::RenderWindow& mainWindow,sf::Event& event);
 	std::shared_ptr<Player> player;
 	std::unique_ptr<TileParser> parser;

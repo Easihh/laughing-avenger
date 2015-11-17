@@ -14,9 +14,10 @@
  Player::Player(Point pos){
 	 depth = 999;
 	 stepToMove = 0;
+	 currentLayer=prevLayer =OverWorld;
 	 stepToAlign = currentInvincibleFrame = transitionStep = xOffset = yOffset = 0;
 	 movePlayerToNewVector = stepIsNegative = movingSwordIsActive = isObtainingItem = false;
-	 isAttacking = isScreenTransitioning = isInvincible = isInsideShop = false;
+	 isAttacking = isScreenTransitioning = isInvincible  = false;
 	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased = true;
 	 position = pos;
 	 worldX = (int)(position.y / Global::roomHeight);
@@ -248,12 +249,14 @@
 		 for(int i = 0; i < 3; i++)
 			 walkingAnimation[i]->updateAnimationFrame(dir, position);
 	 }
-	 if (outsideBound && !isInsideShop){
+	 if (outsideBound && currentLayer !=InsideShop){
+		 prevLayer = currentLayer;
 		 transitionStep = maxTransitionStep;
 		 isScreenTransitioning = true;
 	 }
-	 if(outsideBound && isInsideShop){
-		 isInsideShop = false;
+	 if(outsideBound && currentLayer == InsideShop){
+		 currentLayer = OverWorld;
+		 prevLayer = InsideShop;
 		 position = *pointBeforeTeleport.get();
 		 movePlayerToNewVector = true;
 	 }

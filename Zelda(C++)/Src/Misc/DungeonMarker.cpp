@@ -28,6 +28,11 @@ void DungeonMarker::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 			temp->position = Point(teleportX, teleportY);
 		}
 		else if(temp->currentLayer == Dungeon){
+			//previousWorld must be same as current room when moving to overworld layer
+			int worldX = (int)(position.y / (Global::roomHeight+Global::inventoryHeight));
+			int worldY = (int)(position.x / Global::roomWidth);
+			temp->prevWorldX = worldX;
+			temp->prevWorldY = worldY;
 			temp->currentLayer = Layer::OverWorld;
 			temp->prevLayer = Layer::Dungeon;
 			temp->position = *temp->pointBeforeTeleport.get();

@@ -1,3 +1,9 @@
+Version 0.062
+
+-Fixed an issue where transitioning from one dungeon to another would show the wrong background temporarly.
+-Fixed an issue where player would not be correctly deleted from previous room vector if the previous and 
+current layer was dungeon layer.
+
 Version 0.061
 
 -Added Dungeon Layer.

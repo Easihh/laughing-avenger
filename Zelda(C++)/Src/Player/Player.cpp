@@ -20,7 +20,7 @@
 	 isAttacking = isScreenTransitioning = isInvincible  = false;
 	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased = true;
 	 position = pos;
-	 worldX = (int)(position.y / Global::roomHeight);
+	 worldX = (int)(position.y / (Global::roomHeight+Global::inventoryHeight));
 	 worldY = (int)(position.x / Global::roomWidth);
 	 prevWorldX = worldX;
 	 prevWorldY = worldY;

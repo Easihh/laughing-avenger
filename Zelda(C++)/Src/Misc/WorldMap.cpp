@@ -174,13 +174,26 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 		}
 	}
 	if(player->currentLayer == Dungeon){
-		dungeonVector[newWorldX][newWorldY].push_back(player);
-		for(int i = 0; i < gameMainVector[oldWorldX][oldWorldY].size(); i++){
-			std::shared_ptr<GameObject> tmp = gameMainVector[oldWorldX][oldWorldY].at(i);
-			if(tmp == player){
-				tmp.reset();
-				gameMainVector[oldWorldX][oldWorldY].erase(gameMainVector[oldWorldX][oldWorldY].begin() + i);
-				deleteOutstandingPlayerObjects(&gameMainVector[oldWorldX][oldWorldY]);
+		if(player->prevLayer == OverWorld){
+			dungeonVector[newWorldX][newWorldY].push_back(player);
+			for(int i = 0; i < gameMainVector[oldWorldX][oldWorldY].size(); i++){
+				std::shared_ptr<GameObject> tmp = gameMainVector[oldWorldX][oldWorldY].at(i);
+				if(tmp == player){
+					tmp.reset();
+					gameMainVector[oldWorldX][oldWorldY].erase(gameMainVector[oldWorldX][oldWorldY].begin() + i);
+					deleteOutstandingPlayerObjects(&gameMainVector[oldWorldX][oldWorldY]);
+				}
+			}
+		}
+		if(player->prevLayer == Dungeon){
+			dungeonVector[newWorldX][newWorldY].push_back(player);
+			for(int i = 0; i < dungeonVector[oldWorldX][oldWorldY].size(); i++){
+				std::shared_ptr<GameObject> tmp = dungeonVector[oldWorldX][oldWorldY].at(i);
+				if(tmp == player){
+					tmp.reset();
+					dungeonVector[oldWorldX][oldWorldY].erase(dungeonVector[oldWorldX][oldWorldY].begin() + i);
+					deleteOutstandingPlayerObjects(&dungeonVector[oldWorldX][oldWorldY]);
+				}
 			}
 		}
 	}
@@ -272,21 +285,65 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 }
 void WorldMap::drawRightScreen(sf::RenderWindow& mainWindow){
 	if(player->worldY == Global::WorldRoomWidth - 1)return;
-	drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY + 1]);
-	drawScreen(mainWindow, &gameMainVector[player->worldX][player->worldY + 1]);
+	if(player->currentLayer == OverWorld){
+		drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY + 1]);
+		drawScreen(mainWindow, &gameMainVector[player->worldX][player->worldY + 1]);
+	}
+	else if(player->currentLayer == InsideShop){
+		drawScreen(mainWindow, &secretRoomBackgroundVector[player->worldX][player->worldY + 1]);
+		drawScreen(mainWindow, &secretRoomVector[player->worldX][player->worldY + 1]);
+	}
+	else
+	{
+		drawScreen(mainWindow, &dungeonBackgroundVector[player->worldX][player->worldY + 1]);
+		drawScreen(mainWindow, &dungeonVector[player->worldX][player->worldY + 1]);
+	}
 }
 void WorldMap::drawLeftScreen(sf::RenderWindow& mainWindow){
 	if(player->worldY == 0)return;
-	drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY - 1]);
-	drawScreen(mainWindow, &gameMainVector[player->worldX][player->worldY - 1]);
+	if(player->currentLayer == OverWorld){
+		drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY - 1]);
+		drawScreen(mainWindow, &gameMainVector[player->worldX][player->worldY - 1]);
+	}
+	else if(player->currentLayer == InsideShop){
+		drawScreen(mainWindow, &secretRoomBackgroundVector[player->worldX][player->worldY - 1]);
+		drawScreen(mainWindow, &secretRoomVector[player->worldX][player->worldY - 1]);
+	}
+	else
+	{
+		drawScreen(mainWindow, &dungeonBackgroundVector[player->worldX][player->worldY - 1]);
+		drawScreen(mainWindow, &dungeonVector[player->worldX][player->worldY - 1]);
+	}
 }
 void WorldMap::drawUpScreen(sf::RenderWindow& mainWindow){
 	if(player->worldX == 0)return;
-	drawScreen(mainWindow, &gameBackgroundVector[player->worldX - 1][player->worldY]);
-	drawScreen(mainWindow, &gameMainVector[player->worldX - 1][player->worldY]);
+	if(player->currentLayer == OverWorld){
+		drawScreen(mainWindow, &gameBackgroundVector[player->worldX - 1][player->worldY]);
+		drawScreen(mainWindow, &gameMainVector[player->worldX - 1][player->worldY]);
+	}
+	else if(player->currentLayer == InsideShop){
+		drawScreen(mainWindow, &secretRoomBackgroundVector[player->worldX-1][player->worldY]);
+		drawScreen(mainWindow, &secretRoomVector[player->worldX-1][player->worldY]);
+	}
+	else
+	{
+		drawScreen(mainWindow, &dungeonBackgroundVector[player->worldX-1][player->worldY]);
+		drawScreen(mainWindow, &dungeonVector[player->worldX-1][player->worldY]);
+	}
 }
 void WorldMap::drawDownScreen(sf::RenderWindow& mainWindow){
 	if(player->worldX == Global::WorldRoomHeight - 1)return;
-	drawScreen(mainWindow, &gameBackgroundVector[player->worldX + 1][player->worldY]);
-	drawScreen(mainWindow, &gameMainVector[player->worldX + 1][player->worldY]);
+	if(player->currentLayer == OverWorld){
+		drawScreen(mainWindow, &gameBackgroundVector[player->worldX + 1][player->worldY]);
+		drawScreen(mainWindow, &gameMainVector[player->worldX + 1][player->worldY]);
+	}
+	else if(player->currentLayer == InsideShop){
+		drawScreen(mainWindow, &secretRoomBackgroundVector[player->worldX + 1][player->worldY]);
+		drawScreen(mainWindow, &secretRoomVector[player->worldX + 1][player->worldY]);
+	}
+	else
+	{
+		drawScreen(mainWindow, &dungeonBackgroundVector[player->worldX + 1][player->worldY]);
+		drawScreen(mainWindow, &dungeonVector[player->worldX + 1][player->worldY]);
+	}
 }

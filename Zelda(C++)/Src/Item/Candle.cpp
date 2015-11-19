@@ -16,6 +16,7 @@ void Candle::destroyOtherFlame(std::vector<std::shared_ptr<GameObject>>* worldMa
 void Candle::onUse(Point pos, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction dir) {
 	Player* tmp = (Player*)findPlayer(worldMap).get();
 	std::cout << "Candle Used";
+	Sound::playSound(SoundType::CandleFire);
 	destroyOtherFlame(worldMap);
 	std::shared_ptr<CandleFlame> fire = std::make_shared<CandleFlame>(tmp->position,dir);
 	Static::toAdd.push_back(fire);

@@ -5,12 +5,12 @@
  </tileset>
  <layer name="Layer 1" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztzaERADAIBLA3LNT9h2MGDlUuIjqVpFh7Q36/3++/8QMA/KIBG6MtUQ==
+   eJztw8EJAAAMA6H7ZP+Vu0dRcNVUVVXV1w9BYBQB
   </data>
  </layer>
  <layer name="Layer 2" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt0ttLAkEUx/GBHqx88tHyRhm+aORjF0uynrqSlZpdIKmsxP7/N78LOzENozSzAwXOgQ9nmd2zP86yKSFEKoEsVrCq9TxKsUJ8VtR6LmF25AtrWEdZ6RvYQh0VVFFT+iaePeSP0Rb21cfA0/43Dvn34uf+tuV7f9d83/svzZhR78m5Ea4c8p/wYsj/bcm5d3Qc5u8wnJKfVq4XDWd6ftchv2fIz1jMy7lPXDvkP+BV/L//zzb/A7cO8494U96zbCDLdM/3/iayZj3ja3/X/Gj/Q7RwpPRjXOICJzjFmdLPPe2/jR3sar2BZmw/PjvQ+h4W7D/ddyWZlfMhP+SH/JAf8kP+vOb/pQlQJiTl
+   eJxjZ2BgYKcAUwoosXvUfurZTy99g91+TjxqkeWGq/9BgBuJzYFFjFb2C5Kpj1r200PfYLWfCwuGAWxy9Cj/SFEzaj95gHmA9ML0j9o/av+o/aP2j9o/av9ItX8gMQC4DwVv
   </data>
  </layer>
 </map>

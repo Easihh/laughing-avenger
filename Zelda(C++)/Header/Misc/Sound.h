@@ -19,5 +19,6 @@ private:
 	static sf::Sound* arrow;
 	static sf::Sound* itemNew;
 	static sf::Sound* itemInventoryNew;
+	static sf::Sound* candleFire;
 };
 #endif

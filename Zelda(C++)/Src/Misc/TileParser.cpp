@@ -121,7 +121,8 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile8:
-	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile8);
+	//upper part of North Side door
+	tile = std::make_shared<Tile>(pt, false, TileType::DungeonTile8);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile9:
@@ -249,6 +250,7 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile40:
+	//upper part of South Side door
 	tile = std::make_shared<Tile>(pt, false, TileType::DungeonTile40);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
@@ -409,11 +411,13 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile80:
-	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile80);
+	//upper part of East Side door
+	tile = std::make_shared<Tile>(pt, false, TileType::DungeonTile80);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile81:
-	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile81);
+	//upper part of West Side door
+	tile = std::make_shared<Tile>(pt, false, TileType::DungeonTile81);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile82:

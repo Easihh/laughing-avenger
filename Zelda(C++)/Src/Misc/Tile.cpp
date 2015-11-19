@@ -53,6 +53,7 @@ void Tile::loadTileImage(TileType type) {
 		break;
 	case TileType::DungeonTile8:
 		texture.loadFromFile("Tileset/Dungeon/dungeonTile8.png");
+		depth = 999;
 		break;
 	case TileType::DungeonTile9:
 		texture.loadFromFile("Tileset/Dungeon/dungeonTile9.png");
@@ -149,6 +150,7 @@ void Tile::loadTileImage(TileType type) {
 		break;
 	case TileType::DungeonTile40:
 		texture.loadFromFile("Tileset/Dungeon/dungeonTile40.png");
+		depth = 999;
 		break;
 	case TileType::DungeonTile41:
 		texture.loadFromFile("Tileset/Dungeon/dungeonTile41.png");
@@ -269,9 +271,11 @@ void Tile::loadTileImage(TileType type) {
 		break;
 	case TileType::DungeonTile80:
 		texture.loadFromFile("Tileset/Dungeon/dungeonTile80.png");
+		depth = 999;
 		break;
 	case TileType::DungeonTile81:
 		texture.loadFromFile("Tileset/Dungeon/dungeonTile81.png");
+		depth = 999;
 		break;
 	case TileType::DungeonTile82:
 		texture.loadFromFile("Tileset/Dungeon/dungeonTile82.png");

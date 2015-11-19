@@ -126,6 +126,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 	player->movingSwordIsActive = false;
 	if(player->currentLayer == InsideShop){
 		secretRoomVector[newWorldX][newWorldY].push_back(player);
+		sort(secretRoomVector);
 		enableShopObjects(&secretRoomVector[newWorldX][newWorldY]);
 		for(int i = 0; i < gameMainVector[oldWorldX][oldWorldY].size(); i++){
 			std::shared_ptr<GameObject> tmp = gameMainVector[oldWorldX][oldWorldY].at(i);
@@ -145,6 +146,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 					tmp.reset();
 					secretRoomVector[oldWorldX][oldWorldY].erase(secretRoomVector[oldWorldX][oldWorldY].begin() + i);
 					gameMainVector[newWorldX][newWorldY].push_back(player);
+					sort(gameMainVector);
 					deleteOutstandingPlayerObjects(&secretRoomVector[oldWorldX][oldWorldY]);
 				}
 			}
@@ -157,6 +159,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 					tmp.reset();
 					gameMainVector[oldWorldX][oldWorldY].erase(gameMainVector[oldWorldX][oldWorldY].begin() + i);
 					gameMainVector[newWorldX][newWorldY].push_back(player);
+					sort(gameMainVector);
 					deleteOutstandingPlayerObjects(&gameMainVector[oldWorldX][oldWorldY]);
 				}
 			}
@@ -168,6 +171,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 					tmp.reset();
 					dungeonVector[oldWorldX][oldWorldY].erase(dungeonVector[oldWorldX][oldWorldY].begin() + i);
 					gameMainVector[newWorldX][newWorldY].push_back(player);
+					sort(gameMainVector);
 					deleteOutstandingPlayerObjects(&dungeonVector[oldWorldX][oldWorldY]);
 				}
 			}
@@ -176,6 +180,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 	if(player->currentLayer == Dungeon){
 		if(player->prevLayer == OverWorld){
 			dungeonVector[newWorldX][newWorldY].push_back(player);
+			sort(dungeonVector);
 			for(int i = 0; i < gameMainVector[oldWorldX][oldWorldY].size(); i++){
 				std::shared_ptr<GameObject> tmp = gameMainVector[oldWorldX][oldWorldY].at(i);
 				if(tmp == player){
@@ -187,6 +192,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 		}
 		if(player->prevLayer == Dungeon){
 			dungeonVector[newWorldX][newWorldY].push_back(player);
+			sort(dungeonVector);
 			for(int i = 0; i < dungeonVector[oldWorldX][oldWorldY].size(); i++){
 				std::shared_ptr<GameObject> tmp = dungeonVector[oldWorldX][oldWorldY].at(i);
 				if(tmp == player){

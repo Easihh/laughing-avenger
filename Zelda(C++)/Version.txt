@@ -1,3 +1,11 @@
+
+Version 0.063
+
+-Added more tile type to tileset for dungeon.
+-Removed some unusued/duplicate tile from tileset
+-Fixed dungeon door having a lesser depth than the player thus not playing the player slide through door.
+-Candle inventory item now has a sound on use.
+
 Version 0.062
 
 -Fixed an issue where transitioning from one dungeon to another would show the wrong background temporarly.

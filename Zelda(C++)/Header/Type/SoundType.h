@@ -10,6 +10,7 @@ enum SoundType {
 	SwordCombineAttack,
 	ArrowThrown,
 	NewItem,
-	NewInventoryItem
+	NewInventoryItem,
+	CandleFire
 };
 #endif

@@ -11,6 +11,7 @@ sf::Sound* Sound::swordCombine;
 sf::Sound* Sound::arrow;
 sf::Sound* Sound::itemNew;
 sf::Sound* Sound::itemInventoryNew;
+sf::Sound* Sound::candleFire;
 Sound::Sound() {
 	buffer = new sf::SoundBuffer();
 	if(!buffer->loadFromFile("Sound/bombDrop.wav"))
@@ -62,6 +63,11 @@ Sound::Sound() {
 		std::cout << "Failed to load newInventItem.wav";
 	itemInventoryNew = new sf::Sound();
 	itemInventoryNew->setBuffer(*buffer);
+	buffer = new sf::SoundBuffer();
+	if(!buffer->loadFromFile("Sound/candle.wav"))
+		std::cout << "Failed to load candle.wav";
+	candleFire = new sf::Sound();
+	candleFire->setBuffer(*buffer);
 }
 void Sound::playSound(SoundType sound) {
 	if(sound == BombDrop)
@@ -84,4 +90,6 @@ void Sound::playSound(SoundType sound) {
 		itemNew->play();
 	else if(sound == NewInventoryItem)
 		itemInventoryNew->play();
+	else if(sound == CandleFire)
+		candleFire->play();
 }

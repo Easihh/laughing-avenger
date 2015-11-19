@@ -5,12 +5,12 @@
  </tileset>
  <layer name="Layer 1" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJxjZWBgYKUAUwoosRtmvxIQKw+g/SBgRCIetX/U/lH7R+0ftX942I8NBACxPwE1tLTfAYpHwSgYBaNgFIyCUTAKkAEAjmgihQ==
+   eJxjZWBgYKUAUwoosXsw2W9EIh61f9T+UftH7R+1f3jYjw0EALE/ATW0tN8BikfBKBgFo2AUjIJRMAqQAQBzjCJA
   </data>
  </layer>
  <layer name="Layer 2" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztzgENAAAIA6BnsH9YY9w5SEACAHwz7QAAcM4CokAAEw==
+   eJztkscKgjEQhPMM3uxgAcFy0YsdVFAQBXsvKHbR9785gRVC8BDiHhQy8DG7/88yDESI7+QFPuDXPEguCZGHNQ98mS31BBEQBTHyBM1xmpPkaZAiz4AdQ/4DDCzuFmDPkC/795Q9q7lU7sO8Fa4/R/876FvcbcCBIf8CJspu2n8Ozkz5U4u7GVP+DQyV3bT/ChwZ8uX7G1ncLQXP+7uCsbKb9l+DE0P+r/U3FWf/GqiDBnmT5rfaoAU69F16V/D0z4MCKGpepv8eUKFvVc1LDPlOTk5OTk5O/6cXh2oiSQ==
   </data>
  </layer>
 </map>

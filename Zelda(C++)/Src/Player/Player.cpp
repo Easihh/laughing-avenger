@@ -12,7 +12,7 @@
 #include "Misc\ShopMarker.h"
 #include "Misc\WorldMap.h"
  Player::Player(Point pos){
-	 depth = 999;
+	 depth = 50;
 	 stepToMove = 0;
 	 currentLayer=prevLayer =OverWorld;
 	 stepToAlign = currentInvincibleFrame = transitionStep = xOffset = yOffset = 0;

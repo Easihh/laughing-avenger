@@ -12,7 +12,7 @@ void Bomb::onUse(Point pos, std::vector<std::shared_ptr<GameObject>>* worldMap,D
 	if(tmp->inventory->playerBar->bombAmount >= 1){
 		tmp->inventory->playerBar->bombAmount -= 1;
 		std::shared_ptr<GameObject> myBomb = std::make_shared<ThrownBomb>(pos,dir);
-		Sound::playSound(BombDrop);
+		Sound::playSound(GameSound::BombDrop);
 		Static::toAdd.push_back(myBomb);
 	}
 	if(tmp->inventory->playerBar->bombAmount == 0) isActive = false;

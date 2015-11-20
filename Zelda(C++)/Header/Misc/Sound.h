@@ -5,7 +5,8 @@
 #include <memory>
 class Sound {
 public:
-	void static playSound(SoundType file);
+	void static playSound(GameSound::SoundType file);
+	void static stopSound(GameSound::SoundType file);
 	Sound();
 private:
 	static sf::SoundBuffer* buffer;
@@ -20,5 +21,8 @@ private:
 	static sf::Sound* itemNew;
 	static sf::Sound* itemInventoryNew;
 	static sf::Sound* candleFire;
+	static sf::Sound* Sound::getHit;
+	static sf::Sound* Sound::dungeon;
+	static sf::Sound* Sound::overworld;
 };
 #endif

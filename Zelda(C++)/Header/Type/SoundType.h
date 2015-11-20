@@ -1,16 +1,22 @@
 #ifndef SOUNDTYPE_H
 #define SOUNDTYPE_H
-enum SoundType {
-	BombDrop,
-	BombExplose,
-	SwordAttack,
-	EnemyHit,
-	EnemyKill,
-	Selector,
-	SwordCombineAttack,
-	ArrowThrown,
-	NewItem,
-	NewInventoryItem,
-	CandleFire
-};
+
+namespace GameSound{
+	enum SoundType {
+		BombDrop,
+		BombExplose,
+		SwordAttack,
+		EnemyHit,
+		EnemyKill,
+		Selector,
+		SwordCombineAttack,
+		ArrowThrown,
+		NewItem,
+		NewInventoryItem,
+		CandleFire,
+		TakeDamage,
+		Underworld,
+		OverWorld
+	};
+}
 #endif

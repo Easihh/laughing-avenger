@@ -36,7 +36,7 @@ void ThrownBomb::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	if (currentFrame > maxFrame){
 		createBombEffect();
 		destroyGameObject(worldMap);
-		Sound::playSound(BombExplose);
+		Sound::playSound(GameSound::BombExplose);
 	}
 }
 void ThrownBomb::createBombEffect(){

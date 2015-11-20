@@ -26,8 +26,8 @@
 			 position.x = tmp->position.x;
 			 tmp->isObtainingItem = true;
 			 tmp->sprite.setPosition(tmp->position.x, tmp->position.y);
-			 Sound::playSound(SoundType::NewItem);
-			 Sound::playSound(SoundType::NewInventoryItem);
+			 Sound::playSound(GameSound::NewItem);
+			 Sound::playSound(GameSound::NewInventoryItem);
 			 tmp->inventory->playerBar->increaseBombAmount(bombPerPurchase);
 			 tmp->inventory->playerBar->diamondAmount -= itemPrice;
 			 isObtained = true;

@@ -207,6 +207,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 }
 void WorldMap::deleteOutstandingPlayerObjects(std::vector<std::shared_ptr<GameObject>>* roomObjVector) {
 	//used to delete outstanding objects when player move from one room to another such as moving sword,bomb etc
+	int index = 0;	
 	for(int i = 0; i < roomObjVector->size(); i++){
 		std::shared_ptr<GameObject> tmp = roomObjVector->at(i);
 		if(dynamic_cast<MovingSword*>(tmp.get())
@@ -217,6 +218,7 @@ void WorldMap::deleteOutstandingPlayerObjects(std::vector<std::shared_ptr<GameOb
 			){
 			tmp.reset();
 			roomObjVector->erase(roomObjVector->begin() + i);
+			i--;
 		}
 	}
 }

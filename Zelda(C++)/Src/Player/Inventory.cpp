@@ -104,7 +104,7 @@ void Inventory::findNextSelectorPositionLeft() {
 	}
 	if(found){
 		if(Static::gameState == GameState::InventoryMenu)
-			Sound::playSound(SoundType::Selector);
+			Sound::playSound(GameSound::SoundType::Selector);
 		int i = selectorInventoryIndex;
 		selectedItem = items[i]->sprite;
 		selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
@@ -116,7 +116,7 @@ void Inventory::findNextSelectorPositionRight(){
 	for (int i = selectorInventoryIndex; i < items.size(); i++){
 		if (items[i] != NULL && i!=selectorInventoryIndex && !found){
 			if(Static::gameState == GameState::InventoryMenu)
-				Sound::playSound(SoundType::Selector);
+				Sound::playSound(GameSound::SoundType::Selector);
 			selectorInventoryIndex = i;
 			found = true;
 		}
@@ -125,7 +125,7 @@ void Inventory::findNextSelectorPositionRight(){
 		for(int i = 0; i < selectorInventoryIndex; i++)
 			if(items[i] != NULL){
 				if(Static::gameState == GameState::InventoryMenu)
-					Sound::playSound(SoundType::Selector);
+					Sound::playSound(GameSound::SoundType::Selector);
 				selectorInventoryIndex = i;
 				found = true;
 			}

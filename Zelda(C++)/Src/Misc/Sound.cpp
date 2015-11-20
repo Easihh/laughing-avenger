@@ -12,6 +12,9 @@ sf::Sound* Sound::arrow;
 sf::Sound* Sound::itemNew;
 sf::Sound* Sound::itemInventoryNew;
 sf::Sound* Sound::candleFire;
+sf::Sound* Sound::getHit;
+sf::Sound* Sound::dungeon;
+sf::Sound* Sound::overworld;
 Sound::Sound() {
 	buffer = new sf::SoundBuffer();
 	if(!buffer->loadFromFile("Sound/bombDrop.wav"))
@@ -68,28 +71,57 @@ Sound::Sound() {
 		std::cout << "Failed to load candle.wav";
 	candleFire = new sf::Sound();
 	candleFire->setBuffer(*buffer);
+	buffer = new sf::SoundBuffer();
+	if(!buffer->loadFromFile("Sound/linkHurt.wav"))
+		std::cout << "Failed to load linkHurt.wav";
+	getHit = new sf::Sound();
+	getHit->setBuffer(*buffer);
+	buffer = new sf::SoundBuffer();
+	if(!buffer->loadFromFile("Sound/Underworld.ogg"))
+		std::cout << "Failed to load Underworld.ogg";
+	dungeon = new sf::Sound();
+	dungeon->setBuffer(*buffer);
+	dungeon->setLoop(true);
+	buffer = new sf::SoundBuffer();
+	if(!buffer->loadFromFile("Sound/Overworld.ogg"))
+		std::cout << "Failed to load Overworld.ogg";
+	overworld = new sf::Sound();
+	overworld->setBuffer(*buffer);
+	overworld->setLoop(true);
 }
-void Sound::playSound(SoundType sound) {
-	if(sound == BombDrop)
+void Sound::stopSound(GameSound::SoundType sound) {
+	if(sound == GameSound::Underworld)
+		dungeon->stop();
+	else if(sound == GameSound::OverWorld)
+		overworld->stop();
+}
+void Sound::playSound(GameSound::SoundType sound) {
+	if(sound == GameSound::BombDrop)
 		bombDropSound->play();
-	else if(sound == BombExplose)
+	else if(sound == GameSound::BombExplose)
 		bombBlow->play();
-	else if(sound == SwordAttack)
+	else if(sound == GameSound::SwordAttack)
 		swordAttack->play();
-	else if(sound == EnemyHit)
+	else if(sound == GameSound::EnemyHit)
 		enemyTakeHit->play();
-	else if(sound == EnemyKill)
+	else if(sound == GameSound::EnemyKill)
 		enemyKilled->play();
-	else if(sound == Selector)
+	else if(sound == GameSound::Selector)
 		selectorSound->play();
-	else if(sound == SwordCombineAttack)
+	else if(sound == GameSound::SwordCombineAttack)
 		swordCombine->play();
-	else if(sound == ArrowThrown)
+	else if(sound == GameSound::ArrowThrown)
 		arrow->play();
-	else if(sound == NewItem)
+	else if(sound == GameSound::NewItem)
 		itemNew->play();
-	else if(sound == NewInventoryItem)
+	else if(sound == GameSound::NewInventoryItem)
 		itemInventoryNew->play();
-	else if(sound == CandleFire)
+	else if(sound == GameSound::CandleFire)
 		candleFire->play();
+	else if(sound == GameSound::TakeDamage)
+		getHit->play();
+	else if(sound == GameSound::Underworld)
+		dungeon->play();
+	else if(sound == GameSound::OverWorld)
+		overworld->play();
 }

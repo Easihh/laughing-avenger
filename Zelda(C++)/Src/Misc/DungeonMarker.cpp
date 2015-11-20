@@ -18,8 +18,10 @@ void DungeonMarker::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	if(isCollidingWithPlayer(Worldmap)){
 		Player* temp = ((Player*)player.get());
 		if(temp->currentLayer == OverWorld){
-			temp->currentLayer = Layer::Dungeon;
-			temp->prevLayer = Layer::OverWorld;
+			temp->currentLayer = Dungeon;
+			temp->prevLayer = OverWorld;
+			Sound::stopSound(GameSound::OverWorld);
+			Sound::playSound(GameSound::Underworld);
 			temp->prevWorldX = temp->worldX;
 			temp->prevWorldY = temp->worldY;
 			temp->pointBeforeTeleport = std::make_unique<Point>(position.x, position.y + Global::TileHeight);
@@ -28,6 +30,8 @@ void DungeonMarker::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 			temp->position = Point(teleportX, teleportY);
 		}
 		else if(temp->currentLayer == Dungeon){
+			Sound::stopSound(GameSound::Underworld);
+			Sound::playSound(GameSound::OverWorld);
 			//previousWorld must be same as current room when moving to overworld layer
 			int worldX = (int)(position.y / (Global::roomHeight+Global::inventoryHeight));
 			int worldY = (int)(position.x / Global::roomWidth);

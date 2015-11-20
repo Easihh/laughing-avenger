@@ -42,7 +42,7 @@ void Octorok::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
 		Static::toAdd.push_back(add);
 		destroyGameObject(worldMap);
-		Sound::playSound(SoundType::EnemyKill);
+		Sound::playSound(GameSound::SoundType::EnemyKill);
 		std::cout << "Octorok Destroyed";
 	}
 	else 
@@ -55,7 +55,7 @@ void Octorok::takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* w
 	if (!isInvincible){
 		healthPoint -= damage;
 		if(healthPoint >= 1){
-			Sound::playSound(EnemyHit);
+			Sound::playSound(GameSound::EnemyHit);
 			if(pushbackStep==0)
 				pushBack(worldMap, attackDir);
 		}
@@ -66,7 +66,7 @@ void Octorok::takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* w
 void Octorok::takeDamage(int damage){
 	if (!isInvincible){
 		if(healthPoint > damage)
-			Sound::playSound(EnemyHit);
+			Sound::playSound(GameSound::EnemyHit);
 		healthPoint -= damage;
 		isInvincible = true;
 		walkAnimIndex = 1;

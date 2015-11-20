@@ -21,8 +21,8 @@ void WoodSwordPickUp::update(std::vector<std::shared_ptr<GameObject>>* Worldmap)
 		tmp->inventory->playerBar->mySword = SwordType::WoodSword;
 		tmp->isObtainingItem = true;
 		tmp->sprite.setPosition(tmp->position.x, tmp->position.y);
-		Sound::playSound(SoundType::NewItem);
-		Sound::playSound(SoundType::NewInventoryItem);
+		Sound::playSound(GameSound::NewItem);
+		Sound::playSound(GameSound::NewInventoryItem);
 		isObtained = true;
 	}
 	if(isObtained){

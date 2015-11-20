@@ -7,8 +7,10 @@ SaveLoad::SaveLoad() {
 	texture.loadFromFile("Tileset/Hero.png");
 }
 void SaveLoad::update(sf::Event& event) {
-	if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
-		Static::gameState =GameState::Playing;
+	if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space){
+		Static::gameState = GameState::Playing;
+		Sound::playSound(GameSound::OverWorld);
+	}
 }
 void SaveLoad::draw(sf::RenderWindow& mainWindow) {
 	sf::Text txt("- S E L E C T -", font);

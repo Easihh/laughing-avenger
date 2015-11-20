@@ -177,9 +177,9 @@
 		 if (canAttack && !isAttacking && attackKeyReleased && inventory->playerBar->mySword!=SwordType::None && !isObtainingItem){
 			 sword =std::make_unique<Sword>(position, dir);
 			 if(!inventory->playerBar->isFullHP())
-				 Sound::playSound(SoundType::SwordAttack);
+				 Sound::playSound(GameSound::SoundType::SwordAttack);
 			 if(!movingSwordIsActive && inventory->playerBar->isFullHP()){
-				 Sound::playSound(SoundType::SwordCombineAttack);
+				 Sound::playSound(GameSound::SoundType::SwordCombineAttack);
 				 movingSword = std::make_shared<MovingSword>(position, dir,sword->strength);
 				 Static::toAdd.push_back(movingSword);
 				 movingSwordIsActive = true;
@@ -255,8 +255,8 @@
 		 isScreenTransitioning = true;
 	 }
 	 if(outsideBound && currentLayer == InsideShop){
-		 currentLayer = OverWorld;
-		 prevLayer = InsideShop;
+		 currentLayer = Layer::OverWorld;
+		 prevLayer = Layer::InsideShop;
 		 position = *pointBeforeTeleport.get();
 		 movePlayerToNewVector = true;
 	 }
@@ -269,6 +269,7 @@
  }
  void  Player::takeDamage(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 if (!isInvincible && !isScreenTransitioning){
+		 Sound::playSound(GameSound::SoundType::TakeDamage);
 		 Monster* monster = (Monster*)collidingMonster.get();
 		 inventory->playerBar->decreaseCurrentHP(monster->strength);
 		 walkAnimationIndex = 1;

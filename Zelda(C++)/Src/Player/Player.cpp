@@ -259,6 +259,7 @@
 		 prevLayer = Layer::InsideShop;
 		 position = *pointBeforeTeleport.get();
 		 movePlayerToNewVector = true;
+		 Sound::playSound(GameSound::OverWorld);
 	 }
  }
  void Player::checkItemUseInput(std::vector<std::shared_ptr<GameObject>>* worldMap) {

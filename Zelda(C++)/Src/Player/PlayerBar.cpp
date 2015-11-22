@@ -19,7 +19,7 @@ PlayerBar::PlayerBar(){
 	keyTextStart.setPoint(170, 54);
 	swordSlot.setPoint(268, 50);
 	itemSlotImage.setPoint(220, 50);
-	keysAmount = bombAmount = 99;
+	keysAmount = bombAmount = 0;
 	diamondAmount = 255;
 	loadImages();
 	setupPlayerBar();
@@ -38,8 +38,14 @@ void PlayerBar::loadImages(){
 int PlayerBar::getCurrentHP(){
 	return currentHealthPoint;
 }
+void PlayerBar::increaseRupeeAmount(int amount) {
+	diamondAmount += amount;
+	if(diamondAmount > maxRupee)
+		diamondAmount = maxRupee;
+}
 void PlayerBar::increaseBombAmount(int amount) {
-	if(bombAmount + amount > maxBombAmount){
+	bombAmount += amount;
+	if(bombAmount> maxBombAmount){
 		bombAmount = maxBombAmount;
 	}
 }

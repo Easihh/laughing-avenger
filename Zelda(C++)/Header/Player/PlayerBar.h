@@ -16,6 +16,7 @@ public:
 	void decreaseCurrentHP(int amount);
 	int getCurrentHP();
 	void increaseBombAmount(int amount);
+	void increaseRupeeAmount(int amount);
 	bool isFullHP();
 	SwordType mySword;
 	void movePlayerBarToBottomScreen();
@@ -37,7 +38,7 @@ private:
 	void drawBombInfo(sf::RenderWindow& mainWindow);
 	void drawDiamondInfo(sf::RenderWindow& mainWindow);
 	void drawKeyInfo(sf::RenderWindow& mainWindow);
-	const int heartWidth = 16,heartHeight=16,maxHeartPerRow=8;
+	const int heartWidth = 16,heartHeight=16,maxHeartPerRow=8,maxRupee=999;
 	void loadImages();
 	sf::Font font;
 	sf::Text txt;

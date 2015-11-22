@@ -3,7 +3,7 @@
 #include "Type\Identifier.h"
 #include "Monster\Octorok.h"
 #include "Type\TileType.h"
-#include "Misc\ShopMarker.h"
+#include "Misc\Marker\ShopMarker.h"
 #include "Item\WoodSwordPickUp.h"
 #include "Misc\Flame.h"
 #include "Item\ThrownArrow.h"
@@ -12,7 +12,9 @@
 #include "Misc\ShopBomb.h"
 #include "Misc\ShopRupeeDisplayer.h"
 #include "Misc\CandleFlame.h"
-#include "Misc\DungeonMarker.h"
+#include "Misc\Marker\DungeonMarker.h"
+#include "Misc\Marker\LeaveDungeonMarker.h"
+#include "Misc\Marker\LeaveShopMarker.h"
 TileParser::TileParser() {}
 
 void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector, int vectorXindex, int vectorYindex) {
@@ -90,6 +92,14 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::TeleportDungeon:
 	tile = std::make_shared<DungeonMarker>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::ExitDungeon:
+	tile = std::make_shared<LeaveDungeonMarker>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::ExitShop:
+	tile = std::make_shared<LeaveShopMarker>(pt);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile1:

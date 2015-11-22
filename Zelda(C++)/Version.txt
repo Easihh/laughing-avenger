@@ -1,6 +1,15 @@
+Version 0.066
+
+-Reworked some of the dungeon tiles.
+-Improved logic for leaving/entering different layers.
+-Fixed an issue where buying bomb would not increase player amount if player would still have below max amount.
+-Monster may now drop Item on death.
+-Monster can now drop rupee on Death.
+-Added sound when player earn rupee.
+
 Version 0.065
 
-
+-Overworld music now stop playing when entering shop/secret room layer.
 
 Version 0.064
 

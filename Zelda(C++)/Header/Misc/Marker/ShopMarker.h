@@ -1,6 +1,6 @@
 #ifndef SHOPMARKER_H
 #define SHOPMARKER_H
-#include "GameObject.h"
+#include "Misc\GameObject.h"
 class ShopMarker:public GameObject {
 public:
 	ShopMarker(Point position);

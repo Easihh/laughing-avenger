@@ -1,6 +1,6 @@
 #ifndef DUNGEONMARKER_H
 #define DUNGEONMARKER_H
-#include "GameObject.h"
+#include "Misc\GameObject.h"
 class DungeonMarker :public GameObject {
 public:
 	DungeonMarker(Point position);

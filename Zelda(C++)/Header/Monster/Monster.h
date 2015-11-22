@@ -16,6 +16,7 @@ public:
 	Monster();
 	virtual void takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction swordDir);
 	virtual void takeDamage(int damage);
+	virtual void dropItemOnDeath();
 	int strength, walkAnimIndex;
 	std::unique_ptr<sf::RectangleShape> mask;
 };

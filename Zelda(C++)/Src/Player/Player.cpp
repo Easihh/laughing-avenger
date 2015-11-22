@@ -9,7 +9,7 @@
 #include "Item\Candle.h"
 #include "Utility\Point.h"
 #include"Utility\PlayerInfo.h"
-#include "Misc\ShopMarker.h"
+#include "Misc\Marker\ShopMarker.h"
 #include "Misc\WorldMap.h"
  Player::Player(Point pos){
 	 depth = 50;
@@ -249,17 +249,10 @@
 		 for(int i = 0; i < 3; i++)
 			 walkingAnimation[i]->updateAnimationFrame(dir, position);
 	 }
-	 if (outsideBound && currentLayer !=InsideShop){
+	 if (outsideBound){
 		 prevLayer = currentLayer;
 		 transitionStep = maxTransitionStep;
 		 isScreenTransitioning = true;
-	 }
-	 if(outsideBound && currentLayer == InsideShop){
-		 currentLayer = Layer::OverWorld;
-		 prevLayer = Layer::InsideShop;
-		 position = *pointBeforeTeleport.get();
-		 movePlayerToNewVector = true;
-		 Sound::playSound(GameSound::OverWorld);
 	 }
  }
  void Player::checkItemUseInput(std::vector<std::shared_ptr<GameObject>>* worldMap) {

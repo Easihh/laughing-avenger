@@ -3,6 +3,8 @@
 #include <iostream>
 #include "Monster\DeathEffect.h"
 #include "Misc\Tile.h"
+#include "Type\RupeeType.h"
+#include "Item\RupeeDrop.h"
 Octorok::Octorok(Point pos, bool canBeCollidedWith){
 	position = pos;
 	width = Global::TileWidth;
@@ -43,6 +45,7 @@ void Octorok::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		Static::toAdd.push_back(add);
 		destroyGameObject(worldMap);
 		Sound::playSound(GameSound::SoundType::EnemyKill);
+		dropItemOnDeath();
 		std::cout << "Octorok Destroyed";
 	}
 	else 
@@ -50,6 +53,25 @@ void Octorok::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		checkInvincibility();
 	}
 	updateMasks();
+}
+void Octorok::dropItemOnDeath() {
+	bool willDropItem = false;
+	int value  = std::rand() % 10;
+	if(value < 3) //30% chance to drop item
+		willDropItem = true;
+	if(willDropItem){
+		int itemDropId = std::rand() % 2;
+		std::shared_ptr<GameObject> itemDropped;
+		switch(itemDropId){
+		case 0:
+			itemDropped = std::make_shared<RupeeDrop>(position, RupeeType::OrangeRupee);
+			break;
+		case 1:
+			itemDropped = std::make_shared<RupeeDrop>(position, RupeeType::BlueRupee);
+			break;
+		}
+		Static::toAdd.push_back(itemDropped);
+	}
 }
 void Octorok::takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap,Direction attackDir) {
 	if (!isInvincible){

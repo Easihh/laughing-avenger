@@ -52,6 +52,12 @@ void PlayerBar::increaseBombAmount(int amount) {
 bool PlayerBar::isFullHP() {
 	return currentHealthPoint == maxHealthPoint;
 }
+void PlayerBar::increaseMaxHP() {
+	//used for Heart Container
+	int hpIncrease = 2;//1 for half-heart and 2 for a whole heart
+	maxHealthPoint += hpIncrease;
+	currentHealthPoint += hpIncrease;
+}
 void PlayerBar::updatePlayerMapMarker(Direction direction){
 	switch (direction){
 	case Direction::Down:

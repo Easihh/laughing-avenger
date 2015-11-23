@@ -26,6 +26,7 @@ public:
 	Point marker;
 	sf::Sprite itemSlotS;
 	int diamondAmount, keysAmount, bombAmount;
+	void increaseMaxHP();
 private:
 	Point bar, map, healthBarStart, itemSlotStart, diamondStart, itemSlotTextStart, bombStart, bombTextStart,
 		diamondTextStart, keyTextStart, keyStart, itemSelection, swordSlot, itemSlotImage;

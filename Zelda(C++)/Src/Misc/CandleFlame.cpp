@@ -1,6 +1,7 @@
 #include "Misc\CandleFlame.h"
 #include "Utility\Static.h"
 #include "Monster\Monster.h"
+#include "Misc\SecretTree.h"
 CandleFlame::CandleFlame(Point pos, Direction direction) {
 	position = pos;
 	flamePower = 1;
@@ -45,6 +46,20 @@ void CandleFlame::updateFlameMovement() {
 	break;
 	}
 }
+void CandleFlame::checkForSecretRoom(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
+	for(int i = 0; i < Worldmap->size(); i++){
+		if(dynamic_cast<SecretTree*>(Worldmap->at(i).get())){
+			SecretTree* tmp = (SecretTree*)Worldmap->at(i).get();
+			if(intersect(fullMask, tmp->fullMask)){
+				Sound::playSound(GameSound::SecretRoom);
+				tmp->texture.loadFromFile("Tileset/SecretRoom.png");
+				tmp->sprite.setTexture(tmp->texture);
+				tmp->isCollideable = false;
+				tmp->isActivated = true;
+			}
+		}
+	}
+}
 void CandleFlame::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	flameAnimation.get()->updateAnimationFrame(position);
 	currentDuration++;
@@ -57,8 +72,10 @@ void CandleFlame::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 		temp->takeDamage(flamePower, Worldmap, dir);
 	}
 	fullMask->setPosition(position.x, position.y);
-	if(currentDuration>maxDuration)
+	if(currentDuration > maxDuration){
+		checkForSecretRoom(Worldmap);
 		destroyGameObject(Worldmap);
+	}
 }
 void CandleFlame::draw(sf::RenderWindow& mainWindow) {
 	mainWindow.draw(flameAnimation.get()->sprite);

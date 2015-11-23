@@ -5,12 +5,21 @@
 #include "Player\MovingSword.h"
 #include "Player\Player.h"
 #include "Misc\Tile.h"
+#include "Misc\NPC.h"
 GameObject::GameObject(){
 	pushbackStep = 0;
 }
 void GameObject::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {}
 void GameObject::draw(sf::RenderWindow& mainWindow){}
 
+void GameObject::deleteNpcFromCurrentRoom(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
+	std::shared_ptr<GameObject> del;
+	for(auto& obj : *Worldmap){
+		if(dynamic_cast<NPC*>(obj.get()))
+			del = obj;
+	}
+	Static::toDelete.push_back(del);
+}
 void GameObject::destroyGameObject(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	std::shared_ptr<GameObject> del;
 	for(auto& obj : *Worldmap){
@@ -33,6 +42,21 @@ return(
 	rectAx + rectAxSize + offset.x > rectBx &&
 	rectAy + offset.y < rectBy + rectBySize &&
 	rectAy + rectAySize + offset.y > rectBy);
+}
+bool GameObject::intersect(std::unique_ptr<sf::RectangleShape>& rectA, std::unique_ptr<sf::RectangleShape>& rectB) {
+	float rectAx = rectA->getPosition().x;
+	float rectAxSize = rectA->getSize().x;
+	float rectAySize = rectA->getSize().y;
+	float rectAy = rectA->getPosition().y;
+	float rectBx = rectB->getPosition().x;
+	float rectBxSize = rectB->getSize().x;
+	float rectBySize = rectB->getSize().y;
+	float rectBy = rectB->getPosition().y;
+	return(
+		rectAx  < rectBx + rectBxSize  &&
+		rectAx + rectAxSize  > rectBx &&
+		rectAy < rectBy + rectBySize &&
+		rectAy + rectAySize > rectBy);
 }
 bool GameObject::isCollidingWithPlayer(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	bool isColliding = false;

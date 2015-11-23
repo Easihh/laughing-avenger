@@ -12,7 +12,8 @@ private:
 	void setupFlame();
 	void updateFlameMovement();
 	int currentFrame,flamePower,currentDuration;
-	const int maxFrame = 40,maxDuration=120;
+	const int maxFrame = 40, maxDuration = 120; 
+	void checkForSecretRoom(std::vector<std::shared_ptr<GameObject>>* Worldmap);
 };
 #endif
 

@@ -15,6 +15,7 @@ sf::Sound* Sound::candleFire;
 sf::Sound* Sound::getHit;
 sf::Sound* Sound::dungeon;
 sf::Sound* Sound::overworld;
+sf::Sound* Sound::secretRoom;
 Sound::Sound() {
 	buffer = new sf::SoundBuffer();
 	if(!buffer->loadFromFile("Sound/bombDrop.wav"))
@@ -88,6 +89,11 @@ Sound::Sound() {
 	overworld = new sf::Sound();
 	overworld->setBuffer(*buffer);
 	overworld->setLoop(true);
+	buffer = new sf::SoundBuffer();
+	if(!buffer->loadFromFile("Sound/secret.wav"))
+		std::cout << "Failed to load secret.wav";
+	secretRoom = new sf::Sound();
+	secretRoom->setBuffer(*buffer);
 }
 void Sound::stopSound(GameSound::SoundType sound) {
 	if(sound == GameSound::Underworld)
@@ -124,4 +130,6 @@ void Sound::playSound(GameSound::SoundType sound) {
 		dungeon->play();
 	else if(sound == GameSound::OverWorld)
 		overworld->play();
+	else if(sound == GameSound::SecretRoom)
+		secretRoom->play();
 }

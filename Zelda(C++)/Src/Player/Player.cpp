@@ -11,6 +11,7 @@
 #include"Utility\PlayerInfo.h"
 #include "Misc\Marker\ShopMarker.h"
 #include "Misc\WorldMap.h"
+#include "Misc\NPC.h"
  Player::Player(Point pos){
 	 depth = 50;
 	 stepToMove = 0;
@@ -283,7 +284,7 @@
 	 Point offset(xOffset, yOffset);
 	 for(auto& obj : *worldMap)
 	 {
-		if (dynamic_cast<Tile*>(obj.get()))
+		if (dynamic_cast<Tile*>(obj.get()) || dynamic_cast<NPC*>(obj.get()))
 			if (intersect(mask, obj->fullMask, offset) && obj->isCollideable){
 				collision = true;
 				//std::cout << "CollisionX:" << obj->position.x << std::endl;

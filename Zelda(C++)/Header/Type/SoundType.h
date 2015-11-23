@@ -16,7 +16,8 @@ namespace GameSound{
 		CandleFire,
 		TakeDamage,
 		Underworld,
-		OverWorld
+		OverWorld,
+		SecretRoom
 	};
 }
 #endif

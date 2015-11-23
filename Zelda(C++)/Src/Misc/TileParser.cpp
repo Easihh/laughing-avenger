@@ -15,6 +15,9 @@
 #include "Misc\Marker\DungeonMarker.h"
 #include "Misc\Marker\LeaveDungeonMarker.h"
 #include "Misc\Marker\LeaveShopMarker.h"
+#include "Misc\SecretTree.h"
+#include "Item\HeartContainerPickUp.h"
+#include "Misc\NPC.h"
 TileParser::TileParser() {}
 
 void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector, int vectorXindex, int vectorYindex) {
@@ -100,6 +103,22 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::ExitShop:
 	tile = std::make_shared<LeaveShopMarker>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::SecretGreenTree:
+	tile = std::make_shared<SecretTree>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::HeartContainer:
+	tile = std::make_shared<HeartContainerPickUp>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::Merchant:
+	tile = std::make_shared<NPC>(pt, NpcType::Merchant);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OldMan:
+	tile = std::make_shared<NPC>(pt,NpcType::OldMan);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile1:

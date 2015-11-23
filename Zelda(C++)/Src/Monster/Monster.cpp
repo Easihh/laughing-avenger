@@ -16,6 +16,7 @@ void Monster::checkInvincibility(){
 }
 void Monster::takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap,Direction swordDir) {}
 void Monster::takeDamage(int damage){}
+void Monster::dropItemOnDeath() {}
 void Monster::updateMasks(){
 	mask->setPosition(position.x+8, position.y+8);
 	fullMask->setPosition(position.x, position.y);

@@ -1,24 +1,23 @@
-#include "Item\WoodSwordPickUp.h"
+#include "Item\HeartContainerPickUp.h"
 #include "Player\Player.h"
-WoodSwordPickUp::WoodSwordPickUp(Point pos) {
+HeartContainerPickUp::HeartContainerPickUp(Point pos) {
 	isObtained = false;
 	currentFrame = 0;
 	position = pos;
-	position.x -= Global::HalfTileWidth;//to center align inbetween two grid tile.
-	texture.loadFromFile("Tileset/weapon1.png");
+	texture.loadFromFile("Tileset/HeartContainer.png");
 	width = Global::TileWidth;
 	height = 4;
 	setupFullMask();
 	sprite.setTexture(texture);
 	sprite.setPosition(position.x, position.y);
 }
-void WoodSwordPickUp::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
+void HeartContainerPickUp::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	sprite.setPosition(position.x, position.y);
 	if(isCollidingWithPlayer(Worldmap) && !isObtained) {
 		Player* tmp = ((Player*)player.get());
-		position.y = tmp->position.y-Global::TileHeight;
+		position.y = tmp->position.y - Global::TileHeight;
 		position.x = tmp->position.x;
-		tmp->inventory->playerBar->mySword = SwordType::WoodSword;
+		tmp->inventory->playerBar->increaseMaxHP();
 		tmp->isObtainingItem = true;
 		tmp->sprite.setPosition(tmp->position.x, tmp->position.y);
 		Sound::playSound(GameSound::NewItem);
@@ -35,6 +34,6 @@ void WoodSwordPickUp::update(std::vector<std::shared_ptr<GameObject>>* Worldmap)
 		}
 	}
 }
-void WoodSwordPickUp::draw(sf::RenderWindow& mainWindow) {
+void HeartContainerPickUp::draw(sf::RenderWindow& mainWindow) {
 	mainWindow.draw(sprite);
 }

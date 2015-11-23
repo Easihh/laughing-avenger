@@ -1,3 +1,11 @@
+Version 0.067
+
+-Inventory Candle' Fire can now discover secret room when burning certain trees.
+-Added Sound for Discovering Secret.
+-Added Heart Container Item that now permanement increase Max Hp.
+-Npc(Merchant and OldMan) have been added.
+-Some Sprite change.
+
 Version 0.066
 
 -Reworked some of the dungeon tiles.

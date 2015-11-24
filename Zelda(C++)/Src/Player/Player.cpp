@@ -18,7 +18,7 @@
 	 currentLayer=prevLayer =OverWorld;
 	 stepToAlign = currentInvincibleFrame = transitionStep = xOffset = yOffset = 0;
 	 movePlayerToNewVector = stepIsNegative = movingSwordIsActive = isObtainingItem = false;
-	 isAttacking = isScreenTransitioning = isInvincible  = false;
+	 isAttacking = isScreenTransitioning = isInvincible = boomerangIsActive = false;
 	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased = true;
 	 position = pos;
 	 worldX = (int)(position.y / (Global::roomHeight+Global::inventoryHeight));

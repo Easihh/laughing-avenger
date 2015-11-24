@@ -1,3 +1,9 @@
+Version 0.068
+
+-Added Inventory Item boomerang on use effect.
+-Boomerang can now pickup monster drop.
+-Added Boomerange sound effect.
+
 Version 0.067
 
 -Inventory Candle' Fire can now discover secret room when burning certain trees.

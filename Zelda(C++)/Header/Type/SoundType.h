@@ -17,7 +17,8 @@ namespace GameSound{
 		TakeDamage,
 		Underworld,
 		OverWorld,
-		SecretRoom
+		SecretRoom,
+		Boomerang
 	};
 }
 #endif

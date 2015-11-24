@@ -27,7 +27,7 @@ void RupeeDrop::draw(sf::RenderWindow& window) {
 	window.draw(sprite);
 }
 void RupeeDrop::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
-	if(isCollidingWithPlayer(Worldmap)){
+	if(isCollidingWithPlayer(Worldmap) || isCollidingWithBoomerang(Worldmap)){
 		Player* temp = ((Player*)player.get());
 		Sound::playSound(GameSound::Selector);
 		temp->inventory->playerBar->increaseRupeeAmount(rupeeValue);

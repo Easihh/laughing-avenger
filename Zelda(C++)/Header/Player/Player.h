@@ -17,7 +17,7 @@ public:
 	void draw(sf::RenderWindow& mainWindow);
 	int worldX, worldY,prevWorldX,prevWorldY;
 	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased, movePlayerToNewVector, 
-		movingSwordIsActive,isObtainingItem;
+		movingSwordIsActive, isObtainingItem, boomerangIsActive;
 	std::unique_ptr<Inventory> inventory;
 	std::unique_ptr<Point> pointBeforeTeleport;
 	std::vector<std::unique_ptr<Animation>> walkingAnimation;

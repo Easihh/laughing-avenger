@@ -25,5 +25,6 @@ private:
 	static sf::Sound* Sound::dungeon;
 	static sf::Sound* Sound::overworld;
 	static sf::Sound* Sound::secretRoom;
+	static sf::Sound* Sound::boomrang;
 };
 #endif

@@ -6,6 +6,7 @@
 #include "Player\Player.h"
 #include "Misc\Tile.h"
 #include "Misc\NPC.h"
+#include "Item\ThrownBoomrang.h"
 GameObject::GameObject(){
 	pushbackStep = 0;
 }
@@ -57,6 +58,17 @@ bool GameObject::intersect(std::unique_ptr<sf::RectangleShape>& rectA, std::uniq
 		rectAx + rectAxSize  > rectBx &&
 		rectAy < rectBy + rectBySize &&
 		rectAy + rectAySize > rectBy);
+}
+bool GameObject::isCollidingWithBoomerang(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	bool isColliding = false;
+	Point offset(0, 0);
+	for(auto& obj : *worldMap){
+		if(dynamic_cast<ThrownBoomrang*>(obj.get())){
+			if(intersect(fullMask,obj.get()->fullMask))
+				isColliding = true;
+		}
+	}
+	return isColliding;
 }
 bool GameObject::isCollidingWithPlayer(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	bool isColliding = false;

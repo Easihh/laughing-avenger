@@ -28,14 +28,64 @@ Octorok::Octorok(Point pos, bool canBeCollidedWith){
 	getNextDirection(Direction::None);
 	walkAnimIndex = 0;
 }
+void Octorok::tryToChangeDirection() {
+	int direction;
+	int chanceToSwitch = std::rand() % 5;//20% chance to switch dir;
+ 	if((int)position.x %Global::TileWidth == 0 &&(dir==Direction::Left || dir==Direction::Right) && chanceToSwitch==0){
+		direction = rand() % 3;
+		while(direction == (int)dir){//we are changing direction,cant change to current direction.
+			direction = rand() % 4;
+		}
+		switch(direction){
+		case 0:
+			dir = Direction::Right;
+			break;
+		case 1:
+			if((int)position.y%Global::TileHeight==0)
+				dir = Direction::Down;
+			break;
+		case 2:
+			if((int)position.y%Global::TileHeight == 0)
+				dir = Direction::Up;
+			break;
+		case 3:
+			dir = Direction::Left;
+			break;
+		}
+	}
+	else if((int)position.y %Global::TileHeight == 0 && (dir == Direction::Up || dir == Direction::Down) && chanceToSwitch == 0){
+		direction = rand() % 3;
+		while(direction == (int)dir){//we are changing direction,cant change to current direction.
+			direction = rand() % 4;
+		}
+		switch(direction){
+		case 0:
+			if((int)position.x%Global::TileWidth == 0)
+				dir = Direction::Right;
+			break;
+		case 1:
+			dir = Direction::Down;
+			break;
+		case 2:
+			dir = Direction::Up;
+			break;
+		case 3:
+			if((int)position.x%Global::TileWidth == 0)
+				dir = Direction::Left;
+			break;
+		}
+	}
+}
 void Octorok::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(walkingAnimation[walkAnimIndex]->sprite);
 	mainWindow.draw(*mask);
 	mainWindow.draw(*fullMask);
 }
 void Octorok::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
-	if(pushbackStep == 0)
+	if(pushbackStep == 0){
 		movement(worldMap);
+		tryToChangeDirection();
+	}
 	else pushbackUpdate();
 	for (int i = 0; i < 3;i++)
 		walkingAnimation[i]->updateAnimationFrame(dir, position);

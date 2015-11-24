@@ -9,6 +9,7 @@
 #include "Item\ThrownBoomrang.h"
 GameObject::GameObject(){
 	pushbackStep = 0;
+	depth = 0;
 }
 void GameObject::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {}
 void GameObject::draw(sf::RenderWindow& mainWindow){}

@@ -71,23 +71,23 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::ItemShopCandle:
 	//tile = std::make_shared<ShopCandle>(pt);
-	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	//objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::ItemShopFood:
 	//tile = std::make_shared<ShopFood>(pt);
-	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	//objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::ItemShopPotion:
 	//tile = std::make_shared<ShopPotion>(pt);
-	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	//objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::ItemMagicalRod:
 	//tile = std::make_shared<ShopMagicalRod>(pt);
-	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	//objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::ItemFlute:
 	//tile = std::make_shared<ShopMagicalRod>(pt);
-	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	//objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::ShopDiamondDisplay:
 	tile = std::make_shared<ShopRupeeDisplayer>(pt);
@@ -475,6 +475,30 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::DungeonTile88:
 	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile88);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OverworldTile1:
+	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile1);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OverworldTile2:
+	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile2);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OverworldTile3:
+	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile3);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OverworldTile4:
+	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile4);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OverworldTile5:
+	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile5);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OverworldTile6:
+	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile6);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	}

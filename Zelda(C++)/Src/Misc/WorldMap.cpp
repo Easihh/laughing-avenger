@@ -6,6 +6,7 @@
 #include "Misc\ShopObject.h"
 #include "Misc\CandleFlame.h"
 #include "Type\Identifier.h"
+#include "Item\ThrownBoomrang.h"
 WorldMap::WorldMap(){
 	setupVectors();
 	parser = std::make_unique<TileParser>();
@@ -25,7 +26,8 @@ bool sortByDepth(std::shared_ptr<GameObject> object1, std::shared_ptr<GameObject
 void WorldMap::sort(tripleVector& objectVector) {
 	for(int i = 0; i < Global::WorldRoomWidth; i++){
 		for(int j = 0; j < Global::WorldRoomHeight; j++){
-			std::sort(objectVector[i][j].begin(), objectVector[i][j].end(),sortByDepth);
+			if(objectVector[i][j].size() >0)
+				std::sort(objectVector[i][j].begin(), objectVector[i][j].end(),sortByDepth);
 		}
 	}
 }
@@ -124,6 +126,7 @@ void WorldMap::enableShopObjects(std::vector<std::shared_ptr<GameObject>>* roomO
 }
 void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int newWorldX, int newWorldY) {
 	player->movingSwordIsActive = false;
+	player->boomerangIsActive = false;
 	if(player->currentLayer == InsideShop){
 		secretRoomVector[newWorldX][newWorldY].push_back(player);
 		sort(secretRoomVector);
@@ -215,6 +218,7 @@ void WorldMap::deleteOutstandingPlayerObjects(std::vector<std::shared_ptr<GameOb
 			|| dynamic_cast<ThrownArrow*>(tmp.get())
 			|| dynamic_cast<BombEffect*>(tmp.get())
 			|| dynamic_cast<CandleFlame*>(tmp.get())
+			|| dynamic_cast<ThrownBoomrang*>(tmp.get())
 			){
 			tmp.reset();
 			roomObjVector->erase(roomObjVector->begin() + i);

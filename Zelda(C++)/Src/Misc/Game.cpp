@@ -8,7 +8,7 @@ void Game::GameLoop(){
 		Static::gameState = Exiting;
 	switch (Static::gameState){
 	case LoadSaveMenu:
-		saveLoad.update(event);
+		saveLoad.update(event, mainWindow);
 		saveLoad.draw(mainWindow);
 		break;
 	case Playing:
@@ -25,7 +25,7 @@ void Game::Start(){
 		return;
 	mainWindow.create(sf::VideoMode(Global::SCREEN_WIDTH, Global::SCREEN_HEIGHT, 32), "Zelda: Final Quest");
 	Global::gameView.setSize(Global::SCREEN_WIDTH, Global::SCREEN_HEIGHT);
-	Global::gameView.setCenter(Global::SCREEN_WIDTH / 2,Global::SCREEN_HEIGHT / 2);
+	Global::gameView.setCenter(Global::SCREEN_WIDTH/2, Global::SCREEN_HEIGHT/2);
 	mainWindow.setView(Global::gameView);
 	mainWindow.setFramerateLimit(Global::FPS_RATE);
 	Static::gameState = LoadSaveMenu;

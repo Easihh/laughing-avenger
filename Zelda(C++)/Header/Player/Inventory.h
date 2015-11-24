@@ -5,7 +5,7 @@
 #include "Item\Item.h"
 class Inventory{
 public:
-	Inventory();
+	Inventory(int worldX, int worldY);
 	void draw(sf::RenderWindow& mainWindow);
 	void update(sf::Event& event);
 	void transitionToInventory();
@@ -22,6 +22,7 @@ public:
 private:
 	sf::RectangleShape inventoryRect, itemSelected;
 	void getInput(sf::Event& event);
+	Point startPosition;
 	sf::Sprite selector;
 	sf::Font font;
 	sf::Text txt;

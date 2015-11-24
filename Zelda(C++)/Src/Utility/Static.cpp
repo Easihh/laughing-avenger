@@ -20,8 +20,8 @@ namespace Global
 	 const int playerMarkerHeight = 8;
 	 const int overworldMapWidth=128;
 	 const int overworldMapHeight=64;
-	 const int WorldRoomWidth=2;
-	 const int WorldRoomHeight=2;
+	 const int WorldRoomWidth=5;
+	 const int WorldRoomHeight=5;
 	 sf::View gameView;
 }
 GameState Static::gameState=NotStarted;

@@ -1,8 +1,17 @@
+Version 0.069
+
+-Improved Monster movement AI to be more random and fluid.
+-Added dungeon block Tile.
+-Added some overworld Tile.
+-Increase Map Size to 5x5 from 2x2.
+-Player no longer start at the 0,0(topleft) corner position in worldmap.
+-Boomrang object is now destroyed when leaving a room.
+
 Version 0.068
 
 -Added Inventory Item boomerang on use effect.
 -Boomerang can now pickup monster drop.
--Added Boomerange sound effect.
+-Added Boomerang sound effect.
 
 Version 0.067
 

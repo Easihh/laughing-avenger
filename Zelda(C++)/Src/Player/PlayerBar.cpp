@@ -1,25 +1,27 @@
 #include "Player\PlayerBar.h"
 #include "Utility\Static.h"
-PlayerBar::PlayerBar(){
+PlayerBar::PlayerBar(Point start){
 	maxBombAmount = 8;
 	mySword = SwordType::None;
-	marker.setPoint(16, 32);
-	map.setPoint(16, 32);
-	bar.setPoint(0, 0);
-	healthBarStart.setPoint(320, 80);
+	int worldX = start.y / Global::roomHeight;
+	int worldY = start.x / Global::roomWidth;
+	marker.setPoint(start.x + 16 +(worldY*Global::playerMarkerHeight), start.y + 32+(worldX*Global::playerMarkerWidth));
+	map.setPoint(start.x + 16, start.y+32);
+	bar.setPoint(start.x, start.y);
+	healthBarStart.setPoint(start.x + 320, start.y + 80);
 	currentHealthPoint = 32;
 	maxHealthPoint = 32;
-	itemSlotStart.setPoint(216, 36);
-	diamondStart.setPoint(152, 32);
-	diamondTextStart.setPoint(155, 30);
-	itemSlotTextStart.setPoint(228, 26);
-	bombStart.setPoint(150, 96);
-	bombTextStart.setPoint(170, 78);
-	keyStart.setPoint(150, 56);
-	keyTextStart.setPoint(170, 54);
-	swordSlot.setPoint(268, 50);
-	itemSlotImage.setPoint(220, 50);
-	keysAmount = bombAmount = 0;
+	itemSlotStart.setPoint(start.x + 216, start.y + 36);
+	diamondStart.setPoint(start.x + 152, start.y + 32);
+	diamondTextStart.setPoint(start.x + 155, start.y + 30);
+	itemSlotTextStart.setPoint(start.x + 228, start.y + 26);
+	bombStart.setPoint(start.x + 150, start.y + 96);
+	bombTextStart.setPoint(start.x + 170, start.y + 78);
+	keyStart.setPoint(start.x + 150, start.y + 56);
+	keyTextStart.setPoint(start.x + 170, start.y + 54);
+	swordSlot.setPoint(start.x + 268, start.y+ 50);
+	itemSlotImage.setPoint(start.x + 220, start.y + 50);
+	keysAmount = bombAmount = 1;
 	diamondAmount = 255;
 	loadImages();
 	setupPlayerBar();

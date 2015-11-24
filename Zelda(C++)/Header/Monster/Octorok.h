@@ -18,6 +18,7 @@ private:
 	int getXOffset();
 	int getYOffset();
 	void getNextDirection(Direction blockedDir);
+	void tryToChangeDirection();
 	std::vector<std::unique_ptr<Animation>> walkingAnimation;
 	const int minStep = 1;
 };

@@ -114,6 +114,12 @@ enum Identifier {
 	DungeonTile86 = 109,
 	DungeonTile87 = 110,
 	DungeonTile88 = 111,
+	OverworldTile1 = 112,
+	OverworldTile2 = 113,
+	OverworldTile3 = 114,
+	OverworldTile4 = 115,
+	OverworldTile5 = 116,
+	OverworldTile6 = 117,
 };
 
 #endif

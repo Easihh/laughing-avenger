@@ -21,7 +21,7 @@
 	 isAttacking = isScreenTransitioning = isInvincible = boomerangIsActive = false;
 	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased = true;
 	 position = pos;
-	 worldX = (int)(position.y / (Global::roomHeight+Global::inventoryHeight));
+	 worldX = (int)(position.y / Global::roomHeight);
 	 worldY = (int)(position.x / Global::roomWidth);
 	 prevWorldX = worldX;
 	 prevWorldY = worldY;
@@ -30,7 +30,7 @@
 	 dir = Direction::Up;
 	 loadImage();
 	 setupFullMask();
-	 inventory = std::make_unique<Inventory>();
+	 inventory = std::make_unique<Inventory>(worldX,worldY);
 	 Point pt(0, 0);
 	 inventory->items.push_back(std::make_unique<Boomrang>(pt, "MagicalBoomerang"));
 	 inventory->items.push_back(std::make_unique<Bomb>(pt, "Bomb"));

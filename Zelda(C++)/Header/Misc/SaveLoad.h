@@ -4,7 +4,7 @@
 class SaveLoad {
 public:
 	SaveLoad();
-	void update(sf::Event& event);
+	void update(sf::Event& event, sf::RenderWindow& mainWindow);
 	void draw(sf::RenderWindow& mainWindow);
 private:
 	sf::Font font;

@@ -95,5 +95,11 @@ enum class TileType{
 	DungeonTile86,
 	DungeonTile87,
 	DungeonTile88,
+	OverworldTile1,
+	OverworldTile2,
+	OverworldTile3,
+	OverworldTile4,
+	OverworldTile5,
+	OverworldTile6,
 };
 #endif

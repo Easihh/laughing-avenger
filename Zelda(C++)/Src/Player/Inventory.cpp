@@ -1,20 +1,23 @@
 #include "Player\Inventory.h"
 #include "Utility\Static.h"
 #include <iostream>
-Inventory::Inventory(){
+Inventory::Inventory(int worldX,int worldY){
+	float startX = worldY*Global::roomHeight;
+	float startY = worldX*Global::roomWidth;
+	startPosition = Point(startX,startY);
 	keyWasReleased = hasBoomrang=false;
 	hasBomb = true;
 	inventoryText.setPoint(52,52);
-	itemUseButtonText.setPoint(16, 136);
+	itemUseButtonText.setPoint(startPosition.x + 16, startPosition.y+136);
 	font.loadFromFile("zelda.ttf");
-	playerBar = std::make_unique<PlayerBar>();
+	playerBar = std::make_unique<PlayerBar>(startPosition);
 	txt.setFont(font);
 	loadInventoryCurrentSelection();
 	loadInventoryRectangle();
 	loadSelector();
 }
 void Inventory::loadInventoryCurrentSelection(){
-	itemSelectedPt.setPoint(100,100);
+	itemSelectedPt.setPoint(startPosition.x + 100, startPosition.y+100);
 	itemSelected.setOutlineColor(sf::Color(64, 0, 128));
 	itemSelected.setOutlineThickness(3);
 	itemSelected.setFillColor(sf::Color::Transparent);
@@ -22,7 +25,7 @@ void Inventory::loadInventoryCurrentSelection(){
 	itemSelected.setSize(size);
 }
 void Inventory::loadInventoryRectangle(){
-	inventoryRectPt.setPoint(192,96);
+	inventoryRectPt.setPoint(startPosition.x + 192, startPosition.y+96);
 	inventoryRect.setOutlineColor(sf::Color(64, 0, 128));
 	inventoryRect.setOutlineThickness(3);
 	inventoryRect.setFillColor(sf::Color::Transparent);
@@ -35,7 +38,7 @@ void Inventory::loadSelector(){
 	if (!texture.loadFromFile("Tileset/Selector.png"))
 		std::cout << "Failed to load Selector";
 	selector.setTexture(texture);
-	selector.setPosition(228, 180);
+	selector.setPosition(startPosition.x + 228, startPosition.y+180);
 }
 void Inventory::updateInventoryPosition(Point step){
 	inventoryRectPt+=(step);

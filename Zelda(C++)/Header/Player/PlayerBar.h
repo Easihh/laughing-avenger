@@ -6,7 +6,7 @@
 #include "Type\SwordType.h"
 class PlayerBar{
 public:
-	PlayerBar();
+	PlayerBar(Point pos);
 	void setupPlayerBar();
 	void setupMap();
 	void setupPlayerMarker();

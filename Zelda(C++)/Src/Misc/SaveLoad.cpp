@@ -6,10 +6,11 @@ SaveLoad::SaveLoad() {
 	lifeTexture.loadFromFile("Tileset/life.png");
 	texture.loadFromFile("Tileset/Hero.png");
 }
-void SaveLoad::update(sf::Event& event) {
+void SaveLoad::update(sf::Event& event, sf::RenderWindow& mainWindow) {
 	if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space){
 		Static::gameState = GameState::Playing;
 		Sound::playSound(GameSound::OverWorld);
+		Global::gameView.setCenter(1280,2368);
 	}
 }
 void SaveLoad::draw(sf::RenderWindow& mainWindow) {

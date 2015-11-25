@@ -10,7 +10,8 @@ Arrow::Arrow(Point position, std::string name) :super(position, name){
 void Arrow::onUse(Point pos, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction dir) {
 	Player* tmp = (Player*)findPlayer(worldMap).get();
 	std::cout << "Thrown Arrow";
-	if(tmp->inventory->playerBar->diamondAmount >= 1){
+	if(tmp->inventory->playerBar->diamondAmount >= 1 && !tmp->arrowIsActive){
+		tmp->arrowIsActive = true;
 		tmp->inventory->playerBar->diamondAmount -= 1;
 		std::shared_ptr<GameObject> myArrow = std::make_shared<ThrownArrow>(pos,dir);
 		Sound::playSound(GameSound::ArrowThrown);

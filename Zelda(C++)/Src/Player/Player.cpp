@@ -18,7 +18,7 @@
 	 currentLayer=prevLayer =OverWorld;
 	 stepToAlign = currentInvincibleFrame = transitionStep = xOffset = yOffset = 0;
 	 movePlayerToNewVector = stepIsNegative = movingSwordIsActive = isObtainingItem = false;
-	 isAttacking = isScreenTransitioning = isInvincible = boomerangIsActive = false;
+	 isAttacking = isScreenTransitioning = isInvincible = boomerangIsActive = arrowIsActive= false;
 	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased = true;
 	 position = pos;
 	 worldX = (int)(position.y / Global::roomHeight);
@@ -264,19 +264,21 @@
  }
  void  Player::takeDamage(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 if (!isInvincible && !isScreenTransitioning){
-		 Sound::playSound(GameSound::SoundType::TakeDamage);
 		 Monster* monster = (Monster*)collidingMonster.get();
-		 inventory->playerBar->decreaseCurrentHP(monster->strength);
-		 walkAnimationIndex = 1;
-		 attackAnimationIndex = 1;
-		 playerPushBack(worldMap, monster->position);
-		 if(isAttacking)
-			 sword->endSword();
-		 walkingAnimation[walkAnimationIndex]->sprite.setPosition(position.x, position.y);
-		 attackAnimation[attackAnimationIndex]->sprite.setPosition(position.x, position.y);
-		 if (inventory->playerBar->getCurrentHP() <= 0)
-			 std::cout << "I'm Dead";
-		 else isInvincible = true;
+		 if(monster->strength>0){
+			 Sound::playSound(GameSound::SoundType::TakeDamage);
+			 inventory->playerBar->decreaseCurrentHP(monster->strength);
+			 playerPushBack(worldMap, monster->position);
+			 walkAnimationIndex = 1;
+			 attackAnimationIndex = 1;
+			 if(isAttacking)
+				 sword->endSword();
+			 walkingAnimation[walkAnimationIndex]->sprite.setPosition(position.x, position.y);
+			 attackAnimation[attackAnimationIndex]->sprite.setPosition(position.x, position.y);
+			 if(inventory->playerBar->getCurrentHP() <= 0)
+				 std::cout << "I'm Dead";
+			 else isInvincible = true;
+		 }
 	 }
  }
  bool Player::isColliding(std::vector<std::shared_ptr<GameObject>>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, float xOffset, float yOffset) {

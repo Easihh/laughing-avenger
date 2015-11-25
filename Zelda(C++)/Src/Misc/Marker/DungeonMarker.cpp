@@ -4,7 +4,7 @@
 #include "Type\Layer.h"
 DungeonMarker::DungeonMarker(Point pos) {
 	position = pos;
-	position.x -= Global::HalfTileWidth;//to be in center of the  door entrance
+	texture.loadFromFile("Tileset/BlackTile.png");
 	sprite.setTexture(texture);
 	width = Global::TileWidth;
 	height = 4;

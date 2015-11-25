@@ -1,3 +1,12 @@
+Version 0.070
+
+-Various modification to overworld gameplay map.
+-Added various overworld Tile type.
+-Fixed an issue where player would sometime get stuck when leaving secret room.
+-Fixed an issue where secret sound would play again if burning the same spot again.
+-Player can no longer fire multiple arrow before the first one has been destroyed.
+-Added Monster Keese.
+
 Version 0.069
 
 -Improved Monster movement AI to be more random and fluid.

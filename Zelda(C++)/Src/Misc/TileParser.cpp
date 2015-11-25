@@ -18,6 +18,8 @@
 #include "Misc\SecretTree.h"
 #include "Item\HeartContainerPickUp.h"
 #include "Misc\NPC.h"
+#include "Monster\Armos.h"
+#include "Monster\Keese.h"
 TileParser::TileParser() {}
 
 void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector, int vectorXindex, int vectorYindex) {
@@ -499,6 +501,38 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::OverworldTile6:
 	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile6);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OverworldTile7:
+	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile7);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::GreenArmos:
+	tile = std::make_shared<Tile>(pt, true, TileType::GreenArmosStatue);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OverworldTile8:
+	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile8);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OverworldTile9:
+	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile9);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OverworldTile10:
+	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile10);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OverworldTile11:
+	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile11);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::OverworldTile12:
+	tile = std::make_shared<Tile>(pt, true, TileType::OverworldTile12);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::BlueBat:
+	tile = std::make_shared<Keese>(pt, true);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	}

@@ -8,5 +8,6 @@ public:
 	void draw(sf::RenderWindow& mainWindow);
 	bool isActivated;
 private:
+	Point getPointBeforeTeleport(Direction dirBeforeEntering, Point playerPos);
 };
 #endif

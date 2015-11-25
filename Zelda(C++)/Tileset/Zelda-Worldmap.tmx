@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="80" height="80" tilewidth="32" tileheight="32" nextobjectid="1">
- <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="120">
-  <image source="tileset.png" width="256" height="480"/>
+ <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32" tilecount="128">
+  <image source="tileset.png" width="256" height="512"/>
  </tileset>
  <layer name="Layer 1" width="80" height="80">
   <data encoding="base64" compression="zlib">
@@ -10,7 +10,7 @@
  </layer>
  <layer name="Layer 2" width="80" height="80">
   <data encoding="base64" compression="zlib">
-   eJzt3P9OwyAUhuGaNrsAE29UnddvFiXBDnqgH8iPvic5mW58TB5LV/uH67IsKz10K9Uyr6xBXT9++FlrOJo7Zf2bmE+pnv1qZUvk/Xla5WNrcN9vgedC2deC731mnlb5/Rpuibkt8qi899nqyW8/5xp4rlTN7JdbHH/2nEfnv1jx+VsnWyLvz9Mqj19dv5r7bza/UOeMVVqpnv3218/4PWfV859aV/ALnQfxi/vFPjdC+1mtGf1ysmrhp9XV/Nwexo/jT83jV94v9V4Ufhx/ah4//PAbN49fOb+zrRZ+Wl3dj9bqynn88MNv3Dx++OE3bh4//PAbN48ffviNm8cPvx78aK2VunIeP/zwGzePH374jZvHDz/8xs3jhx9+4+bxw68Hv5b9YbSr2Outf/7Wv/9Po61xLdffq9/t9/FujHN+Z2tGv3viuFS/lP8hcrZ684vZ7cfF/HL360x+R3b+OHX/zuhn2T3qa8nzi+3b2fz+u/DT6s37egY/dx38Hnn9xchx/nu+Vs7J5V6/4Pc3x/VL3ePvUUefxTP5WfcS/Obvt5+y7h9Y3cP9g5bdg5/S31A8T4U=
+   eJztnI1OAyEQhM9c0wcw8UGrVq0/7+41hgTp7vEzXIG9mWTTSm/A/QSOrtZ5mqaZMXQgaulHckDzJz/yi+Ww1ndK/gfQn6Ke+W3lreH3+2nl13JwXx+ENsn7WHHskn5a+cMcjom+g/KIjF2qnviFfc5CWy1Z5pcrzr94n2v7nybef7fx1vD7/bTyk9+2/LZcf9b4SZFzLRKIeuYXnp/J79aL7n+o9sBP2gfJT+en3Tek9YzKIr8cLyryw7Q3fm4Nkx/nH+onv/r8UmtR5Mf5h/rJj/zIb1w/+dXjVxqoyA/T3vkxMO3ZT37kR37j+smP/MhvXD/5kR/5jesnP/Ijv3H95Ed+PfBrGa+No0YOiFD/Wm7HyOu1+JWqN37nhOvfJplDilfqxwq/nPxDhmveyxKfS3wpY1vgJ+Uv/R2O3+YYSt4P7/F7+vt86E/Q7sYenV/uuqspC/x8vSdGTOE809qt8bu3LPMr+Uxsbl/W+NVav6mywO+0xDPgK/E6WeDnznClvmuUMrTE70UIn8speC18/5HL8DTZ4qdF6nXaz0ALi+9/UX57rx+Myq/n+l+MX+vvf/T51zL/Xvm5uuk5cl3r/atHflo9ppRfyv8QKVVv/NZqWSn8cterJX6xOmCt9WuRH/J7D218bd1a43dvkR+mJ++5BX5SrcDXQ8TH/e/2rJzjyz2/kN9/H88v286/q9buxZb4jVa/641faf2pdf2gZfTAD4lfPn7BlA==
   </data>
  </layer>
 </map>

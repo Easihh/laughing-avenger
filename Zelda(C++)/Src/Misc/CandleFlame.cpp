@@ -50,7 +50,7 @@ void CandleFlame::checkForSecretRoom(std::vector<std::shared_ptr<GameObject>>* W
 	for(int i = 0; i < Worldmap->size(); i++){
 		if(dynamic_cast<SecretTree*>(Worldmap->at(i).get())){
 			SecretTree* tmp = (SecretTree*)Worldmap->at(i).get();
-			if(intersect(fullMask, tmp->fullMask)){
+			if(intersect(fullMask, tmp->fullMask) && !tmp->isActivated){
 				Sound::playSound(GameSound::SecretRoom);
 				tmp->texture.loadFromFile("Tileset/SecretRoom.png");
 				tmp->sprite.setTexture(tmp->texture);

@@ -127,6 +127,7 @@ void WorldMap::enableShopObjects(std::vector<std::shared_ptr<GameObject>>* roomO
 void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int newWorldX, int newWorldY) {
 	player->movingSwordIsActive = false;
 	player->boomerangIsActive = false;
+	player->arrowIsActive = false;
 	if(player->currentLayer == InsideShop){
 		secretRoomVector[newWorldX][newWorldY].push_back(player);
 		sort(secretRoomVector);

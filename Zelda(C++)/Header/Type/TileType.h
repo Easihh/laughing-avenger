@@ -101,5 +101,12 @@ enum class TileType{
 	OverworldTile4,
 	OverworldTile5,
 	OverworldTile6,
+	OverworldTile7,
+	OverworldTile8,
+	OverworldTile9,
+	OverworldTile10,
+	OverworldTile11,
+	OverworldTile12,
+	GreenArmosStatue
 };
 #endif

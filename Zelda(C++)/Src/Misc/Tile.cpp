@@ -316,6 +316,27 @@ void Tile::loadTileImage(TileType type) {
 	case TileType::OverworldTile6:
 		texture.loadFromFile("Tileset/Overworld/overworldTile6.png");
 		break;
+	case TileType::OverworldTile7:
+		texture.loadFromFile("Tileset/Overworld/overworldTile7.png");
+		break;
+	case TileType::OverworldTile8:
+		texture.loadFromFile("Tileset/Overworld/overworldTile8.png");
+		break;
+	case TileType::OverworldTile9:
+		texture.loadFromFile("Tileset/Overworld/overworldTile9.png");
+		break;
+	case TileType::OverworldTile10:
+		texture.loadFromFile("Tileset/Overworld/overworldTile10.png");
+		break;
+	case TileType::OverworldTile11:
+		texture.loadFromFile("Tileset/Overworld/overworldTile11.png");
+		break;
+	case TileType::OverworldTile12:
+		texture.loadFromFile("Tileset/Overworld/overworldTile12.png");
+		break;
+	case TileType::GreenArmosStatue:
+		texture.loadFromFile("Tileset/greenArmos.png");
+		break;
 	}
 	sprite.setTexture(texture);
 	sprite.setPosition(position.x, position.y);

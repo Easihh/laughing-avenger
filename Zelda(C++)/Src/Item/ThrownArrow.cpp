@@ -1,5 +1,6 @@
 #include "Item\ThrownArrow.h"
 #include "Monster\Monster.h"
+#include "Player\Player.h"
 ThrownArrow::ThrownArrow(Point pos,Direction direction) {
 	position = pos;
 	arrowDir = direction;
@@ -71,7 +72,14 @@ void ThrownArrow::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		if(!((Monster*)collidingMonster.get())->isInvincible)
 			destroyGameObject(worldMap);
 		((Monster*)collidingMonster.get())->takeDamage(arrowStrength, worldMap,arrowDir);
+		std::shared_ptr<GameObject> temp = findPlayer(worldMap);
+		Player* player = (Player*)temp.get();
+		player->arrowIsActive = false;
 	}
-	else if(isOutsideRoomBound(position))
+	else if(isOutsideRoomBound(position)){
 		destroyGameObject(worldMap);
+		std::shared_ptr<GameObject> temp = findPlayer(worldMap);
+		Player* player = (Player*)temp.get();
+		player->arrowIsActive = false;
+	}
 }

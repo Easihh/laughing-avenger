@@ -16,7 +16,7 @@ void LeaveDungeonMarker::draw(sf::RenderWindow& window) {
 }
 void LeaveDungeonMarker::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	if(isCollidingWithPlayer(Worldmap)){
-		Player* temp = ((Player*)player.get());
+		Player* temp = ((Player*)findPlayer(Worldmap).get());
 		Sound::stopSound(GameSound::Underworld);
 		Sound::playSound(GameSound::OverWorld);
 		//previousWorld must be same as current room when moving to overworld layer

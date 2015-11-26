@@ -31,6 +31,11 @@ void WorldMap::sort(tripleVector& objectVector) {
 		}
 	}
 }
+void WorldMap::sort(std::vector<std::shared_ptr<GameObject>>* roomObjVector) {
+	for (int i = 0; i < roomObjVector->size(); i++){
+		std::sort(roomObjVector->begin(), roomObjVector->end(), sortByDepth);
+	}
+}
 void WorldMap::setupVectors() {
 	/*pre populate vector of vectors with empty vectors*/
 	for(int i = 0; i < Global::WorldRoomWidth; i++){
@@ -128,6 +133,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 	player->movingSwordIsActive = false;
 	player->boomerangIsActive = false;
 	player->arrowIsActive = false;
+	Sound::stopSound(GameSound::Boomerang);
 	if(player->currentLayer == InsideShop){
 		secretRoomVector[newWorldX][newWorldY].push_back(player);
 		sort(secretRoomVector);
@@ -254,6 +260,7 @@ void WorldMap::addToGameVector(std::vector<std::shared_ptr<GameObject>>* roomObj
 	{
 		roomObjVector->push_back(add);
 	}
+	sort(roomObjVector);
 	Static::toAdd.clear();
 }
 void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
@@ -267,7 +274,8 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 			obj->update(&gameMainVector[player->worldX][player->worldY]);
 			obj->draw(mainWindow);
 		}
-		addToGameVector(&gameMainVector[player->worldX][player->worldY]);
+		if (Static::toAdd.size()>0)
+			addToGameVector(&gameMainVector[player->worldX][player->worldY]);
 	}
 	else if(player->currentLayer == InsideShop)
 	{
@@ -280,7 +288,8 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 			obj->update(&secretRoomVector[player->worldX][player->worldY]);
 			obj->draw(mainWindow);
 		}
-		addToGameVector(&secretRoomVector[player->worldX][player->worldY]);
+		if (Static::toAdd.size()>0)
+			addToGameVector(&secretRoomVector[player->worldX][player->worldY]);
 	}
 	else if(player->currentLayer == Dungeon)
 	{
@@ -293,7 +302,8 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 			obj->update(&dungeonVector[player->worldX][player->worldY]);
 			obj->draw(mainWindow);
 		}
-		addToGameVector(&dungeonVector[player->worldX][player->worldY]);
+		if (Static::toAdd.size()>0)
+			addToGameVector(&dungeonVector[player->worldX][player->worldY]);
 	}
 }
 void WorldMap::drawRightScreen(sf::RenderWindow& mainWindow){

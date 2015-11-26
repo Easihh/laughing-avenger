@@ -20,7 +20,7 @@
  void ShopBomb::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	 sprite.setPosition(position.x, position.y);
 	 if(isCollidingWithPlayer(Worldmap) && !isObtained && isVisible) {
-		 Player* tmp = ((Player*)player.get());
+		 Player* tmp = ((Player*)findPlayer(Worldmap).get());
 		 if(tmp->inventory->playerBar->diamondAmount >= itemPrice){
 			 position.y = tmp->position.y - Global::TileHeight;
 			 position.x = tmp->position.x;
@@ -38,7 +38,7 @@
 		 currentFrame++;
 		 if(currentFrame > maxFrame){
 			 currentFrame = 0;
-			 Player* tmp = ((Player*)player.get());
+			 Player* tmp = ((Player*)findPlayer(Worldmap).get());
 			 tmp->isObtainingItem = false;
 			 resetShopItem();
 		 }

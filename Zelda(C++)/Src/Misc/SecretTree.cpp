@@ -38,7 +38,7 @@ Point SecretTree::getPointBeforeTeleport(Direction dirBeforeEntering, Point play
 void SecretTree::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	if(isActivated){
 		if(isCollidingWithPlayer(Worldmap)){
-			Player* tmp = ((Player*)player.get());
+			Player* tmp = ((Player*)findPlayer(Worldmap).get());
 			Sound::stopSound(GameSound::OverWorld);
 			tmp->prevLayer = tmp->currentLayer;
 			tmp->currentLayer = Layer::InsideShop;

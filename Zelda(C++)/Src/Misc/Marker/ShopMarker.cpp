@@ -39,7 +39,7 @@ Point ShopMarker::getPointBeforeTeleport(Direction dirBeforeEntering,Point playe
 }
 void ShopMarker::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	if(isCollidingWithPlayer(Worldmap)){
-		Player* temp = ((Player*)player.get());
+		Player* temp = ((Player*)findPlayer(Worldmap).get());
 		Sound::stopSound(GameSound::OverWorld);
 		temp->currentLayer=Layer::InsideShop;
 		temp->prevLayer = Layer::OverWorld;

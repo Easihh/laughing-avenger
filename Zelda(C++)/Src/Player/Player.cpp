@@ -13,7 +13,7 @@
 #include "Misc\WorldMap.h"
 #include "Misc\NPC.h"
  Player::Player(Point pos){
-	 depth = 50;
+	 depth = 999;
 	 stepToMove = 0;
 	 currentLayer=prevLayer =OverWorld;
 	 stepToAlign = currentInvincibleFrame = transitionStep = xOffset = yOffset = 0;

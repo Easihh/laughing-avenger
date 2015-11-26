@@ -9,14 +9,15 @@ public:
 	ThrownBoomrang(Point pos, Direction direction);
 	void draw(sf::RenderWindow& mainWindow);
 	void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
+	bool isReturning;
+	void destroyBoomerang(std::vector<std::shared_ptr<GameObject>>* worldMap);
 private:
 	void setup();
 	void setupInitialPosition();
 	Direction boomrangDir;
 	void boomrangMovement();
-	void setCorrectDirection();
-	void setDiagonalSpeed();
-	bool isReturning;
+	void setCorrectDirection(std::vector<std::shared_ptr<GameObject>>* worldMap);
+	void setDiagonalSpeed(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	const int boomrangSpeed = 6;
 	int stepsXToPlayer, stepsYToPlayer;
 	float diagonalXspeed,diagonalYspeed;

@@ -157,6 +157,7 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile9:
+	//blocked dungeon right door part
 	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile9);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
@@ -213,6 +214,7 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile23:
+	//blocked dungeon right door part
 	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile23);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
@@ -286,6 +288,7 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile41:
+	//blocked dungeon right door part
 	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile41);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;

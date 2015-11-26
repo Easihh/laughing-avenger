@@ -16,7 +16,7 @@ void DungeonMarker::draw(sf::RenderWindow& window) {
 }
 void DungeonMarker::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	if(isCollidingWithPlayer(Worldmap)){
-		Player* temp = ((Player*)player.get());
+		Player* temp = ((Player*)findPlayer(Worldmap).get());
 		if(temp->currentLayer == OverWorld){
 			temp->currentLayer = Dungeon;
 			temp->prevLayer = OverWorld;

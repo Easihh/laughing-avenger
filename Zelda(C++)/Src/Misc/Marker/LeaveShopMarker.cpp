@@ -17,7 +17,7 @@ void LeaveShopMarker::draw(sf::RenderWindow& window) {
 }
 void LeaveShopMarker::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	if(isCollidingWithPlayer(Worldmap)){
-		Player* temp = ((Player*)player.get());
+		Player* temp = ((Player*)findPlayer(Worldmap).get());
 		Sound::playSound(GameSound::OverWorld);
 		temp->currentLayer = Layer::OverWorld;
 		temp->prevLayer = Layer::InsideShop;

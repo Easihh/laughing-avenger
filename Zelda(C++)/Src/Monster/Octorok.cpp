@@ -5,6 +5,7 @@
 #include "Misc\Tile.h"
 #include "Type\RupeeType.h"
 #include "Item\RupeeDrop.h"
+#include "Item\ThrownBoomrang.h"
 Octorok::Octorok(Point pos, bool canBeCollidedWith){
 	position = pos;
 	width = Global::TileWidth;
@@ -82,6 +83,12 @@ void Octorok::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(*fullMask);
 }
 void Octorok::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	if (isCollidingWithBoomerang(worldMap)){
+		Sound::playSound(GameSound::EnemyHit); 
+		ThrownBoomrang* boom = (ThrownBoomrang*)findBoomerang(worldMap).get();
+		if (!boom->isReturning)
+			boom->isReturning=true;
+	}
 	if(pushbackStep == 0){
 		movement(worldMap);
 		tryToChangeDirection();

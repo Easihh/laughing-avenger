@@ -24,14 +24,13 @@ public:
 	sf::Sprite sprite;
 	std::unique_ptr<sf::RectangleShape> fullMask;
 	bool isOutsideRoomBound(Point pos);
-	std::shared_ptr<GameObject> tmpPlayer;
 	std::shared_ptr<GameObject> findPlayer(std::vector<std::shared_ptr<GameObject>>* worldMap);
+	std::shared_ptr<GameObject> findBoomerang(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	std::shared_ptr<GameObject> collidingMonster;
 	bool isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	Direction dir;
 	void pushBack(std::vector<std::shared_ptr<GameObject>>* worldMap,Direction attackDir);
 	int GameObject::getDistanceToMapBoundary(Direction direction);
-	std::shared_ptr<GameObject> player;
 	bool GameObject::isCollidingWithPlayer(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	bool GameObject::isCollidingWithBoomerang(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	bool GameObject::isColliding(std::vector<std::shared_ptr<GameObject>>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, Point offsets);

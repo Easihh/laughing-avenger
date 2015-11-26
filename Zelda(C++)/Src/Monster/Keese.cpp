@@ -5,7 +5,9 @@
 #include "Misc\Tile.h"
 #include "Type\RupeeType.h"
 #include "Item\RupeeDrop.h"
+#include "Item\ThrownBoomrang.h"
 Keese::Keese(Point pos, bool canBeCollidedWith) {
+	depth = 50;
 	position = pos;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
@@ -25,71 +27,67 @@ Keese::Keese(Point pos, bool canBeCollidedWith) {
 	mask->setPosition(position.x + 8, position.y + 8);
 	dir = Direction::None;
 	getNextDirection(Direction::None);
+	timeSinceLastTryDirectionChange = 0;
 }
 void Keese::tryToChangeDirection() {
 	int direction;
+	timeSinceLastTryDirectionChange++;
 	int chanceToSwitch = std::rand() % 5;//20% chance to switch dir;
-	if((int)position.x %Global::TileWidth == 0 && (dir == Direction::Left || dir == Direction::Right) && chanceToSwitch == 0){
-		direction = rand() % 3;
-		while(direction == (int)dir){//we are changing direction,cant change to current direction.
-			direction = rand() % 4;
+	direction = rand() % 8;
+	if (chanceToSwitch == 0 && timeSinceLastTryDirectionChange >= minimumTimeSinceLastDirectionChange){
+		timeSinceLastTryDirectionChange = 0;
+		while (direction == (int)dir){//we are changing direction,cant change to current direction.
+			direction = rand() % 8;
 		}
-		switch(direction){
+		switch (direction){
 		case 0:
-		dir = Direction::Right;
-		break;
-		case 1:
-		if((int)position.y%Global::TileHeight == 0)
-			dir = Direction::Down;
-		break;
-		case 2:
-		if((int)position.y%Global::TileHeight == 0)
-			dir = Direction::Up;
-		break;
-		case 3:
-		dir = Direction::Left;
-		break;
-		}
-	}
-	else if((int)position.y %Global::TileHeight == 0 && (dir == Direction::Up || dir == Direction::Down) && chanceToSwitch == 0){
-		direction = rand() % 3;
-		while(direction == (int)dir){//we are changing direction,cant change to current direction.
-			direction = rand() % 4;
-		}
-		switch(direction){
-		case 0:
-		if((int)position.x%Global::TileWidth == 0)
 			dir = Direction::Right;
-		break;
+			break;
 		case 1:
-		dir = Direction::Down;
-		break;
+			dir = Direction::Down;
+			break;
 		case 2:
-		dir = Direction::Up;
-		break;
+			dir = Direction::Up;
+			break;
 		case 3:
-		if((int)position.x%Global::TileWidth == 0)
 			dir = Direction::Left;
-		break;
+			break;
+		case 4:
+			dir = Direction::TopLeft;
+			break;
+		case 5:
+			dir = Direction::TopRight;
+			break;
+		case 6:
+			dir = Direction::BottomLeft;
+			break;
+		case 7:
+			dir = Direction::BottomRight;
+			break;
 		}
 	}
 }
 void Keese::draw(sf::RenderWindow& mainWindow) {
 	mainWindow.draw(keeseAnimation->sprite);
-	mainWindow.draw(*mask);
-	mainWindow.draw(*fullMask);
+	//mainWindow.draw(*mask);
+	//mainWindow.draw(*fullMask);
 }
 void Keese::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	keeseAnimation->updateAnimationFrame(position);
 	movement(worldMap);
 	tryToChangeDirection();
+	if (isCollidingWithBoomerang(worldMap)){
+		takeDamage(1);
+		ThrownBoomrang* boom = (ThrownBoomrang*)findBoomerang(worldMap).get();
+		if (!boom->isReturning)
+			boom->isReturning=true;
+	}
 	if(healthPoint <= 0){
 		Point pt(position.x + (width / 4), position.y + (height / 4));
 		std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
 		Static::toAdd.push_back(add);
 		destroyGameObject(worldMap);
 		Sound::playSound(GameSound::SoundType::EnemyKill);
-		dropItemOnDeath();
 		std::cout << "Keese Destroyed";
 	}
 	updateMasks();
@@ -121,7 +119,7 @@ void Keese::movement(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	case Direction::Down:
 	{
 		Point pt(position.x, position.y + minStep);
-		if(!isColliding(worldMap, fullMask, offsets) && !isOutsideRoomBound(pt))
+		if(!isOutsideRoomBound(pt))
 			position.y += minStep;
 		else getNextDirection(Direction::Down);
 		break;
@@ -129,7 +127,7 @@ void Keese::movement(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	case Direction::Up:
 	{
 		Point pt(position.x, position.y - minStep);
-		if(!isColliding(worldMap, fullMask, offsets) && !isOutsideRoomBound(pt))
+		if(!isOutsideRoomBound(pt))
 			position.y -= minStep;
 		else getNextDirection(Direction::Up);
 		break;
@@ -137,7 +135,7 @@ void Keese::movement(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	case Direction::Left:
 	{
 		Point pt(position.x - minStep, position.y);
-		if(!isColliding(worldMap, fullMask, offsets) && !isOutsideRoomBound(pt))
+		if(!isOutsideRoomBound(pt))
 			position.x -= minStep;
 		else getNextDirection(Direction::Left);
 		break;
@@ -145,15 +143,55 @@ void Keese::movement(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	case Direction::Right:
 	{
 		Point pt(position.x + minStep, position.y);
-		if(!isColliding(worldMap, fullMask, offsets) && !isOutsideRoomBound(pt))
+		if(!isOutsideRoomBound(pt))
 			position.x += minStep;
 		else getNextDirection(Direction::Right);
+		break;
+	}
+	case Direction::TopRight:
+	{
+		Point pt(position.x + minStep, position.y-minStep);
+		if (!isOutsideRoomBound(pt)){
+			position.x += minStep;
+			position.y -= minStep;
+		}
+		else getNextDirection(Direction::TopRight);
+		break;
+	}
+	case Direction::TopLeft:
+	{
+		Point pt(position.x - minStep, position.y - minStep);
+		if (!isOutsideRoomBound(pt)){
+			position.x -= minStep;
+			position.y -= minStep;
+		}
+		else getNextDirection(Direction::TopLeft);
+		break;
+	}
+	case Direction::BottomLeft:
+	{
+		Point pt(position.x - minStep, position.y + minStep);
+		if (!isOutsideRoomBound(pt)){
+			position.x -= minStep;
+			position.y += minStep;
+		}
+		else getNextDirection(Direction::BottomLeft);
+		break;
+	}
+	case Direction::BottomRight:
+	{
+		Point pt(position.x + minStep, position.y + minStep);
+		if (!isOutsideRoomBound(pt)){
+			position.x += minStep;
+			position.y += minStep;
+		}
+		else getNextDirection(Direction::BottomRight);
 		break;
 	}
 	}
 }
 void Keese::getNextDirection(Direction blockedDir) {
-	const int numberofDirection = 4;
+	const int numberofDirection = 8;
 	while(dir == blockedDir || dir == Direction::None){
 		int val = std::rand() % numberofDirection;
 		switch(val){
@@ -168,6 +206,18 @@ void Keese::getNextDirection(Direction blockedDir) {
 		break;
 		case 3:
 		dir = Direction::Right;
+		break;
+		case 4:
+		dir = Direction::TopLeft;
+		break;
+		case 5:
+		dir = Direction::TopRight;
+		break;
+		case 6:
+		dir = Direction::BottomRight;
+		break;
+		case 7:
+		dir = Direction::BottomLeft;
 		break;
 		}
 	}

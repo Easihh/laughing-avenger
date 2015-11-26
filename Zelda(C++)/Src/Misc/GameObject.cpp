@@ -65,7 +65,7 @@ bool GameObject::isCollidingWithBoomerang(std::vector<std::shared_ptr<GameObject
 	Point offset(0, 0);
 	for(auto& obj : *worldMap){
 		if(dynamic_cast<ThrownBoomrang*>(obj.get())){
-			if(intersect(fullMask,obj.get()->fullMask))
+			if (intersect(fullMask, obj.get()->fullMask))
 				isColliding = true;
 		}
 	}
@@ -74,11 +74,7 @@ bool GameObject::isCollidingWithBoomerang(std::vector<std::shared_ptr<GameObject
 bool GameObject::isCollidingWithPlayer(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	bool isColliding = false;
 	Point offset(0, 0);
-	if(player == NULL){
-		for(auto& obj : *worldMap)
-			if(dynamic_cast<Player*>(obj.get()))
-				player = obj;
-	}
+	Player* player =(Player*)findPlayer(worldMap).get();
 	if(intersect(player->fullMask, fullMask, offset))
 		isColliding = true;
 	return isColliding;
@@ -291,6 +287,12 @@ bool GameObject::isOutsideRoomBound(Point pos) {
 std::shared_ptr<GameObject> GameObject::findPlayer(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	for(int i = 0; i < worldMap->size(); i++){
 		if(dynamic_cast<Player*>(worldMap->at(i).get()))
+			return worldMap->at(i);
+	}
+}
+std::shared_ptr<GameObject> GameObject::findBoomerang(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	for (int i = 0; i < worldMap->size(); i++){
+		if (dynamic_cast<ThrownBoomrang*>(worldMap->at(i).get()))
 			return worldMap->at(i);
 	}
 }

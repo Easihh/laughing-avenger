@@ -1,6 +1,7 @@
 #include "Item\ThrownBoomrang.h"
 #include "Player\Player.h"
 ThrownBoomrang::ThrownBoomrang(Point pos, Direction direction) {
+	depth = 40;//less than player since we update by depth order and player must be last.
 	Sound::playSound(GameSound::Boomerang);
 	position = pos;
 	isReturning = false;
@@ -33,8 +34,8 @@ void ThrownBoomrang::draw(sf::RenderWindow& mainWindow) {
 	mainWindow.draw(boomrangAnimation->sprite);
 	mainWindow.draw(*fullMask);
 }
-void ThrownBoomrang::setDiagonalSpeed() {
-	Player* temp = (Player*)player.get();
+void ThrownBoomrang::setDiagonalSpeed(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	Player* temp = ((Player*)findPlayer(worldMap).get());
 	Point playerPos = temp->position;
 	float ratio,factor;
 	stepsYToPlayer = std::abs(position.y - playerPos.y);
@@ -53,27 +54,27 @@ void ThrownBoomrang::setDiagonalSpeed() {
 		diagonalXspeed = 1 * factor;
 	}
 }
-void ThrownBoomrang::setCorrectDirection() {
-	Player* temp = (Player*)player.get();
+void ThrownBoomrang::setCorrectDirection(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	Player* temp = ((Player*)findPlayer(worldMap).get());
 	Point playerPos = temp->position;
-	if(playerPos.x<position.x){//boomerang is to the right of player
-		if(playerPos.y > position.y)//player is below the boomerang
+	if (playerPos.x < position.x){//boomerang is to the right of player
+		if (playerPos.y > position.y)//player is below the boomerang
 			boomrangDir = Direction::BottomLeft;
-		else if(playerPos.y < position.y)//player is atop the boomerang
+		else if (playerPos.y < position.y)//player is atop the boomerang
 			boomrangDir = Direction::TopLeft;
 		else boomrangDir = Direction::Left;
 	}
-	else if(playerPos.x>position.x){//boomerang is to the left of player
-			if(playerPos.y > position.y)//player is below the boomerang
-				boomrangDir = Direction::BottomRight;
-			else if(playerPos.y < position.y)//player is atop the boomerang
-				boomrangDir = Direction::TopRight;
-			else boomrangDir = Direction::Right;
-		}
-	else if(playerPos.x == position.x){
-		if(playerPos.y > position.y)//player is below the boomerang
+	else if (playerPos.x > position.x){//boomerang is to the left of player
+		if (playerPos.y > position.y)//player is below the boomerang
+			boomrangDir = Direction::BottomRight;
+		else if (playerPos.y < position.y)//player is atop the boomerang
+			boomrangDir = Direction::TopRight;
+		else boomrangDir = Direction::Right;
+	}
+	else if (playerPos.x == position.x){
+		if (playerPos.y > position.y)//player is below the boomerang
 			boomrangDir = Direction::Down;
-		else if(playerPos.y < position.y)//player is atop the boomerang
+		else if (playerPos.y < position.y)//player is atop the boomerang
 			boomrangDir = Direction::Up;
 	}
 }
@@ -113,17 +114,19 @@ void ThrownBoomrang::boomrangMovement() {
 		isReturning = true;
 	fullMask->setPosition(position.x, position.y);
 }
+void ThrownBoomrang::destroyBoomerang(std::vector<std::shared_ptr<GameObject>>* worldMap){
+	Sound::stopSound(GameSound::Boomerang);
+	destroyGameObject(worldMap);
+	Player* temp =(Player*)findPlayer(worldMap).get();
+	temp->boomerangIsActive = false;
+}
 void ThrownBoomrang::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	boomrangMovement();
 	boomrangAnimation->updateAnimationFrame(position);
 	if(isReturning){
-		setCorrectDirection();
-		setDiagonalSpeed();
+		setCorrectDirection(worldMap);
+		setDiagonalSpeed(worldMap);
 	}
-	if(isCollidingWithPlayer(worldMap)){
-		Sound::stopSound(GameSound::Boomerang);
-		destroyGameObject(worldMap);
-		Player* temp = (Player*)player.get();
-		temp->boomerangIsActive = false;
-	}
+	if(isCollidingWithPlayer(worldMap))
+		destroyBoomerang(worldMap);
 }

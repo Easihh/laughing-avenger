@@ -15,6 +15,8 @@ private:
 	void dropItemOnDeath();
 	int getXOffset();
 	int getYOffset();
+	int timeSinceLastTryDirectionChange;
+	const int minimumTimeSinceLastDirectionChange = 180;
 	void getNextDirection(Direction blockedDir);
 	void tryToChangeDirection();
 	std::unique_ptr<Animation> keeseAnimation;

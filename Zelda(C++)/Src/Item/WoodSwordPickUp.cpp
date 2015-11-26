@@ -15,7 +15,7 @@ WoodSwordPickUp::WoodSwordPickUp(Point pos) {
 void WoodSwordPickUp::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	sprite.setPosition(position.x, position.y);
 	if(isCollidingWithPlayer(Worldmap) && !isObtained) {
-		Player* tmp = ((Player*)player.get());
+		Player* tmp = ((Player*)findPlayer(Worldmap).get());
 		position.y = tmp->position.y-Global::TileHeight;
 		position.x = tmp->position.x;
 		tmp->inventory->playerBar->mySword = SwordType::WoodSword;
@@ -28,7 +28,7 @@ void WoodSwordPickUp::update(std::vector<std::shared_ptr<GameObject>>* Worldmap)
 	if(isObtained){
 		currentFrame++;
 		if(currentFrame > maxFrame){
-			Player* tmp = ((Player*)player.get());
+			Player* tmp = ((Player*)findPlayer(Worldmap).get());
 			tmp->isObtainingItem = false;
 			deleteNpcFromCurrentRoom(Worldmap);
 			destroyGameObject(Worldmap);

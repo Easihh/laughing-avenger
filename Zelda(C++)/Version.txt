@@ -1,3 +1,14 @@
+Version 0.071
+
+-Many Additiona to the dungeon layer/rooms
+-Keese monster no longer collide with dungeon tile.
+-Keese monster can now move diagonally.
+-Keese monster can now be killed with boomerang.
+-Boomerang no longer pass through enemies when not in return mode.
+-Boomerang sound no longer keep playing when switching screen.
+-Object added at runtime to the room vector now sort the vector.
+-Player now has the highest depth since the object must be updated last.
+
 Version 0.070
 
 -Various modification to overworld gameplay map.

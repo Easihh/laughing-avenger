@@ -46,6 +46,12 @@ void Inventory::updateInventoryPosition(Point step){
 	inventoryText+=(step);
 	itemUseButtonText+=(step);
 }
+void Inventory::setInventoryPosition(Point newPt){
+	inventoryRectPt.setPoint(newPt.x + 192, newPt.y + 96);
+	itemSelectedPt.setPoint(newPt.x + 100, newPt.y + 100);
+	inventoryText.setPoint(newPt.x + 52, newPt.y + 52);
+	itemUseButtonText.setPoint(newPt.x + 16, newPt.y + 136);
+}
 Item* Inventory::getCurrentItem() {
 	return items[selectorInventoryIndex].get();
 }

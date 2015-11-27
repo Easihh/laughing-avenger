@@ -23,6 +23,7 @@ public:
 	std::vector<std::unique_ptr<Animation>> walkingAnimation;
 	std::vector<std::unique_ptr<Animation>> attackAnimation;
 	Layer currentLayer,prevLayer;
+	void updateSprites();
 private:
 	unsigned int stepToMove;
 	void completeMove();

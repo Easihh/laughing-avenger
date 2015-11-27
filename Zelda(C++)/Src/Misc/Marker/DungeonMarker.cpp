@@ -17,30 +17,17 @@ void DungeonMarker::draw(sf::RenderWindow& window) {
 void DungeonMarker::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	if(isCollidingWithPlayer(Worldmap)){
 		Player* temp = ((Player*)findPlayer(Worldmap).get());
-		if(temp->currentLayer == OverWorld){
-			temp->currentLayer = Dungeon;
-			temp->prevLayer = OverWorld;
-			Sound::stopSound(GameSound::OverWorld);
-			Sound::playSound(GameSound::Underworld);
-			temp->prevWorldX = temp->worldX;
-			temp->prevWorldY = temp->worldY;
-			temp->pointBeforeTeleport = std::make_unique<Point>(position.x, position.y + Global::TileHeight);
-			float teleportX = temp->worldY*Global::roomWidth + (0.5*Global::roomWidth);
-			float teleportY = temp->worldX*Global::roomHeight + Global::roomHeight + Global::inventoryHeight - 2 * Global::TileHeight;
-			temp->position = Point(teleportX, teleportY);
-		}
-		else if(temp->currentLayer == Dungeon){
-			Sound::stopSound(GameSound::Underworld);
-			Sound::playSound(GameSound::OverWorld);
-			//previousWorld must be same as current room when moving to overworld layer
-			int worldX = (int)(position.y / (Global::roomHeight+Global::inventoryHeight));
-			int worldY = (int)(position.x / Global::roomWidth);
-			temp->prevWorldX = worldX;
-			temp->prevWorldY = worldY;
-			temp->currentLayer = Layer::OverWorld;
-			temp->prevLayer = Layer::Dungeon;
-			temp->position = *temp->pointBeforeTeleport.get();
-		}
+		temp->currentLayer = Dungeon;
+		temp->prevLayer = OverWorld;
+		Sound::stopSound(GameSound::OverWorld);
+		Sound::playSound(GameSound::Underworld);
+		temp->prevWorldX = temp->worldX;
+		temp->prevWorldY = temp->worldY;
+		temp->inventory->playerBar->currentDungeon = DungeonLevel::ONE;
+		temp->inventory->playerBar->resetDungeonPlayerMarker();
+		float teleportX = temp->worldY*Global::roomWidth + (0.5*Global::roomWidth);
+		float teleportY = temp->worldX*Global::roomHeight + Global::roomHeight + Global::inventoryHeight - 2 * Global::TileHeight;
+		temp->position = Point(teleportX, teleportY);
 		for(int i = 0; i < temp->walkingAnimation.size(); i++) {
 			temp->walkingAnimation[i]->sprite.setPosition(temp->position.x, temp->position.y);
 			temp->attackAnimation[i]->sprite.setPosition(temp->position.x, temp->position.y);

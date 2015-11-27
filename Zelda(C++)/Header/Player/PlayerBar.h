@@ -4,6 +4,7 @@
 #include "SFML\Graphics.hpp"
 #include <sstream>
 #include "Type\SwordType.h"
+#include "Type\DungeonLevel.h"
 class PlayerBar{
 public:
 	PlayerBar(Point pos);
@@ -13,20 +14,23 @@ public:
 	void draw(sf::RenderWindow& mainWindow);
 	void update();
 	void setBarNextPosition(Point step);
+	void setPlayerBar(Point pt);
 	void decreaseCurrentHP(int amount);
 	int getCurrentHP();
 	void increaseBombAmount(int amount);
 	void increaseRupeeAmount(int amount);
 	bool isFullHP();
 	SwordType mySword;
+	DungeonLevel currentDungeon;
 	void movePlayerBarToBottomScreen();
 	void movePlayerBarToTopScreen();
 	void updatePlayerMapMarker(Direction direction);
-	sf::RectangleShape playerMarker, playerBar, overworldMap;
-	Point marker;
+	sf::RectangleShape playerMarker,playerBar, overworldMap,dungeonMap,dungeonPlayerMarker;
+	Point marker,dungeonMarker;
 	sf::Sprite itemSlotS;
 	int diamondAmount, keysAmount, bombAmount;
 	void increaseMaxHP();
+	void resetDungeonPlayerMarker();
 private:
 	Point bar, map, healthBarStart, itemSlotStart, diamondStart, itemSlotTextStart, bombStart, bombTextStart,
 		diamondTextStart, keyTextStart, keyStart, itemSelection, swordSlot, itemSlotImage;
@@ -39,6 +43,7 @@ private:
 	void drawBombInfo(sf::RenderWindow& mainWindow);
 	void drawDiamondInfo(sf::RenderWindow& mainWindow);
 	void drawKeyInfo(sf::RenderWindow& mainWindow);
+	void drawDungeonMap(sf::RenderWindow& mainWindow);
 	const int heartWidth = 16,heartHeight=16,maxHeartPerRow=8,maxRupee=999;
 	void loadImages();
 	sf::Font font;

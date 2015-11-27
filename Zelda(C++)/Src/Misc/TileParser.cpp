@@ -20,6 +20,9 @@
 #include "Misc\NPC.h"
 #include "Monster\Armos.h"
 #include "Monster\Keese.h"
+#include "Misc\MoveableBlock.h"
+#include "Misc\Marker\TeleportToArtifactRoom.h"
+#include "Misc\Marker\TeleportFromArtifactRoom.h"
 TileParser::TileParser() {}
 
 void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector, int vectorXindex, int vectorYindex) {
@@ -242,16 +245,16 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile29);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
-	case Identifier::DungeonTile30:
-	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile30);
+	case Identifier::ArtifactRoomStair:
+	tile = std::make_shared<Tile>(pt, false, TileType::ArtifactRoomStair);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
-	case Identifier::DungeonTile31:
-	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile31);
+	case Identifier::ArtifactRoomWall:
+		tile = std::make_shared<Tile>(pt, true, TileType::ArtifactRoomWall);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
-	case Identifier::DungeonTile32:
-	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile32);
+	case Identifier::DungeonPushBlock:
+	tile = std::make_shared<MoveableBlock>(pt);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile33:
@@ -416,8 +419,8 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile72);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
-	case Identifier::DungeonTile73:
-	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile73);
+	case Identifier::ToArtifactRoom:
+	tile = std::make_shared<TeleportToArtifactRoom>(pt);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile74:
@@ -428,8 +431,8 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile75);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
-	case Identifier::DungeonTile76:
-	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile76);
+	case Identifier::FromArtifactRoom:
+	tile = std::make_shared<TeleportFromArtifactRoom>(pt);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile77:
@@ -536,6 +539,14 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::BlueBat:
 	tile = std::make_shared<Keese>(pt, true);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::Unknown:
+	//tile = std::make_shared<Keese>(pt, true);
+	//objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::BlackTileBlocker:
+	tile = std::make_shared<Tile>(pt, true,TileType::BlackTile);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	}

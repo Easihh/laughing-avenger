@@ -12,8 +12,9 @@
 #include "Misc\Marker\ShopMarker.h"
 #include "Misc\WorldMap.h"
 #include "Misc\NPC.h"
+#include "Misc\MoveableBlock.h"
  Player::Player(Point pos){
-	 depth = 999;
+	 depth = 100;
 	 stepToMove = 0;
 	 currentLayer=prevLayer =OverWorld;
 	 stepToAlign = currentInvincibleFrame = transitionStep = xOffset = yOffset = 0;
@@ -286,7 +287,8 @@
 	 Point offset(xOffset, yOffset);
 	 for(auto& obj : *worldMap)
 	 {
-		if (dynamic_cast<Tile*>(obj.get()) || dynamic_cast<NPC*>(obj.get()))
+		if (dynamic_cast<Tile*>(obj.get()) || dynamic_cast<NPC*>(obj.get())
+			|| dynamic_cast<MoveableBlock*>(obj.get()))
 			if (intersect(mask, obj->fullMask, offset) && obj->isCollideable){
 				collision = true;
 				//std::cout << "CollisionX:" << obj->position.x << std::endl;
@@ -458,8 +460,7 @@
 	 if (stepToAlign < Global::minStep)
 		 stepToAlign = 0;
 	 else stepToAlign -= Global::minStep;
-	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(position.x, position.y);
-	 attackAnimation[attackAnimationIndex]->sprite.setPosition(position.x, position.y);
+	 updateSprites();
  }
  void Player::completeMove(){
 	 stepToMove -= Global::minStep;
@@ -477,6 +478,9 @@
 		 position.y += Global::minStep;
 			 break;
 	 }
+	 updateSprites();
+ }
+ void Player::updateSprites(){
 	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(position.x, position.y);
 	 attackAnimation[attackAnimationIndex]->sprite.setPosition(position.x, position.y);
  }
@@ -496,14 +500,14 @@
 	 mainWindow.draw(*fullMask);
  }
  void Player::drawText(sf::RenderWindow& mainWindow){
-	 /*sf::Font font;
+	 sf::Font font;
 	 std::stringstream pos;
-	 /*pos << "X:" << position.x << std::endl << "Y:" << position.y << std::endl
+	 pos << "X:" << position.x << std::endl << "Y:" << position.y << std::endl
 		 <<"WorldX:"<<worldX <<std::endl <<"WorldY:"<<worldY<<std::endl;
 	 font.loadFromFile("arial.ttf");
 	 sf::Text txt(pos.str(), font);
 	 txt.setColor(sf::Color::Red);
 	 txt.setPosition(position.x, position.y - 64);
 	 txt.setCharacterSize(textSize);
-	 mainWindow.draw(txt);*/
+	 mainWindow.draw(txt);
  }

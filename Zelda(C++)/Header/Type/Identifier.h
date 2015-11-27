@@ -55,9 +55,9 @@ enum Identifier {
 	DungeonTile27 = 50,
 	DungeonTile28 = 51,
 	DungeonTile29 = 52,
-	DungeonTile30 = 53,
-	DungeonTile31 = 54,
-	DungeonTile32 = 55,
+	ArtifactRoomStair = 53,
+	ArtifactRoomWall = 54,
+	DungeonPushBlock = 55,
 	DungeonTile33 = 56,
 	DungeonTile34 = 57,
 	DungeonTile35 = 58,
@@ -98,10 +98,10 @@ enum Identifier {
 	DungeonTile70 = 93,
 	DungeonTile71 = 94,
 	DungeonTile72 = 95,
-	DungeonTile73 = 96,
+	ToArtifactRoom = 96,
 	DungeonTile74 = 97,
 	DungeonTile75 = 98,
-	DungeonTile76 = 99,
+	FromArtifactRoom = 99,
 	DungeonTile77 = 100,
 	DungeonTile78 = 101,
 	DungeonTile79 = 102,
@@ -128,6 +128,8 @@ enum Identifier {
 	OverworldTile11 = 123,
 	OverworldTile12 = 124,
 	BlueBat = 125,
+	Unknown=126,
+	BlackTileBlocker =127
 };
 
 #endif

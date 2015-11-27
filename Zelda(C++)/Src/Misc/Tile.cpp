@@ -118,10 +118,10 @@ void Tile::loadTileImage(TileType type) {
 	case TileType::DungeonTile29:
 		texture.loadFromFile("Tileset/Dungeon/dungeonTile29.png");
 		break;
-	case TileType::DungeonTile30:
+	case TileType::ArtifactRoomStair:
 		texture.loadFromFile("Tileset/Dungeon/dungeonTile30.png");
 		break;
-	case TileType::DungeonTile31:
+	case TileType::ArtifactRoomWall:
 		texture.loadFromFile("Tileset/Dungeon/dungeonTile31.png");
 		break;
 	case TileType::DungeonTile32:

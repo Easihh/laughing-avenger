@@ -14,6 +14,16 @@ LeaveDungeonMarker::LeaveDungeonMarker(Point pos) {
 void LeaveDungeonMarker::draw(sf::RenderWindow& window) {
 	window.draw(sprite);
 }
+Point LeaveDungeonMarker::getReturnPointForPlayerLeavingDungeon(DungeonLevel level){
+	Point retVal;
+	switch (level){
+	case DungeonLevel::ONE:
+		retVal.x = 1824;
+		retVal.y = 1824;
+		break;
+	}
+	return retVal;
+}
 void LeaveDungeonMarker::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	if(isCollidingWithPlayer(Worldmap)){
 		Player* temp = ((Player*)findPlayer(Worldmap).get());
@@ -26,7 +36,8 @@ void LeaveDungeonMarker::update(std::vector<std::shared_ptr<GameObject>>* Worldm
 		temp->prevWorldY = worldY;
 		temp->currentLayer = Layer::OverWorld;
 		temp->prevLayer = Layer::Dungeon;
-		temp->position = *temp->pointBeforeTeleport.get();
+		temp->position = getReturnPointForPlayerLeavingDungeon(temp->inventory->playerBar->currentDungeon);
+		temp->inventory->playerBar->currentDungeon = DungeonLevel::NONE;
 		for(int i = 0; i < temp->walkingAnimation.size(); i++) {
 			temp->walkingAnimation[i]->sprite.setPosition(temp->position.x, temp->position.y);
 			temp->attackAnimation[i]->sprite.setPosition(temp->position.x, temp->position.y);

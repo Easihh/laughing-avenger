@@ -1,6 +1,16 @@
+Version 0.072
+
+-Various additional to Dungeon Layer.
+-Player can now push back certain block.
+-Player can now access artifact room in the dungeon.
+-Fixed an issue with throwing boomerang crashing the game if moving/teleporting to a different room.
+-Player is no longer drawn over the dungeon door when moving.
+-Reworked logic for teleport to/from dungeon.
+-Added Dungeon Level 1 map.
+
 Version 0.071
 
--Many Additiona to the dungeon layer/rooms
+-Many additions to the dungeon layer/rooms
 -Keese monster no longer collide with dungeon tile.
 -Keese monster can now move diagonally.
 -Keese monster can now be killed with boomerang.

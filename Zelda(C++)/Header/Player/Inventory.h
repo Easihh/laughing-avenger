@@ -19,6 +19,7 @@ public:
 	void findNextSelectorPositionRight();
 	void findNextSelectorPositionLeft();
 	std::unique_ptr<PlayerBar> playerBar;
+	void setInventoryPosition(Point pos);
 private:
 	sf::RectangleShape inventoryRect, itemSelected;
 	void getInput(sf::Event& event);

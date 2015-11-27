@@ -7,6 +7,7 @@
 #include "Misc\CandleFlame.h"
 #include "Type\Identifier.h"
 #include "Item\ThrownBoomrang.h"
+#include "Misc\MoveableBlock.h"
 WorldMap::WorldMap(){
 	setupVectors();
 	parser = std::make_unique<TileParser>();
@@ -156,7 +157,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 					tmp.reset();
 					secretRoomVector[oldWorldX][oldWorldY].erase(secretRoomVector[oldWorldX][oldWorldY].begin() + i);
 					gameMainVector[newWorldX][newWorldY].push_back(player);
-					sort(gameMainVector);
+					//sort(gameMainVector);
 					deleteOutstandingPlayerObjects(&secretRoomVector[oldWorldX][oldWorldY]);
 				}
 			}
@@ -169,7 +170,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 					tmp.reset();
 					gameMainVector[oldWorldX][oldWorldY].erase(gameMainVector[oldWorldX][oldWorldY].begin() + i);
 					gameMainVector[newWorldX][newWorldY].push_back(player);
-					sort(gameMainVector);
+					//sort(gameMainVector);
 					deleteOutstandingPlayerObjects(&gameMainVector[oldWorldX][oldWorldY]);
 				}
 			}
@@ -181,7 +182,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 					tmp.reset();
 					dungeonVector[oldWorldX][oldWorldY].erase(dungeonVector[oldWorldX][oldWorldY].begin() + i);
 					gameMainVector[newWorldX][newWorldY].push_back(player);
-					sort(gameMainVector);
+					//sort(gameMainVector);
 					deleteOutstandingPlayerObjects(&dungeonVector[oldWorldX][oldWorldY]);
 				}
 			}
@@ -209,6 +210,10 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 					tmp.reset();
 					dungeonVector[oldWorldX][oldWorldY].erase(dungeonVector[oldWorldX][oldWorldY].begin() + i);
 					deleteOutstandingPlayerObjects(&dungeonVector[oldWorldX][oldWorldY]);
+				}
+				if (dynamic_cast<MoveableBlock*>(tmp.get())){
+					MoveableBlock* block = (MoveableBlock*)tmp.get();
+					block->resetPosition();
 				}
 			}
 		}
@@ -271,8 +276,13 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 		drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY]);
 		for(auto& obj : gameMainVector[player->worldX][player->worldY])
 		{
-			obj->update(&gameMainVector[player->worldX][player->worldY]);
-			obj->draw(mainWindow);
+			if (!player->movePlayerToNewVector){
+				//if true the current vector may have changed mid loop since worldX/worldY 
+				//may be udpated(Teleport to Artifact room for example)
+				//->unpredictable errors in other object update from previous vector.
+				obj->update(&gameMainVector[player->worldX][player->worldY]);
+				obj->draw(mainWindow);
+			}
 		}
 		if (Static::toAdd.size()>0)
 			addToGameVector(&gameMainVector[player->worldX][player->worldY]);
@@ -285,8 +295,10 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 		drawScreen(mainWindow, &secretRoomBackgroundVector[player->worldX][player->worldY]);
 		for(auto& obj : secretRoomVector[player->worldX][player->worldY])
 		{
-			obj->update(&secretRoomVector[player->worldX][player->worldY]);
-			obj->draw(mainWindow);
+			if (!player->movePlayerToNewVector){
+				obj->update(&secretRoomVector[player->worldX][player->worldY]);
+				obj->draw(mainWindow);
+			}
 		}
 		if (Static::toAdd.size()>0)
 			addToGameVector(&secretRoomVector[player->worldX][player->worldY]);
@@ -299,8 +311,10 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 		drawScreen(mainWindow, &dungeonBackgroundVector[player->worldX][player->worldY]);
 		for(auto& obj : dungeonVector[player->worldX][player->worldY])
 		{
-			obj->update(&dungeonVector[player->worldX][player->worldY]);
-			obj->draw(mainWindow);
+			if (!player->movePlayerToNewVector){
+				obj->update(&dungeonVector[player->worldX][player->worldY]);
+				obj->draw(mainWindow);
+			}
 		}
 		if (Static::toAdd.size()>0)
 			addToGameVector(&dungeonVector[player->worldX][player->worldY]);

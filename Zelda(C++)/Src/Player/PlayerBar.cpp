@@ -1,6 +1,7 @@
 #include "Player\PlayerBar.h"
 #include "Utility\Static.h"
 PlayerBar::PlayerBar(Point start){
+	currentDungeon = DungeonLevel::NONE;
 	maxBombAmount = 8;
 	mySword = SwordType::None;
 	int worldX = start.y / Global::roomHeight;
@@ -63,16 +64,24 @@ void PlayerBar::increaseMaxHP() {
 void PlayerBar::updatePlayerMapMarker(Direction direction){
 	switch (direction){
 	case Direction::Down:
-		marker.y += Global::playerMarkerHeight;
+		if (currentDungeon==DungeonLevel::NONE)
+			marker.y += Global::playerMarkerHeight;
+		else dungeonMarker.y += Global::playerMarkerHeight;
 		break;
 	case Direction::Up:
-		marker.y -= Global::playerMarkerHeight;
+		if (currentDungeon == DungeonLevel::NONE)
+			marker.y -= Global::playerMarkerHeight;
+		else dungeonMarker.y -= Global::playerMarkerHeight;
 		break;
 	case Direction::Right:
-		marker.x += Global::playerMarkerWidth;
+		if (currentDungeon == DungeonLevel::NONE)
+			marker.x += Global::playerMarkerWidth;
+		else dungeonMarker.x += Global::HalfTileWidth;
 		break;
 	case Direction::Left:
-		marker.x -= Global::playerMarkerWidth;
+		if (currentDungeon == DungeonLevel::NONE)
+			marker.x -= Global::playerMarkerWidth;
+		else dungeonMarker.x -= Global::HalfTileWidth;
 		break;
 	}
 }
@@ -85,6 +94,11 @@ void PlayerBar::setupMap(){
 	sf::Vector2f size(Global::overworldMapWidth, Global::overworldMapHeight);
 	overworldMap.setSize(size);
 	overworldMap.setPosition(map.x, map.y);
+
+	dungeonMap.setFillColor(sf::Color::Black);
+	//sf::Vector2f size(Global::overworldMapWidth, Global::overworldMapHeight);
+	dungeonMap.setSize(size);
+	dungeonMap.setPosition(map.x, map.y);
 }
 void PlayerBar::setupPlayerBar(){
 	playerBar.setFillColor(sf::Color::Black);
@@ -100,10 +114,15 @@ void PlayerBar::setupPlayerMarker(){
 	sf::Vector2f size(Global::playerMarkerWidth, Global::playerMarkerHeight);
 	playerMarker.setSize(size);
 	playerMarker.setPosition(marker.x, marker.y);
+
+	dungeonPlayerMarker.setFillColor(sf::Color::Green);
+	dungeonPlayerMarker.setSize(size);
+	dungeonPlayerMarker.setPosition(dungeonMarker.x, dungeonMarker.y);
 }
 void PlayerBar::setBarNextPosition(Point step){
 	bar +=step;
 	marker+=step;
+	dungeonMarker += step;
 	map+=(step);
 	healthBarStart+=(step);
 	itemSlotStart+=(step);
@@ -116,6 +135,24 @@ void PlayerBar::setBarNextPosition(Point step){
 	keyTextStart+=(step);
 	swordSlot+=(step);
 	itemSlotImage+=(step);
+}
+void PlayerBar::setPlayerBar(Point pt){
+	int worldX = pt.y / Global::roomHeight;
+	int worldY = pt.x / Global::roomWidth;
+	bar.setPoint(pt.x,pt.y);
+	marker.setPoint(pt.x + 16 + (worldY*Global::playerMarkerHeight), pt.y+32 + (worldX*Global::playerMarkerWidth));
+	map.setPoint(pt.x+16, pt.y+32);
+	healthBarStart.setPoint(pt.x+320, pt.y+80);
+	itemSlotStart.setPoint(pt.x+216, pt.y+36);
+	diamondStart.setPoint(pt.x+152, pt.y+32);
+	itemSlotTextStart.setPoint(pt.x+228, pt.y+26);
+	bombStart.setPoint(pt.x+150, pt.y+96);
+	bombTextStart.setPoint(pt.x+170, pt.y+78);
+	diamondTextStart.setPoint(pt.x+155, pt.y+30);
+	keyStart.setPoint(pt.x+150, pt.y+56);
+	keyTextStart.setPoint(pt.x+170, pt.y+54);
+	swordSlot.setPoint(pt.x+268, pt.y+50);
+	itemSlotImage.setPoint(pt.x+220, pt.y+50);
 }
 void PlayerBar::movePlayerBarToBottomScreen(){
 	healthBarStart.y += Global::SCREEN_HEIGHT-Global::inventoryHeight;
@@ -130,6 +167,7 @@ void PlayerBar::movePlayerBarToBottomScreen(){
 	bar.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 	map.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 	marker.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
+	dungeonMarker.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 	swordSlot.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 	itemSlotImage.y += Global::SCREEN_HEIGHT - Global::inventoryHeight;
 }
@@ -145,6 +183,7 @@ void PlayerBar::movePlayerBarToTopScreen(){
 	keyTextStart.y = keyTextStart.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 	bar.y = bar.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 	marker.y = marker.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
+	dungeonMarker.y = dungeonMarker.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 	swordSlot.y = swordSlot.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 	map.y = map.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
 	itemSlotImage.y = itemSlotImage.y - Global::SCREEN_HEIGHT + Global::inventoryHeight;
@@ -273,14 +312,65 @@ void PlayerBar::drawPlayerBar(sf::RenderWindow& mainWindow){
 	drawKeyInfo(mainWindow);
 	drawItemsSlot(mainWindow);
 }
+void PlayerBar::drawDungeonMap(sf::RenderWindow& mainWindow){
+	sf::RectangleShape dungeonMapRect;
+	int spaceBetweenDungeonRect = 1;
+	sf::Vector2f size(15,7);
+	dungeonMapRect.setFillColor(sf::Color(110, 93, 243));
+	dungeonMapRect.setSize(size);
+	std::stringstream pos;
+	pos << "LEVEL-" << (int)currentDungeon;
+	sf::Text txt(pos.str(), font);
+	txt.setPosition(bar.x+16, bar.y+16);
+	txt.setColor(sf::Color::White);
+	txt.setCharacterSize(14);
+	mainWindow.draw(txt);
+	mainWindow.draw(dungeonMap);
+	dungeonMapRect.setPosition(map.x+56, map.y + 56);
+	mainWindow.draw(dungeonMapRect);
+	dungeonMapRect.setPosition(map.x+72, map.y + 56);
+	mainWindow.draw(dungeonMapRect);
+	dungeonMapRect.setPosition(map.x + 72, map.y + 48);
+	mainWindow.draw(dungeonMapRect);
+	dungeonMapRect.setPosition(map.x + 56, map.y + 48);
+	mainWindow.draw(dungeonMapRect);
+	dungeonMapRect.setPosition(map.x + 40, map.y + 48);
+	mainWindow.draw(dungeonMapRect);
+	dungeonMapRect.setPosition(map.x + 40, map.y + 56);
+	mainWindow.draw(dungeonMapRect);
+	dungeonMapRect.setPosition(map.x + 24, map.y + 48);
+	mainWindow.draw(dungeonMapRect);
+	dungeonMapRect.setPosition(map.x + 24, map.y + 56 );
+	mainWindow.draw(dungeonMapRect);
+	dungeonMapRect.setPosition(map.x + 56, map.y + 40);
+	mainWindow.draw(dungeonMapRect);
+	dungeonMapRect.setPosition(map.x + 40, map.y + 40);
+	mainWindow.draw(dungeonMapRect);
+	dungeonMapRect.setPosition(map.x + 56, map.y + 32);
+	mainWindow.draw(dungeonMapRect);
+	dungeonMapRect.setPosition(map.x + 72, map.y + 32);
+	mainWindow.draw(dungeonMapRect);
+}
 void PlayerBar::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(playerBar);
-	mainWindow.draw(overworldMap);
-	mainWindow.draw(playerMarker);
+	if (currentDungeon == DungeonLevel::NONE){
+		mainWindow.draw(overworldMap);
+		mainWindow.draw(playerMarker);
+	}
+	else {
+		drawDungeonMap(mainWindow);
+		mainWindow.draw(dungeonPlayerMarker);
+	}
 	drawPlayerBar(mainWindow);
+}
+void PlayerBar::resetDungeonPlayerMarker(){
+	dungeonMarker.x = map.x+60;
+	dungeonMarker.y = map.y+56;
 }
 void PlayerBar::update(){
 	playerBar.setPosition(bar.x, bar.y);
 	overworldMap.setPosition(map.x, map.y);
+	dungeonMap.setPosition(map.x, map.y);
 	playerMarker.setPosition(marker.x, marker.y);
+	dungeonPlayerMarker.setPosition(dungeonMarker.x, dungeonMarker.y);
 }

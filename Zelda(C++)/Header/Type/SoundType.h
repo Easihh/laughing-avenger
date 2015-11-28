@@ -18,7 +18,8 @@ namespace GameSound{
 		Underworld,
 		OverWorld,
 		SecretRoom,
-		Boomerang
+		Boomerang,
+		Triforce
 	};
 }
 #endif

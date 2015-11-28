@@ -15,6 +15,7 @@ public:
 	void updateInventoryPosition(Point step);
 	int selectorInventoryIndex;
 	Item* getCurrentItem();
+	void acquireBow();
 	void itemUse(Point position,Direction dir, std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void findNextSelectorPositionRight();
 	void findNextSelectorPositionLeft();
@@ -27,7 +28,7 @@ private:
 	sf::Sprite selector;
 	sf::Font font;
 	sf::Text txt;
-	sf::Texture texture;
+	sf::Texture selectorTexture,completeBowTexture;
 	const int selectorWidth=32, selectorHeight = 32;
 	void loadSelector();
 	void drawInventoryItems(sf::RenderWindow& mainWindow);

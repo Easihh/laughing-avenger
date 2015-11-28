@@ -2,6 +2,7 @@
 #include "Utility\Static.h"
 PlayerBar::PlayerBar(Point start){
 	currentDungeon = DungeonLevel::NONE;
+	hasDungeonMap=hasDungeonCompass = false;
 	maxBombAmount = 8;
 	mySword = SwordType::None;
 	int worldX = start.y / Global::roomHeight;
@@ -118,6 +119,9 @@ void PlayerBar::setupPlayerMarker(){
 	dungeonPlayerMarker.setFillColor(sf::Color::Green);
 	dungeonPlayerMarker.setSize(size);
 	dungeonPlayerMarker.setPosition(dungeonMarker.x, dungeonMarker.y);
+
+	dungeonBossMarker.setSize(size);
+	dungeonBossMarker.setFillColor(sf::Color::Red);
 }
 void PlayerBar::setBarNextPosition(Point step){
 	bar +=step;
@@ -326,30 +330,34 @@ void PlayerBar::drawDungeonMap(sf::RenderWindow& mainWindow){
 	txt.setCharacterSize(14);
 	mainWindow.draw(txt);
 	mainWindow.draw(dungeonMap);
-	dungeonMapRect.setPosition(map.x+56, map.y + 56);
-	mainWindow.draw(dungeonMapRect);
-	dungeonMapRect.setPosition(map.x+72, map.y + 56);
-	mainWindow.draw(dungeonMapRect);
-	dungeonMapRect.setPosition(map.x + 72, map.y + 48);
-	mainWindow.draw(dungeonMapRect);
-	dungeonMapRect.setPosition(map.x + 56, map.y + 48);
-	mainWindow.draw(dungeonMapRect);
-	dungeonMapRect.setPosition(map.x + 40, map.y + 48);
-	mainWindow.draw(dungeonMapRect);
-	dungeonMapRect.setPosition(map.x + 40, map.y + 56);
-	mainWindow.draw(dungeonMapRect);
-	dungeonMapRect.setPosition(map.x + 24, map.y + 48);
-	mainWindow.draw(dungeonMapRect);
-	dungeonMapRect.setPosition(map.x + 24, map.y + 56 );
-	mainWindow.draw(dungeonMapRect);
-	dungeonMapRect.setPosition(map.x + 56, map.y + 40);
-	mainWindow.draw(dungeonMapRect);
-	dungeonMapRect.setPosition(map.x + 40, map.y + 40);
-	mainWindow.draw(dungeonMapRect);
-	dungeonMapRect.setPosition(map.x + 56, map.y + 32);
-	mainWindow.draw(dungeonMapRect);
-	dungeonMapRect.setPosition(map.x + 72, map.y + 32);
-	mainWindow.draw(dungeonMapRect);
+	if (hasDungeonMap){
+		dungeonMapRect.setPosition(map.x + 56, map.y + 56);
+		mainWindow.draw(dungeonMapRect);
+		dungeonMapRect.setPosition(map.x + 72, map.y + 56);
+		mainWindow.draw(dungeonMapRect);
+		dungeonMapRect.setPosition(map.x + 72, map.y + 48);
+		mainWindow.draw(dungeonMapRect);
+		dungeonMapRect.setPosition(map.x + 56, map.y + 48);
+		mainWindow.draw(dungeonMapRect);
+		dungeonMapRect.setPosition(map.x + 40, map.y + 48);
+		mainWindow.draw(dungeonMapRect);
+		dungeonMapRect.setPosition(map.x + 40, map.y + 56);
+		mainWindow.draw(dungeonMapRect);
+		dungeonMapRect.setPosition(map.x + 24, map.y + 48);
+		mainWindow.draw(dungeonMapRect);
+		dungeonMapRect.setPosition(map.x + 24, map.y + 56);
+		mainWindow.draw(dungeonMapRect);
+		dungeonMapRect.setPosition(map.x + 56, map.y + 40);
+		mainWindow.draw(dungeonMapRect);
+		dungeonMapRect.setPosition(map.x + 40, map.y + 40);
+		mainWindow.draw(dungeonMapRect);
+		dungeonMapRect.setPosition(map.x + 56, map.y + 32);
+		mainWindow.draw(dungeonMapRect);
+		dungeonMapRect.setPosition(map.x + 72, map.y + 32);
+		mainWindow.draw(dungeonMapRect);
+	}
+	if (hasDungeonCompass)
+		mainWindow.draw(dungeonBossMarker);
 }
 void PlayerBar::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(playerBar);
@@ -366,6 +374,8 @@ void PlayerBar::draw(sf::RenderWindow& mainWindow){
 void PlayerBar::resetDungeonPlayerMarker(){
 	dungeonMarker.x = map.x+60;
 	dungeonMarker.y = map.y+56;
+	bossMarker.x = map.x + 76;
+	bossMarker.y = map.y + 32;
 }
 void PlayerBar::update(){
 	playerBar.setPosition(bar.x, bar.y);
@@ -373,4 +383,5 @@ void PlayerBar::update(){
 	dungeonMap.setPosition(map.x, map.y);
 	playerMarker.setPosition(marker.x, marker.y);
 	dungeonPlayerMarker.setPosition(dungeonMarker.x, dungeonMarker.y);
+	dungeonBossMarker.setPosition(bossMarker.x, bossMarker.y);
 }

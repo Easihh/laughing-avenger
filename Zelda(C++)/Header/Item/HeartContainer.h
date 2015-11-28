@@ -1,9 +1,9 @@
-#ifndef HEARTCONTAINERPICKUP_H
-#define HEARTCONTAINERPICKUP_H
+#ifndef HEARTCONTAINER_H
+#define HEARTCONTAINER_H
 #include "Misc\GameObject.h"
-class HeartContainerPickUp :public GameObject {
+class HeartContainer :public GameObject {
 public:
-	HeartContainerPickUp(Point pos);
+	HeartContainer(Point pos);
 	void update(std::vector<std::shared_ptr<GameObject>>* Worldmap);
 	void draw(sf::RenderWindow& mainWindow);
 private:

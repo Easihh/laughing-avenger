@@ -1,5 +1,6 @@
 #include "Player\Inventory.h"
 #include "Utility\Static.h"
+#include "Item\Arrow.h"
 #include <iostream>
 Inventory::Inventory(int worldX,int worldY){
 	float startX = worldY*Global::roomHeight;
@@ -35,9 +36,9 @@ void Inventory::loadInventoryRectangle(){
 void Inventory::loadSelector(){
 	//selectorInventoryXIndex = -1;
 	//selectorInventoryYIndex = -1;
-	if (!texture.loadFromFile("Tileset/Selector.png"))
+	if (!selectorTexture.loadFromFile("Tileset/Selector.png"))
 		std::cout << "Failed to load Selector";
-	selector.setTexture(texture);
+	selector.setTexture(selectorTexture);
 	selector.setPosition(startPosition.x + 228, startPosition.y+180);
 }
 void Inventory::updateInventoryPosition(Point step){
@@ -65,6 +66,13 @@ void Inventory::itemUse(Point pos,Direction dir, std::vector<std::shared_ptr<Gam
 			playerBar->itemSlotS = getCurrentItem()->sprite;
 		}
 	}
+}
+void Inventory::acquireBow(){
+	Arrow* temp = (Arrow*)items.at(2).get();
+	completeBowTexture.loadFromFile("Tileset/BowAndArrow.png");
+	temp->texture = completeBowTexture;
+	temp->sprite.setTexture(completeBowTexture);
+	temp->bowIsActive = true;
 }
 void Inventory::transitionToInventory(){
 	playerBar->movePlayerBarToBottomScreen();
@@ -100,15 +108,35 @@ void Inventory::findNextSelectorPositionLeft() {
 	bool found = false;
 	for(int i = selectorInventoryIndex; i >= 0; i--){
 		if(items[i] != NULL && i != selectorInventoryIndex && !found){
-			selectorInventoryIndex = i;
-			found = true;
+			if (dynamic_cast<Arrow*>(items[i].get())){
+				Arrow* temp = (Arrow*)items[i].get();
+				if (temp->bowIsActive){
+					selectorInventoryIndex = i;
+					found = true;
+				}
+				else continue;
+			}
+			else {
+				selectorInventoryIndex = i;
+				found = true;
+			}
 		}
 	}
 	if(!found){
 		for(int i = items.size()-1; i > selectorInventoryIndex; i--)
 			if(items[i] != NULL){
-				found = true;
-				selectorInventoryIndex = i;
+				if (dynamic_cast<Arrow*>(items[i].get())){
+					Arrow* temp = (Arrow*)items[i].get();
+					if (temp->bowIsActive){
+						selectorInventoryIndex = i;
+						found = true;
+					}
+					else continue;
+				}
+				else {
+					selectorInventoryIndex = i;
+					found = true;
+				}
 			}
 	}
 	if(found){
@@ -124,22 +152,40 @@ void Inventory::findNextSelectorPositionRight(){
 	bool found = false;
 	for (int i = selectorInventoryIndex; i < items.size(); i++){
 		if (items[i] != NULL && i!=selectorInventoryIndex && !found){
-			if(Static::gameState == GameState::InventoryMenu)
-				Sound::playSound(GameSound::SoundType::Selector);
-			selectorInventoryIndex = i;
-			found = true;
+			if (dynamic_cast<Arrow*>(items[i].get())){
+				Arrow* temp = (Arrow*)items[i].get();
+				if (temp->bowIsActive){
+					selectorInventoryIndex = i;
+					found = true;
+				}
+				else continue;
+			}
+			else {
+				selectorInventoryIndex = i;
+				found = true;
+			}
 		}
 	}
 	if(!found){
 		for(int i = 0; i < selectorInventoryIndex; i++)
 			if(items[i] != NULL){
-				if(Static::gameState == GameState::InventoryMenu)
-					Sound::playSound(GameSound::SoundType::Selector);
-				selectorInventoryIndex = i;
-				found = true;
+				if (dynamic_cast<Arrow*>(items[i].get())){
+					Arrow* temp = (Arrow*)items[i].get();
+					if (temp->bowIsActive){
+						selectorInventoryIndex = i;
+						found = true;
+					}
+					else continue;
+				}
+				else {
+					selectorInventoryIndex = i;
+					found = true;
+				}
 			}
 	}
 	if(found){
+		if (Static::gameState == GameState::InventoryMenu)
+			Sound::playSound(GameSound::SoundType::Selector);
 		int i = selectorInventoryIndex;
 		selectedItem = items[i]->sprite;
 		selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);

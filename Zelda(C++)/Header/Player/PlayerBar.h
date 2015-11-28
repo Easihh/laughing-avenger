@@ -25,12 +25,13 @@ public:
 	void movePlayerBarToBottomScreen();
 	void movePlayerBarToTopScreen();
 	void updatePlayerMapMarker(Direction direction);
-	sf::RectangleShape playerMarker,playerBar, overworldMap,dungeonMap,dungeonPlayerMarker;
-	Point marker,dungeonMarker;
+	sf::RectangleShape playerMarker,playerBar, overworldMap,dungeonMap,dungeonPlayerMarker,dungeonBossMarker;
+	Point marker,dungeonMarker,bossMarker;
 	sf::Sprite itemSlotS;
 	int diamondAmount, keysAmount, bombAmount;
 	void increaseMaxHP();
 	void resetDungeonPlayerMarker();
+	bool hasDungeonMap,hasDungeonCompass;
 private:
 	Point bar, map, healthBarStart, itemSlotStart, diamondStart, itemSlotTextStart, bombStart, bombTextStart,
 		diamondTextStart, keyTextStart, keyStart, itemSelection, swordSlot, itemSlotImage;

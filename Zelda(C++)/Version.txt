@@ -1,3 +1,14 @@
+Version 0.073
+
+-Added Dungeon Map Item.
+-Player no longer see dungeon map until the Dungeon Map Item is acquired.
+-Added Dungeon Compass item.
+-Player can now see the triforce location on dungeon map after acquiring the compass.
+-Added Bow Item.
+-Player can no longer fire arrows without possessing the Bow.
+-Player can no longer select arrows in inventory if not possessing the bow.
+-Arrows is no longer removed from inventory when rupee amount hit 0.
+
 Version 0.072
 
 -Various additional to Dungeon Layer.

@@ -6,6 +6,7 @@ Arrow::Arrow(Point position, std::string name) :super(position, name){
 	width = 32;
 	height = 32;
 	isActive = true;
+	bowIsActive=false;
 }
 void Arrow::onUse(Point pos, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction dir) {
 	Player* tmp = (Player*)findPlayer(worldMap).get();
@@ -17,5 +18,4 @@ void Arrow::onUse(Point pos, std::vector<std::shared_ptr<GameObject>>* worldMap,
 		Sound::playSound(GameSound::ArrowThrown);
 		Static::toAdd.push_back(myArrow);
 	}
-	if(tmp->inventory->playerBar->diamondAmount == 0) isActive = false;
 }

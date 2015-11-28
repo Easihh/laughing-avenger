@@ -16,13 +16,17 @@
 #include "Misc\Marker\LeaveDungeonMarker.h"
 #include "Misc\Marker\LeaveShopMarker.h"
 #include "Misc\SecretTree.h"
-#include "Item\HeartContainerPickUp.h"
+#include "Item\HeartContainer.h"
 #include "Misc\NPC.h"
 #include "Monster\Armos.h"
 #include "Monster\Keese.h"
 #include "Misc\MoveableBlock.h"
 #include "Misc\Marker\TeleportToArtifactRoom.h"
 #include "Misc\Marker\TeleportFromArtifactRoom.h"
+#include "Item\DungeonMap.h"
+#include "Item\Compass.h"
+#include "Item\Triforce.h"
+#include "Item\BowPickUp.h"
 TileParser::TileParser() {}
 
 void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector, int vectorXindex, int vectorYindex) {
@@ -114,8 +118,8 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	tile = std::make_shared<SecretTree>(pt);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
-	case Identifier::HeartContainer:
-	tile = std::make_shared<HeartContainerPickUp>(pt);
+	case Identifier::HeartContainerItem:
+	tile = std::make_shared<HeartContainer>(pt);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::Merchant:
@@ -541,12 +545,24 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	tile = std::make_shared<Keese>(pt, true);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
-	case Identifier::Unknown:
-	//tile = std::make_shared<Keese>(pt, true);
-	//objectVector[vectorXindex][vectorYindex].push_back(tile);
+	case Identifier::Map:
+	tile = std::make_shared<DungeonMap>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::BlackTileBlocker:
 	tile = std::make_shared<Tile>(pt, true,TileType::BlackTile);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::DungeonCompass:
+	tile = std::make_shared<Compass>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::DungeonTriforce:
+	tile = std::make_shared<Triforce>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::BowItem:
+	tile = std::make_shared<BowPickUp>(pt);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	}

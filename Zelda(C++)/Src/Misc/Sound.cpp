@@ -17,6 +17,7 @@ sf::Sound* Sound::dungeon;
 sf::Sound* Sound::overworld;
 sf::Sound* Sound::secretRoom;
 sf::Sound* Sound::boomrang;
+sf::Sound* Sound::triforce;
 Sound::Sound() {
 	buffer = new sf::SoundBuffer();
 	if(!buffer->loadFromFile("Sound/bombDrop.wav"))
@@ -101,6 +102,11 @@ Sound::Sound() {
 	boomrang = new sf::Sound();
 	boomrang->setBuffer(*buffer);
 	boomrang->setLoop(true);
+	buffer = new sf::SoundBuffer();
+	if (!buffer->loadFromFile("Sound/Triforce.ogg"))
+		std::cout << "Failed to load Triforce.ogg";
+	triforce = new sf::Sound();
+	triforce->setBuffer(*buffer);
 }
 void Sound::stopSound(GameSound::SoundType sound) {
 	if(sound == GameSound::Underworld)
@@ -143,4 +149,6 @@ void Sound::playSound(GameSound::SoundType sound) {
 		secretRoom->play();
 	else if(sound == GameSound::Boomerang)
 		boomrang->play();
+	else if (sound == GameSound::Triforce)
+		triforce->play();
 }

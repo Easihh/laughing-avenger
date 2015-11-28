@@ -1,6 +1,6 @@
-#include "Item\HeartContainerPickUp.h"
+#include "Item\HeartContainer.h"
 #include "Player\Player.h"
-HeartContainerPickUp::HeartContainerPickUp(Point pos) {
+HeartContainer::HeartContainer(Point pos) {
 	isObtained = false;
 	currentFrame = 0;
 	position = pos;
@@ -11,16 +11,19 @@ HeartContainerPickUp::HeartContainerPickUp(Point pos) {
 	sprite.setTexture(texture);
 	sprite.setPosition(position.x, position.y);
 }
-void HeartContainerPickUp::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
+void HeartContainer::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	sprite.setPosition(position.x, position.y);
 	if(isCollidingWithPlayer(Worldmap) && !isObtained) {
 		Player* tmp = ((Player*)findPlayer(Worldmap).get());
-		position.y = tmp->position.y - Global::TileHeight;
-		position.x = tmp->position.x;
+		if (tmp->inventory->playerBar->currentDungeon == DungeonLevel::NONE){
+			position.y = tmp->position.y - Global::TileHeight;
+			position.x = tmp->position.x;
+			tmp->sprite.setPosition(tmp->position.x, tmp->position.y);
+			tmp->isObtainingItem = true;
+			Sound::playSound(GameSound::NewItem);
+		}
+		else currentFrame = maxFrame;
 		tmp->inventory->playerBar->increaseMaxHP();
-		tmp->isObtainingItem = true;
-		tmp->sprite.setPosition(tmp->position.x, tmp->position.y);
-		Sound::playSound(GameSound::NewItem);
 		Sound::playSound(GameSound::NewInventoryItem);
 		isObtained = true;
 	}
@@ -34,6 +37,6 @@ void HeartContainerPickUp::update(std::vector<std::shared_ptr<GameObject>>* Worl
 		}
 	}
 }
-void HeartContainerPickUp::draw(sf::RenderWindow& mainWindow) {
+void HeartContainer::draw(sf::RenderWindow& mainWindow) {
 	mainWindow.draw(sprite);
 }

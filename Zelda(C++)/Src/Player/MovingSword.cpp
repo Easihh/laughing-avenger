@@ -6,6 +6,7 @@ MovingSword::MovingSword(Point pos,Direction attackDir,int power) {
 	position = pos;
 	swordDir = attackDir;
 	loadAnimation(attackDir);
+	depth = 9999;
 }
 void MovingSword::loadAnimation(Direction attackDir) {
 	int nextFrameInUpdates = 6;
@@ -56,8 +57,6 @@ void MovingSword::swordMovement(std::vector<std::shared_ptr<GameObject>>* worldM
 		position.y -= movingSpeed;
 		break;
 	}
-	if(isOutsideRoomBound(position))
-		destroyGameObject(worldMap);
 	fullMask->setPosition(position.x, position.y);
 }
 void MovingSword::createDestroyEffect() {
@@ -88,7 +87,7 @@ void MovingSword::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		}
 		((Monster*)collidingMonster.get())->takeDamage(swordPower,worldMap,swordDir);
 	}
-	else if(isOutsideRoomBound(position)){
+	else if (isOutsideRoomBound(position)){
 		destroyGameObject(worldMap);
 		createDestroyEffect();
 	}

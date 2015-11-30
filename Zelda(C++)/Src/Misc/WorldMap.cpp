@@ -246,8 +246,9 @@ void WorldMap::drawScreen(sf::RenderWindow& mainWindow, std::vector<std::shared_
 }
 void WorldMap::freeSpace(tripleVector&  objVector) {
 
-		for(auto& del : Static::toDelete)
+		for (int j = 0; j < Static::toDelete.size();j++)
 		{
+			std::shared_ptr<GameObject> del = Static::toDelete.at(j);
 			for(int i = 0; i < objVector[player->worldX][player->worldY].size(); i++){
 				std::shared_ptr<GameObject> tmp = objVector[player->worldX][player->worldY].at(i);
 				if(tmp == del){
@@ -255,10 +256,11 @@ void WorldMap::freeSpace(tripleVector&  objVector) {
 						player->movingSwordIsActive = false;
 					del.reset();
 					objVector[player->worldX][player->worldY].erase(objVector[player->worldX][player->worldY].begin() + i);
+					Static::toDelete.erase(Static::toDelete.begin()+j);
+					j--;
 				}
 			}
 		}
-		Static::toDelete.clear();
 }
 void WorldMap::addToGameVector(std::vector<std::shared_ptr<GameObject>>* roomObjVector) {
 	for(auto& add : Static::toAdd)
@@ -269,10 +271,14 @@ void WorldMap::addToGameVector(std::vector<std::shared_ptr<GameObject>>* roomObj
 	Static::toAdd.clear();
 }
 void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
+	if (Static::toDelete.size() > 0){
+		freeSpace(gameMainVector);
+		freeSpace(dungeonVector);
+		freeSpace(secretRoomVector);
+	}
 	if(player->currentLayer==OverWorld){
 		if(player->movePlayerToNewVector)
 			movePlayerToDifferentRoomVector(player->prevWorldX, player->prevWorldY, player->worldX, player->worldY);
-		freeSpace(gameMainVector);
 		drawScreen(mainWindow, &gameBackgroundVector[player->worldX][player->worldY]);
 		for(auto& obj : gameMainVector[player->worldX][player->worldY])
 		{
@@ -291,7 +297,6 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 	{
 		if(player->movePlayerToNewVector)
 			movePlayerToDifferentRoomVector(player->prevWorldX, player->prevWorldY, player->worldX, player->worldY);
-		freeSpace(secretRoomVector);
 		drawScreen(mainWindow, &secretRoomBackgroundVector[player->worldX][player->worldY]);
 		for(auto& obj : secretRoomVector[player->worldX][player->worldY])
 		{
@@ -307,7 +312,6 @@ void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 	{
 		if(player->movePlayerToNewVector)
 			movePlayerToDifferentRoomVector(player->prevWorldX, player->prevWorldY, player->worldX, player->worldY);
-		freeSpace(dungeonVector);
 		drawScreen(mainWindow, &dungeonBackgroundVector[player->worldX][player->worldY]);
 		for(auto& obj : dungeonVector[player->worldX][player->worldY])
 		{

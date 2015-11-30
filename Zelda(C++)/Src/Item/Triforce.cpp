@@ -11,6 +11,16 @@ Triforce::Triforce(Point pos) {
 	sprite.setTexture(texture);
 	sprite.setPosition(position.x, position.y);
 }
+Point Triforce::getReturnPointForPlayerLeavingDungeon(DungeonLevel level){
+	Point retVal;
+	switch (level){
+	case DungeonLevel::ONE:
+		retVal.x = 1824;
+		retVal.y = 1824;
+		break;
+	}
+	return retVal;
+}
 void Triforce::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	sprite.setPosition(position.x, position.y);
 	if (isCollidingWithPlayer(Worldmap) && !isObtained) {
@@ -19,6 +29,7 @@ void Triforce::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 		position.x = tmp->position.x;
 		tmp->isObtainingItem = true;
 		tmp->sprite.setPosition(tmp->position.x, tmp->position.y);
+		Sound::stopSound(GameSound::Underworld);
 		Sound::playSound(GameSound::NewInventoryItem);
 		Sound::playSound(GameSound::Triforce);
 		isObtained = true;
@@ -26,8 +37,23 @@ void Triforce::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	if (isObtained){
 		currentFrame++;
 		if (currentFrame > maxFrame){
-			Player* tmp = ((Player*)findPlayer(Worldmap).get());
-			tmp->isObtainingItem = false;
+			Player* temp = ((Player*)findPlayer(Worldmap).get());
+			temp->isObtainingItem = false;
+			Sound::playSound(GameSound::OverWorld);
+			//previousWorld must be same as current room when moving to overworld layer
+			int worldX = (int)(position.y / (Global::roomHeight + Global::inventoryHeight));
+			int worldY = (int)(position.x / Global::roomWidth);
+			temp->prevWorldX = worldX;
+			temp->prevWorldY = worldY;
+			temp->currentLayer = Layer::OverWorld;
+			temp->prevLayer = Layer::Dungeon;
+			temp->position = getReturnPointForPlayerLeavingDungeon(temp->inventory->playerBar->currentDungeon);
+			temp->inventory->playerBar->currentDungeon = DungeonLevel::NONE;
+			for (int i = 0; i < temp->walkingAnimation.size(); i++) {
+				temp->walkingAnimation[i]->sprite.setPosition(temp->position.x, temp->position.y);
+				temp->attackAnimation[i]->sprite.setPosition(temp->position.x, temp->position.y);
+				temp->movePlayerToNewVector = true;
+			}
 			destroyGameObject(Worldmap);
 		}
 	}

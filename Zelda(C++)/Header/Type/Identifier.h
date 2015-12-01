@@ -132,7 +132,8 @@ Map = 126,
 BlackTileBlocker = 127,
 DungeonCompass = 128,
 DungeonTriforce = 129,
-BowItem=130
+BowItem=130,
+ItemShopArrow=131
 };
 
 #endif

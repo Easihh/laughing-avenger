@@ -1,3 +1,10 @@
+Version 0.075
+
+-Item cost text no longer show during the buying item animation.
+-Arrow Item can now be bought.
+-Player no longer start with Inventory Arrow Item.
+-Inactive inventory items such as arrows are no longer drawn when inactive.
+
 Version 0.074
 
 -Taking the triforce item now teleport user outside dungeon.

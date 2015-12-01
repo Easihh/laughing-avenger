@@ -206,7 +206,7 @@ void Inventory::transitionBackToGame(){
 void Inventory::drawInventoryItems(sf::RenderWindow& mainWindow){
 	mainWindow.draw(selectedItem);
 	for (int i = 0; i < items.size(); i++){
-		if (items[i] != NULL)
+		if (items[i] != NULL && items[i]->isActive)
 			mainWindow.draw(items[i]->sprite);
 	}
 }

@@ -5,7 +5,7 @@
 Arrow::Arrow(Point position, std::string name) :super(position, name){
 	width = 32;
 	height = 32;
-	isActive = true;
+	isActive = false;
 	bowIsActive=false;
 }
 void Arrow::onUse(Point pos, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction dir) {

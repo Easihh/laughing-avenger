@@ -47,6 +47,7 @@
  void ShopBomb::draw(sf::RenderWindow& mainWindow) {
 	 if(isVisible){
 		 mainWindow.draw(sprite);
-		 drawCost(mainWindow,itemPrice);
 	 }
+	 if (!isObtained && isVisible)
+		 drawCost(mainWindow, itemPrice);
  }

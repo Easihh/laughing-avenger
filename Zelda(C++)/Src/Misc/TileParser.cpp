@@ -27,6 +27,7 @@
 #include "Item\Compass.h"
 #include "Item\Triforce.h"
 #include "Item\BowPickUp.h"
+#include "Misc\ShopArrow.h"
 TileParser::TileParser() {}
 
 void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector, int vectorXindex, int vectorYindex) {
@@ -563,6 +564,10 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::BowItem:
 	tile = std::make_shared<BowPickUp>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::ItemShopArrow:
+	tile = std::make_shared<ShopArrow>(pt);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	}

@@ -107,36 +107,24 @@ void Inventory::getInput(sf::Event& event){
 void Inventory::findNextSelectorPositionLeft() {
 	bool found = false;
 	for(int i = selectorInventoryIndex; i >= 0; i--){
-		if(items[i] != NULL && i != selectorInventoryIndex && !found){
-			if (dynamic_cast<Arrow*>(items[i].get())){
-				Arrow* temp = (Arrow*)items[i].get();
-				if (temp->bowIsActive){
-					selectorInventoryIndex = i;
-					found = true;
-				}
-				else continue;
-			}
-			else {
+		if (items[i] != NULL && i != selectorInventoryIndex && !found && items[i]->isActive){
+			if (!dynamic_cast<Arrow*>(items[i].get())){
 				selectorInventoryIndex = i;
 				found = true;
 			}
+			//pointing at arrow item; check if possessing the bow to allow selection.
+			else found = isPossessingBow(items[i].get(), i);
 		}
 	}
 	if(!found){
 		for(int i = items.size()-1; i > selectorInventoryIndex; i--)
-			if(items[i] != NULL){
-				if (dynamic_cast<Arrow*>(items[i].get())){
-					Arrow* temp = (Arrow*)items[i].get();
-					if (temp->bowIsActive){
-						selectorInventoryIndex = i;
-						found = true;
-					}
-					else continue;
-				}
-				else {
+			if (items[i] != NULL && items[i]->isActive){
+				if (!dynamic_cast<Arrow*>(items[i].get())){
 					selectorInventoryIndex = i;
 					found = true;
 				}
+				//pointing at arrow item; check if possessing the bow to allow selection.
+				else found = isPossessingBow(items[i].get(), i);
 			}
 	}
 	if(found){
@@ -151,36 +139,24 @@ void Inventory::findNextSelectorPositionLeft() {
 void Inventory::findNextSelectorPositionRight(){
 	bool found = false;
 	for (int i = selectorInventoryIndex; i < items.size(); i++){
-		if (items[i] != NULL && i!=selectorInventoryIndex && !found){
-			if (dynamic_cast<Arrow*>(items[i].get())){
-				Arrow* temp = (Arrow*)items[i].get();
-				if (temp->bowIsActive){
-					selectorInventoryIndex = i;
-					found = true;
-				}
-				else continue;
-			}
-			else {
+		if (items[i] != NULL && i!=selectorInventoryIndex && !found && items[i]->isActive){
+			if (!dynamic_cast<Arrow*>(items[i].get())){
 				selectorInventoryIndex = i;
 				found = true;
 			}
+			//pointing at arrow item; check if possessing the bow to allow selection.
+			else found = isPossessingBow(items[i].get(), i);
 		}
 	}
 	if(!found){
 		for(int i = 0; i < selectorInventoryIndex; i++)
-			if(items[i] != NULL){
-				if (dynamic_cast<Arrow*>(items[i].get())){
-					Arrow* temp = (Arrow*)items[i].get();
-					if (temp->bowIsActive){
-						selectorInventoryIndex = i;
-						found = true;
-					}
-					else continue;
-				}
-				else {
+			if (items[i] != NULL &&items[i]->isActive){
+				if (!dynamic_cast<Arrow*>(items[i].get())){
 					selectorInventoryIndex = i;
 					found = true;
 				}
+				//pointing at arrow item; check if possessing the bow to allow selection.
+				else found = isPossessingBow(items[i].get(), i);
 			}
 	}
 	if(found){
@@ -191,6 +167,15 @@ void Inventory::findNextSelectorPositionRight(){
 		selectedItem.setPosition(itemSelectedPt.x, itemSelectedPt.y);
 		selector.setPosition(items[i]->sprite.getPosition().x, items[i]->sprite.getPosition().y);
 	}
+}
+bool Inventory::isPossessingBow(Item* item,int index){
+	bool found = false;
+	Arrow* arrow = (Arrow*)item;
+	if (arrow->bowIsActive){
+		selectorInventoryIndex = index;
+		found = true;
+	}
+	return found;
 }
 void Inventory::update(sf::Event& event){
 	getInput(event);

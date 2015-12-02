@@ -1,3 +1,9 @@
+Version 0.076
+
+-Candle Inventory Item can now be purchased from Shop.
+-Player no longer start with Candle Inventory.
+-Improved logic for inventory Item selection. 
+
 Version 0.075
 
 -Item cost text no longer show during the buying item animation.

@@ -22,6 +22,7 @@ public:
 	std::unique_ptr<PlayerBar> playerBar;
 	void setInventoryPosition(Point pos);
 private:
+	bool isPossessingBow(Item* item, int index);
 	sf::RectangleShape inventoryRect, itemSelected;
 	void getInput(sf::Event& event);
 	Point startPosition;

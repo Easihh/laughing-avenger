@@ -47,6 +47,9 @@ void PlayerBar::increaseRupeeAmount(int amount) {
 	if(diamondAmount > maxRupee)
 		diamondAmount = maxRupee;
 }
+void PlayerBar::increaseKeyAmount() {
+	keysAmount++;
+}
 void PlayerBar::increaseBombAmount(int amount) {
 	bombAmount += amount;
 	if(bombAmount> maxBombAmount){

@@ -1,3 +1,7 @@
+Version 0.077
+
+-Player can now buy keys at the Item shop.
+
 Version 0.076
 
 -Candle Inventory Item can now be purchased from Shop.

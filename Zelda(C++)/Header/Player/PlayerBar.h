@@ -32,6 +32,7 @@ public:
 	void increaseMaxHP();
 	void resetDungeonPlayerMarker();
 	bool hasDungeonMap,hasDungeonCompass;
+	void increaseKeyAmount();
 private:
 	Point bar, map, healthBarStart, itemSlotStart, diamondStart, itemSlotTextStart, bombStart, bombTextStart,
 		diamondTextStart, keyTextStart, keyStart, itemSelection, swordSlot, itemSlotImage;

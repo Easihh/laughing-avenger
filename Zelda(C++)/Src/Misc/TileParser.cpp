@@ -29,6 +29,7 @@
 #include "Item\BowPickUp.h"
 #include "Misc\ShopArrow.h"
 #include "Misc\ShopCandle.h"
+#include "Misc\ShopKey.h"
 TileParser::TileParser() {}
 
 void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector, int vectorXindex, int vectorYindex) {
@@ -569,6 +570,10 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::ItemShopArrow:
 	tile = std::make_shared<ShopArrow>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::ItemShopKey:
+	tile = std::make_shared<ShopKey>(pt);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	}

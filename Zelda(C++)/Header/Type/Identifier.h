@@ -15,7 +15,7 @@ enum Identifier {
 	ItemShopBomb = 10,
 	ItemShopCandle = 11,
 	ItemShopFood = 12,
-	ItemShopPotion = 13,
+	SecretShopPotion = 13,
 	ItemMagicalRod = 14,
 	ItemFlute = 15,
 	ShopDiamondDisplay = 16,

@@ -1,3 +1,10 @@
+Version 0.078
+
+-Player are now teleported at the shop door when leaving shop layer to prevent being attacked by monster.
+-RedPotion item can now be picked up in secret rooms.
+-Picking up RedPotion now activate Potion inventory item(no use yet).
+-Picking one of the two choices in Secret Room now correctly delete the other choice aswell.
+
 Version 0.077
 
 -Player can now buy keys at the Item shop.

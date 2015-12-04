@@ -17,16 +17,17 @@ public:
 	void draw(sf::RenderWindow& mainWindow);
 	int worldX, worldY,prevWorldX,prevWorldY;
 	bool inventoryKeyReleased, attackKeyReleased, itemKeyReleased, movePlayerToNewVector, 
-		movingSwordIsActive, isObtainingItem, boomerangIsActive,arrowIsActive;
+		movingSwordIsActive, isObtainingItem, boomerangIsActive, arrowIsActive, hasMovedFromEntranceDoor;
 	std::unique_ptr<Inventory> inventory;
 	std::unique_ptr<Point> pointBeforeTeleport;
 	std::vector<std::unique_ptr<Animation>> walkingAnimation;
 	std::vector<std::unique_ptr<Animation>> attackAnimation;
 	Layer currentLayer,prevLayer;
 	void updateSprites();
-private:
 	unsigned int stepToMove;
+private:
 	void completeMove();
+	void checkIfMovedFromEntrance(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	bool isColliding(std::vector<std::shared_ptr<GameObject>>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, float xOffset, float yOffset);
 	int xOffset, yOffset, stepToAlign, transitionStep,currentInvincibleFrame;
 	int const maxTransitionStep = 90, maxInvincibleFrame=60;

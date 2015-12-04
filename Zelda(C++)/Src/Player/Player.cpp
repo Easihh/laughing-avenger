@@ -7,6 +7,7 @@
 #include "Item\Boomrang.h"
 #include "Item\Arrow.h"
 #include "Item\Candle.h"
+#include "Item\Potion.h"
 #include "Utility\Point.h"
 #include"Utility\PlayerInfo.h"
 #include "Misc\Marker\ShopMarker.h"
@@ -20,7 +21,7 @@
 	 stepToAlign = currentInvincibleFrame = transitionStep = xOffset = yOffset = 0;
 	 movePlayerToNewVector = stepIsNegative = movingSwordIsActive = isObtainingItem = false;
 	 isAttacking = isScreenTransitioning = isInvincible = boomerangIsActive = arrowIsActive= false;
-	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased = true;
+	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased=hasMovedFromEntranceDoor = true;
 	 position = pos;
 	 worldX = (int)(position.y / Global::roomHeight);
 	 worldY = (int)(position.x / Global::roomWidth);
@@ -38,7 +39,7 @@
 	 inventory->items.push_back(std::make_unique<Arrow>(pt, "Arrow"));
 	 inventory->items.push_back(std::make_unique<Candle>(pt, "Candle"));
 	 inventory->items.push_back(std::make_unique<Candle>(pt, "Food"));
-	 inventory->items.push_back(std::make_unique<Candle>(pt, "BluePotion"));
+	 inventory->items.push_back(std::make_unique<Potion>(pt, "RedPotion"));
 	 inventory->items.push_back(std::make_unique<Candle>(pt, "Whistle"));
 	 inventory->items.push_back(std::make_unique<Candle>(pt, "MagicalRod"));
 }
@@ -56,6 +57,7 @@
 	sprite.setPosition(position.x, position.y);
  }
  void Player::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	 checkIfMovedFromEntrance(worldMap);
 	 if(sword!=NULL)
 		sword->update(isAttacking, canAttack, worldMap, &walkingAnimation);
 	 if(pushbackStep == 0)
@@ -76,6 +78,18 @@
 	 checkInvincible();
 	 fullMask->setPosition(position.x, position.y);
 	 inventory->playerBar->update();
+ }
+ void Player::checkIfMovedFromEntrance(std::vector<std::shared_ptr<GameObject>>* worldMap){
+	 //there wont be more than 1 entrance per room.
+	 for (auto& obj : *worldMap){
+		 if (dynamic_cast<ShopMarker*>(obj.get())){
+			 ShopMarker* marker = (ShopMarker*)obj.get();
+			 int yDistance = marker->position.y - position.y;
+			 if (std::abs(yDistance) >= Global::TileHeight)
+				 hasMovedFromEntranceDoor = true;
+		 }
+			 
+	 }
  }
  void Player::playerPushBack(std::vector<std::shared_ptr<GameObject>>* worldMap,Point monsterPosition) {
 	 float pushBackMinDistance = 0;

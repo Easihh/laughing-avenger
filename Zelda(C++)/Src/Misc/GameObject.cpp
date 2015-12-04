@@ -7,13 +7,30 @@
 #include "Misc\Tile.h"
 #include "Misc\NPC.h"
 #include "Item\ThrownBoomrang.h"
+#include "Item\PotionPickUp.h"
+#include "Item\HeartContainer.h"
 GameObject::GameObject(){
 	pushbackStep = 0;
 	depth = 0;
 }
 void GameObject::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {}
 void GameObject::draw(sf::RenderWindow& mainWindow){}
-
+void GameObject::destroyHeartContainer(std::vector<std::shared_ptr<GameObject>>* Worldmap){
+	std::shared_ptr<GameObject> del;
+	for (auto& obj : *Worldmap){
+		if (dynamic_cast<HeartContainer*>(obj.get()))
+			del = obj;
+	}
+	Static::toDelete.push_back(del);
+}
+void GameObject::destroyPotion(std::vector<std::shared_ptr<GameObject>>* Worldmap){
+	std::shared_ptr<GameObject> del;
+	for (auto& obj : *Worldmap){
+		if (dynamic_cast<PotionPickUp*>(obj.get()))
+			del = obj;
+	}
+	Static::toDelete.push_back(del);
+}
 void GameObject::deleteNpcFromCurrentRoom(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	std::shared_ptr<GameObject> del;
 	for(auto& obj : *Worldmap){

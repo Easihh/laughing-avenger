@@ -26,6 +26,7 @@ void LeaveShopMarker::update(std::vector<std::shared_ptr<GameObject>>* Worldmap)
 			temp->walkingAnimation[i]->sprite.setPosition(temp->position.x, temp->position.y);
 			temp->attackAnimation[i]->sprite.setPosition(temp->position.x, temp->position.y);
 			temp->movePlayerToNewVector = true;
+			temp->hasMovedFromEntranceDoor = false;
 		}
 	}
 }

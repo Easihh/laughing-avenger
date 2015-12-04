@@ -7,6 +7,5 @@ public:
 	void update(std::vector<std::shared_ptr<GameObject>>* Worldmap);
 	void draw(sf::RenderWindow& mainWindow);
 private:
-	Point getPointBeforeTeleport(Direction dirBeforeEntering, Point playerPos);
 };
 #endif

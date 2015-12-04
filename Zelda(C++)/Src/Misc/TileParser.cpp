@@ -30,6 +30,7 @@
 #include "Misc\ShopArrow.h"
 #include "Misc\ShopCandle.h"
 #include "Misc\ShopKey.h"
+#include "Item\PotionPickUp.h"
 TileParser::TileParser() {}
 
 void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector, int vectorXindex, int vectorYindex) {
@@ -89,9 +90,9 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	//tile = std::make_shared<ShopFood>(pt);
 	//objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
-	case Identifier::ItemShopPotion:
-	//tile = std::make_shared<ShopPotion>(pt);
-	//objectVector[vectorXindex][vectorYindex].push_back(tile);
+	case Identifier::SecretShopPotion:
+	tile = std::make_shared<PotionPickUp>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::ItemMagicalRod:
 	//tile = std::make_shared<ShopMagicalRod>(pt);

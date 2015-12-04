@@ -38,6 +38,8 @@ public:
 	static bool intersect(std::unique_ptr<sf::RectangleShape>& rectA, std::unique_ptr<sf::RectangleShape>& rectB, Point offset);
 	static bool intersect(std::unique_ptr<sf::RectangleShape>& rectA, std::unique_ptr<sf::RectangleShape>& rectB);
 	static void deleteNpcFromCurrentRoom(std::vector<std::shared_ptr<GameObject>>* worldMap);
+	void destroyPotion(std::vector<std::shared_ptr<GameObject>>* worldMap);
+	void destroyHeartContainer(std::vector<std::shared_ptr<GameObject>>* worldMap);
 private:
 };
 

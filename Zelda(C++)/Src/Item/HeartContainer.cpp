@@ -1,5 +1,6 @@
 #include "Item\HeartContainer.h"
 #include "Player\Player.h"
+#include "Type\Layer.h"
 HeartContainer::HeartContainer(Point pos) {
 	isObtained = false;
 	currentFrame = 0;
@@ -33,6 +34,8 @@ void HeartContainer::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) 
 			Player* tmp = ((Player*)findPlayer(Worldmap).get());
 			tmp->isObtainingItem = false;
 			deleteNpcFromCurrentRoom(Worldmap);
+			if (tmp->currentLayer == InsideShop)//secret room destroy the potion choice
+				destroyPotion(Worldmap);
 			destroyGameObject(Worldmap);
 		}
 	}

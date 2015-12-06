@@ -11,13 +11,16 @@ protected:
 	int currentInvincibleFrame;
 	void checkInvincibility();
 	void updateMasks();
+	void checkParalyzeStatus();
 public:
 	bool isInvincible;
 	Monster();
 	virtual void takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction swordDir);
 	virtual void takeDamage(int damage);
 	virtual void dropItemOnDeath();
-	int strength, walkAnimIndex;
+	int strength, walkAnimIndex,currentParalyzeTime;
 	std::unique_ptr<sf::RectangleShape> mask;
+	bool isParalyzed;
+	const int maxParalyzeTime = 90;
 };
 #endif

@@ -2,6 +2,7 @@
 #define RUPEEDROP_H
 #include "Misc\GameObject.h"
 #include "Type\RupeeType.h"
+#include "Misc\Animation.h"
 class RupeeDrop :public GameObject {
 public:
 	RupeeDrop(Point pos,RupeeType type);
@@ -11,5 +12,6 @@ private:
 	RupeeType rtype;
 	void setImage();
 	int rupeeValue;
+	std::unique_ptr<Animation> anim;
 };
 #endif

@@ -12,11 +12,11 @@ RupeeDrop::RupeeDrop(Point pos, RupeeType type) {
 void RupeeDrop::setImage() {
 	switch(rtype){
 	case RupeeType::OrangeRupee:
-		texture.loadFromFile("Tileset/orangeRupee.png");
+		anim = std::make_unique<Animation>("rupee", height, width, position, 8);
 		rupeeValue = 1;
 		break;
 		case RupeeType::BlueRupee:
-		texture.loadFromFile("Tileset/blueRupee.png");
+		anim = std::make_unique<Animation>("blueRupee", height, width, position, 8);
 		rupeeValue = 5;
 		break;
 	}
@@ -24,9 +24,10 @@ void RupeeDrop::setImage() {
 	sprite.setPosition(position.x, position.y);
 }
 void RupeeDrop::draw(sf::RenderWindow& window) {
-	window.draw(sprite);
+	window.draw(anim->sprite);
 }
 void RupeeDrop::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
+	anim->updateAnimationFrame(position);
 	if(isCollidingWithPlayer(Worldmap) || isCollidingWithBoomerang(Worldmap)){
 		Player* temp = ((Player*)findPlayer(Worldmap).get());
 		Sound::playSound(GameSound::Selector);

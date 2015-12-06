@@ -14,6 +14,15 @@ void Monster::checkInvincibility(){
 		}
 	}
 }
+void Monster::checkParalyzeStatus(){
+	if (isParalyzed){
+		currentParalyzeTime++;
+		if (currentParalyzeTime > maxParalyzeTime){
+			isParalyzed = false;
+			currentParalyzeTime = 0;
+		}
+	}
+}
 void Monster::takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap,Direction swordDir) {}
 void Monster::takeDamage(int damage){}
 void Monster::dropItemOnDeath() {}

@@ -506,15 +506,15 @@
 	 else if(isAttacking && !isObtainingItem){
 		 mainWindow.draw(attackAnimation[attackAnimationIndex]->sprite);
 		 mainWindow.draw(sword->sprite);
-		 mainWindow.draw(*(sword->fullMask));
+		 //mainWindow.draw(*(sword->fullMask));
 	 }
 	 if(isObtainingItem)
 		 mainWindow.draw(sprite);
 	 drawText(mainWindow);
-	 mainWindow.draw(*fullMask);
+	// mainWindow.draw(*fullMask);
  }
  void Player::drawText(sf::RenderWindow& mainWindow){
-	 sf::Font font;
+	/* sf::Font font;
 	 std::stringstream pos;
 	 pos << "X:" << position.x << std::endl << "Y:" << position.y << std::endl
 		 <<"WorldX:"<<worldX <<std::endl <<"WorldY:"<<worldY<<std::endl;
@@ -523,5 +523,5 @@
 	 txt.setColor(sf::Color::Red);
 	 txt.setPosition(position.x, position.y - 64);
 	 txt.setCharacterSize(textSize);
-	 mainWindow.draw(txt);
+	 mainWindow.draw(txt);*/
  }

@@ -21,6 +21,7 @@
 #include "Monster\Armos.h"
 #include "Monster\Keese.h"
 #include "Monster\Gel.h"
+#include "Monster\Stalfos.h"
 #include "Misc\MoveableBlock.h"
 #include "Misc\Marker\TeleportToArtifactRoom.h"
 #include "Misc\Marker\TeleportFromArtifactRoom.h"
@@ -580,6 +581,10 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::GelMonster:
 	tile = std::make_shared<Gel>(pt,true);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::StalfosMonster:
+	tile = std::make_shared<Stalfos>(pt, true);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	}

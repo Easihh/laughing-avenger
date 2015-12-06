@@ -32,7 +32,7 @@ void ThrownBoomrang::setupInitialPosition() {
 }
 void ThrownBoomrang::draw(sf::RenderWindow& mainWindow) {
 	mainWindow.draw(boomrangAnimation->sprite);
-	mainWindow.draw(*fullMask);
+	//mainWindow.draw(*fullMask);
 }
 void ThrownBoomrang::setDiagonalSpeed(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	Player* temp = ((Player*)findPlayer(worldMap).get());

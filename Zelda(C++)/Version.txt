@@ -1,3 +1,13 @@
+Version 0.080
+
+-Removed 4th item, Key (was used for test purpose) from Shop since only 3 Items are permitted.
+-Removed masks being drawn(used for debugging purpose).
+-Removed player position/location being drawn over player head(used for debug purpose).
+-Reduced RedOctorok monster hp from 2 to 1.
+-Added Monster Stalfos.
+-Normal Rupee drop with value 1  is now animated.
+-Certain monster being hit by the Boomerang now become temporarly paralyzed.
+
 Version 0.079
 
 -Taking the triforce now also heal the player to full hp.

@@ -135,7 +135,8 @@ DungeonTriforce = 129,
 BowItem=130,
 ItemShopArrow=131,
 ItemShopKey=132,
-GelMonster = 133
+GelMonster = 133,
+StalfosMonster = 134,
 };
 
 #endif

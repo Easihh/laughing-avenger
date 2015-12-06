@@ -49,6 +49,7 @@ void Triforce::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 			temp->prevLayer = Layer::Dungeon;
 			temp->position = getReturnPointForPlayerLeavingDungeon(temp->inventory->playerBar->currentDungeon);
 			temp->inventory->playerBar->currentDungeon = DungeonLevel::NONE;
+			temp->inventory->playerBar->healPlayerToFull();
 			for (int i = 0; i < temp->walkingAnimation.size(); i++) {
 				temp->walkingAnimation[i]->sprite.setPosition(temp->position.x, temp->position.y);
 				temp->attackAnimation[i]->sprite.setPosition(temp->position.x, temp->position.y);

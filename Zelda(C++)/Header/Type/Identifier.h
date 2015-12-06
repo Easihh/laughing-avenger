@@ -5,7 +5,7 @@ enum Identifier {
 	Player_ID = 0,
 	Sand_ID = 1,
 	GreenTree_ID = 2,
-	RedOctorok_ID = 3,
+	RedOctorokMonster = 3,
 	BlackTile_ID = 4,
 	ShopMarker_ID = 5,
 	BrownBlock1_ID = 6,
@@ -110,7 +110,7 @@ DungeonTile81 = 104,
 DungeonTile82 = 105,
 DungeonTile83 = 106,
 DungeonTile84 = 107,
-DungeonTile85 = 108,
+RedDungeonTile = 108,
 DungeonTile86 = 109,
 DungeonTile87 = 110,
 DungeonTile88 = 111,
@@ -134,7 +134,8 @@ DungeonCompass = 128,
 DungeonTriforce = 129,
 BowItem=130,
 ItemShopArrow=131,
-ItemShopKey=132
+ItemShopKey=132,
+GelMonster = 133
 };
 
 #endif

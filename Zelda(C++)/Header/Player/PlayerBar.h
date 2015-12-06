@@ -33,6 +33,7 @@ public:
 	void resetDungeonPlayerMarker();
 	bool hasDungeonMap,hasDungeonCompass;
 	void increaseKeyAmount();
+	void healPlayerToFull();
 private:
 	Point bar, map, healthBarStart, itemSlotStart, diamondStart, itemSlotTextStart, bombStart, bombTextStart,
 		diamondTextStart, keyTextStart, keyStart, itemSelection, swordSlot, itemSlotImage;

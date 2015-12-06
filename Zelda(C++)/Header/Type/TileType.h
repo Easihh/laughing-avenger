@@ -91,7 +91,7 @@ enum class TileType{
 	DungeonTile82,
 	DungeonTile83,
 	DungeonTile84,
-	DungeonTile85,
+	RedDungeonTile,
 	DungeonTile86,
 	DungeonTile87,
 	DungeonTile88,

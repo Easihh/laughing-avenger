@@ -1,3 +1,11 @@
+Version 0.079
+
+-Taking the triforce now also heal the player to full hp.
+-Fininished adding all the tiles to dungeon 1.
+-Moved the dungeon items to their expected place.
+-Fixed an issue where Boss Location after earning Compass would not be drawn at the correct location.
+-Added Monster Gel.
+
 Version 0.078
 
 -Player are now teleported at the shop door when leaving shop layer to prevent being attacked by monster.

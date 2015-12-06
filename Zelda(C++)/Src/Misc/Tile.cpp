@@ -286,7 +286,7 @@ void Tile::loadTileImage(TileType type) {
 	case TileType::DungeonTile84:
 		texture.loadFromFile("Tileset/Dungeon/dungeonTile84.png");
 		break;
-	case TileType::DungeonTile85:
+	case TileType::RedDungeonTile:
 		texture.loadFromFile("Tileset/Dungeon/dungeonTile85.png");
 		break;
 	case TileType::DungeonTile86:

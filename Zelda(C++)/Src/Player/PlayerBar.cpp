@@ -42,6 +42,9 @@ void PlayerBar::loadImages(){
 int PlayerBar::getCurrentHP(){
 	return currentHealthPoint;
 }
+void PlayerBar::healPlayerToFull(){
+	currentHealthPoint = maxHealthPoint;
+}
 void PlayerBar::increaseRupeeAmount(int amount) {
 	diamondAmount += amount;
 	if(diamondAmount > maxRupee)
@@ -127,6 +130,7 @@ void PlayerBar::setupPlayerMarker(){
 	dungeonBossMarker.setFillColor(sf::Color::Red);
 }
 void PlayerBar::setBarNextPosition(Point step){
+	bossMarker += step;
 	bar +=step;
 	marker+=step;
 	dungeonMarker += step;

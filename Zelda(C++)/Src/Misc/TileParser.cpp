@@ -20,6 +20,7 @@
 #include "Misc\NPC.h"
 #include "Monster\Armos.h"
 #include "Monster\Keese.h"
+#include "Monster\Gel.h"
 #include "Misc\MoveableBlock.h"
 #include "Misc\Marker\TeleportToArtifactRoom.h"
 #include "Misc\Marker\TeleportFromArtifactRoom.h"
@@ -50,7 +51,7 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	tile = std::make_shared<Tile>(pt, true, TileType::GreenTree);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
-	case Identifier::RedOctorok_ID:
+	case Identifier::RedOctorokMonster:
 	tile = std::make_shared<Octorok>(pt, false);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
@@ -477,8 +478,8 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile84);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
-	case Identifier::DungeonTile85:
-	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile85);
+	case Identifier::RedDungeonTile:
+		tile = std::make_shared<Tile>(pt, true, TileType::RedDungeonTile);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	case Identifier::DungeonTile86:
@@ -575,6 +576,10 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::ItemShopKey:
 	tile = std::make_shared<ShopKey>(pt);
+	objectVector[vectorXindex][vectorYindex].push_back(tile);
+	break;
+	case Identifier::GelMonster:
+	tile = std::make_shared<Gel>(pt,true);
 	objectVector[vectorXindex][vectorYindex].push_back(tile);
 	break;
 	}

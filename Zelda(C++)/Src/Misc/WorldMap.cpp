@@ -70,9 +70,19 @@ void WorldMap::loadMap(std::string filename,tripleVector& objectVector){
 	while (!in.eof()){
 		std::getline(in, line, '\n');
 		boost::split(strs, line, boost::is_any_of(","));
-		for (std::vector<std::string>::iterator it = strs.begin(); it < strs.end(); it++){
+		std::clock_t start;
+		double duration;
+		start = std::clock();
+		for (int i = 0; i < strs.size(); i++){
+			std::string search = "Map/Zelda-Worldmap_Layer 1.csv";
+			if (filename.compare(search) == 0 && i == 1){
+				duration = (std::clock() - start) / (double)1000000;
+				std::cout << "printf:" << duration << '\n';
+			}
+		//for (std::vector<std::string>::iterator it = strs.begin(); it < strs.end(); it++){
 			//std::cout <<"Row:"<<lastWorldXIndex <<" Col:"<<lastWorldYIndex << " Value:" << *it << std::endl;
-			std::string val = *it;
+			//std::string val = *it;
+			std::string val = strs[i];
 			createTile(lastWorldXIndex, lastWorldYIndex, atoi(val.c_str()), objectVector);
 			lastWorldXIndex++;
 			if (lastWorldXIndex % 16 == 0){

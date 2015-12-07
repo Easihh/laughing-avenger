@@ -36,5 +36,6 @@ public:
 	static const int inventoryCols=6;
 	static std::vector<std::shared_ptr<GameObject>>  toAdd;
 	static std::vector<std::shared_ptr<GameObject>>  toDelete;
+	static std::vector<sf::Texture>  Static::gameResource;
 };
 #endif

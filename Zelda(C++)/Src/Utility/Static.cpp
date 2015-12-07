@@ -27,4 +27,5 @@ namespace Global
 GameState Static::gameState=NotStarted;
 std::vector<std::shared_ptr<GameObject>>  Static::toAdd;
 std::vector<std::shared_ptr<GameObject>>  Static::toDelete;
+std::vector<sf::Texture>  Static::gameResource;
 const std::string Static::GAME_TITLE = "Zelda: Last Quest ";

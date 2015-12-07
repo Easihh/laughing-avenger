@@ -1,3 +1,8 @@
+Version 0.081
+
+-Fixed an issue where Tile images were loaded multiple time causing game start up to be slower than expected.
+
+
 Version 0.080
 
 -Removed 4th item, Key (was used for test purpose) from Shop since only 3 Items are permitted.

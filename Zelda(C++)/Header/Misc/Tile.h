@@ -9,7 +9,11 @@ public:
 	Tile(Point position, bool canBeCollidedWith, TileType type);
 	void draw(sf::RenderWindow& mainWindow);
 	void update();
-	void loadTileImage(TileType type);
+	void loadTileImage(int type);
+private:
+	bool hasBeenSetup;
+	int id;
 };
+
 
 #endif

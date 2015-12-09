@@ -8,5 +8,6 @@ public:
 	typedef std::vector<std::vector<std::vector<std::shared_ptr<GameObject>>>> tripleVector;
 	void createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector, int vectorXIndex, int vectorYIndex);
 private:
+	std::shared_ptr<GameObject> tile;
 };
 #endif

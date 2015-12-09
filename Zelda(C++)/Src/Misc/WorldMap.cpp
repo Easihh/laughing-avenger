@@ -11,6 +11,9 @@
 WorldMap::WorldMap(){
 	setupVectors();
 	parser = std::make_unique<TileParser>();
+	std::clock_t start;
+	start = std::clock();
+	double duration;
 	loadMap("Map/Zelda-Worldmap_Layer 1.csv", gameBackgroundVector);
 	loadMap("Map/Zelda-Worldmap_Layer 2.csv", gameMainVector);
 	loadMap("Map/Zelda-Shop_Layer 1.csv", secretRoomBackgroundVector);
@@ -20,6 +23,8 @@ WorldMap::WorldMap(){
 	sort(gameMainVector);
 	sort(secretRoomVector);
 	sort(dungeonVector);
+	duration = (std::clock() - start) / (double)1000;
+	std::cout << "printf:" << duration << '\n';
 }
 bool sortByDepth(std::shared_ptr<GameObject> object1, std::shared_ptr<GameObject> object2) {
 	return object1.get()->depth<object2.get()->depth;
@@ -70,15 +75,7 @@ void WorldMap::loadMap(std::string filename,tripleVector& objectVector){
 	while (!in.eof()){
 		std::getline(in, line, '\n');
 		boost::split(strs, line, boost::is_any_of(","));
-		std::clock_t start;
-		double duration;
-		start = std::clock();
 		for (int i = 0; i < strs.size(); i++){
-			std::string search = "Map/Zelda-Worldmap_Layer 1.csv";
-			if (filename.compare(search) == 0 && i == 1){
-				duration = (std::clock() - start) / (double)1000000;
-				std::cout << "printf:" << duration << '\n';
-			}
 		//for (std::vector<std::string>::iterator it = strs.begin(); it < strs.end(); it++){
 			//std::cout <<"Row:"<<lastWorldXIndex <<" Col:"<<lastWorldYIndex << " Value:" << *it << std::endl;
 			//std::string val = *it;
@@ -98,7 +95,6 @@ void WorldMap::loadMap(std::string filename,tripleVector& objectVector){
 		lastWorldXIndex = 0;
 	}
 	in.close();
-	
 }
 void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector) {
 	float x = lastWorldXIndex*Global::TileWidth;
@@ -111,6 +107,7 @@ void WorldMap::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType
 	case Identifier::Player_ID:
 		player = std::make_shared<Player>(pt);
 		objectVector[vectorXindex][vectorYindex].push_back(player);
+		break;
 	default:
 		parser->createTile(lastWorldXIndex, lastWorldYIndex, tileType, objectVector, vectorXindex, vectorYindex);
 		break;

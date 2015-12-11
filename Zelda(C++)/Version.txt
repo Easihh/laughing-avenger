@@ -1,3 +1,12 @@
+Version 0.083
+
+-Monster can now drop heart item that slighly restore player health.
+-Added sound when collecting dropped hearts.
+
+Version 0.082
+
+-Significantly improved game load time
+
 Version 0.081
 
 -Fixed an issue where Tile images were loaded multiple time causing game start up to be slower than expected.

@@ -6,6 +6,7 @@
 #include "Type\RupeeType.h"
 #include "Item\RupeeDrop.h"
 #include "Item\ThrownBoomrang.h"
+#include "Item\HeartDrop.h"
 Octorok::Octorok(Point pos, bool canBeCollidedWith){
 	position = pos;
 	width = Global::TileWidth;
@@ -122,7 +123,7 @@ void Octorok::dropItemOnDeath() {
 	if(value < 3) //30% chance to drop item
 		willDropItem = true;
 	if(willDropItem){
-		int itemDropId = std::rand() % 2;
+		int itemDropId = std::rand() % 3;
 		std::shared_ptr<GameObject> itemDropped;
 		switch(itemDropId){
 		case 0:
@@ -130,6 +131,9 @@ void Octorok::dropItemOnDeath() {
 			break;
 		case 1:
 			itemDropped = std::make_shared<RupeeDrop>(position, RupeeType::BlueRupee);
+			break;
+		case 2:
+			itemDropped = std::make_shared<HeartDrop>(position);
 			break;
 		}
 		Static::toAdd.push_back(itemDropped);

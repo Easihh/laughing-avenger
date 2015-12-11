@@ -19,7 +19,8 @@ namespace GameSound{
 		OverWorld,
 		SecretRoom,
 		Boomerang,
-		Triforce
+		Triforce,
+		GetHeart
 	};
 }
 #endif

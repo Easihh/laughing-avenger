@@ -42,6 +42,11 @@ void PlayerBar::loadImages(){
 int PlayerBar::getCurrentHP(){
 	return currentHealthPoint;
 }
+void PlayerBar::increaseCurrentHP(){
+	currentHealthPoint += 2;
+	if (currentHealthPoint > maxHealthPoint)
+		currentHealthPoint = maxHealthPoint;
+}
 void PlayerBar::healPlayerToFull(){
 	currentHealthPoint = maxHealthPoint;
 }

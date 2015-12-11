@@ -27,5 +27,6 @@ private:
 	static sf::Sound* Sound::secretRoom;
 	static sf::Sound* Sound::boomrang;
 	static sf::Sound* Sound::triforce;
+	static sf::Sound* Sound::getHeart; 
 };
 #endif

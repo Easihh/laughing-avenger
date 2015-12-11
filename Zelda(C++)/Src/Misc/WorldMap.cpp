@@ -8,6 +8,8 @@
 #include "Type\Identifier.h"
 #include "Item\ThrownBoomrang.h"
 #include "Misc\MoveableBlock.h"
+#include "Item\HeartDrop.h"
+#include "Item\RupeeDrop.h"
 WorldMap::WorldMap(){
 	setupVectors();
 	parser = std::make_unique<TileParser>();
@@ -238,6 +240,8 @@ void WorldMap::deleteOutstandingPlayerObjects(std::vector<std::shared_ptr<GameOb
 			|| dynamic_cast<BombEffect*>(tmp.get())
 			|| dynamic_cast<CandleFlame*>(tmp.get())
 			|| dynamic_cast<ThrownBoomrang*>(tmp.get())
+			|| dynamic_cast<RupeeDrop*>(tmp.get())
+			|| dynamic_cast<HeartDrop*>(tmp.get())
 			){
 			tmp.reset();
 			roomObjVector->erase(roomObjVector->begin() + i);

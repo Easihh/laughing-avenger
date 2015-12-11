@@ -1,3 +1,7 @@
+Version 0.084
+
+-Items dropped from monsters are now destroyed when changing screen.
+
 Version 0.083
 
 -Monster can now drop heart item that slighly restore player health.

@@ -19,6 +19,7 @@ sf::Sound* Sound::secretRoom;
 sf::Sound* Sound::boomrang;
 sf::Sound* Sound::triforce;
 sf::Sound* Sound::getHeart;
+sf::Sound* Sound::shieldBlock;
 Sound::Sound() {
 	buffer = new sf::SoundBuffer();
 	if(!buffer->loadFromFile("Sound/bombDrop.wav"))
@@ -113,6 +114,11 @@ Sound::Sound() {
 		std::cout << "Failed to load getHeart.wav";
 	getHeart = new sf::Sound();
 	getHeart->setBuffer(*buffer);
+	buffer = new sf::SoundBuffer();
+	if (!buffer->loadFromFile("Sound/shieldBlock.wav"))
+		std::cout << "Failed to load shieldBlock.wav";
+	shieldBlock = new sf::Sound();
+	shieldBlock->setBuffer(*buffer);
 }
 void Sound::stopSound(GameSound::SoundType sound) {
 	if(sound == GameSound::Underworld)
@@ -159,4 +165,6 @@ void Sound::playSound(GameSound::SoundType sound) {
 		triforce->play();
 	else if (sound == GameSound::GetHeart)
 		getHeart->play();
+	else if (sound == GameSound::ShieldBlock)
+		shieldBlock->play();
 }

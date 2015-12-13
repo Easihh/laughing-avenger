@@ -20,7 +20,8 @@ namespace GameSound{
 		SecretRoom,
 		Boomerang,
 		Triforce,
-		GetHeart
+		GetHeart,
+		ShieldBlock
 	};
 }
 #endif

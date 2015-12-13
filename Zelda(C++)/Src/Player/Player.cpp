@@ -301,13 +301,16 @@
 	 Point offset(xOffset, yOffset);
 	 for(auto& obj : *worldMap)
 	 {
-		if (dynamic_cast<Tile*>(obj.get()) || dynamic_cast<NPC*>(obj.get())
-			|| dynamic_cast<MoveableBlock*>(obj.get()))
-			if (intersect(mask, obj->fullMask, offset) && obj->isCollideable){
+		 //Tile mask/setup is not done at object creation but at the first update for loading time purpose
+		 //Since player has a higher depth
+		 if (dynamic_cast<Tile*>(obj.get())){
+			 Tile* temp = (Tile*)obj.get();
+			 if (temp->hasBeenSetup && intersect(mask, obj->fullMask, offset) && obj->isCollideable)
+				 collision = true;
+		 }
+		 if (dynamic_cast<NPC*>(obj.get())|| dynamic_cast<MoveableBlock*>(obj.get()))
+			if (intersect(mask, obj->fullMask, offset) && obj->isCollideable)
 				collision = true;
-				//std::cout << "CollisionX:" << obj->position.x << std::endl;
-				//std::cout << "CollisionY:" << obj->position.y << std::endl;
-			 }
 	 }
 	 return collision;
  }

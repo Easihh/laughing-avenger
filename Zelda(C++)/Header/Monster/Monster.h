@@ -20,6 +20,7 @@ public:
 	virtual void dropItemOnDeath();
 	int strength, walkAnimIndex,currentParalyzeTime;
 	std::unique_ptr<sf::RectangleShape> mask;
+	void setupMonsterMask();
 	bool isParalyzed;
 	const int maxParalyzeTime = 90;
 };

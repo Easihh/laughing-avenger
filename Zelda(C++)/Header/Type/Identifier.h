@@ -137,6 +137,7 @@ ItemShopArrow=131,
 ItemShopKey=132,
 GelMonster = 133,
 StalfosMonster = 134,
+RedGoriyaMonster=135
 };
 
 #endif

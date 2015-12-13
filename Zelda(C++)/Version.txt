@@ -1,3 +1,10 @@
+Version 0.085
+
+-Added monster Goriya.
+-Added ShieldBlock sound when blocking certain projectile.
+-Fixed an issue where dungeon upper door part had lower draw priority than player when moving from one screen to another.
+
+
 Version 0.084
 
 -Items dropped from monsters are now destroyed when changing screen.

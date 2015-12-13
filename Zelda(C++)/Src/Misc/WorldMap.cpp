@@ -179,7 +179,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 					tmp.reset();
 					gameMainVector[oldWorldX][oldWorldY].erase(gameMainVector[oldWorldX][oldWorldY].begin() + i);
 					gameMainVector[newWorldX][newWorldY].push_back(player);
-					//sort(gameMainVector);
+					sort(gameMainVector);
 					deleteOutstandingPlayerObjects(&gameMainVector[oldWorldX][oldWorldY]);
 				}
 			}
@@ -191,7 +191,7 @@ void WorldMap::movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int
 					tmp.reset();
 					dungeonVector[oldWorldX][oldWorldY].erase(dungeonVector[oldWorldX][oldWorldY].begin() + i);
 					gameMainVector[newWorldX][newWorldY].push_back(player);
-					//sort(gameMainVector);
+					sort(gameMainVector);
 					deleteOutstandingPlayerObjects(&dungeonVector[oldWorldX][oldWorldY]);
 				}
 			}

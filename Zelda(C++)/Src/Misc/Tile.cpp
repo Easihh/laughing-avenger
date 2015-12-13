@@ -10,6 +10,13 @@ Tile::Tile(Point pos, bool canBeCollidedWith, TileType type) {
 	height = Global::TileHeight;
 	isCollideable = canBeCollidedWith;
 	hasBeenSetup = false;
+	//upper part of dungeon doors must have higher priority over the player in drawing. 
+	if (type == TileType::DungeonTile8
+		|| type == TileType::DungeonTile40
+		|| type == TileType::DungeonTile80
+		|| type == TileType::DungeonTile81
+		)
+		depth = 999;
 	id = (int)type;
 }
 void Tile::draw(sf::RenderWindow& mainWindow){

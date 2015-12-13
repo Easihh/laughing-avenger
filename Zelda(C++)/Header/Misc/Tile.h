@@ -10,8 +10,8 @@ public:
 	void draw(sf::RenderWindow& mainWindow);
 	void update();
 	void loadTileImage(int type);
-private:
 	bool hasBeenSetup;
+private:
 	int id;
 };
 

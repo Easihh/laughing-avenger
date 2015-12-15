@@ -7,6 +7,7 @@
 #include "Item\RupeeDrop.h"
 #include "Item\ThrownBoomrang.h"
 #include "Item\HeartDrop.h"
+#include "Player\Player.h"
 Octorok::Octorok(Point pos, bool canBeCollidedWith){
 	position = pos;
 	width = Global::TileWidth;
@@ -80,6 +81,10 @@ void Octorok::draw(sf::RenderWindow& mainWindow){
 	//mainWindow.draw(*fullMask);
 }
 void Octorok::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	if (isCollidingWithPlayer(worldMap)){
+		Player* temp = (Player*)findPlayer(worldMap).get();
+		temp->takeDamage(worldMap,this);
+	}
 	checkParalyzeStatus();
 	if (isCollidingWithBoomerang(worldMap)){
 		Sound::playSound(GameSound::EnemyHit); 

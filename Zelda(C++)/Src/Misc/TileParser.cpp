@@ -24,6 +24,8 @@
 #include "Monster\Stalfos.h"
 #include "Monster\Goriya.h"
 #include "Monster\Trap.h"
+#include "Monster\WallMasterSpawner.h"
+#include "Misc\WallMasterSpawnController.h"
 #include "Misc\MoveableBlock.h"
 #include "Misc\Marker\TeleportToArtifactRoom.h"
 #include "Misc\Marker\TeleportFromArtifactRoom.h"
@@ -463,6 +465,21 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::DungeonTrap:
 	tile = std::make_shared<Trap>(pt, true);
+	break;
+	case Identifier::WallMasterDungeonSpawnerUp:
+	tile = std::make_shared<WallMasterSpawner>(pt,Direction::Up);
+	break;
+	case Identifier::WallMasterDungeonSpawnerDown:
+	tile = std::make_shared<WallMasterSpawner>(pt, Direction::Down);
+	break;
+	case Identifier::WallMasterDungeonSpawnerRight:
+	tile = std::make_shared<WallMasterSpawner>(pt, Direction::Right);
+	break;
+	case Identifier::WallMasterDungeonSpawnerLeft:
+	tile = std::make_shared<WallMasterSpawner>(pt, Direction::Left);
+	break;
+	case Identifier::WallMasterDungeonSpawnerController:
+	tile = std::make_shared<WallMasterSpawnController>(pt);
 	break;
 	}
 	objectVector[vectorXindex][vectorYindex].push_back(tile);

@@ -138,7 +138,12 @@ ItemShopKey=132,
 GelMonster = 133,
 StalfosMonster = 134,
 RedGoriyaMonster=135,
-DungeonTrap=136
+DungeonTrap=136,
+WallMasterDungeonSpawnerUp = 137,
+WallMasterDungeonSpawnerDown=138,
+WallMasterDungeonSpawnerRight=139,
+WallMasterDungeonSpawnerLeft=140,
+WallMasterDungeonSpawnerController=141
 };
 
 #endif

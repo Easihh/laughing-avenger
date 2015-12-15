@@ -9,6 +9,7 @@
 #include "Item\ThrownBoomrang.h"
 #include "Item\PotionPickUp.h"
 #include "Item\HeartContainer.h"
+#include "Monster\WallMasterSpawner.h"
 GameObject::GameObject(){
 	pushbackStep = 0;
 	depth = 0;
@@ -304,6 +305,12 @@ bool GameObject::isOutsideRoomBound(Point pos) {
 std::shared_ptr<GameObject> GameObject::findPlayer(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	for(int i = 0; i < worldMap->size(); i++){
 		if(dynamic_cast<Player*>(worldMap->at(i).get()))
+			return worldMap->at(i);
+	}
+}
+std::shared_ptr<GameObject> GameObject::findClosestSpawner(std::vector<std::shared_ptr<GameObject>>* worldMap){
+	for (int i = 0; i < worldMap->size(); i++){
+		if (dynamic_cast<WallMasterSpawner*>(worldMap->at(i).get()))
 			return worldMap->at(i);
 	}
 }

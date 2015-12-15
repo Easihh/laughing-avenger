@@ -6,6 +6,7 @@
 #include "Type\RupeeType.h"
 #include "Item\RupeeDrop.h"
 #include "Item\ThrownBoomrang.h"
+#include "Player\Player.h"
 Gel::Gel(Point pos, bool canBeCollidedWith){
 	position = pos;
 	width = Global::TileWidth;
@@ -83,6 +84,10 @@ void Gel::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		if (!boom->isReturning)
 			boom->isReturning = true;
 		takeDamage(1);
+	}
+	if (isCollidingWithPlayer(worldMap)){
+		Player* temp = (Player*)findPlayer(worldMap).get();
+		temp->takeDamage(worldMap, this);
 	}
 	movement(worldMap);
 	tryToChangeDirection();

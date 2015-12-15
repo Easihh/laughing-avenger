@@ -81,6 +81,8 @@ void Trap::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	if (isActive)
 		TrapMovement();
 	Player* temp = (Player*)findPlayer(worldMap).get();
+	if (isCollidingWithPlayer(worldMap))
+		temp->takeDamage(worldMap, this);
 	float xDiff = std::abs(position.x - temp->position.x);
 	float yDiff = std::abs(position.y - temp->position.y);
 	if (xDiff <= Global::TileWidth && temp->position.y < position.y && !isActive){

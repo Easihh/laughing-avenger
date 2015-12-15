@@ -6,6 +6,7 @@
 #include "Type\RupeeType.h"
 #include "Item\RupeeDrop.h"
 #include "Item\ThrownBoomrang.h"
+#include "Player\Player.h"
 Keese::Keese(Point pos, bool canBeCollidedWith) {
 	depth = 50;
 	position = pos;
@@ -67,6 +68,10 @@ void Keese::draw(sf::RenderWindow& mainWindow) {
 	//mainWindow.draw(*fullMask);
 }
 void Keese::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+	if (isCollidingWithPlayer(worldMap)){
+		Player* temp = (Player*)findPlayer(worldMap).get();
+		temp->takeDamage(worldMap, this);
+	}
 	keeseAnimation->updateAnimationFrame(position);
 	movement(worldMap);
 	tryToChangeDirection();

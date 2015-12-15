@@ -25,6 +25,7 @@ public:
 	Layer currentLayer,prevLayer;
 	void updateSprites();
 	unsigned int stepToMove;
+	void takeDamage(std::vector<std::shared_ptr<GameObject>>* worldMap, Monster* monster);
 private:
 	void completeMove();
 	void checkIfMovedFromEntrance(std::vector<std::shared_ptr<GameObject>>* worldMap);
@@ -34,7 +35,6 @@ private:
 	int getXOffset();
 	int getYOffset();
 	void loadImage();
-	void takeDamage(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void getUnalignedCount(Direction nextDir);
 	void snapToGrid();
 	void drawPlayerBar(sf::RenderWindow& mainWindow);

@@ -73,8 +73,6 @@
 	 attackAnimation[attackAnimationIndex]->updateAnimationFrame(dir, position);
 	 if(isScreenTransitioning)
 		 screenTransition();
-	 if (isCollidingWithMonster(worldMap))
-		 takeDamage(worldMap);
 	 checkInvincible();
 	 fullMask->setPosition(position.x, position.y);
 	 inventory->playerBar->update();
@@ -277,9 +275,8 @@
 		 itemKeyReleased = false;
 	 }
  }
- void  Player::takeDamage(std::vector<std::shared_ptr<GameObject>>* worldMap) {
+ void  Player::takeDamage(std::vector<std::shared_ptr<GameObject>>* worldMap,Monster* monster) {
 	 if (!isInvincible && !isScreenTransitioning){
-		 Monster* monster = (Monster*)collidingMonster.get();
 		 if(monster->strength>0){
 			 Sound::playSound(GameSound::SoundType::TakeDamage);
 			 inventory->playerBar->decreaseCurrentHP(monster->strength);

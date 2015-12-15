@@ -7,6 +7,7 @@
 #include "Item\RupeeDrop.h"
 #include "Item\ThrownBoomrang.h"
 #include "Item\HeartDrop.h"
+#include "Player\Player.h"
 Goriya::Goriya(Point pos, bool canBeCollidedWith){
 	position = pos;
 	width = Global::TileWidth;
@@ -102,6 +103,10 @@ void Goriya::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		ThrownBoomrang* boom = (ThrownBoomrang*)findBoomerang(worldMap).get();
 		if (!boom->isReturning)
 			boom->isReturning = true;
+	}
+	if (isCollidingWithPlayer(worldMap)){
+		Player* temp = (Player*)findPlayer(worldMap).get();
+		temp->takeDamage(worldMap, this);
 	}
 	if (projectileIsActive && intersect(fullMask, myBoomerang->fullMask)){
 		projectileIsActive = false;

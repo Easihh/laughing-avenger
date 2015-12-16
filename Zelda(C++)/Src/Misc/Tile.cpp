@@ -17,6 +17,27 @@ Tile::Tile(Point pos, bool canBeCollidedWith, TileType type) {
 		|| type == TileType::DungeonTile81
 		)
 		depth = 999;
+	if (type == TileType::DungeonTile2
+		||type == TileType::DungeonTile3
+		|| type == TileType::DungeonTile5
+		|| type == TileType::DungeonTile7
+		||type == TileType::DungeonTile34
+		|| type == TileType::DungeonTile35
+		|| type == TileType::DungeonTile37
+		|| type == TileType::DungeonTile38
+		|| type == TileType::DungeonTile39
+		|| type == TileType::DungeonTile74
+		|| type == TileType::DungeonTile75
+		|| type == TileType::DungeonTile77
+		|| type == TileType::DungeonTile78
+		|| type == TileType::DungeonTile82
+		|| type == TileType::DungeonTile83
+		|| type == TileType::DungeonTile84
+		|| type == TileType::DungeonTile86
+		|| type == TileType::DungeonTile87
+		){
+		depth = 2000;//higher depth than WallMaster so the WallMaster get covered by these tile.
+	}
 	id = (int)type;
 }
 void Tile::draw(sf::RenderWindow& mainWindow){

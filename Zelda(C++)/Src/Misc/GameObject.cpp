@@ -308,11 +308,25 @@ std::shared_ptr<GameObject> GameObject::findPlayer(std::vector<std::shared_ptr<G
 			return worldMap->at(i);
 	}
 }
-std::shared_ptr<GameObject> GameObject::findClosestSpawner(std::vector<std::shared_ptr<GameObject>>* worldMap){
+std::shared_ptr<GameObject> GameObject::findClosestSpawner(std::vector<std::shared_ptr<GameObject>>* worldMap,Point objPos){
+	std::shared_ptr<GameObject> closest;
+	float minDistance = 9999;
 	for (int i = 0; i < worldMap->size(); i++){
-		if (dynamic_cast<WallMasterSpawner*>(worldMap->at(i).get()))
-			return worldMap->at(i);
+		if (dynamic_cast<WallMasterSpawner*>(worldMap->at(i).get())){
+			float distance = distanceBetweenPoint(worldMap->at(i).get()->position, objPos);
+			if (distance < minDistance){
+				closest = worldMap->at(i);
+				minDistance = distance;
+			}
+		}
 	}
+	return closest;
+}
+float GameObject::distanceBetweenPoint(Point pt1, Point pt2){
+	float distance=0;
+	distance = std::pow((pt1.x - pt2.x), 2) +std::pow((pt1.y - pt2.y),2);
+	distance = std::sqrt(distance);
+	return distance;
 }
 std::shared_ptr<GameObject> GameObject::findBoomerang(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	for (int i = 0; i < worldMap->size(); i++){

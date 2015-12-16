@@ -9,6 +9,7 @@ public:
 	void draw(sf::RenderWindow& mainWindow);
 	void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
 private:
-	bool hasSpawned;
+	const int maxSpawn = 10,maxTimeSpawner=300;
+	int currentSpawnCount,currentTimeSpawner;
 };
 #endif

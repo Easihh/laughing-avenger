@@ -21,6 +21,7 @@
 	 stepToAlign = currentInvincibleFrame = transitionStep = xOffset = yOffset = 0;
 	 movePlayerToNewVector = stepIsNegative = movingSwordIsActive = isObtainingItem = false;
 	 isAttacking = isScreenTransitioning = isInvincible = boomerangIsActive = arrowIsActive= false;
+	 inputIsDisabled = false;
 	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased=hasMovedFromEntranceDoor = true;
 	 position = pos;
 	 worldX = (int)(position.y / Global::roomHeight);
@@ -60,12 +61,15 @@
 	 checkIfMovedFromEntrance(worldMap);
 	 if(sword!=NULL)
 		sword->update(isAttacking, canAttack, worldMap, &walkingAnimation);
-	 if(pushbackStep == 0)
-		 checkMovementInput(worldMap);
-	 else playerPushbackUpdate();
-	 checkAttackInput();
+	 if (pushbackStep!=0)
+		playerPushbackUpdate();
 	 checkInventoryInput();
-	 checkItemUseInput(worldMap);
+	 if (!inputIsDisabled){
+		 checkAttackInput();
+		 checkItemUseInput(worldMap);
+		 if (pushbackStep == 0)
+			 checkMovementInput(worldMap);
+	 }
 	 if (stepToMove != 0)
 		 completeMove();
 	 if (stepToAlign != 0)

@@ -9,12 +9,12 @@
 #include "Monster\WallMasterSpawner.h"
 WallMaster::WallMaster(Point pos,Direction spawnDir){
 	position = pos;
-	depth = 999;
+	depth = 1000;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
 	loadAnimation();
 	isInvincible = false;
-	healthPoint = 2;
+	healthPoint = 20;
 	strength = 1;
 	currentInvincibleFrame = 0;
 	pushbackStep = 0;
@@ -33,11 +33,29 @@ void WallMaster::draw(sf::RenderWindow& mainWindow){
 }
 void WallMaster::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	setDirection(worldMap);
-	if (isCollidingWithPlayer(worldMap)){
+	checkCollisions(worldMap);
+	checkParalyzeStatus();
+	if (hasCaughtPlayer)
+		movePlayerToDungeonEntrance(worldMap);
+	if (pushbackStep == 0 && !isParalyzed)
+		movement(worldMap);
+	else if (pushbackStep != 0 && !isParalyzed)
+		pushbackUpdate();
+	updateAnimation();
+	if (healthPoint <= 0)
+		processDeath(worldMap);
+	else checkInvincibility();
+	updateMasks();
+}
+void WallMaster::checkCollisions(std::vector<std::shared_ptr<GameObject>>* worldMap){
+	if (isCollidingWithPlayer(worldMap) && !hasCaughtPlayer){
 		Player* temp = (Player*)findPlayer(worldMap).get();
 		hasCaughtPlayer = true;
+		Sound::playSound(GameSound::TakeDamage);
+		temp->position.x = position.x;
+		temp->position.y = position.y;
+		temp->inputIsDisabled = true;
 	}
-	checkParalyzeStatus();
 	if (isCollidingWithBoomerang(worldMap)){
 		Sound::playSound(GameSound::EnemyHit);
 		isParalyzed = true;
@@ -45,26 +63,37 @@ void WallMaster::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		if (!boom->isReturning)
 			boom->isReturning = true;
 	}
-	if (pushbackStep == 0 && !isParalyzed){
-		movement(worldMap);
-	}
-	else if (pushbackStep != 0 && !isParalyzed)
-		pushbackUpdate();
+}
+void WallMaster::updateAnimation(){
 	for (int i = 0; i < 3; i++)
 		walkingAnimation[i]->updateAnimationFrame(position);
-	if (healthPoint <= 0){
-		Point pt(position.x + (width / 4), position.y + (height / 4));
-		std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
-		Static::toAdd.push_back(add);
-		destroyGameObject(worldMap);
-		Sound::playSound(GameSound::SoundType::EnemyKill);
-		dropItemOnDeath();
+}
+void WallMaster::processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap){
+	Point pt(position.x + (width / 4), position.y + (height / 4));
+	std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
+	Static::toAdd.push_back(add);
+	Sound::playSound(GameSound::SoundType::EnemyKill);
+	dropItemOnDeath();
+	destroyGameObject(worldMap);
+}
+void WallMaster::movePlayerToDungeonEntrance(std::vector<std::shared_ptr<GameObject>>* worldMap){
+	Player* temp = (Player*)findPlayer(worldMap).get();
+	switch (dir){
+	case Direction::Left:
+		temp->position.x -= minStep;
+		break;
+	case Direction::Right:
+		temp->position.x += minStep;
+		break;
+	case Direction::Up:
+		temp->position.y -= minStep;
+		break;
+	case Direction::Down:
+		temp->position.y += minStep;
+		break;
 	}
-	else
-	{
-		checkInvincibility();
-	}
-	updateMasks();
+	for (int i = 0; i < 3; i++)
+		temp->walkingAnimation[i]->updateAnimationFrame(temp->dir, temp->position);
 }
 void WallMaster::dropItemOnDeath() {
 	bool willDropItem = false;
@@ -124,43 +153,77 @@ void WallMaster::setMaxDistance(Direction spawnDir){
 	switch (spawnDir){
 	case Direction::Down:
 		maxXDistance = 4*Global::TileWidth;
-		maxYDistance = Global::TileHeight;
+		maxYDistance = 2*Global::TileHeight;
 		break;
 	case Direction::Right:
-		maxXDistance = Global::TileWidth;
+		maxXDistance = 2*Global::TileWidth;
 		maxYDistance = 4*Global::TileHeight;
 		break;
 	case Direction::Left:
-		maxXDistance = Global::TileWidth;
+		maxXDistance = 2*Global::TileWidth;
 		maxYDistance = 4 * Global::TileHeight;
 		break;
 	case Direction::Up:
 		maxXDistance = 4 * Global::TileWidth;
-		maxYDistance = Global::TileHeight;
+		maxYDistance = 2*Global::TileHeight;
 		break;
 	}
 }
 void WallMaster::setDirection(std::vector<std::shared_ptr<GameObject>>* worldMap){
-	WallMasterSpawner* spawn = (WallMasterSpawner*)findClosestSpawner(worldMap).get();
+	Player* player = (Player*)findPlayer(worldMap).get();
+	WallMasterSpawner* spawn = (WallMasterSpawner*)findClosestSpawner(worldMap,position).get();
+	WallMasterSpawner* nearPlayer = (WallMasterSpawner*)findClosestSpawner(worldMap, player->position).get();
 	setMaxDistance(spawn->dir);
 	float distanceX = std::abs(position.x - spawn->position.x);
 	float distanceY = std::abs(position.y - spawn->position.y);
 	switch (spawn->dir){
 	case Direction::Down:
+		if (distanceX == 0 && distanceY == 0){
+			position = nearPlayer->position;
+			dir = nearPlayer->dir;
+		}
+		else if (distanceY==maxYDistance && distanceX==0)
+			dir = Direction::Left;
+		else if (distanceX >= maxXDistance && distanceY == maxYDistance)
+			dir = Direction::Up;
+		else if (distanceX >= maxXDistance && distanceY==0)
+			dir = Direction::Right;
 		break;
 	case Direction::Right:
-		if (distanceX==0 && distanceY == 0)
-			dir = Direction::Right;
-		else if (distanceX == Global::TileWidth && distanceY<128)
+		if (distanceX == 0 && distanceY == 0){
+			position = nearPlayer->position;
+			dir = nearPlayer->dir;
+		}
+		else if (distanceX == maxXDistance && distanceY<128)
 			dir = Direction::Up;
-		else if (distanceY == maxYDistance && distanceX>0)
+		else if (distanceY >= maxYDistance && distanceX>0)
 			dir = Direction::Left;
 		else if (distanceY == maxYDistance && distanceX == 0)
 			dir = Direction::Down;
 		break;
 	case Direction::Left:
+		if (distanceX == 0 && distanceY == 0){
+			position = nearPlayer->position;
+			dir = nearPlayer->dir;
+		}
+		else if (distanceX == maxXDistance && distanceY<128)
+			dir = Direction::Up;
+		else if (distanceY >= maxYDistance && distanceX>0)
+			dir = Direction::Right;
+		else if (distanceY >= maxYDistance && distanceX == 0)
+			dir = Direction::Down;
 		break;
 	case Direction::Up:
+		if (distanceX == 0 && distanceY == 0){
+			position = nearPlayer->position;
+			dir = nearPlayer->dir;
+		}
+		else if (distanceY == maxYDistance && distanceX == 0)
+			dir = Direction::Left;
+		else if (distanceX >= maxXDistance && distanceY == maxYDistance)
+			dir = Direction::Down;
+		else if (distanceX >= maxXDistance && distanceY == 0)
+			dir = Direction::Right;
 		break;
 	}
 }

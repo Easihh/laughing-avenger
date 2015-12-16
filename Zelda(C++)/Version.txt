@@ -1,3 +1,12 @@
+Version 0.088
+
+-Fixed an issue where WallMaster that spawn with right direction could get off track when knockedback from behind when facing north.
+-FindClosestSpawner now return closestSpawner from player/wall Master position instead of the first spawner in the current map.
+-WallMaster movement AI should now be working for all direction.
+-WallMaster now catch player upon touch and render player unable to use any input(next update will transport player back to dungeon entrance);
+-WallMaster spawned from WallmasterSpawner position is now based on player location.
+-WallMaster will now move around the closest spawner near the player and is no longer fixed to a single location.
+
 Version 0.087
 
 -Moved collision With monster logic from Player class to class derived from monster to allow variety of logic when touching enemies.

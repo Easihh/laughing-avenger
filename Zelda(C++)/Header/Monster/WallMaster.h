@@ -8,6 +8,8 @@ public:
 	WallMaster(Point position,Direction dir);
 	void draw(sf::RenderWindow& mainWindow);
 	void update(std::vector<std::shared_ptr<GameObject>>* worldMap);
+	Direction spawnedDir;
+	Point lastSpawnLocation;
 private:
 	void loadAnimation();
 	void setMaxDistance(Direction spawnDir);

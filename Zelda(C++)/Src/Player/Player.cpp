@@ -81,6 +81,26 @@
 	 fullMask->setPosition(position.x, position.y);
 	 inventory->playerBar->update();
  }
+ void Player::movePlayerToDungeonEntrance(){
+	 movePlayerToNewVector = true;
+	 inputIsDisabled = false;
+	 worldX = 3;
+	 worldY = 3;
+	 float teleportX = worldY*Global::roomWidth + (0.5*Global::roomWidth);
+	 float teleportY = worldX*Global::roomHeight + Global::roomHeight + Global::inventoryHeight - 2 * Global::TileHeight;
+	 float inventoryNewX = worldY*Global::roomHeight;
+	 float inventoryNewY = worldX*Global::roomWidth;
+	 position = Point(teleportX, teleportY);
+	 inventory->setInventoryPosition(Point(inventoryNewX, inventoryNewY));
+	 inventory->playerBar->setPlayerBar(Point(inventoryNewX, inventoryNewY));
+	 inventory->playerBar->resetDungeonPlayerMarker();
+	 Global::gameView.setCenter(worldY*Global::roomWidth + Global::SCREEN_WIDTH / 2,
+		 worldX*Global::roomHeight + Global::SCREEN_HEIGHT / 2);
+	 for (int i = 0; i < 3; i++)
+		 walkingAnimation[i]->updateAnimationFrame(dir, position);
+	 fullMask->setPosition(position.x, position.y);
+	 Sound::playSound(GameSound::Underworld);
+ }
  void Player::checkIfMovedFromEntrance(std::vector<std::shared_ptr<GameObject>>* worldMap){
 	 //there wont be more than 1 entrance per room.
 	 for (auto& obj : *worldMap){
@@ -518,7 +538,7 @@
 	// mainWindow.draw(*fullMask);
  }
  void Player::drawText(sf::RenderWindow& mainWindow){
-	/* sf::Font font;
+	 sf::Font font;
 	 std::stringstream pos;
 	 pos << "X:" << position.x << std::endl << "Y:" << position.y << std::endl
 		 <<"WorldX:"<<worldX <<std::endl <<"WorldY:"<<worldY<<std::endl;
@@ -527,5 +547,5 @@
 	 txt.setColor(sf::Color::Red);
 	 txt.setPosition(position.x, position.y - 64);
 	 txt.setCharacterSize(textSize);
-	 mainWindow.draw(txt);*/
+	 mainWindow.draw(txt);
  }

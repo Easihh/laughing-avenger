@@ -1,3 +1,10 @@
+Version 0.089
+
+-Improved WallMaster/WallMasterSpawner logic to now allow multiple spawner close to each other without affecting the pathing.
+-Fixed an issue where player could be caught by multiple WallMaster at once and cause unintended behavior.
+-Player caught by WallMaster are now teleported back to dungeon entrance.
+-WallMaster/WallMasterSpawner logic is now completed.
+
 Version 0.088
 
 -Fixed an issue where WallMaster that spawn with right direction could get off track when knockedback from behind when facing north.

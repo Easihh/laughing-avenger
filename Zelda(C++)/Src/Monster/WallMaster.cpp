@@ -8,7 +8,7 @@
 #include "Player\Player.h"
 #include "Monster\WallMasterSpawner.h"
 WallMaster::WallMaster(Point pos,Direction spawnDir){
-	position = pos;
+	position =lastSpawnLocation= pos;
 	depth = 1000;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
@@ -20,7 +20,7 @@ WallMaster::WallMaster(Point pos,Direction spawnDir){
 	pushbackStep = 0;
 	setupFullMask();
 	setupMonsterMask();
-	dir = spawnDir;
+	dir =spawnedDir= spawnDir;
 	walkAnimIndex = 0;
 	isParalyzed = false;
 	currentParalyzeTime = 0;
@@ -50,11 +50,18 @@ void WallMaster::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 void WallMaster::checkCollisions(std::vector<std::shared_ptr<GameObject>>* worldMap){
 	if (isCollidingWithPlayer(worldMap) && !hasCaughtPlayer){
 		Player* temp = (Player*)findPlayer(worldMap).get();
-		hasCaughtPlayer = true;
-		Sound::playSound(GameSound::TakeDamage);
-		temp->position.x = position.x;
-		temp->position.y = position.y;
-		temp->inputIsDisabled = true;
+		if (!temp->inputIsDisabled){//player isnt caught already by another WallMaster
+			hasCaughtPlayer = true;
+			Sound::playSound(GameSound::TakeDamage);
+			temp->position.x = position.x;
+			temp->position.y = position.y;
+			temp->inputIsDisabled = true;
+			//used to determine which room player was before the teleport to entrance.
+			int prevWorldX = position.y / Global::roomHeight;
+			int prevWorldY = position.x / Global::roomWidth;
+			temp->prevWorldX = prevWorldX;
+			temp->prevWorldY = prevWorldY;
+		}
 	}
 	if (isCollidingWithBoomerang(worldMap)){
 		Sound::playSound(GameSound::EnemyHit);
@@ -171,59 +178,84 @@ void WallMaster::setMaxDistance(Direction spawnDir){
 }
 void WallMaster::setDirection(std::vector<std::shared_ptr<GameObject>>* worldMap){
 	Player* player = (Player*)findPlayer(worldMap).get();
-	WallMasterSpawner* spawn = (WallMasterSpawner*)findClosestSpawner(worldMap,position).get();
 	WallMasterSpawner* nearPlayer = (WallMasterSpawner*)findClosestSpawner(worldMap, player->position).get();
-	setMaxDistance(spawn->dir);
-	float distanceX = std::abs(position.x - spawn->position.x);
-	float distanceY = std::abs(position.y - spawn->position.y);
-	switch (spawn->dir){
+	setMaxDistance(spawnedDir);
+	float distanceX = std::abs(position.x - lastSpawnLocation.x);
+	float distanceY = std::abs(position.y - lastSpawnLocation.y);
+	switch (spawnedDir){
 	case Direction::Down:
 		if (distanceX == 0 && distanceY == 0){
 			position = nearPlayer->position;
-			dir = nearPlayer->dir;
+			dir=spawnedDir = nearPlayer->dir;
+			lastSpawnLocation = position;
 		}
 		else if (distanceY==maxYDistance && distanceX==0)
 			dir = Direction::Left;
 		else if (distanceX >= maxXDistance && distanceY == maxYDistance)
 			dir = Direction::Up;
-		else if (distanceX >= maxXDistance && distanceY==0)
+		else if (distanceX >= maxXDistance && distanceY == 0){
 			dir = Direction::Right;
+			if (player->inputIsDisabled){//player was caught
+				player->movePlayerToDungeonEntrance();
+				hasCaughtPlayer = false;
+			}
+		}
 		break;
 	case Direction::Right:
 		if (distanceX == 0 && distanceY == 0){
 			position = nearPlayer->position;
-			dir = nearPlayer->dir;
+			dir = spawnedDir = nearPlayer->dir;
+			lastSpawnLocation = position;
 		}
-		else if (distanceX == maxXDistance && distanceY<128)
+		else if (distanceX >= maxXDistance && distanceY<128)
 			dir = Direction::Up;
-		else if (distanceY >= maxYDistance && distanceX>0)
+		else if (distanceY >= maxYDistance && distanceX > 0)
 			dir = Direction::Left;
-		else if (distanceY == maxYDistance && distanceX == 0)
+		else if (distanceY == maxYDistance && distanceX == 0){
 			dir = Direction::Down;
+			if (player->inputIsDisabled){//player was caught
+				player->movePlayerToDungeonEntrance();
+				hasCaughtPlayer = false;
+			}
+		}
 		break;
 	case Direction::Left:
 		if (distanceX == 0 && distanceY == 0){
 			position = nearPlayer->position;
-			dir = nearPlayer->dir;
+			dir = spawnedDir = nearPlayer->dir;
+			lastSpawnLocation = position;
 		}
 		else if (distanceX == maxXDistance && distanceY<128)
 			dir = Direction::Up;
-		else if (distanceY >= maxYDistance && distanceX>0)
+		else if (distanceY >= maxYDistance && distanceX > 0){
 			dir = Direction::Right;
-		else if (distanceY >= maxYDistance && distanceX == 0)
+		}
+		else if (distanceY >= maxYDistance && distanceX == 0){
 			dir = Direction::Down;
+			if (player->inputIsDisabled){//player was caught
+				player->movePlayerToDungeonEntrance();
+				hasCaughtPlayer = false;
+			}
+		}
 		break;
 	case Direction::Up:
 		if (distanceX == 0 && distanceY == 0){
 			position = nearPlayer->position;
-			dir = nearPlayer->dir;
+			dir = spawnedDir = nearPlayer->dir;
+			lastSpawnLocation = position;
 		}
-		else if (distanceY == maxYDistance && distanceX == 0)
+		else if (distanceY == maxYDistance && distanceX == 0){
 			dir = Direction::Left;
+		}
 		else if (distanceX >= maxXDistance && distanceY == maxYDistance)
 			dir = Direction::Down;
-		else if (distanceX >= maxXDistance && distanceY == 0)
+		else if (distanceX >= maxXDistance && distanceY == 0){
 			dir = Direction::Right;
+			if (player->inputIsDisabled){//player was caught
+				player->movePlayerToDungeonEntrance();
+				hasCaughtPlayer = false;
+			}
+		}
 		break;
 	}
 }

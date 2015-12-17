@@ -27,6 +27,7 @@ public:
 	void updateSprites();
 	unsigned int stepToMove;
 	void takeDamage(std::vector<std::shared_ptr<GameObject>>* worldMap, Monster* monster);
+	void movePlayerToDungeonEntrance();
 private:
 	void completeMove();
 	void checkIfMovedFromEntrance(std::vector<std::shared_ptr<GameObject>>* worldMap);

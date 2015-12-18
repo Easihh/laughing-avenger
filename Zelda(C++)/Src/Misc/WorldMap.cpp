@@ -72,17 +72,37 @@ void WorldMap::loadMap(std::string filename,tripleVector& objectVector){
 	lastWorldXIndex = 0;
 	lastWorldYIndex = 0;
 	in.open(filename);
+	int elementCount = 0;
+	int currentIndex;
+	std::string idString;
+	int minSubstring;
+	int parsedId;
+	int counter;
 	if (in.fail())
 		std::cout << "Failed To open:" + filename<<std::endl;
 	while (!in.eof()){
+		lastWorldXIndex = 0;
+		minSubstring = 0;
+		currentIndex = 0;
+		counter = 0;
+		idString = "";
 		std::getline(in, line, '\n');
-		boost::split(strs, line, boost::is_any_of(","));
-		for (int i = 0; i < strs.size(); i++){
-		//for (std::vector<std::string>::iterator it = strs.begin(); it < strs.end(); it++){
-			//std::cout <<"Row:"<<lastWorldXIndex <<" Col:"<<lastWorldYIndex << " Value:" << *it << std::endl;
-			//std::string val = *it;
-			std::string val = strs[i];
-			createTile(lastWorldXIndex, lastWorldYIndex, atoi(val.c_str()), objectVector);
+		bool isRunning = true;
+		while (isRunning){
+			while (currentIndex<line.size() && line.at(currentIndex) != ','){
+				currentIndex++;
+				counter++;
+			}
+			idString = line.substr(minSubstring, counter);
+			currentIndex++;//pass over , char
+			minSubstring = currentIndex;
+			if (minSubstring >= line.size())
+				isRunning = false;
+			counter = 0;
+			parsedId = atoi(idString.c_str());
+			elementCount++;
+
+			createTile(lastWorldXIndex, lastWorldYIndex, parsedId, objectVector);
 			lastWorldXIndex++;
 			if (lastWorldXIndex % 16 == 0){
 				vectorYindex++;
@@ -94,7 +114,6 @@ void WorldMap::loadMap(std::string filename,tripleVector& objectVector){
 		if (lastWorldYIndex % 16 == 0){
 			vectorXindex++;
 		}
-		lastWorldXIndex = 0;
 	}
 	in.close();
 }

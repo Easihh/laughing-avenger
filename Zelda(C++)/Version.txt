@@ -1,3 +1,7 @@
+Version 0.090
+
+-Significantly reduced game load time from ~2seconds to 0.5seconds in order to be able to increase map size further later on with long load delay.
+
 Version 0.089
 
 -Improved WallMaster/WallMasterSpawner logic to now allow multiple spawner close to each other without affecting the pathing.

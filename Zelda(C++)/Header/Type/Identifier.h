@@ -143,7 +143,8 @@ WallMasterDungeonSpawnerUp = 137,
 WallMasterDungeonSpawnerDown=138,
 WallMasterDungeonSpawnerRight=139,
 WallMasterDungeonSpawnerLeft=140,
-WallMasterDungeonSpawnerController=141
+WallMasterDungeonSpawnerController=141,
+AquamentusBoss=142
 };
 
 #endif

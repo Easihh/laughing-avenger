@@ -29,5 +29,7 @@ private:
 	static sf::Sound* Sound::triforce;
 	static sf::Sound* Sound::getHeart; 
 	static sf::Sound* Sound::shieldBlock;
+	static sf::Sound* Sound::bossScream1;
+	static sf::Sound* Sound::bossScream2;
 };
 #endif

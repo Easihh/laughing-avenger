@@ -21,7 +21,9 @@ namespace GameSound{
 		Boomerang,
 		Triforce,
 		GetHeart,
-		ShieldBlock
+		ShieldBlock,
+		BossScream1,
+		BossScream2
 	};
 }
 #endif

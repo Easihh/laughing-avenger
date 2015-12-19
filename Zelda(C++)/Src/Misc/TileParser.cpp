@@ -25,6 +25,7 @@
 #include "Monster\Goriya.h"
 #include "Monster\Trap.h"
 #include "Monster\WallMasterSpawner.h"
+#include "Monster\Aquamentus.h"
 #include "Misc\WallMasterSpawnController.h"
 #include "Misc\MoveableBlock.h"
 #include "Misc\Marker\TeleportToArtifactRoom.h"
@@ -480,6 +481,9 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::WallMasterDungeonSpawnerController:
 	tile = std::make_shared<WallMasterSpawnController>(pt);
+	break;
+	case Identifier::AquamentusBoss:
+	tile = std::make_shared<Aquamentus>(pt);
 	break;
 	}
 	objectVector[vectorXindex][vectorYindex].push_back(tile);

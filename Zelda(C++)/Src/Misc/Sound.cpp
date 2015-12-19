@@ -20,6 +20,8 @@ sf::Sound* Sound::boomrang;
 sf::Sound* Sound::triforce;
 sf::Sound* Sound::getHeart;
 sf::Sound* Sound::shieldBlock;
+sf::Sound* Sound::bossScream1;
+sf::Sound* Sound::bossScream2;
 Sound::Sound() {
 	buffer = new sf::SoundBuffer();
 	if(!buffer->loadFromFile("Sound/bombDrop.wav"))
@@ -119,6 +121,17 @@ Sound::Sound() {
 		std::cout << "Failed to load shieldBlock.wav";
 	shieldBlock = new sf::Sound();
 	shieldBlock->setBuffer(*buffer);
+	buffer = new sf::SoundBuffer();
+	if (!buffer->loadFromFile("Sound/bossScream1.wav"))
+		std::cout << "Failed to load bossScream1.wav";
+	bossScream1 = new sf::Sound();
+	bossScream1->setBuffer(*buffer);
+	bossScream1->setLoop(true);
+	buffer = new sf::SoundBuffer();
+	if (!buffer->loadFromFile("Sound/bossScream2.wav"))
+		std::cout << "Failed to load bossScream2.wav";
+	bossScream2 = new sf::Sound();
+	bossScream2->setBuffer(*buffer);
 }
 void Sound::stopSound(GameSound::SoundType sound) {
 	if(sound == GameSound::Underworld)
@@ -167,4 +180,8 @@ void Sound::playSound(GameSound::SoundType sound) {
 		getHeart->play();
 	else if (sound == GameSound::ShieldBlock)
 		shieldBlock->play();
+	else if (sound == GameSound::BossScream1)
+		bossScream1->play();
+	else if (sound == GameSound::BossScream2)
+		bossScream2->play();
 }

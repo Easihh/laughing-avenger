@@ -5,7 +5,8 @@ TeleportFromArtifactRoom::TeleportFromArtifactRoom(Point pos){
 	position = pos;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
+	setupMask(&mask, width, height, sf::Color::Cyan);
 	texture.loadFromFile("Tileset/Dungeon/dungeonTile30.png");
 	sprite.setTexture(texture);
 	sprite.setPosition(position.x, position.y);

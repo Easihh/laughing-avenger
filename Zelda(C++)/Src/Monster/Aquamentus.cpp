@@ -12,14 +12,12 @@ Aquamentus::Aquamentus(Point pos){
 	height = 2*Global::TileHeight;
 	loadAnimation();
 	isInvincible = false;
-	healthPoint = 2;
+	healthPoint = 6;
 	strength = 2;
 	currentInvincibleFrame = 0;
 	pushbackStep = 0;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 	setupMonsterMask();
-	sf::Vector2f size(32, 24);
-	fullMask->setSize(size);
 	dir = Direction::Left;
 	walkAnimIndex = 0;
 	currentForwardDistance = 0;
@@ -36,25 +34,41 @@ void Aquamentus::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		temp->takeDamage(worldMap, this);
 	}
 	movement(worldMap);
-	shoot(worldMap);
+	shoot();
 	for (int i = 0; i < 3; i++)
 		walkingAnimation[i]->updateAnimationFrame(position);
-	if (healthPoint <= 0){
-		Point pt(position.x + (width / 4), position.y + (height / 4));
-		std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
-		Static::toAdd.push_back(add);
-		destroyGameObject(worldMap);
-		Sound::playSound(GameSound::SoundType::EnemyKill);
-		dropItemOnDeath();
-		std::cout << "Aquamentus Destroyed";
-	}
-	else
-	{
-		checkInvincibility();
-	}
+	if (healthPoint <= 0)
+		processDeath(worldMap);
+	else checkInvincibility();
 	updateMasks();
 }
-void Aquamentus::shoot(std::vector<std::shared_ptr<GameObject>>* worldMap){
+void Aquamentus::processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap){
+	Player* temp = (Player*)findPlayer(worldMap).get();
+	temp->boss1IsAlive = false;
+	Point pt(position.x + (width / 4), position.y + (height / 4));
+	std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
+	Static::toAdd.push_back(add);
+	destroyGameObject(worldMap);
+	Sound::playSound(GameSound::SoundType::EnemyKill);
+	Sound::stopSound(GameSound::SoundType::BossScream1);
+	dropItemOnDeath();
+	openDoor(worldMap);
+}
+void Aquamentus::openDoor(std::vector<std::shared_ptr<GameObject>>* worldMap){
+	Sound::playSound(GameSound::DoorUnlock);
+	std::shared_ptr<GameObject> del;
+	for (auto& obj : *worldMap){
+		if (dynamic_cast<Tile*>(obj.get())){
+			Tile* temp = (Tile*)obj.get();
+			if (temp->id == (int)TileType::DungeonTile9){
+				temp->texture.loadFromFile("Tileset/Dungeon/dungeonTile88.png");
+				temp->sprite.setTexture(temp->texture);
+				temp->isCollideable = false;
+			}
+		}
+	}
+}
+void Aquamentus::shoot(){
 	timeSinceLastProjectile ++;
 	if (timeSinceLastProjectile > maxTimeSinceLastProjectile){
 		std::shared_ptr<GameObject> add;

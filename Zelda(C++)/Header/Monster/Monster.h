@@ -19,7 +19,6 @@ public:
 	virtual void takeDamage(int damage);
 	virtual void dropItemOnDeath();
 	int strength, walkAnimIndex,currentParalyzeTime;
-	std::unique_ptr<sf::RectangleShape> mask;
 	void setupMonsterMask();
 	bool isParalyzed;
 	const int maxParalyzeTime = 90;

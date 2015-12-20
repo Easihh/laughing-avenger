@@ -93,7 +93,7 @@ bool GameObject::isCollidingWithPlayer(std::vector<std::shared_ptr<GameObject>>*
 	bool isColliding = false;
 	Point offset(0, 0);
 	Player* player =(Player*)findPlayer(worldMap).get();
-	if(intersect(player->fullMask, fullMask, offset))
+	if(intersect(player->fullMask, mask, offset))
 		isColliding = true;
 	return isColliding;
 }
@@ -265,14 +265,14 @@ bool GameObject::isColliding(std::vector<std::shared_ptr<GameObject>>* worldMap,
 	}
 	return collision;
 }
-void GameObject::setupFullMask(){
-	fullMask = std::make_unique<sf::RectangleShape>();
-	sf::Vector2f size(width, height);
-	fullMask->setSize(size);
-	fullMask->setOutlineThickness(1);
-	fullMask->setFillColor(sf::Color::Transparent);
-	fullMask->setPosition(position.x, position.y);
-	fullMask->setOutlineColor(sf::Color::Magenta);
+void GameObject::setupMask(std::unique_ptr<sf::RectangleShape>* themask, int theWidth, int theHeight, sf::Color color){
+	*themask = std::make_unique<sf::RectangleShape>();
+	sf::Vector2f size(theWidth, theHeight);
+	themask->get()->setSize(size);
+	themask->get()->setOutlineThickness(1);
+	themask->get()->setFillColor(sf::Color::Transparent);
+	themask->get()->setPosition(position.x, position.y);
+	themask->get()->setOutlineColor(color);
 }
 bool GameObject::isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	bool isColliding = false;

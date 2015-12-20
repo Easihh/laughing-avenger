@@ -9,7 +9,7 @@ Sword::Sword(Point pos,Direction dir){
 	swordDelay = 0;
 	swordDir = dir;
 	loadImage(dir);
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 	strength = 1;
 }
 void Sword::loadImage(Direction dir){
@@ -70,7 +70,7 @@ bool Sword::isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>* wor
 	for(auto& obj:*worldMap)
 	{
 		if (dynamic_cast<Monster*>(obj.get()))
-			if (intersect(fullMask, ((Monster*)obj.get())->fullMask, offset)){
+			if (intersect(fullMask, ((Monster*)obj.get())->mask, offset)){
 				isColliding = true;
 				collidingMonsterList.push_back(obj);
 		}

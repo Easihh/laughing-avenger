@@ -9,7 +9,8 @@ DungeonMarker::DungeonMarker(Point pos) {
 	width = Global::TileWidth;
 	height = 4;
 	sprite.setPosition(position.x, position.y);
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
+	setupMask(&mask, width, height, sf::Color::Cyan);
 }
 void DungeonMarker::draw(sf::RenderWindow& window) {
 	window.draw(sprite);

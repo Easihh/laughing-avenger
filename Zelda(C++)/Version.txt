@@ -1,3 +1,11 @@
+Version 0.093
+
+-Killing the Boss now opens the door to the triforce room.
+-Fixed an issue where taking the triforce would not move the view/inventory bar to the correct location.
+-Aquamentus now shoot delay is now reduced from 3 seconds to 2.5seconds.
+-Added Dungeon locked doors that can only be opened if possessing a key.
+-Boss now scream when player is near.
+
 Version 0.092
 
 -Fixed an issue where Keese bat were not drawn on top of certain tile.

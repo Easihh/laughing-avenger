@@ -8,7 +8,8 @@
 	 currentFrame = 0;
 	 width = Global::TileWidth;
 	 height = 4;
-	 setupFullMask();
+	 setupMask(&fullMask, width, height, sf::Color::Magenta);
+	 setupMask(&mask, width, height, sf::Color::Cyan);
 	 isVisible = true;
 	 isObtained = false;
 	 texture.loadFromFile("Tileset/Bomb.png");

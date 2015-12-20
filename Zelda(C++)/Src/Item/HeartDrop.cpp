@@ -6,7 +6,8 @@ HeartDrop::HeartDrop(Point pos) {
 	width = Global::TileWidth;
 	height = Global::TileHeight;
 	setImage();
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
+	setupMask(&mask, width, height, sf::Color::Cyan);
 }
 void HeartDrop::setImage() {
 	anim = std::make_unique<Animation>("heart", height, width, position, 8);

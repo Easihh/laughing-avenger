@@ -30,7 +30,7 @@ private:
 	void drawLeftScreen(sf::RenderWindow& mainWindow);
 	void drawDownScreen(sf::RenderWindow& mainWindow);
 	void drawUpScreen(sf::RenderWindow& mainWindow);
-	void freeSpace(tripleVector&);
+	void freeSpace(tripleVector&,int worldX,int worldY);
 	void addToGameVector(std::vector<std::shared_ptr<GameObject>>* roomVector);
 	void setupVectors();
 	void deleteOutstandingPlayerObjects(std::vector<std::shared_ptr<GameObject>>*);

@@ -8,7 +8,8 @@ ThrownBoomrang::ThrownBoomrang(Point pos, Direction direction) {
 	boomrangDir = direction;
 	width=Global::TileWidth;
 	height = Global::TileHeight;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
+	setupMask(&mask, width, height, sf::Color::Cyan);
 	setupInitialPosition();
 	boomrangAnimation = std::make_unique<Animation>("Boomerang", height, width, position, 8);
 }
@@ -29,10 +30,12 @@ void ThrownBoomrang::setupInitialPosition() {
 	}
 	sprite.setPosition(position.x, position.y);
 	fullMask->setPosition(position.x, position.y);
+	mask->setPosition(position.x, position.y);
 }
 void ThrownBoomrang::draw(sf::RenderWindow& mainWindow) {
 	mainWindow.draw(boomrangAnimation->sprite);
 	//mainWindow.draw(*fullMask);
+	//mainWindow.draw(*mask);
 }
 void ThrownBoomrang::setDiagonalSpeed(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	Player* temp = ((Player*)findPlayer(worldMap).get());
@@ -113,6 +116,7 @@ void ThrownBoomrang::boomrangMovement() {
 	if(isOutsideRoomBound(position))
 		isReturning = true;
 	fullMask->setPosition(position.x, position.y);
+	mask->setPosition(position.x, position.y);
 }
 void ThrownBoomrang::destroyBoomerang(std::vector<std::shared_ptr<GameObject>>* worldMap){
 	Sound::stopSound(GameSound::Boomerang);

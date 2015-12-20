@@ -9,6 +9,7 @@
 #include "Item\ThrownArrow.h"
 #include "Item\ThrownBomb.h"
 #include "Item\BombEffect.h"
+#include "Item\KeyDrop.h"
 #include "Misc\ShopBomb.h"
 #include "Misc\ShopRupeeDisplayer.h"
 #include "Misc\CandleFlame.h"
@@ -484,6 +485,15 @@ void TileParser::createTile(int lastWorldXIndex, int lastWorldYIndex, int tileTy
 	break;
 	case Identifier::AquamentusBoss:
 	tile = std::make_shared<Aquamentus>(pt);
+	break;
+	case Identifier::DungeonTile89:
+	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile89);
+	break;
+	case Identifier::DungeonTile90:
+	tile = std::make_shared<Tile>(pt, true, TileType::DungeonTile90);
+	break;
+	case Identifier::DungeonKeyDrop:
+	tile = std::make_shared<KeyDrop>(pt);
 	break;
 	}
 	objectVector[vectorXindex][vectorYindex].push_back(tile);

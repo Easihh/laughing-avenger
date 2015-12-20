@@ -274,18 +274,18 @@ void WorldMap::drawScreen(sf::RenderWindow& mainWindow, std::vector<std::shared_
 			obj->draw(mainWindow);
 	}
 }
-void WorldMap::freeSpace(tripleVector&  objVector) {
+void WorldMap::freeSpace(tripleVector&  objVector,int worldX,int worldY) {
 
 		for (int j = 0; j < Static::toDelete.size();j++)
 		{
 			std::shared_ptr<GameObject> del = Static::toDelete.at(j);
-			for(int i = 0; i < objVector[player->worldX][player->worldY].size(); i++){
-				std::shared_ptr<GameObject> tmp = objVector[player->worldX][player->worldY].at(i);
+			for(int i = 0; i < objVector[worldX][worldY].size(); i++){
+				std::shared_ptr<GameObject> tmp = objVector[worldX][worldY].at(i);
 				if(tmp == del){
 					if(dynamic_cast<MovingSword*>(del.get()))
 						player->movingSwordIsActive = false;
 					del.reset();
-					objVector[player->worldX][player->worldY].erase(objVector[player->worldX][player->worldY].begin() + i);
+					objVector[worldX][worldY].erase(objVector[worldX][worldY].begin() + i);
 					Static::toDelete.erase(Static::toDelete.begin()+j);
 					j--;
 				}
@@ -302,9 +302,13 @@ void WorldMap::addToGameVector(std::vector<std::shared_ptr<GameObject>>* roomObj
 }
 void WorldMap::drawAndUpdateCurrentScreen(sf::RenderWindow& mainWindow){
 	if (Static::toDelete.size() > 0){
-		freeSpace(gameMainVector);
-		freeSpace(dungeonVector);
-		freeSpace(secretRoomVector);
+		freeSpace(gameMainVector,player->worldX,player->worldY);
+		freeSpace(dungeonVector, player->worldX, player->worldY);
+		freeSpace(secretRoomVector, player->worldX, player->worldY);
+		//used when teleporting from one layer point to another layer differnet point such as triforce.
+		freeSpace(gameMainVector, player->prevWorldX, player->prevWorldY);
+		freeSpace(dungeonVector, player->prevWorldX, player->prevWorldY);
+		freeSpace(secretRoomVector, player->prevWorldX, player->prevWorldY);
 	}
 	if(player->currentLayer==OverWorld){
 		if(player->movePlayerToNewVector)

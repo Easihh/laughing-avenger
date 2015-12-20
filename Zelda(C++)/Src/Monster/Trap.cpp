@@ -12,7 +12,7 @@ Trap::Trap(Point pos, bool canBeCollidedWith) {
 	currentInvincibleFrame = 0;
 	isInvincible = true;
 	pushbackStep = 0;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 	setupMonsterMask();
 	dir = Direction::None;
 	walkAnimIndex = 0;

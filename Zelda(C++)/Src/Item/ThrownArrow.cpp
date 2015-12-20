@@ -7,7 +7,7 @@ ThrownArrow::ThrownArrow(Point pos,Direction direction) {
 	width = Global::TileWidth;
 	height = Global::TileHeight;
 	setup();
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 }
 void ThrownArrow::setup() {
 	switch(arrowDir)

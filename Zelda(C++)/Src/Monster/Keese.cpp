@@ -18,7 +18,7 @@ Keese::Keese(Point pos, bool canBeCollidedWith) {
 	healthPoint = 1;
 	strength = 1;
 	currentInvincibleFrame = 0;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 	setupMonsterMask();
 	dir = Direction::None;
 	getNextDirection(Direction::None);

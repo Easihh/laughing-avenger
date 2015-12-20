@@ -8,7 +8,7 @@ CandleFlame::CandleFlame(Point pos, Direction direction) {
 	currentDuration=currentFrame = 0;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 	flameAnimation = std::make_unique<Animation>("Fire", height, width, position, 8);
 	dir = direction;
 	setupFlame();

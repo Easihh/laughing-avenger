@@ -40,7 +40,7 @@ void MovingSword::loadAnimation(Direction attackDir) {
 		swordAnimation = std::make_unique<Animation>("sword_thrown_up", height, width, position, nextFrameInUpdates);
 		break;
 	}
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 }
 void MovingSword::swordMovement(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	switch(swordDir){

@@ -9,7 +9,7 @@ GoriyaBoomerang::GoriyaBoomerang(Point pos, Direction direction) {
 	boomrangDir = direction;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 	setupMonsterMask();
 	setupInitialPosition();
 	returnDirectionIsSet = false;

@@ -8,7 +8,8 @@ ShopKey::ShopKey(Point pos){
 	currentFrame = 0;
 	width = Global::TileWidth;
 	height = 4;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
+	setupMask(&mask, width, height, sf::Color::Cyan);
 	isVisible = true;
 	isObtained = false;
 	texture.loadFromFile("Tileset/Key.png");
@@ -48,6 +49,7 @@ void ShopKey::draw(sf::RenderWindow& mainWindow) {
 	if (isVisible){
 		mainWindow.draw(sprite);
 	}
+
 	if (!isObtained && isVisible)
 		drawCost(mainWindow, itemPrice);
 }

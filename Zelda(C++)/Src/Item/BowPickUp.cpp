@@ -7,7 +7,8 @@ BowPickUp::BowPickUp(Point pos) {
 	texture.loadFromFile("Tileset/Bow.png");
 	width = Global::TileWidth;
 	height = 4;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
+	setupMask(&mask, width, height, sf::Color::Cyan);
 	sprite.setTexture(texture);
 	sprite.setPosition(position.x, position.y);
 }

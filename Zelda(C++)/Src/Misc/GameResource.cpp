@@ -216,4 +216,8 @@ GameResource::GameResource(){
 	Static::gameResource.push_back(texture);
 	texture.loadFromFile("Tileset/greenArmos.png");
 	Static::gameResource.push_back(texture);
+	texture.loadFromFile("Tileset/Dungeon/dungeonTile89.png");
+	Static::gameResource.push_back(texture);
+	texture.loadFromFile("Tileset/Dungeon/dungeonTile90.png");
+	Static::gameResource.push_back(texture);
 }

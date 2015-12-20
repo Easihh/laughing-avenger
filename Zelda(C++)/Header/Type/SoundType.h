@@ -24,7 +24,8 @@ namespace GameSound{
 		ShieldBlock,
 		BossScream1,
 		BossScream2,
-		ItemAppear
+		ItemAppear,
+		DoorUnlock
 	};
 }
 #endif

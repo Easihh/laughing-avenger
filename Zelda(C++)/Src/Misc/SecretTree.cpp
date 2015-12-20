@@ -10,7 +10,8 @@ SecretTree::SecretTree(Point pos) {
 	texture.loadFromFile("Tileset/Tree.png");
 	sprite.setTexture(texture);
 	sprite.setPosition(position.x, position.y);
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
+	setupMask(&mask, width, height, sf::Color::Cyan);
 }
 Point SecretTree::getPointBeforeTeleport(Direction dirBeforeEntering, Point playerPos) {
 	float x;

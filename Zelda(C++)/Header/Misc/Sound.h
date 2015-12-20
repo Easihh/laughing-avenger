@@ -32,5 +32,6 @@ private:
 	static sf::Sound* Sound::bossScream1;
 	static sf::Sound* Sound::bossScream2;
 	static sf::Sound* Sound::itemAppear;
+	static sf::Sound* Sound::unlock;
 };
 #endif

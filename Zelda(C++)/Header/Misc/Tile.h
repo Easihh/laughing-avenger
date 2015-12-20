@@ -11,8 +11,8 @@ public:
 	void update();
 	void loadTileImage(int type);
 	bool hasBeenSetup;
-private:
 	int id;
+private:
 };
 
 

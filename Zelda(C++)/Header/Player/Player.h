@@ -28,8 +28,12 @@ public:
 	unsigned int stepToMove;
 	void takeDamage(std::vector<std::shared_ptr<GameObject>>* worldMap, Monster* monster);
 	void movePlayerToDungeonEntrance();
+	bool boss1IsAlive;
 private:
 	void completeMove();
+	bool isNearBoss();
+	void checkDungeonKeyDoor(std::vector<std::shared_ptr<GameObject>>* worldMap, GameObject* closedKeyDoor);
+	void openKeyedDoor(std::vector<std::shared_ptr<GameObject>>* worldMap, int id);
 	void checkIfMovedFromEntrance(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	bool isColliding(std::vector<std::shared_ptr<GameObject>>* worldMap, std::unique_ptr<sf::RectangleShape>& mask, float xOffset, float yOffset);
 	int xOffset, yOffset, stepToAlign, transitionStep,currentInvincibleFrame;

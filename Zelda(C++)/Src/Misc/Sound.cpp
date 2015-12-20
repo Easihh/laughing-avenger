@@ -23,6 +23,7 @@ sf::Sound* Sound::shieldBlock;
 sf::Sound* Sound::bossScream1;
 sf::Sound* Sound::bossScream2;
 sf::Sound* Sound::itemAppear;
+sf::Sound* Sound::unlock;
 Sound::Sound() {
 	buffer = new sf::SoundBuffer();
 	if(!buffer->loadFromFile("Sound/bombDrop.wav"))
@@ -138,6 +139,11 @@ Sound::Sound() {
 		std::cout << "Failed to load itemAppear.wav";
 	itemAppear = new sf::Sound();
 	itemAppear->setBuffer(*buffer);
+	buffer = new sf::SoundBuffer();
+	if (!buffer->loadFromFile("Sound/unlock.wav"))
+		std::cout << "Failed to load unlock.wav";
+	unlock = new sf::Sound();
+	unlock->setBuffer(*buffer);
 }
 void Sound::stopSound(GameSound::SoundType sound) {
 	if(sound == GameSound::Underworld)
@@ -146,6 +152,8 @@ void Sound::stopSound(GameSound::SoundType sound) {
 		overworld->stop();
 	else if(sound == GameSound::Boomerang)
 		boomrang->stop();
+	else if (sound == GameSound::BossScream1)
+		bossScream1->stop();
 }
 void Sound::playSound(GameSound::SoundType sound) {
 	if(sound == GameSound::BombDrop)
@@ -186,10 +194,14 @@ void Sound::playSound(GameSound::SoundType sound) {
 		getHeart->play();
 	else if (sound == GameSound::ShieldBlock)
 		shieldBlock->play();
-	else if (sound == GameSound::BossScream1)
-		bossScream1->play();
+	else if (sound == GameSound::BossScream1){
+		if (bossScream1->getStatus()==sf::SoundSource::Stopped)
+			bossScream1->play();
+	}
 	else if (sound == GameSound::BossScream2)
 		bossScream2->play();
 	else if (sound == GameSound::ItemAppear)
 		itemAppear->play();
+	else if (sound == GameSound::DoorUnlock)
+		unlock->play();
 }

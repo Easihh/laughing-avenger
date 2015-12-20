@@ -4,7 +4,7 @@ Flame::Flame(Point pos, bool canBeCollidedWith){
 	position = pos;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 	flameAnimation = std::make_unique<Animation>("Fire", height, width, position, 8);
 }
 void Flame::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {

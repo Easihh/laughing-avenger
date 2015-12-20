@@ -18,7 +18,7 @@ WallMaster::WallMaster(Point pos,Direction spawnDir){
 	strength = 1;
 	currentInvincibleFrame = 0;
 	pushbackStep = 0;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 	setupMonsterMask();
 	dir =spawnedDir= spawnDir;
 	walkAnimIndex = 0;

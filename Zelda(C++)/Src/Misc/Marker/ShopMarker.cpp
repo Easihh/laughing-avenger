@@ -9,7 +9,7 @@ ShopMarker::ShopMarker(Point pos) {
 	width = Global::TileWidth;
 	height = 3;
 	sprite.setPosition(position.x, position.y);
-	setupFullMask();
+	setupMask(&mask, width, height, sf::Color::Magenta);
 }
 void ShopMarker::draw(sf::RenderWindow& window) {
 	window.draw(sprite);

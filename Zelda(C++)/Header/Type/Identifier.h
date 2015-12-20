@@ -144,7 +144,10 @@ WallMasterDungeonSpawnerDown=138,
 WallMasterDungeonSpawnerRight=139,
 WallMasterDungeonSpawnerLeft=140,
 WallMasterDungeonSpawnerController=141,
-AquamentusBoss=142
+AquamentusBoss=142,
+DungeonTile89 = 143,
+DungeonTile90 = 144,
+DungeonKeyDrop=145
 };
 
 #endif

@@ -6,7 +6,7 @@ MoveableBlock::MoveableBlock(Point pos){
 	originalPosition = pos;
 	width = Global::TileHeight;
 	height = Global::TileHeight;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 	texture.loadFromFile("Tileset/Dungeon/dungeonTile29.png");
 	sprite.setTexture(texture);
 	sprite.setPosition(position.x, position.y);

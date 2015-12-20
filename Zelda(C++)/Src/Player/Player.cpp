@@ -23,6 +23,7 @@
 	 isAttacking = isScreenTransitioning = isInvincible = boomerangIsActive = arrowIsActive= false;
 	 inputIsDisabled = false;
 	 canAttack = inventoryKeyReleased = itemKeyReleased = attackKeyReleased=hasMovedFromEntranceDoor = true;
+	 boss1IsAlive = true;
 	 position = pos;
 	 worldX = (int)(position.y / Global::roomHeight);
 	 worldY = (int)(position.x / Global::roomWidth);
@@ -32,7 +33,7 @@
 	 height = Global::TileHeight;
 	 dir = Direction::Up;
 	 loadImage();
-	 setupFullMask();
+	 setupMask(&fullMask, width, height, sf::Color::Magenta);
 	 inventory = std::make_unique<Inventory>(worldX,worldY);
 	 Point pt(0, 0);
 	 inventory->items.push_back(std::make_unique<Boomrang>(pt, "MagicalBoomerang"));
@@ -59,6 +60,9 @@
  }
  void Player::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	 checkIfMovedFromEntrance(worldMap);
+	 if (isNearBoss())
+		 Sound::playSound(GameSound::BossScream1);
+	 else Sound::stopSound(GameSound::BossScream1);
 	 if(sword!=NULL)
 		sword->update(isAttacking, canAttack, worldMap, &walkingAnimation);
 	 if (pushbackStep!=0)
@@ -80,6 +84,19 @@
 	 checkInvincible();
 	 fullMask->setPosition(position.x, position.y);
 	 inventory->playerBar->update();
+ }
+ bool Player::isNearBoss(){
+	 bool isNearBoss = false;
+	 if (inventory->playerBar->currentDungeon != DungeonLevel::NONE && boss1IsAlive){
+		 switch (inventory->playerBar->currentDungeon){
+		 case DungeonLevel::ONE:
+			 if (worldX == 0 && worldY == 3 ||
+				 worldX == 1 && worldY == 3)
+				 isNearBoss = true;
+			 break;
+		 }
+	 }
+	 return isNearBoss;
  }
  void Player::movePlayerToDungeonEntrance(){
 	 movePlayerToNewVector = true;
@@ -323,17 +340,63 @@
 	 for(auto& obj : *worldMap)
 	 {
 		 //Tile mask/setup is not done at object creation but at the first update for loading time purpose
-		 //Since player has a higher depth
 		 if (dynamic_cast<Tile*>(obj.get())){
 			 Tile* temp = (Tile*)obj.get();
-			 if (temp->hasBeenSetup && intersect(mask, obj->fullMask, offset) && obj->isCollideable)
+			 if (temp->hasBeenSetup && intersect(mask, obj->fullMask, offset) && obj->isCollideable){
 				 collision = true;
+			if (temp->id == (int)TileType::DungeonTile89 || temp->id == (int)TileType::DungeonTile90)
+				checkDungeonKeyDoor(worldMap,temp);
+			 }
 		 }
 		 if (dynamic_cast<NPC*>(obj.get())|| dynamic_cast<MoveableBlock*>(obj.get()))
 			if (intersect(mask, obj->fullMask, offset) && obj->isCollideable)
 				collision = true;
 	 }
 	 return collision;
+ }
+ void Player::checkDungeonKeyDoor(std::vector<std::shared_ptr<GameObject>>* Worldmap, GameObject* closedKeyDoor){
+	 Tile* temp = (Tile*)closedKeyDoor;
+	 if (inventory->playerBar->keysAmount >= 1){
+		 switch (temp->id){
+		 case (int)TileType::DungeonTile89:
+			 temp->texture.loadFromFile("Tileset/Dungeon/dungeonTile24.png");
+			 temp->sprite.setTexture(temp->texture);
+			 temp->isCollideable = false;
+			 temp->id = (int)TileType::DungeonTile24;
+			 openKeyedDoor(Worldmap, (int)TileType::DungeonTile90);//find and change the 2nd part of the door to open
+			 break;
+		 case (int)TileType::DungeonTile90:
+			 temp->texture.loadFromFile("Tileset/Dungeon/dungeonTile25.png");
+			 temp->sprite.setTexture(temp->texture);
+			 temp->isCollideable = false;
+			 openKeyedDoor(Worldmap, (int)TileType::DungeonTile89);
+			 break;
+		 }
+		 inventory->playerBar->keysAmount -= 1;
+		 Sound::playSound(GameSound::DoorUnlock);
+	 }
+ }
+ void Player::openKeyedDoor(std::vector<std::shared_ptr<GameObject>>* Worldmap,int id){
+	 for (auto& obj : *Worldmap)
+	 {
+		 if (dynamic_cast<Tile*>(obj.get())){
+			 Tile* temp = (Tile*)obj.get();
+			 if (temp->id == id){
+				 switch (temp->id){
+				 case (int)TileType::DungeonTile90:
+					 temp->texture.loadFromFile("Tileset/Dungeon/dungeonTile25.png");
+					 temp->id = (int)TileType::DungeonTile25;
+					 break;
+				 case (int)TileType::DungeonTile89:
+					 temp->texture.loadFromFile("Tileset/Dungeon/dungeonTile24.png");
+					 temp->id = (int)TileType::DungeonTile24;
+					 break;
+				 }
+				 temp->sprite.setTexture(temp->texture);
+				 temp->isCollideable = false;
+			 }
+		 }
+	 }
  }
  void Player::checkInvincible(){
 	 if (isInvincible){

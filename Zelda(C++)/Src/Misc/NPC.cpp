@@ -7,7 +7,7 @@ NPC::NPC(Point pos,NpcType type) {
 	position.x -= Global::HalfTileWidth;//to center align inbetween two grid tile.
 	width = Global::TileWidth;
 	height = Global::TileHeight;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 	isVisible = true;
 	font.loadFromFile("zelda.ttf");
 	txt.setFont(font);

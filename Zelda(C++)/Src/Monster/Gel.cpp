@@ -18,7 +18,7 @@ Gel::Gel(Point pos, bool canBeCollidedWith){
 	strength = 1;
 	currentInvincibleFrame = 0;
 	pushbackStep = 0;
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
 	setupMonsterMask();
 	dir = Direction::None;
 	getNextDirection(Direction::None);

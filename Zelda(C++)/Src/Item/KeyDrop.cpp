@@ -1,24 +1,27 @@
-#include "Item\DungeonMap.h"
+#include "Item\KeyDrop.h"
 #include "Utility\Static.h"
 #include "Player\Player.h"
-DungeonMap::DungeonMap(Point pos){
+KeyDrop::KeyDrop(Point pos) {
 	position = pos;
 	width = Global::TileWidth;
 	height = Global::TileHeight;
+	setImage();
 	setupMask(&fullMask, width, height, sf::Color::Magenta);
 	setupMask(&mask, width, height, sf::Color::Cyan);
-	texture.loadFromFile("Tileset/Map.png");
+}
+void KeyDrop::setImage() {
+	texture.loadFromFile("Tileset/Key.png");
 	sprite.setTexture(texture);
 	sprite.setPosition(position.x, position.y);
 }
-void DungeonMap::draw(sf::RenderWindow& window) {
+void KeyDrop::draw(sf::RenderWindow& window) {
 	window.draw(sprite);
 }
-void DungeonMap::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
+void KeyDrop::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	if (isCollidingWithPlayer(Worldmap)){
-		Player* player = (Player*)findPlayer(Worldmap).get();
-		Sound::playSound(GameSound::NewInventoryItem);
-		player->inventory->playerBar->hasDungeonMap = true;
+		Player* temp = ((Player*)findPlayer(Worldmap).get());
+		Sound::playSound(GameSound::GetHeart);
+		temp->inventory->playerBar->increaseKeyAmount();
 		destroyGameObject(Worldmap);
 	}
 }

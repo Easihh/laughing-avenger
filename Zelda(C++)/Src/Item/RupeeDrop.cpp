@@ -7,7 +7,8 @@ RupeeDrop::RupeeDrop(Point pos, RupeeType type) {
 	width = Global::TileWidth;
 	height = Global::TileHeight;
 	setImage();
-	setupFullMask();
+	setupMask(&fullMask, width, height, sf::Color::Magenta);
+	setupMask(&mask, width, height, sf::Color::Cyan);
 }
 void RupeeDrop::setImage() {
 	switch(rtype){

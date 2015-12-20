@@ -18,11 +18,11 @@ public:
 	int depth, pushbackStep;
 	const float pushBackMaxDistance = 96;
 	const int stepPerPushBackUpdate = 4;
-	void setupFullMask();
+	void setupMask(std::unique_ptr<sf::RectangleShape>* mask, int width, int height, sf::Color color);
 	void pushbackUpdate();
 	sf::Texture texture;
 	sf::Sprite sprite;
-	std::unique_ptr<sf::RectangleShape> fullMask;
+	std::unique_ptr<sf::RectangleShape> fullMask, mask;
 	bool isOutsideRoomBound(Point pos);
 	std::shared_ptr<GameObject> findPlayer(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	std::shared_ptr<GameObject> findBoomerang(std::vector<std::shared_ptr<GameObject>>* worldMap);

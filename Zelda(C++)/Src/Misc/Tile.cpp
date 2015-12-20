@@ -44,7 +44,7 @@ void Tile::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(sprite);
 	if (!hasBeenSetup){
 		loadTileImage(id);
-		setupFullMask();
+		setupMask(&fullMask, width, height, sf::Color::Magenta);
 		hasBeenSetup = true;
 	}
 }

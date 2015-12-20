@@ -31,5 +31,6 @@ private:
 	static sf::Sound* Sound::shieldBlock;
 	static sf::Sound* Sound::bossScream1;
 	static sf::Sound* Sound::bossScream2;
+	static sf::Sound* Sound::itemAppear;
 };
 #endif

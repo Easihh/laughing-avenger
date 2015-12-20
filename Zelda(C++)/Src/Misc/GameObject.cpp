@@ -280,7 +280,7 @@ bool GameObject::isCollidingWithMonster(std::vector<std::shared_ptr<GameObject>>
 	for(auto& obj : *worldMap)
 	{
 		if(dynamic_cast<Monster*>(obj.get()))
-			if(intersect(fullMask, ((Monster*)obj.get())->mask, offset)){
+			if(intersect(fullMask, ((Monster*)obj.get())->fullMask, offset)){
 				isColliding = true;
 				collidingMonster = obj;
 				break;

@@ -1,6 +1,9 @@
 Version 0.092
 
--
+-Fixed an issue where Keese bat were not drawn on top of certain tile.
+-Decreased WallMaster HP to the correct value of 2 down from 20.
+-Added Aquamentus boss movement AI/projectile firing/Item drop.
+-Added Item Appear sound.
 
 Version 0.091
 

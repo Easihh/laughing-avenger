@@ -8,7 +8,7 @@
 #include "Item\ThrownBoomrang.h"
 #include "Player\Player.h"
 Keese::Keese(Point pos, bool canBeCollidedWith) {
-	depth = 50;
+	depth = 5000;
 	position = pos;
 	width = Global::TileWidth;
 	height = Global::TileHeight;

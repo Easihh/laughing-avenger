@@ -14,7 +14,7 @@ WallMaster::WallMaster(Point pos,Direction spawnDir){
 	height = Global::TileHeight;
 	loadAnimation();
 	isInvincible = false;
-	healthPoint = 20;
+	healthPoint = 2;
 	strength = 1;
 	currentInvincibleFrame = 0;
 	pushbackStep = 0;

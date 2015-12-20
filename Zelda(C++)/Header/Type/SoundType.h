@@ -23,7 +23,8 @@ namespace GameSound{
 		GetHeart,
 		ShieldBlock,
 		BossScream1,
-		BossScream2
+		BossScream2,
+		ItemAppear
 	};
 }
 #endif

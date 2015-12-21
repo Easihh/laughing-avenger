@@ -10,7 +10,7 @@ GoriyaBoomerang::GoriyaBoomerang(Point pos, Direction direction) {
 	width = Global::TileWidth;
 	height = Global::TileHeight;
 	setupMask(&fullMask, width, height, sf::Color::Magenta);
-	setupMonsterMask();
+	setupMask(&mask, width, height, sf::Color::Cyan);
 	setupInitialPosition();
 	returnDirectionIsSet = false;
 	hasBeenBlocked = false;
@@ -37,7 +37,7 @@ void GoriyaBoomerang::setupInitialPosition() {
 }
 void GoriyaBoomerang::draw(sf::RenderWindow& mainWindow) {
 	mainWindow.draw(boomrangAnimation->sprite);
-	//mainWindow.draw(*fullMask);
+	//mainWindow.draw(*mask);
 }
 void GoriyaBoomerang::setReturnDirection(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	switch (boomrangDir){
@@ -77,38 +77,44 @@ void GoriyaBoomerang::boomrangMovement() {
 		isReturning = true;
 	}
 	fullMask->setPosition(position.x, position.y);
+	mask->setPosition(position.x, position.y);
 }
 void GoriyaBoomerang::checkIfPlayerCanBlock(std::vector<std::shared_ptr<GameObject>>* worldMap){
 	Player* temp = (Player*)findPlayer(worldMap).get();
+	bool damagePlayer = false;
 	switch (boomrangDir){
 	case Direction::Down:
 		if (temp->dir == Direction::Up){
 			Sound::playSound(GameSound::ShieldBlock);
 			hasBeenBlocked = true;
 		}
-		else isReturning = true;
+		else damagePlayer = true;
 		break;
 	case Direction::Up:
 		if (temp->dir == Direction::Down){
 			Sound::playSound(GameSound::ShieldBlock);
 			hasBeenBlocked = true;
 		}
-		else isReturning = true;
+		else damagePlayer = true;
 		break;
 	case Direction::Left:
 		if (temp->dir == Direction::Right){
 			Sound::playSound(GameSound::ShieldBlock);
 			hasBeenBlocked = true;
 		}
-		else isReturning = true;
+		else damagePlayer = true;
 		break;
 	case Direction::Right:
 		if (temp->dir == Direction::Left){
 			Sound::playSound(GameSound::ShieldBlock);
 			hasBeenBlocked = true;
 		}
-		else isReturning = true;
+		else damagePlayer = true;
 		break;
+	}
+	if (damagePlayer){
+		isReturning = true;
+		temp->takeDamage(worldMap,this);
 	}
 }
 void GoriyaBoomerang::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {

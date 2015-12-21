@@ -1,3 +1,8 @@
+Version 0.094
+
+-Fixed an issue where WallMaster would not correctly set the previous worldx/worldy value so hero would not be removed from previous room.
+-Goriya's boomrang now damage the player if the player cannot block it.
+
 Version 0.093
 
 -Killing the Boss now opens the door to the triforce room.

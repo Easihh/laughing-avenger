@@ -79,5 +79,5 @@ void CandleFlame::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 }
 void CandleFlame::draw(sf::RenderWindow& mainWindow) {
 	mainWindow.draw(flameAnimation.get()->sprite);
-	mainWindow.draw(*fullMask);
+	//mainWindow.draw(*fullMask);
 }

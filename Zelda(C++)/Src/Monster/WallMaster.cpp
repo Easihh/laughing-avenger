@@ -53,14 +53,14 @@ void WallMaster::checkCollisions(std::vector<std::shared_ptr<GameObject>>* world
 		if (!temp->inputIsDisabled){//player isnt caught already by another WallMaster
 			hasCaughtPlayer = true;
 			Sound::playSound(GameSound::TakeDamage);
-			temp->position.x = position.x;
-			temp->position.y = position.y;
-			temp->inputIsDisabled = true;
 			//used to determine which room player was before the teleport to entrance.
-			int prevWorldX = position.y / Global::roomHeight;
+			int prevWorldX = (position.y - Global::inventoryHeight) / Global::roomHeight;
 			int prevWorldY = position.x / Global::roomWidth;
 			temp->prevWorldX = prevWorldX;
 			temp->prevWorldY = prevWorldY;
+			temp->position.x = position.x;
+			temp->position.y = position.y;
+			temp->inputIsDisabled = true;
 		}
 	}
 	if (isCollidingWithBoomerang(worldMap)){

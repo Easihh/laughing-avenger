@@ -64,7 +64,7 @@ void ThrownArrow::arrowMovement() {
 }
 void ThrownArrow::draw(sf::RenderWindow& mainWindow) {
 	mainWindow.draw(sprite);
-	mainWindow.draw(*fullMask);
+	//mainWindow.draw(*fullMask);
 }
 void ThrownArrow::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	arrowMovement();

@@ -2,6 +2,7 @@
 #include "Utility\Static.h"
 #include "Monster\Monster.h"
 #include "Misc\SecretTree.h"
+#include "Monster\Aquamentus.h"
 CandleFlame::CandleFlame(Point pos, Direction direction) {
 	position = pos;
 	flamePower = 1;
@@ -9,6 +10,7 @@ CandleFlame::CandleFlame(Point pos, Direction direction) {
 	width = Global::TileWidth;
 	height = Global::TileHeight;
 	setupMask(&fullMask, width, height, sf::Color::Magenta);
+	setupMask(&mask, width, height, sf::Color::Cyan);
 	flameAnimation = std::make_unique<Animation>("Fire", height, width, position, 8);
 	dir = direction;
 	setupFlame();
@@ -69,7 +71,8 @@ void CandleFlame::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 	}
 	if(isCollidingWithMonster(Worldmap)){
 		Monster* temp = ((Monster*)collidingMonster.get());
-		temp->takeDamage(flamePower, Worldmap, dir);
+		if (!dynamic_cast<Aquamentus*>(temp))
+			temp->takeDamage(flamePower, Worldmap, dir);
 	}
 	fullMask->setPosition(position.x, position.y);
 	if(currentDuration > maxDuration){

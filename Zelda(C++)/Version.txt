@@ -1,3 +1,9 @@
+Version 0.096
+
+-Fixed issue where spawner would only spawn 1 WallMaster.
+-Goriya monster no longer keep track of the fact it was pushed back due to hit when projectile is active.
+-Candle's Flame no longer damage Aquamentus Boss.
+
 Version 0.095
 
 -Fixed an issue where Goriya's boomerang would not be immediately destroy upon it's death.

@@ -5,7 +5,7 @@
 #include "Player\Player.h"
 WallMasterSpawnController::WallMasterSpawnController(Point pos){
 	position = pos;
-	currentSpawnCount = 9;
+	currentSpawnCount = 0;
 	currentTimeSpawner = 0;
 }
 void WallMasterSpawnController::update(std::vector<std::shared_ptr<GameObject>>* worldMap){

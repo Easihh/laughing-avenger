@@ -116,6 +116,8 @@ void Goriya::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		projectileIsActive = false;
 		myBoomerang->destroyGameObject(worldMap);
 	}
+	if (pushbackStep > 0 && projectileIsActive)
+		pushbackStep = 0;
 	if (pushbackStep == 0 && !isParalyzed && !projectileIsActive){
 		movement(worldMap);
 		tryToChangeDirection();

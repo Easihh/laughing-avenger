@@ -59,4 +59,5 @@ void SecretTree::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 }
 void SecretTree::draw(sf::RenderWindow& mainWindow) {
 	mainWindow.draw(sprite);
+	//mainWindow.draw(*mask);
 }

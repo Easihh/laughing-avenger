@@ -15,6 +15,7 @@ private:
 	void takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction attackDir);
 	void takeDamage(int damage);
 	void dropItemOnDeath();
+	void processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	int getXOffset();
 	int getYOffset();
 	void getNextDirection(Direction blockedDir);

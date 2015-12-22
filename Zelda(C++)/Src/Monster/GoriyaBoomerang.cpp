@@ -117,6 +117,7 @@ void GoriyaBoomerang::checkIfPlayerCanBlock(std::vector<std::shared_ptr<GameObje
 		temp->takeDamage(worldMap,this);
 	}
 }
+void GoriyaBoomerang::processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap){}
 void GoriyaBoomerang::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	boomrangMovement();
 	boomrangAnimation->updateAnimationFrame(position);

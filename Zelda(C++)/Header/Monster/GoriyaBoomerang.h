@@ -16,6 +16,7 @@ private:
 	Direction boomrangDir;
 	void boomrangMovement();
 	void setReturnDirection(std::vector<std::shared_ptr<GameObject>>* worldMap);
+	void processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	const int boomrangSpeed = 3,maxDistance=Global::roomWidth/4;
 	int currentDistance;
 	bool returnDirectionIsSet;

@@ -20,7 +20,7 @@ Goriya::Goriya(Point pos, bool canBeCollidedWith){
 	currentInvincibleFrame = 0;
 	pushbackStep = 0;
 	setupMask(&fullMask, width, height, sf::Color::Magenta);
-	setupMonsterMask();
+	setupMask(&mask, width, height, sf::Color::Magenta);
 	dir = Direction::None;
 	isParalyzed = false;
 	projectileIsActive = false;
@@ -124,20 +124,20 @@ void Goriya::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		pushbackUpdate();
 	for (int i = 0; i < 3; i++)
 		walkingAnimation[i]->updateAnimationFrame(dir, position);
-	if (healthPoint <= 0){
-		Point pt(position.x + (width / 4), position.y + (height / 4));
-		std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
-		Static::toAdd.push_back(add);
-		destroyGameObject(worldMap);
-		Sound::playSound(GameSound::SoundType::EnemyKill);
-		dropItemOnDeath();
-		std::cout << "Octorok Destroyed";
-	}
-	else
-	{
-		checkInvincibility();
-	}
+	if (healthPoint <= 0)
+		processDeath(worldMap);
+	else checkInvincibility();
 	updateMasks();
+}
+void Goriya::processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap){
+	Point pt(position.x + (width / 4), position.y + (height / 4));
+	std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
+	Static::toAdd.push_back(add);
+	destroyGameObject(worldMap);
+	if (projectileIsActive)
+		myBoomerang->destroyGameObject(worldMap);
+	Sound::playSound(GameSound::SoundType::EnemyKill);
+	dropItemOnDeath();
 }
 void Goriya::dropItemOnDeath() {
 	bool willDropItem = false;

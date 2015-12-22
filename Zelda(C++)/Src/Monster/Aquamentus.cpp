@@ -17,7 +17,7 @@ Aquamentus::Aquamentus(Point pos){
 	currentInvincibleFrame = 0;
 	pushbackStep = 0;
 	setupMask(&fullMask, width, height, sf::Color::Magenta);
-	setupMonsterMask();
+	setupMask(&mask, 32, 24, sf::Color::Cyan);
 	dir = Direction::Left;
 	walkAnimIndex = 0;
 	currentForwardDistance = 0;
@@ -40,7 +40,8 @@ void Aquamentus::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	if (healthPoint <= 0)
 		processDeath(worldMap);
 	else checkInvincibility();
-	updateMasks();
+	mask->setPosition(position.x+8, position.y);
+	fullMask->setPosition(position.x, position.y);
 }
 void Aquamentus::processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap){
 	Player* temp = (Player*)findPlayer(worldMap).get();

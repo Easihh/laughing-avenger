@@ -21,6 +21,8 @@ public:
 	void findNextSelectorPositionLeft();
 	std::unique_ptr<PlayerBar> playerBar;
 	void setInventoryPosition(Point pos);
+	bool hasDungeon1Triforce, hasDungeon2Triforce, hasDungeon3Triforce, hasDungeon4Triforce, hasDungeon5Triforce
+		, hasDungeon6Triforce, hasDungeon7Triforce, hasDungeon8Triforce;
 private:
 	bool isPossessingBow(Item* item, int index);
 	sf::RectangleShape inventoryRect, itemSelected;
@@ -38,7 +40,7 @@ private:
 	void loadInventoryRectangle();
 	void loadInventoryCurrentSelection();
 	void selectInventoryItem();
-	Point inventoryRectPt, itemSelectedPt, inventoryText,itemUseButtonText;
+	Point inventoryRectPt, itemSelectedPt, inventoryText,itemUseButtonText,triforce;
 	sf::Sprite selectedItem;
 };
 #endif

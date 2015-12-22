@@ -48,6 +48,13 @@ void GameObject::destroyGameObject(std::vector<std::shared_ptr<GameObject>>* Wor
 	}
 	Static::toDelete.push_back(del);
 }
+void GameObject::destroyGameObject(std::vector<std::shared_ptr<GameObject>>* Worldmap, std::shared_ptr<GameObject> del) {
+	for (auto& obj : *Worldmap){
+		if (obj.get() == this)
+			del = obj;
+	}
+	Static::toDelete.push_back(del);
+}
 bool GameObject::intersect(std::unique_ptr<sf::RectangleShape>& rectA, std::unique_ptr<sf::RectangleShape>& rectB, Point offset) {
 	float rectAx		= rectA->getPosition().x;
 	float rectAxSize	= rectA->getSize().x;

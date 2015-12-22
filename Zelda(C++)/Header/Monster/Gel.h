@@ -13,6 +13,7 @@ private:
 	void movement(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction attackDir);
 	void takeDamage(int damage);
+	void processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	int getXOffset();
 	int getYOffset();
 	void getNextDirection(Direction blockedDir);

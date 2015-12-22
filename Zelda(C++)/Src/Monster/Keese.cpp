@@ -19,10 +19,18 @@ Keese::Keese(Point pos, bool canBeCollidedWith) {
 	strength = 1;
 	currentInvincibleFrame = 0;
 	setupMask(&fullMask, width, height, sf::Color::Magenta);
-	setupMonsterMask();
+	setupMask(&mask, width, height, sf::Color::Cyan);
 	dir = Direction::None;
 	getNextDirection(Direction::None);
 	timeSinceLastTryDirectionChange = 0;
+}
+void Keese::processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap){
+	Point pt(position.x + (width / 4), position.y + (height / 4));
+	std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
+	Static::toAdd.push_back(add);
+	destroyGameObject(worldMap);
+	Sound::playSound(GameSound::SoundType::EnemyKill);
+	std::cout << "Keese Destroyed";
 }
 void Keese::tryToChangeDirection() {
 	int direction;
@@ -81,14 +89,8 @@ void Keese::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 		if (!boom->isReturning)
 			boom->isReturning=true;
 	}
-	if(healthPoint <= 0){
-		Point pt(position.x + (width / 4), position.y + (height / 4));
-		std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
-		Static::toAdd.push_back(add);
-		destroyGameObject(worldMap);
-		Sound::playSound(GameSound::SoundType::EnemyKill);
-		std::cout << "Keese Destroyed";
-	}
+	if (healthPoint <= 0)
+		processDeath(worldMap);
 	updateMasks();
 }
 void Keese::dropItemOnDeath() {}

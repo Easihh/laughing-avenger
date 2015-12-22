@@ -18,8 +18,8 @@ public:
 	virtual void takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction swordDir);
 	virtual void takeDamage(int damage);
 	virtual void dropItemOnDeath();
+	virtual void processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	int strength, walkAnimIndex,currentParalyzeTime;
-	void setupMonsterMask();
 	bool isParalyzed;
 	const int maxParalyzeTime = 90;
 };

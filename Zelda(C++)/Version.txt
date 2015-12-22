@@ -1,3 +1,10 @@
+Version 0.095
+
+-Fixed an issue where Goriya's boomerang would not be immediately destroy upon it's death.
+-Reworked the size/location of the hit box for certains monsters and Aquamentus boss.
+-Fixed an issue where Inventory Text was no longer appearing in the inventory screen.
+-Player can now see acquired Triforce in the inventory screen.
+
 Version 0.094
 
 -Fixed an issue where WallMaster would not correctly set the previous worldx/worldy value so hero would not be removed from previous room.

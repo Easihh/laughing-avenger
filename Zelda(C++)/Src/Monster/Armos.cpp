@@ -17,7 +17,7 @@ Armos::Armos(Point pos, bool canBeCollidedWith) {
 	currentInvincibleFrame = 0;
 	pushbackStep = 0;
 	setupMask(&fullMask, width, height, sf::Color::Magenta);
-	setupMonsterMask();
+	setupMask(&mask, width, height, sf::Color::Cyan);
 	dir = Direction::None;
 	getNextDirection(Direction::None);
 	walkAnimIndex = 0;
@@ -29,8 +29,8 @@ void Armos::draw(sf::RenderWindow& mainWindow) {
 }
 void Armos::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 }
-void Armos::dropItemOnDeath() {
-}
+void Armos::dropItemOnDeath() {}
+void Armos::processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap){}
 void Armos::loadAnimation() {
 	texture.loadFromFile("Tileset/greenArmos.png");
 	sprite.setTexture(texture);

@@ -8,7 +8,7 @@ ZoraProjectile::ZoraProjectile(Point pos,Direction Projectiledir) {
 	width = Global::HalfTileWidth;
 	height = 20;
 	setupMask(&fullMask, width, height, sf::Color::Magenta);
-	setupMonsterMask();
+	setupMask(&mask, width, height, sf::Color::Cyan);
 	isBeingDestroyed = false;
 	projectileAnimation = std::make_unique<Animation>("ZoraProjectile", height, width, position, 8);
 }
@@ -38,6 +38,7 @@ void ZoraProjectile::projectileMovement(std::vector<std::shared_ptr<GameObject>>
 	fullMask->setPosition(position.x, position.y);
 	mask->setPosition(position.x, position.y);
 }
+void ZoraProjectile::processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap){}
 void ZoraProjectile::checkIfPlayerCanBlock(std::vector<std::shared_ptr<GameObject>>* worldMap){
 	Player* temp = (Player*)findPlayer(worldMap).get();
 	temp->takeDamage(worldMap, this);

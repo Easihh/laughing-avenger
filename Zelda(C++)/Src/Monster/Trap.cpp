@@ -13,7 +13,7 @@ Trap::Trap(Point pos, bool canBeCollidedWith) {
 	isInvincible = true;
 	pushbackStep = 0;
 	setupMask(&fullMask, width, height, sf::Color::Magenta);
-	setupMonsterMask();
+	setupMask(&mask, width, height, sf::Color::Cyan);
 	dir = Direction::None;
 	walkAnimIndex = 0;
 	currentDistance = 0;
@@ -23,6 +23,7 @@ Trap::Trap(Point pos, bool canBeCollidedWith) {
 	//Trap use fullmask size when player touch it unlike other monster like octorok who use part of monster sprite.
 	mask->setSize(fullMask->getSize());
 }
+void Trap::processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap){}
 void Trap::draw(sf::RenderWindow& mainWindow) {
 	mainWindow.draw(sprite);
 }

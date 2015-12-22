@@ -23,19 +23,11 @@ void Monster::checkParalyzeStatus(){
 		}
 	}
 }
-void Monster::setupMonsterMask(){
-	mask = std::make_unique<sf::RectangleShape>();
-	mask->setFillColor(sf::Color::Transparent);
-	sf::Vector2f size(16, 16);
-	mask->setSize(size);
-	mask->setOutlineColor(sf::Color::Blue);
-	mask->setOutlineThickness(1);
-	mask->setPosition(position.x + 8, position.y + 8);
-}
 void Monster::takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap,Direction swordDir) {}
 void Monster::takeDamage(int damage){}
 void Monster::dropItemOnDeath() {}
+void Monster::processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap) {}
 void Monster::updateMasks(){
-	mask->setPosition(position.x+8, position.y+8);
+	mask->setPosition(position.x, position.y);
 	fullMask->setPosition(position.x, position.y);
 }

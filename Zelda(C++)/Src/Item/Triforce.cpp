@@ -34,6 +34,8 @@ void Triforce::update(std::vector<std::shared_ptr<GameObject>>* Worldmap) {
 		Sound::playSound(GameSound::NewInventoryItem);
 		Sound::playSound(GameSound::Triforce);
 		tmp->inventory->playerBar->healPlayerToFull();
+		if (tmp->inventory->playerBar->currentDungeon == DungeonLevel::ONE)
+			tmp->inventory->hasDungeon1Triforce = true;
 		isObtained = true;
 	}
 	if (isObtained){

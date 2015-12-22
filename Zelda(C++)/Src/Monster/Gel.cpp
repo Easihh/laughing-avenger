@@ -19,7 +19,7 @@ Gel::Gel(Point pos, bool canBeCollidedWith){
 	currentInvincibleFrame = 0;
 	pushbackStep = 0;
 	setupMask(&fullMask, width, height, sf::Color::Magenta);
-	setupMonsterMask();
+	setupMask(&mask, 16, 16, sf::Color::Cyan);
 	dir = Direction::None;
 	getNextDirection(Direction::None);
 }
@@ -71,6 +71,14 @@ void Gel::tryToChangeDirection() {
 		}
 	}
 }
+void Gel::processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap){
+	Point pt(position.x + (width / 4), position.y + (height / 4));
+	std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
+	Static::toAdd.push_back(add);
+	destroyGameObject(worldMap);
+	Sound::playSound(GameSound::SoundType::EnemyKill);
+	std::cout << "Gel Destroyed";
+}
 void Gel::draw(sf::RenderWindow& mainWindow){
 	mainWindow.draw(walkingAnimation->sprite);
 	//mainWindow.draw(*mask);
@@ -91,15 +99,10 @@ void Gel::update(std::vector<std::shared_ptr<GameObject>>* worldMap) {
 	}
 	movement(worldMap);
 	tryToChangeDirection();
-	if (healthPoint <= 0){
-		Point pt(position.x + (width / 4), position.y + (height / 4));
-		std::shared_ptr<GameObject> add = std::make_shared<DeathEffect>(pt);
-		Static::toAdd.push_back(add);
-		destroyGameObject(worldMap);
-		Sound::playSound(GameSound::SoundType::EnemyKill);
-		std::cout << "Gel Destroyed";
-	}
-	updateMasks();
+	if (healthPoint <= 0)
+		processDeath(worldMap);
+	mask->setPosition(position.x + 8, position.y+8);
+	fullMask->setPosition(position.x, position.y);
 }
 
 void Gel::takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction attackDir) {

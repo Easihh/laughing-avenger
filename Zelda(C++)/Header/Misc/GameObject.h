@@ -12,6 +12,7 @@ public:
 	virtual void update(std::vector<std::shared_ptr<GameObject>>* Worldmap);
 	virtual void draw(sf::RenderWindow& mainWindow);
 	void destroyGameObject(std::vector<std::shared_ptr<GameObject>>* Worldmap);
+	void destroyGameObject(std::vector<std::shared_ptr<GameObject>>* Worldmap, std::shared_ptr<GameObject> del);
 	Point position;
 	unsigned int width,height;
 	bool isCollideable;

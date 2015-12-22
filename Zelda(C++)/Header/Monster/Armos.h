@@ -10,6 +10,7 @@ public:
 private:
 	void loadAnimation();
 	void movement(std::vector<std::shared_ptr<GameObject>>* worldMap);
+	void processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	void takeDamage(int damage, std::vector<std::shared_ptr<GameObject>>* worldMap, Direction attackDir);
 	void takeDamage(int damage);
 	void dropItemOnDeath();

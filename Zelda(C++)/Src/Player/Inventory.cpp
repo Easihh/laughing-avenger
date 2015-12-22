@@ -7,9 +7,12 @@ Inventory::Inventory(int worldX,int worldY){
 	float startY = worldX*Global::roomWidth;
 	startPosition = Point(startX,startY);
 	keyWasReleased = hasBoomrang=false;
+	hasDungeon1Triforce = hasDungeon2Triforce = hasDungeon3Triforce = hasDungeon4Triforce = hasDungeon5Triforce = hasDungeon6Triforce,
+		hasDungeon7Triforce = hasDungeon8Triforce = false;
 	hasBomb = true;
-	inventoryText.setPoint(52,52);
+	inventoryText.setPoint(startPosition.x + 52, startPosition.y+52);
 	itemUseButtonText.setPoint(startPosition.x + 16, startPosition.y+136);
+	triforce.setPoint(startPosition.x + 250, startPosition.y + 350);
 	font.loadFromFile("zelda.ttf");
 	playerBar = std::make_unique<PlayerBar>(startPosition);
 	txt.setFont(font);
@@ -46,12 +49,14 @@ void Inventory::updateInventoryPosition(Point step){
 	itemSelectedPt+=(step);
 	inventoryText+=(step);
 	itemUseButtonText+=(step);
+	triforce += (step);
 }
 void Inventory::setInventoryPosition(Point newPt){
 	inventoryRectPt.setPoint(newPt.x + 192, newPt.y + 96);
 	itemSelectedPt.setPoint(newPt.x + 100, newPt.y + 100);
 	inventoryText.setPoint(newPt.x + 52, newPt.y + 52);
 	itemUseButtonText.setPoint(newPt.x + 16, newPt.y + 136);
+	triforce.setPoint(newPt.x + 250, newPt.y + 350);
 }
 Item* Inventory::getCurrentItem() {
 	return items[selectorInventoryIndex].get();
@@ -197,7 +202,7 @@ void Inventory::drawInventoryItems(sf::RenderWindow& mainWindow){
 }
 void Inventory::drawInventoryText(sf::RenderWindow& mainWindow){
 	txt.setCharacterSize(14);
-	txt.setColor(sf::Color::Red);
+	txt.setColor(sf::Color(228, 68, 55, 255));
 	txt.setPosition(inventoryText.x, inventoryText.y);
 	txt.setString("INVENTORY");
 	mainWindow.draw(txt);
@@ -205,6 +210,91 @@ void Inventory::drawInventoryText(sf::RenderWindow& mainWindow){
 	txt.setColor(sf::Color::White);
 	txt.setPosition(itemUseButtonText.x, itemUseButtonText.y);
 	txt.setString("USE S BUTTON\n FOR THIS");
+	mainWindow.draw(txt);
+	float triX = triforce.x;
+	float triY = triforce.y;
+	int triforceSize = 34;
+	sf::ConvexShape testTri;
+	testTri.setPointCount(3);
+	testTri.setFillColor(sf::Color(255, 165, 66, 255));
+
+	//triforce Dungeon 1
+	if (hasDungeon1Triforce){
+		testTri.setPoint(0, sf::Vector2f(triX, triY));
+		testTri.setPoint(1, sf::Vector2f(triX + triforceSize, triY - triforceSize));
+		testTri.setPoint(2, sf::Vector2f(triX + triforceSize, triY));
+		mainWindow.draw(testTri);
+	}
+	//triforce Dungeon 2
+	if (hasDungeon2Triforce){
+		testTri.setPoint(0, sf::Vector2f(triX + triforceSize, triY));
+		testTri.setPoint(1, sf::Vector2f(triX + 2 * triforceSize, triY));
+		testTri.setPoint(2, sf::Vector2f(triX + triforceSize, triY - triforceSize));
+		mainWindow.draw(testTri);
+	}
+	//triforce Dungeon 3
+	if (hasDungeon3Triforce){
+		testTri.setPoint(0, sf::Vector2f(triX - triforceSize, triY + triforceSize));
+		testTri.setPoint(1, sf::Vector2f(triX, triY));
+		testTri.setPoint(2, sf::Vector2f(triX, triY + triforceSize));
+		mainWindow.draw(testTri);
+	}
+	//triforce Dungeon 4
+	if (hasDungeon4Triforce){
+		testTri.setPoint(0, sf::Vector2f(triX, triY + triforceSize));
+		testTri.setPoint(1, sf::Vector2f(triX + triforceSize, triY + triforceSize));
+		testTri.setPoint(2, sf::Vector2f(triX, triY));
+		mainWindow.draw(testTri);
+	}
+	//triforce Dungeon 5
+	if (hasDungeon5Triforce){
+		testTri.setPoint(0, sf::Vector2f(triX, triY));
+		testTri.setPoint(1, sf::Vector2f(triX + triforceSize, triY));
+		testTri.setPoint(2, sf::Vector2f(triX + triforceSize, triY + triforceSize));
+		mainWindow.draw(testTri);
+	}
+	//triforce Dungeon 6
+	if (hasDungeon6Triforce){
+		testTri.setPoint(0, sf::Vector2f(triX + triforceSize, triY + triforceSize));
+		testTri.setPoint(1, sf::Vector2f(triX + 2 * triforceSize, triY + triforceSize));
+		testTri.setPoint(2, sf::Vector2f(triX + triforceSize, triY));
+		mainWindow.draw(testTri);
+	}
+	//triforce Dungeon 7
+	if (hasDungeon7Triforce){
+		testTri.setPoint(0, sf::Vector2f(triX + triforceSize, triY));
+		testTri.setPoint(1, sf::Vector2f(triX + 2 * triforceSize, triY));
+		testTri.setPoint(2, sf::Vector2f(triX + 2 * triforceSize, triY + triforceSize));
+		mainWindow.draw(testTri);
+	}
+	//triforce Dungeon 8
+	if (hasDungeon8Triforce){
+		testTri.setPoint(0, sf::Vector2f(triX + 2 * triforceSize, triY + triforceSize));
+		testTri.setPoint(1, sf::Vector2f(triX + 3 * triforceSize, triY + triforceSize));
+		testTri.setPoint(2, sf::Vector2f(triX + 2 * triforceSize, triY));
+		mainWindow.draw(testTri);
+	}
+
+	sf::ConvexShape triforce;
+	triforce.setPointCount(3);
+	triforce.setFillColor(sf::Color::Transparent);
+	triforce.setOutlineThickness(1);
+	triforce.setOutlineColor(sf::Color(255,184,170,255));
+	triforce.setPoint(0, sf::Vector2f(triX - triforceSize, triY + triforceSize));
+	triforce.setPoint(1, sf::Vector2f(triX + triforceSize, triY-triforceSize));
+	triforce.setPoint(2, sf::Vector2f(triX + 3 * triforceSize, triY+triforceSize));
+	mainWindow.draw(triforce);
+
+	//bigger triforce frame
+	int triFrameSizeDif = 16;
+	triforce.setPoint(0, sf::Vector2f(triX - triforceSize - 2*triFrameSizeDif, triY + triforceSize + triFrameSizeDif));
+	triforce.setPoint(1, sf::Vector2f(triX + triforceSize, triY - triforceSize - triFrameSizeDif));
+	triforce.setPoint(2, sf::Vector2f(triX + 3 * triforceSize + 2*triFrameSizeDif, triY + triforceSize + triFrameSizeDif));
+	mainWindow.draw(triforce);
+
+	txt.setColor(sf::Color(228,68,55,255));
+	txt.setPosition(triX - triforceSize, triY + triforceSize + 2*triFrameSizeDif);
+	txt.setString("TRIFORCE");
 	mainWindow.draw(txt);
 }
 void Inventory::draw(sf::RenderWindow& mainWindow){

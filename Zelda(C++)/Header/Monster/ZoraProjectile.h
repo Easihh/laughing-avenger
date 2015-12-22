@@ -16,5 +16,6 @@ private:
 	const float projectileSpeed = 2, maxDistance = Global::roomWidth / 4;
 	void checkIfPlayerCanBlock(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	std::unique_ptr<Animation> projectileAnimation;
+	void processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap);
 };
 #endif

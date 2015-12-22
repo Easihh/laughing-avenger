@@ -10,6 +10,7 @@ public:
 private:
 	void loadImage();
 	void movement(std::vector<std::shared_ptr<GameObject>>* worldMap);
+	void processDeath(std::vector<std::shared_ptr<GameObject>>* worldMap);
 	int getXOffset();
 	int getYOffset();
 	void TrapMovement();

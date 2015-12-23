@@ -2,6 +2,6 @@
 #define GameStateType_H
 
 enum GameState {
-	NotStarted, Paused, Playing, InventoryMenu, Exiting, LoadSaveMenu
+	NotStarted, Paused, Playing, InventoryMenu, Exiting, LoadSaveMenu,PlayerDeath
 };
 #endif

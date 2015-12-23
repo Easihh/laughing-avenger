@@ -21,6 +21,8 @@ public:
 	std::shared_ptr<Player> player;
 	std::unique_ptr<TileParser> parser;
 	void movePlayerToDifferentRoomVector(int oldWorldX, int oldWorldY, int newWorldX, int newWorldY);
+	void drawDeathScreen(sf::RenderWindow& mainWindow);
+	void updateDeathScreen(sf::Event& event);
 private:
 	int lastWorldXIndex, lastWorldYIndex, vectorXindex, vectorYindex;
 	void createTile(int lastWorldXIndex, int lastWorldYIndex, int tileType, tripleVector& objectVector);
@@ -37,5 +39,9 @@ private:
 	void sort(tripleVector& objectVector);
 	void sort(std::vector<std::shared_ptr<GameObject>>* vector);
 	void WorldMap::enableShopObjects(std::vector<std::shared_ptr<GameObject>>* roomObjVector);
+	sf::Text txt;
+	sf::Font font;
+	sf::Texture gameOverSelector;
+	int gameOverSelectorIndex;
 };
 #endif

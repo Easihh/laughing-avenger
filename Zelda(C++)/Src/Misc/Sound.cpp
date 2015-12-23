@@ -24,7 +24,11 @@ sf::Sound* Sound::bossScream1;
 sf::Sound* Sound::bossScream2;
 sf::Sound* Sound::itemAppear;
 sf::Sound* Sound::unlock;
+sf::Sound* Sound::lowHealth;
+sf::Sound* Sound::gameOver;
+bool Sound::allSoundMuted;
 Sound::Sound() {
+	allSoundMuted = false;
 	buffer = new sf::SoundBuffer();
 	if(!buffer->loadFromFile("Sound/bombDrop.wav"))
 		std::cout << "Failed to load bombDrop.wav";
@@ -144,6 +148,18 @@ Sound::Sound() {
 		std::cout << "Failed to load unlock.wav";
 	unlock = new sf::Sound();
 	unlock->setBuffer(*buffer);
+	buffer = new sf::SoundBuffer();
+	if (!buffer->loadFromFile("Sound/lowHealth.wav"))
+		std::cout << "Failed to load lowHealth.wav";
+	lowHealth = new sf::Sound();
+	lowHealth->setBuffer(*buffer);
+	lowHealth->setLoop(true);
+	buffer = new sf::SoundBuffer();
+	if (!buffer->loadFromFile("Sound/gameOver.ogg"))
+		std::cout << "Failed to load gameOver.ogg";
+	gameOver = new sf::Sound();
+	gameOver->setBuffer(*buffer);
+	gameOver->setLoop(true);
 }
 void Sound::stopSound(GameSound::SoundType sound) {
 	if(sound == GameSound::Underworld)
@@ -154,6 +170,35 @@ void Sound::stopSound(GameSound::SoundType sound) {
 		boomrang->stop();
 	else if (sound == GameSound::BossScream1)
 		bossScream1->stop();
+	else if (sound == GameSound::LowHealth)
+		lowHealth->stop();
+}
+void Sound::stopAllSounds(){
+	allSoundMuted = true;
+	bombDropSound->stop();
+	bombBlow->stop();
+	swordAttack->stop();
+	enemyTakeHit->stop();
+	enemyKilled->stop();
+	selectorSound->stop();
+	swordCombine->stop();
+	arrow->stop();
+	itemNew->stop();
+	itemInventoryNew->stop();
+	candleFire->stop();
+	getHit->stop();
+	dungeon->stop();
+	overworld->stop();
+	secretRoom->stop();
+	boomrang->stop();
+	triforce->stop();
+	getHeart->stop();
+	shieldBlock->stop();
+	bossScream1->stop();
+	bossScream2->stop();
+	itemAppear->stop();
+	unlock->stop();
+	lowHealth->stop();
 }
 void Sound::playSound(GameSound::SoundType sound) {
 	if(sound == GameSound::BombDrop)
@@ -204,4 +249,10 @@ void Sound::playSound(GameSound::SoundType sound) {
 		itemAppear->play();
 	else if (sound == GameSound::DoorUnlock)
 		unlock->play();
+	else if (sound == GameSound::LowHealth){
+		if (lowHealth->getStatus() == sf::SoundSource::Stopped && !allSoundMuted)
+			lowHealth->play();
+	}
+	else if (sound == GameSound::GameOver)
+		gameOver->play();
 }

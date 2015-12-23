@@ -1,3 +1,10 @@
+Version 0.097
+
+-Added low health sound.
+-At 1 full hearth or lower, beeping sound will be heard to signify that player is almost dead.
+-Added Game Over Sound.
+-GameOver screen now shows when player dies(Not Fully Implemented).
+
 Version 0.096
 
 -Fixed issue where spawner would only spawn 1 WallMaster.

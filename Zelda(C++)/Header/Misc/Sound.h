@@ -7,6 +7,7 @@ class Sound {
 public:
 	void static playSound(GameSound::SoundType file);
 	void static stopSound(GameSound::SoundType file);
+	void static stopAllSounds();
 	Sound();
 private:
 	static sf::SoundBuffer* buffer;
@@ -33,5 +34,8 @@ private:
 	static sf::Sound* Sound::bossScream2;
 	static sf::Sound* Sound::itemAppear;
 	static sf::Sound* Sound::unlock;
+	static sf::Sound* Sound::lowHealth;
+	static sf::Sound* Sound::gameOver;
+	static bool allSoundMuted;
 };
 #endif

@@ -12,6 +12,9 @@
 #include "Item\RupeeDrop.h"
 WorldMap::WorldMap(){
 	setupVectors();
+	font.loadFromFile("zelda.ttf");
+	gameOverSelector.loadFromFile("Tileset/Life_Full.png");
+	gameOverSelectorIndex = 0;
 	parser = std::make_unique<TileParser>();
 	std::clock_t start;
 	start = std::clock();
@@ -421,4 +424,34 @@ void WorldMap::drawDownScreen(sf::RenderWindow& mainWindow){
 		drawScreen(mainWindow, &dungeonBackgroundVector[player->worldX + 1][player->worldY]);
 		drawScreen(mainWindow, &dungeonVector[player->worldX + 1][player->worldY]);
 	}
+}
+void WorldMap::updateDeathScreen(sf::Event& event){
+	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::W){
+		gameOverSelectorIndex++;
+		if (gameOverSelectorIndex > 1)
+			gameOverSelectorIndex = 0;
+	}
+}
+void WorldMap::drawDeathScreen(sf::RenderWindow& mainWindow){
+	int startX = player->worldY*Global::roomHeight;//the 0,0 points within current screen.
+	int startY = player->worldX*Global::roomWidth;
+	int startTextX = startX + (Global::SCREEN_WIDTH / 3);
+	int startTextY = startY + (Global::SCREEN_HEIGHT / 3);
+	txt.setColor(sf::Color::White);
+	txt.setFont(font);
+	txt.setCharacterSize(14);
+	txt.setPosition(startTextX, startTextY);
+	txt.setString("CONTINUE");
+	mainWindow.draw(txt);
+
+	sf::Sprite spr;
+	spr.setTexture(gameOverSelector);
+	spr.setPosition(startTextX - 32, startTextY+ (gameOverSelectorIndex*32));
+	mainWindow.draw(spr);
+
+	txt.setPosition(startTextX, startTextY + 32);
+	txt.setString("SAVE");
+	mainWindow.draw(txt);
+
+	mainWindow.display();
 }

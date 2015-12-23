@@ -25,7 +25,9 @@ namespace GameSound{
 		BossScream1,
 		BossScream2,
 		ItemAppear,
-		DoorUnlock
+		DoorUnlock,
+		LowHealth,
+		GameOver
 	};
 }
 #endif

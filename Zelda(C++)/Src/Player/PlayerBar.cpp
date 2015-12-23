@@ -11,7 +11,7 @@ PlayerBar::PlayerBar(Point start){
 	map.setPoint(start.x + 16, start.y+32);
 	bar.setPoint(start.x, start.y);
 	healthBarStart.setPoint(start.x + 320, start.y + 80);
-	currentHealthPoint = 32;
+	currentHealthPoint = 2;
 	maxHealthPoint = 32;
 	itemSlotStart.setPoint(start.x + 216, start.y + 36);
 	diamondStart.setPoint(start.x + 152, start.y + 32);
@@ -397,4 +397,7 @@ void PlayerBar::update(){
 	playerMarker.setPosition(marker.x, marker.y);
 	dungeonPlayerMarker.setPosition(dungeonMarker.x, dungeonMarker.y);
 	dungeonBossMarker.setPosition(bossMarker.x, bossMarker.y);
+	if (currentHealthPoint <= 2)
+		Sound::playSound(GameSound::LowHealth);
+	else Sound::stopSound(GameSound::LowHealth);
 }

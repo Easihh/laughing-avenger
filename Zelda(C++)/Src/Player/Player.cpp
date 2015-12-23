@@ -328,8 +328,11 @@
 				 sword->endSword();
 			 walkingAnimation[walkAnimationIndex]->sprite.setPosition(position.x, position.y);
 			 attackAnimation[attackAnimationIndex]->sprite.setPosition(position.x, position.y);
-			 if(inventory->playerBar->getCurrentHP() <= 0)
-				 std::cout << "I'm Dead";
+			 if (inventory->playerBar->getCurrentHP() <= 0){
+				 Static::gameState = GameState::PlayerDeath;
+				 Sound::stopAllSounds();
+				 Sound::playSound(GameSound::GameOver);
+			 }
 			 else isInvincible = true;
 		 }
 	 }
@@ -483,9 +486,8 @@
 	 inventory->updateInventoryPosition(nextPosition);
 	 walkingAnimation[walkAnimationIndex]->updateAnimationFrame(dir, position);
 	 transitionStep -= minTransitionStep;
-	 if (transitionStep == 0){
+	 if (transitionStep == 0)
 		 endScreenTransition();
-	 }
  }
  int Player::getXOffset(){
 	 xOffset = 0;
@@ -601,7 +603,7 @@
 	// mainWindow.draw(*fullMask);
  }
  void Player::drawText(sf::RenderWindow& mainWindow){
-	/* sf::Font font;
+	/*sf::Font font;
 	 std::stringstream pos;
 	 pos << "X:" << position.x << std::endl << "Y:" << position.y << std::endl
 		 <<"WorldX:"<<worldX <<std::endl <<"WorldY:"<<worldY<<std::endl;

@@ -18,6 +18,10 @@ void Game::GameLoop(){
 		world.player->inventory->update(event);
 		world.player->inventory->draw(mainWindow);
 		break;
+	case PlayerDeath:
+		world.updateDeathScreen(event);
+		world.drawDeathScreen(mainWindow);
+		break;
 	}
 }
 void Game::Start(){

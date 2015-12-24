@@ -43,5 +43,6 @@ private:
 	sf::Font font;
 	sf::Texture gameOverSelector;
 	int gameOverSelectorIndex;
+	void restartGame();
 };
 #endif

@@ -431,6 +431,31 @@ void WorldMap::updateDeathScreen(sf::Event& event){
 		if (gameOverSelectorIndex > 1)
 			gameOverSelectorIndex = 0;
 	}
+	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Q){
+		if (gameOverSelectorIndex == 0)
+			restartGame();
+	}
+}
+void WorldMap::restartGame(){
+	Sound::stopSound(GameSound::GameOver);
+	Static::gameState = GameState::Playing;
+	Point startPt(1280, 2464);//original starting pt
+	player->currentLayer = Layer::OverWorld;
+	player->prevWorldX = player->worldX;
+	player->prevWorldY = player->worldY;
+	player->worldX = 4;
+	player->worldY = 2;
+	float inventoryNewX = player->worldY*Global::roomHeight;
+	float inventoryNewY = player->worldX*Global::roomWidth;
+	player->inventory->setInventoryPosition(Point(inventoryNewX, inventoryNewY));
+	player->inventory->playerBar->setPlayerBar(Point(inventoryNewX, inventoryNewY));
+	player->inventory->playerBar->healPlayerToFull();
+	player->movePlayerToNewVector = true;
+	player->position = startPt;
+	player->updateSprites();
+	Global::gameView.setCenter(player->worldY*Global::roomWidth + Global::SCREEN_WIDTH / 2,
+		player->worldX*Global::roomHeight + Global::SCREEN_HEIGHT / 2);
+	Sound::playSound(GameSound::OverWorld);
 }
 void WorldMap::drawDeathScreen(sf::RenderWindow& mainWindow){
 	int startX = player->worldY*Global::roomHeight;//the 0,0 points within current screen.

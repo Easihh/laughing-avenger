@@ -172,6 +172,8 @@ void Sound::stopSound(GameSound::SoundType sound) {
 		bossScream1->stop();
 	else if (sound == GameSound::LowHealth)
 		lowHealth->stop();
+	else if (sound == GameSound::GameOver)
+		gameOver->stop();
 }
 void Sound::stopAllSounds(){
 	allSoundMuted = true;

@@ -332,6 +332,9 @@
 				 Static::gameState = GameState::PlayerDeath;
 				 Sound::stopAllSounds();
 				 Sound::playSound(GameSound::GameOver);
+				 currentInvincibleFrame = 0;
+				 walkAnimationIndex = 0;
+				 attackAnimationIndex = 0;
 			 }
 			 else isInvincible = true;
 		 }
@@ -584,8 +587,10 @@
 	 updateSprites();
  }
  void Player::updateSprites(){
-	 walkingAnimation[walkAnimationIndex]->sprite.setPosition(position.x, position.y);
-	 attackAnimation[attackAnimationIndex]->sprite.setPosition(position.x, position.y);
+	 for (int i = 0; i < 3; i++){
+		 walkingAnimation[i]->sprite.setPosition(position.x, position.y);
+		 attackAnimation[i]->sprite.setPosition(position.x, position.y);
+	 }
  }
  void Player::draw(sf::RenderWindow& mainWindow){
 	 mainWindow.setView(Global::gameView);

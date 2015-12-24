@@ -1,3 +1,7 @@
+Version 0.098
+
+-Player who dies can now using continue option on Death screen to continue the game.
+
 Version 0.097
 
 -Added low health sound.

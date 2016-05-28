@@ -1,0 +1,9 @@
+Version 0.02:
+
+-Renamed Database from TEST to Thanatos.
+-Removed hibernate files since mybatis will be used.
+-Added Version file to better keep track of the project changes.
+
+Version 0.01:
+
+-Project setup with Ibatis,JavaFX,Quartz Scheduler working.

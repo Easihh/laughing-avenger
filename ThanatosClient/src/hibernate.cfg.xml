@@ -1,0 +1,24 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+<session-factory>
+   <!-- Database connection settings -->
+   <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
+   <property name="hibernate.connection.username">sa</property>
+   <property name="hibernate.connection.password">Polimkar1</property>
+   <property name="hibernate.connection.url">jdbc:sqlserver://74.58.85.141\ASURA\SQLEXPRESS:1433;databaseName=TEST</property>
+
+   <!-- SQL dialect -->
+   <property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property>
+
+   <!-- Echo all executed SQL to sysout -->
+   <property name="show_sql">true</property>
+   <!-- Drop and re-create the database schema on startup -->
+   <property name="hbm2ddl.auto">update</property>
+   <!-- Mapping file -->
+   <mapping class="com.thanatos.model.Student"/>
+</session-factory>
+</hibernate-configuration>

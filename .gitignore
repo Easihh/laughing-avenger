@@ -13,3 +13,4 @@ Zelda(C++)/Zelda.aps
 *.vcxproj
 Zelda(C++)/Debug/vc120.pdb
 *.filters
+*.class

@@ -1,3 +1,9 @@
+Version 0.03:
+
+-Fixed Scheduled job to now run during between Trading hours.
+-Scheduled job now run 15min after Nasdaq open/close since the quote are delayed by 15.
+-Setup Dao/injection with MyBatis.
+
 Version 0.02:
 
 -Renamed Database from TEST to Thanatos.

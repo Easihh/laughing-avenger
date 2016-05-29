@@ -1,21 +1,15 @@
 package com.thanatos;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
-import org.apache.ibatis.session.SqlSession;
+import com.thanatos.Dao.OrderDao;
 import com.thanatos.model.Order;
-import com.thanatos.utility.MyBatisUtil;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -29,7 +23,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class MainController extends BaseController implements Initializable{
+public class MainController implements Initializable{
+	
+	private OrderDao orderDao;
     public TableView<Order> tableView = new TableView<Order>();
     public TableColumn<?, ?> symbolCol = new TableColumn<Object, Object>();
     public TableColumn<?, ?> qtyCol = new TableColumn<Object, Object>();
@@ -47,17 +43,10 @@ public class MainController extends BaseController implements Initializable{
       tableView.setItems(data);
       //filteredData=new FilteredList<Order>(data,p->true);
 	}
-	public void testShow(){
-		SqlSession session=MyBatisUtil.getSqlSessionFactory().openSession();
-		Map<String,Object> map=new HashMap<String,Object>();
-		map.put("currentName","Yoshie");
-		map.put("newName","TEST");
-	    int success=session.update("test",map);
-	    session.commit();
-	    session.close();
-	}
 	public void createNewOrder(){
 		try{
+			orderDao=(OrderDao)Main.ctx.getBean("orderDao");
+			orderDao.insert(new Order("AMZ",999));
 	        FXMLLoader loader = new FXMLLoader();
 	        loader.setLocation(getClass().getResource("/com/thanatos/NewOrderview.fxml"));
 	        BorderPane page = (BorderPane)loader.load();

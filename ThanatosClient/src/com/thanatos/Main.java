@@ -8,6 +8,9 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -17,11 +20,13 @@ import javafx.scene.layout.AnchorPane;
 
 public class Main extends Application {
 	private Scheduler yahooScheduler;
-	static AnchorPane root;
-	static Stage primaryStage;
+	private AnchorPane root;
+	public static Stage primaryStage;
+	public static ApplicationContext ctx;
 	@Override
 	public void start(Stage primaryStage) {
-		try {
+		try {		
+			ctx=new ClassPathXmlApplicationContext("Spring.xml");
             FXMLLoader loader = new FXMLLoader();
             Main.primaryStage=primaryStage;
             loader.setLocation(getClass().getResource("TestOverview.fxml"));
@@ -52,10 +57,13 @@ public class Main extends Application {
 		}
 	}
 	private void setupJobs() throws SchedulerException {
-		JobDetail yahooData=JobBuilder.newJob(ImportDataFromYahooJob.class).withIdentity("yahoo","group1").build();
-		Trigger yahooTrig=TriggerBuilder.newTrigger().withIdentity("yahooTrigger1","group1").withSchedule(CronScheduleBuilder.cronSchedule("0 * 8-16 ? * MON-FRI")).build();
+		JobDetail yahooDataStart=JobBuilder.newJob(ImportDataFromYahooJob.class).withIdentity("yahooStart","group1").build();
+		JobDetail yahooDataEnd=JobBuilder.newJob(ImportDataFromYahooJob.class).withIdentity("yahooEnd","group1").build();
+		Trigger yahooTrig=TriggerBuilder.newTrigger().withIdentity("yahooTriggerStart","group1").withSchedule(CronScheduleBuilder.cronSchedule("0 45-59/1 9-15 ? * MON-FRI")).build();
+		Trigger yahooTrigEnd=TriggerBuilder.newTrigger().withIdentity("yahooTriggerEnd","group1").withSchedule(CronScheduleBuilder.cronSchedule("0 0-15/1 16 ? * MON-FRI")).build();
 		yahooScheduler=new StdSchedulerFactory().getScheduler();
 		yahooScheduler.start();
-		yahooScheduler.scheduleJob(yahooData, yahooTrig);
+		yahooScheduler.scheduleJob(yahooDataStart, yahooTrig);
+		yahooScheduler.scheduleJob(yahooDataEnd, yahooTrigEnd);
 	}
 }

@@ -1,3 +1,8 @@
+Version 0.04:
+
+-Fixed Issue with schedule job to now properly run between 945-1615EST due to delayed quote.
+-Retrieved Market Data is now inserted into the Database.
+
 Version 0.03:
 
 -Fixed Scheduled job to now run during between Trading hours.

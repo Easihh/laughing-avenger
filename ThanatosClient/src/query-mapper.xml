@@ -2,12 +2,28 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.thanatos.model.Order">
+<mapper namespace="mapper">
     <insert id="insertOrder" parameterType="com.thanatos.model.Order" useGeneratedKeys="true" keyProperty="id" keyColumn="Orderid">
         INSERT INTO [Order](Symbol,Quantity) 
         values(
         	#{symbol},
         	#{qty}
         ) 
-    </insert>   
+    </insert>
+    <insert id="insertQuote" parameterType="com.thanatos.model.Quote" useGeneratedKeys="true" keyProperty="id" keyColumn="Orderid">
+        INSERT INTO Quote(Symbol_ID,LastPx,DayHigh,DayLow,Volume,Change,[Open],PrevClose,Bid,Ask) 
+        values(
+        	1,
+        	#{lastPx},
+        	#{dayHigh},
+        	#{dayLow},
+        	#{volume},
+        	#{change},
+        	#{open},
+        	#{prevClose},
+        	#{bid},
+        	#{ask}
+        ) 
+    </insert>    
 </mapper>
+

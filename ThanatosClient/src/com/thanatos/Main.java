@@ -37,9 +37,6 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			setupJobs();
-			//primaryStage.setOnCloseRequest(e -> Platform.exit()){
-				
-		//	};
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -58,12 +55,18 @@ public class Main extends Application {
 	}
 	private void setupJobs() throws SchedulerException {
 		JobDetail yahooDataStart=JobBuilder.newJob(ImportDataFromYahooJob.class).withIdentity("yahooStart","group1").build();
-		JobDetail yahooDataEnd=JobBuilder.newJob(ImportDataFromYahooJob.class).withIdentity("yahooEnd","group1").build();
-		Trigger yahooTrig=TriggerBuilder.newTrigger().withIdentity("yahooTriggerStart","group1").withSchedule(CronScheduleBuilder.cronSchedule("0 45-59/1 9-15 ? * MON-FRI")).build();
-		Trigger yahooTrigEnd=TriggerBuilder.newTrigger().withIdentity("yahooTriggerEnd","group1").withSchedule(CronScheduleBuilder.cronSchedule("0 0-15/1 16 ? * MON-FRI")).build();
+		JobDetail yahooDataDay=JobBuilder.newJob(ImportDataFromYahooJob.class).withIdentity("yahooDay","group1").build();
+		JobDetail yahooDataEndDay=JobBuilder.newJob(ImportDataFromYahooJob.class).withIdentity("yahooEndDay","group1").build();
+		//JobDetail yahooDataTest=JobBuilder.newJob(ImportDataFromYahooJob.class).withIdentity("yahooTest","group1").build();
+		//Trigger yahooTrigTest=TriggerBuilder.newTrigger().withIdentity("yahooTestTrgger","group1").withSchedule(CronScheduleBuilder.cronSchedule("0 * * ? * *")).build();
+		Trigger yahooTrigStartDay=TriggerBuilder.newTrigger().withIdentity("yahooTriggerStart","group1").withSchedule(CronScheduleBuilder.cronSchedule("0 45-59/1 9 ? * MON-FRI")).build();
+		Trigger yahooTrigDay=TriggerBuilder.newTrigger().withIdentity("yahooTriggerDay","group1").withSchedule(CronScheduleBuilder.cronSchedule("0 * 10-15 ? * MON-FRI")).build();
+		Trigger yahooTrigEndDay=TriggerBuilder.newTrigger().withIdentity("yahooTriggerEndDay","group1").withSchedule(CronScheduleBuilder.cronSchedule("0 0-15/1 16 ? * MON-FRI")).build();
 		yahooScheduler=new StdSchedulerFactory().getScheduler();
 		yahooScheduler.start();
-		yahooScheduler.scheduleJob(yahooDataStart, yahooTrig);
-		yahooScheduler.scheduleJob(yahooDataEnd, yahooTrigEnd);
+		//yahooScheduler.scheduleJob(yahooDataTest, yahooTrigTest);
+		yahooScheduler.scheduleJob(yahooDataStart, yahooTrigStartDay);
+		yahooScheduler.scheduleJob(yahooDataDay, yahooTrigDay);
+		yahooScheduler.scheduleJob(yahooDataEndDay, yahooTrigEndDay);
 	}
 }

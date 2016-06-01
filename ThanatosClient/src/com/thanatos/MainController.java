@@ -19,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -29,8 +30,8 @@ public class MainController implements Initializable{
     public TableView<Order> tableView = new TableView<Order>();
     public TableColumn<?, ?> symbolCol = new TableColumn<Object, Object>();
     public TableColumn<?, ?> qtyCol = new TableColumn<Object, Object>();
-    ObservableList<Order> data;
-    FilteredList<Order> filteredData;
+    private ObservableList<Order> data;
+    private FilteredList<Order> filteredData;
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -40,7 +41,10 @@ public class MainController implements Initializable{
             );
       symbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
       qtyCol.setCellValueFactory(new PropertyValueFactory("qty"));
+      symbolCol.prefWidthProperty().bind(tableView.widthProperty().multiply(0.25));
+      qtyCol.prefWidthProperty().bind(tableView.widthProperty().multiply(0.25));
       tableView.setItems(data);
+      //tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
       //filteredData=new FilteredList<Order>(data,p->true);
 	}
 	public void createNewOrder(){

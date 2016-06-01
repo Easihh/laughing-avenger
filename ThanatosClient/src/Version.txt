@@ -1,3 +1,7 @@
+Version 0.05:
+
+-Main-UI Screen  early work for Open Trade/Order and Account info.
+
 Version 0.04:
 
 -Fixed Issue with schedule job to now properly run between 945-1615EST due to delayed quote.

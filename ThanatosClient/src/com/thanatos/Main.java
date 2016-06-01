@@ -14,6 +14,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 
@@ -25,7 +26,7 @@ public class Main extends Application {
 	public static ApplicationContext ctx;
 	@Override
 	public void start(Stage primaryStage) {
-		try {		
+		try {
 			ctx=new ClassPathXmlApplicationContext("Spring.xml");
             FXMLLoader loader = new FXMLLoader();
             Main.primaryStage=primaryStage;
@@ -36,6 +37,7 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			primaryStage.setMaximized(true);
 			setupJobs();
 		} catch(Exception e) {
 			e.printStackTrace();

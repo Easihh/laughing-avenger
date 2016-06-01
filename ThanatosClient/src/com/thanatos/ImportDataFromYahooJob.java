@@ -14,15 +14,17 @@ import com.thanatos.Dao.QuoteDao;
 
 public class ImportDataFromYahooJob implements Job{
 	private QuoteDao quoteDao;
+	
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+		
 		URL u;
 		InputStream is=null;
 		BufferedReader dis;
 		String s="";
 		String[] values=null;
 		try{
-			String stock="http://download.finance.yahoo.com/d/quotes.csv?s=AMZN&f=sl1d1t1c1ohgvpba&e=.csv";
+			String stock="http://download.finance.yahoo.com/d/quotes.csv?s=GOOG&f=sl1d1t1c1ohgvpba&e=.csv";
 			u=new URL(stock);
 			is=u.openStream();
 			dis=new BufferedReader(new InputStreamReader(is));

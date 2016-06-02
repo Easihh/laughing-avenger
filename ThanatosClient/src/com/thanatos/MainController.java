@@ -13,38 +13,62 @@ import com.thanatos.model.Order;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class MainController implements Initializable{
 	
 	private OrderDao orderDao;
-    public TableView<Order> tableView = new TableView<Order>();
-    public TableColumn<?, ?> symbolCol = new TableColumn<Object, Object>();
-    public TableColumn<?, ?> qtyCol = new TableColumn<Object, Object>();
+	@FXML
+    public TableView<Order> pendingOrdersTableView;
+	@FXML
+	public TableView<Order> openTradeTableView;
+	@FXML
+	public TableView<Order> quoteTableView;
+    @FXML
+    public TitledPane activeQuotePane;
+    @FXML
+    public TableColumn<?, ?> symbolCol;
+    @FXML
+    public TableColumn<?, ?> qtyCol;
+    @FXML
+    public VBox accInfoActiveQuoteCol;
     private ObservableList<Order> data;
     private FilteredList<Order> filteredData;
+    @FXML
+    private AnchorPane	accountInfo;
+    
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
       data = FXCollections.observableArrayList(
-    		  new Order("XYZ",99)
-
+    		  new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),
+    		  new Order("XYZ",99),new Order("XYZ",99)
             );
+      quoteTableView.setPlaceholder(new Label(""));
+      pendingOrdersTableView.setPlaceholder(new Label(""));
       symbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
       qtyCol.setCellValueFactory(new PropertyValueFactory("qty"));
-      symbolCol.prefWidthProperty().bind(tableView.widthProperty().multiply(0.25));
-      qtyCol.prefWidthProperty().bind(tableView.widthProperty().multiply(0.25));
-      tableView.setItems(data);
-      //tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+      symbolCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
+      qtyCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
+      pendingOrdersTableView.setItems(data);
+      quoteTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+      openTradeTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
       //filteredData=new FilteredList<Order>(data,p->true);
 	}
 	public void createNewOrder(){

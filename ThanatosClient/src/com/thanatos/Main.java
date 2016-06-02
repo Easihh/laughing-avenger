@@ -13,6 +13,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.scene.Scene;
@@ -24,15 +26,20 @@ public class Main extends Application {
 	private AnchorPane root;
 	public static Stage primaryStage;
 	public static ApplicationContext ctx;
+	public static Double screenWidth;
+	public static Double screenHeight;
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			ctx=new ClassPathXmlApplicationContext("Spring.xml");
             FXMLLoader loader = new FXMLLoader();
             Main.primaryStage=primaryStage;
+			Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+			screenWidth=primaryScreenBounds.getWidth();
+			screenHeight=primaryScreenBounds.getHeight();
             loader.setLocation(getClass().getResource("TestOverview.fxml"));
             root = (AnchorPane) loader.load();
-			Scene scene = new Scene(root,400,400);
+			Scene scene = new Scene(root,600,800);
 			primaryStage.setTitle("Thanatos:Client");
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);

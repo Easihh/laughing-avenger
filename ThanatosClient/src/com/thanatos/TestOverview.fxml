@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -35,34 +36,85 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <Accordion>
-              <panes>
-                <TitledPane animated="false" text="Account Information ">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                  </content>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                <TitledPane animated="false" collapsible="false" prefHeight="206.0" prefWidth="1280.0" text="Account Information " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <content>
+                    <AnchorPane fx:id="accountInfo" minHeight="0.0" minWidth="0.0" prefHeight="50.0" prefWidth="200.0" />
+                     </content>
                 </TitledPane>
-              </panes>
-            </Accordion>
-          <TitledPane animated="false" collapsible="false" text="Open Trades">
-               <content>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Button" />
+                        <TitledPane fx:id="activeQuotePane" animated="false" collapsible="false" prefHeight="200.0" prefWidth="1265.0" text="Active Quotes">
+                           <content>
+                              <TableView fx:id="quoteTableView" prefHeight="200.0" prefWidth="200.0">
+                                 <columns>
+                                    <TableColumn prefWidth="75.0" text="Symbol" />
+                                    <TableColumn prefWidth="75.0" text="LastPx" />
+                                    <TableColumn prefWidth="75.0" text="Bid" />
+                                    <TableColumn prefWidth="75.0" text="Ask" />
+                                    <TableColumn prefWidth="75.0" text="DayLow" />
+                                    <TableColumn prefWidth="75.0" text="DayHigh" />
+                                    <TableColumn prefWidth="75.0" text="Change" />
+                                    <TableColumn prefWidth="75.0" text="Volume" />
+                                 </columns>
+                              </TableView>
+                           </content>
+                        </TitledPane>
+                        <TitledPane animated="false" collapsible="false" prefHeight="200.0" prefWidth="1265.0" text="Streaming Chart">
+                           <content>
+                              <LineChart>
+                                <xAxis>
+                                  <CategoryAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                              </LineChart>
+                           </content>
+                        </TitledPane>
                      </children>
-                  </VBox>
-               </content>
-          </TitledPane>
-            <TitledPane animated="false" collapsible="false" text="Pending Orders">
-               <content>
-                  <TableView prefHeight="200.0" prefWidth="200.0">
-                    <columns>
-                      <TableColumn prefWidth="75.0" text="C1" />
-                      <TableColumn prefWidth="75.0" text="C2" />
-                    </columns>
-                  </TableView>
-               </content>
-            </TitledPane>
+                  </HBox>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <TitledPane animated="false" collapsible="false" prefHeight="200.0" prefWidth="1265.0" text="Pending Orders" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <content>
+                        <TableView fx:id="pendingOrdersTableView" prefHeight="200.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn fx:id="symbolCol" prefWidth="75.0" text="Symbol" />
+                            <TableColumn fx:id="qtyCol" prefWidth="75.0" text="Quantity" />
+                          </columns>
+                        </TableView>
+                     </content>
+                  </TitledPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                <TitledPane animated="false" collapsible="false" text="Open Trades" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <content>
+                        <TableView fx:id="openTradeTableView" prefHeight="200.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn prefWidth="75.0" text="Ticket ID" />
+                            <TableColumn prefWidth="75.0" text="Symbol" />
+                              <TableColumn prefWidth="75.0" text="B/S" />
+                              <TableColumn prefWidth="75.0" text="Amount" />
+                              <TableColumn prefWidth="75.0" text="Type" />
+                              <TableColumn prefWidth="75.0" text="Price" />
+                              <TableColumn prefWidth="75.0" text="Current" />
+                              <TableColumn prefWidth="75.0" text="P/L" />
+                          </columns>
+                        </TableView>
+                     </content>
+                </TitledPane>
+               </children>
+            </AnchorPane>
          </children>
       </VBox>
    </children>

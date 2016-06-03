@@ -6,10 +6,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import com.thanatos.Dao.OrderDao;
+import com.thanatos.Dao.QuoteDao;
 import com.thanatos.model.Order;
+import com.thanatos.model.Quote;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -34,21 +38,35 @@ import javafx.stage.Stage;
 public class MainController implements Initializable{
 	
 	private OrderDao orderDao;
+	private QuoteDao quoteDao;
 	@FXML
     public TableView<Order> pendingOrdersTableView;
 	@FXML
 	public TableView<Order> openTradeTableView;
 	@FXML
-	public TableView<Order> quoteTableView;
+	public TableView<Quote> quoteTableView;
     @FXML
-    public TitledPane activeQuotePane;
+    public TableColumn<?, ?> quoteTableSymbolCol;
+    @FXML
+    public TableColumn<?, ?> quoteTableVolumeCol;
+    @FXML
+    public TableColumn<?, ?> quoteTableLastPxCol;
+    @FXML
+    public TableColumn<?, ?> quoteTableBidCol;
+    @FXML
+    public TableColumn<?, ?> quoteTableAskCol;
+    @FXML
+    public TableColumn<?, ?> quoteTableDayLowCol;
+    @FXML
+    public TableColumn<?, ?> quoteTableDayHighCol;
+    @FXML
+    public TableColumn<?, ?> quoteTableChangeCol;
     @FXML
     public TableColumn<?, ?> symbolCol;
     @FXML
     public TableColumn<?, ?> qtyCol;
-    @FXML
-    public VBox accInfoActiveQuoteCol;
     private ObservableList<Order> data;
+    private ObservableList<Quote> currentQuote;
     private FilteredList<Order> filteredData;
     @FXML
     private AnchorPane	accountInfo;
@@ -56,20 +74,33 @@ public class MainController implements Initializable{
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-      data = FXCollections.observableArrayList(
-    		  new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),
-    		  new Order("XYZ",99),new Order("XYZ",99)
-            );
-      quoteTableView.setPlaceholder(new Label(""));
-      pendingOrdersTableView.setPlaceholder(new Label(""));
-      symbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
-      qtyCol.setCellValueFactory(new PropertyValueFactory("qty"));
-      symbolCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
-      qtyCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
-      pendingOrdersTableView.setItems(data);
-      quoteTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-      openTradeTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-      //filteredData=new FilteredList<Order>(data,p->true);
+	  quoteDao=(QuoteDao)Main.ctx.getBean("quoteDao");
+	  List<Quote> quoteList=quoteDao.getWatchedQuotes();
+	  data = FXCollections.observableArrayList(
+			  new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),
+			  new Order("XYZ",99),new Order("XYZ",99)
+	        );
+	  currentQuote=FXCollections.observableArrayList();
+	  currentQuote.addAll(quoteList);
+	  quoteTableSymbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
+	  quoteTableVolumeCol.setCellValueFactory(new PropertyValueFactory("volume"));
+	  quoteTableLastPxCol.setCellValueFactory(new PropertyValueFactory("lastPx"));
+	  quoteTableBidCol.setCellValueFactory(new PropertyValueFactory("bid"));
+	  quoteTableAskCol.setCellValueFactory(new PropertyValueFactory("ask"));
+	  quoteTableDayLowCol.setCellValueFactory(new PropertyValueFactory("dayLow"));
+	  quoteTableDayHighCol.setCellValueFactory(new PropertyValueFactory("dayHigh"));
+	  quoteTableChangeCol.setCellValueFactory(new PropertyValueFactory("change"));
+	  quoteTableView.setItems(currentQuote);
+	  //quoteTableView.setPlaceholder(new Label(""));
+	  pendingOrdersTableView.setPlaceholder(new Label(""));
+	  symbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
+	  qtyCol.setCellValueFactory(new PropertyValueFactory("qty"));
+	  symbolCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
+	  qtyCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
+	  pendingOrdersTableView.setItems(data);
+	  quoteTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+	  openTradeTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+	  //filteredData=new FilteredList<Order>(data,p->true);
 	}
 	public void createNewOrder(){
 		try{

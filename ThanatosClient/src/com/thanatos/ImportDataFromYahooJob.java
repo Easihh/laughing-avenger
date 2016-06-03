@@ -34,7 +34,8 @@ public class ImportDataFromYahooJob implements Job{
 					System.out.println(values[i]);
 			}
 			quoteDao=(QuoteDao)Main.ctx.getBean("quoteDao");
-			quoteDao.insert(values);
+			quoteDao.insertHistorical(values);
+			quoteDao.updateCurrentQuote(values);
 		}
 		catch(MalformedURLException me){
 			System.out.println(me.getMessage());

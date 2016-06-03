@@ -1,3 +1,10 @@
+Version 0.07:
+
+-Moved schedule import quote job to 1min later to better capture 1st and last trade of a given day due to latency.
+-Finished Basic Main-UI screen/layout
+-Quote table data is now binded to latest Data from Database on program start.
+-Database Change to now keep track of latest Quote and History Data of a quote.
+
 Version 0.06:
 
 -Improved Main-UI screen/layout

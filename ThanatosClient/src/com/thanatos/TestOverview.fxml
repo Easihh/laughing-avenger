@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thanatos.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thanatos.MainController">
    <children>
       <VBox prefHeight="600.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -45,38 +45,54 @@
                 </TitledPane>
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <TitledPane fx:id="activeQuotePane" animated="false" collapsible="false" prefHeight="200.0" prefWidth="1265.0" text="Active Quotes">
-                           <content>
-                              <TableView fx:id="quoteTableView" prefHeight="200.0" prefWidth="200.0">
-                                 <columns>
-                                    <TableColumn prefWidth="75.0" text="Symbol" />
-                                    <TableColumn prefWidth="75.0" text="LastPx" />
-                                    <TableColumn prefWidth="75.0" text="Bid" />
-                                    <TableColumn prefWidth="75.0" text="Ask" />
-                                    <TableColumn prefWidth="75.0" text="DayLow" />
-                                    <TableColumn prefWidth="75.0" text="DayHigh" />
-                                    <TableColumn prefWidth="75.0" text="Change" />
-                                    <TableColumn prefWidth="75.0" text="Volume" />
-                                 </columns>
-                              </TableView>
-                           </content>
-                        </TitledPane>
-                        <TitledPane animated="false" collapsible="false" prefHeight="200.0" prefWidth="1265.0" text="Streaming Chart">
-                           <content>
-                              <LineChart>
-                                <xAxis>
-                                  <CategoryAxis side="BOTTOM" />
-                                </xAxis>
-                                <yAxis>
-                                  <NumberAxis side="LEFT" />
-                                </yAxis>
-                              </LineChart>
-                           </content>
-                        </TitledPane>
+                        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <TitledPane fx:id="activeQuotePane" animated="false" collapsible="false" prefHeight="200.0" prefWidth="1265.0" text="Active Quotes" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <content>
+                                          <TableView fx:id="quoteTableView" prefHeight="200.0" prefWidth="200.0">
+                                             <columns>
+                                                <TableColumn fx:id="quoteTableSymbolCol" prefWidth="75.0" text="Symbol" />
+                                                <TableColumn fx:id="quoteTableLastPxCol" prefWidth="75.0" text="LastPx" />
+                                                <TableColumn fx:id="quoteTableBidCol" prefWidth="75.0" text="Bid" />
+                                                <TableColumn fx:id="quoteTableAskCol" prefWidth="75.0" text="Ask" />
+                                                <TableColumn fx:id="quoteTableDayLowCol" prefWidth="75.0" text="DayLow" />
+                                                <TableColumn fx:id="quoteTableDayHighCol" prefWidth="75.0" text="DayHigh" />
+                                                <TableColumn fx:id="quoteTableChangeCol" prefWidth="75.0" text="Change" />
+                                                <TableColumn fx:id="quoteTableVolumeCol" prefWidth="75.0" text="Volume" />
+                                             </columns>
+                                          </TableView>
+                                       </content>
+                                    </TitledPane>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <TitledPane animated="false" collapsible="false" prefHeight="200.0" prefWidth="1265.0" text="Streaming Chart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <content>
+                                          <LineChart>
+                                            <xAxis>
+                                              <CategoryAxis side="BOTTOM" />
+                                            </xAxis>
+                                            <yAxis>
+                                              <NumberAxis side="LEFT" />
+                                            </yAxis>
+                                          </LineChart>
+                                       </content>
+                                    </TitledPane>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </VBox>
                      </children>
                   </HBox>
                </children>

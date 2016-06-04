@@ -1,0 +1,4 @@
+Version 0.01:
+
+-Server project setup for the Thanatos project.
+-Basic quickfix 4.4 setup for a single client communicating with the Server

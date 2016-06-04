@@ -1,3 +1,8 @@
+Version 0.08:
+
+-Basic Quickfix 4.4 setup for a Single Client communicating with the Server.
+
+
 Version 0.07:
 
 -Moved schedule import quote job to 1min later to better capture 1st and last trade of a given day due to latency.

@@ -1,5 +1,7 @@
 package com.thanatos;
 	
+import java.util.Date;
+
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -16,10 +18,24 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Callback;
+import quickfix.DefaultMessageFactory;
+import quickfix.FileStoreFactory;
+import quickfix.ScreenLogFactory;
+import quickfix.Session;
+import quickfix.SessionID;
+import quickfix.SessionSettings;
+import quickfix.SocketInitiator;
+import quickfix.field.ClOrdID;
+import quickfix.field.HandlInst;
+import quickfix.field.OrdType;
+import quickfix.field.OrderQty;
+import quickfix.field.Price;
+import quickfix.field.Side;
+import quickfix.field.Symbol;
+import quickfix.field.TransactTime;
+import quickfix.fix44.NewOrderSingle;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-
 
 public class Main extends Application {
 	private Scheduler yahooScheduler;
@@ -31,6 +47,27 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			FixClient client=new FixClient();
+			SessionSettings settings = new SessionSettings("Client.cfg"); 
+			FileStoreFactory storeFactory = new FileStoreFactory(settings); 
+			ScreenLogFactory logFactory = new ScreenLogFactory(settings); 
+			SocketInitiator initiator = new SocketInitiator(client, storeFactory, settings, 
+				    logFactory, new DefaultMessageFactory()); 
+			initiator.start(); 
+			Thread.sleep(3000); 
+			SessionID sessionID = new SessionID("FIX.4.4","CLIENT1","FixServer");
+			Session.lookupSession(sessionID).logon();
+			NewOrderSingle order = new NewOrderSingle();
+			order.set(new HandlInst(HandlInst.MANUAL_ORDER));
+			order.set(new ClOrdID("DLF")); 
+			order.set(new Symbol("DLF")); 
+		    order.set(new Side(Side.BUY)); 
+		    order.set(new TransactTime(new Date()));
+		    order.set(new OrdType(OrdType.LIMIT)); 
+			order.set(new OrderQty(45)); 
+			order.set(new Price(25.4d)); 
+			Session.sendToTarget(order, sessionID); 
+			//initiator.stop(); 
 			ctx=new ClassPathXmlApplicationContext("Spring.xml");
             FXMLLoader loader = new FXMLLoader();
             Main.primaryStage=primaryStage;

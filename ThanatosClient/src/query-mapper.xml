@@ -23,34 +23,6 @@
         	#{qty}
         ) 
     </insert>
-    <insert id="insertHistoricalQuote" parameterType="com.thanatos.model.Quote" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO HistoricalQuote(Symbol,LastPx,DayHigh,DayLow,Volume,Change,[Open],PrevClose,Bid,Ask) 
-        values(
-        	#{symbol},
-        	#{lastPx},
-        	#{dayHigh},
-        	#{dayLow},
-        	#{volume},
-        	#{change},
-        	#{open},
-        	#{prevClose},
-        	#{bid},
-        	#{ask}
-        ) 
-    </insert>
-    <update id="updateQuote" parameterType="com.thanatos.model.Quote">
-	    	UPDATE Quote SET 
-	    	Volume=#{volume},
-	    	LastPx=#{lastPx},
-	    	DayHigh=#{dayHigh},
-	    	DayLow=#{dayLow},
-	    	Change=#{change},
-	    	[Open]=#{open},
-	    	PrevClose=#{prevClose},
-	    	Bid=#{bid},
-	    	Ask=#{ask}
-	    		WHERE Symbol=#{symbol}
-    </update>
     <select id="selectQuotes" resultMap="Quote">
     		SELECT Symbol,LastPx,DayHigh,DayLow,Volume,Change,[Open],PrevClose,Bid,Ask FROM Quote
     </select>    

@@ -1,3 +1,8 @@
+Version 0.09:
+
+-Fixed an issue where fix connection thread would not close when exiting the application.
+-Deleted ImportData Job/related logic as it is now part of the Server project. 
+
 Version 0.08:
 
 -Basic Quickfix 4.4 setup for a Single Client communicating with the Server.

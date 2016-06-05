@@ -30,6 +30,7 @@ public class Main{
 	
 	public void start() {
 		try {
+			setupJobs();
 			SessionSettings settings=new SessionSettings("src/Server.cfg");
 			FixServer server=new FixServer();
 			FileStoreFactory storeFactory=new FileStoreFactory(settings);
@@ -37,7 +38,6 @@ public class Main{
 			Acceptor acceptor = new SocketAcceptor
 					      (server, storeFactory, settings, logFactory, new DefaultMessageFactory());
 			acceptor.start();
-			setupJobs();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

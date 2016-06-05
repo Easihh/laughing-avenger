@@ -1,5 +1,11 @@
 package com.thanatos;
 	
+
+import java.io.BufferedReader;
+import java.net.URL;
+import java.util.List;
+import java.util.Scanner;
+
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -9,20 +15,26 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.context.ApplicationContext;
-import javafx.stage.Stage;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.core.io.UrlResource;
+
+import com.thanatos.Dao.UsersDao;
+import com.thanatos.model.Users;
+
 import quickfix.Acceptor;
 import quickfix.DefaultMessageFactory;
+import quickfix.Dictionary;
 import quickfix.FileStoreFactory;
 import quickfix.ScreenLogFactory;
+import quickfix.SessionID;
 import quickfix.SessionSettings;
 import quickfix.SocketAcceptor;
 
 public class Main{
 	private Scheduler yahooScheduler;
-	public static Stage primaryStage;
+	private UsersDao usersDao;
 	public static ApplicationContext ctx;
-	public static Double screenWidth;
-	public static Double screenHeight;
 	
 	public static void main(String[] args) {
 		new Main().start();
@@ -31,7 +43,28 @@ public class Main{
 	public void start() {
 		try {
 			setupJobs();
-			SessionSettings settings=new SessionSettings("src/Server.cfg");
+			//String resourceUrl = Main.class.getResource("Spring.xml").getPath();
+			//ctx = new ClassPathXmlApplicationContext(resourceUrl);
+			//String test=this.getClass().getClassLoader().getResource("/config/Spring.xml").getPath();
+			ctx=new ClassPathXmlApplicationContext("Spring.xml");
+			SessionSettings settings=new SessionSettings();
+			usersDao=(UsersDao)ctx.getBean("usersDao");
+			List<Users> myUsers=usersDao.getUsers();
+			for(int i=0;i<myUsers.size();i++){
+				Dictionary d=new Dictionary();
+				d.setString("SocketReuseAddress", "Y");
+	            d.setString("ConnectionType", "acceptor");
+	            d.setString("SocketAcceptPort", "5001");
+	            d.setString("FileLogPath", "c:\\fixlog");
+	            d.setString("StartTime", "00:00:00");
+	            d.setString("EndTime", "00:00:00");
+	            d.setString("FileStorePath", "c:\\fixfiles");
+	            d.setString("UseDataDictionary", "Y");
+	            d.setString("DataDictionary", "FIX44.xml");
+				d.setString("BeginString", "FIX.4.4");
+				SessionID session=new SessionID("FIX.4.4","FixServer","CLIENT1");
+	            settings.set(session,d);
+			}
 			FixServer server=new FixServer();
 			FileStoreFactory storeFactory=new FileStoreFactory(settings);
 			ScreenLogFactory logFactory=new ScreenLogFactory(settings);

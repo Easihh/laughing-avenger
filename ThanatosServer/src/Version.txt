@@ -1,3 +1,7 @@
+Version 0.03:
+
+-Server now allow for multiple clients: some work still required on the client.
+
 Version 0.02:
 
 -Fixed an issue where schedule job setup would not be started.

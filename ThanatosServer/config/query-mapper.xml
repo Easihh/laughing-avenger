@@ -16,6 +16,10 @@
 			  <result property="bid" column="Bid"/>
 			  <result property="ask" column="Ask"/>
 	</resultMap>
+	<resultMap type="com.thanatos.model.Users" id="Users">
+			  <id property="id" column="Userid" />
+			  <result property="username" column="Username"/>
+	</resultMap>
     <insert id="insertOrder" parameterType="com.thanatos.model.Order" useGeneratedKeys="true" keyProperty="id" keyColumn="Orderid">
         INSERT INTO [Order](Symbol,Quantity) 
         values(
@@ -53,6 +57,8 @@
     </update>
     <select id="selectQuotes" resultMap="Quote">
     		SELECT Symbol,LastPx,DayHigh,DayLow,Volume,Change,[Open],PrevClose,Bid,Ask FROM Quote
-    </select>    
+    </select>
+    <select id="getAllUsers" resultMap="Users">
+    		SELECT Username FROM Users   </select>
 </mapper>
 

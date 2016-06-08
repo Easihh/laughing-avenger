@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<TitledPane fx:controller="com.thanatos.QuoteController" fx:id="activeQuotePane" animated="false" collapsible="false" prefHeight="200.0" prefWidth="1265.0" text="Active Quotes" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <TableView fx:id="quoteTableView" prefHeight="200.0" prefWidth="200.0">
+         <columns>
+            <TableColumn fx:id="quoteTableSymbolCol" prefWidth="75.0" text="Symbol" />
+            <TableColumn fx:id="quoteTableLastPxCol" prefWidth="75.0" text="LastPx" />
+            <TableColumn fx:id="quoteTableBidCol" prefWidth="75.0" text="Bid" />
+            <TableColumn fx:id="quoteTableAskCol" prefWidth="75.0" text="Ask" />
+            <TableColumn fx:id="quoteTableDayLowCol" prefWidth="75.0" text="DayLow" />
+            <TableColumn fx:id="quoteTableDayHighCol" prefWidth="75.0" text="DayHigh" />
+            <TableColumn fx:id="quoteTableChangeCol" prefWidth="75.0" text="Change" />
+            <TableColumn fx:id="quoteTableVolumeCol" prefWidth="75.0" text="Volume" />
+         </columns>
+      </TableView>
+   </content>
+</TitledPane>
+

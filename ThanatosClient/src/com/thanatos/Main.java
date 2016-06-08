@@ -58,7 +58,7 @@ public class Main extends Application {
 		    order.set(new OrdType(OrdType.LIMIT)); 
 			order.set(new OrderQty(45)); 
 			order.set(new Price(25.4d)); 
-			Session.sendToTarget(order, sessionID); 
+			Session.sendToTarget(order, sessionID);
 			ctx=new ClassPathXmlApplicationContext("Spring.xml");
             FXMLLoader loader = new FXMLLoader();
             Main.primaryStage=primaryStage;

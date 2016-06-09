@@ -29,6 +29,11 @@
     <artifactId>quickfixj-messages-fix44</artifactId>
     <version>1.6.2</version>
    </dependency>
+   <dependency>
+	  <groupId>com.rabbitmq</groupId>
+	  <artifactId>amqp-client</artifactId>
+	  <version>3.6.2</version>
+   </dependency>
   <dependency>
     <groupId>org.slf4j</groupId>
     <artifactId>slf4j-log4j12</artifactId>

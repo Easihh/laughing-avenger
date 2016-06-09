@@ -1,3 +1,7 @@
+Version 0.11:
+
+-Basic RabbitMQ setup.
+
 Version 0.10:
 
 -Started moving the complex main view into several .xml views and controllers.

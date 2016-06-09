@@ -1,9 +1,15 @@
 package com.thanatos;
 	
+import java.net.ConnectException;
 import java.util.Date;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.MessageProperties;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -39,6 +45,17 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			ConnectionFactory factory=new ConnectionFactory();
+			factory.setHost("localhost");
+			Connection connection =factory.newConnection();
+			Channel channel=connection.createChannel();
+			boolean durable=true;
+			channel.queueDeclare("TEST",true,false,false,null);
+			String message="Hello World!";
+			channel.basicPublish("", "TEST", MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
+			System.out.println("[x]Sent '"+message+"'");
+			channel.close();
+			connection.close();
 			FixClient client=new FixClient();
 			SessionSettings settings = new SessionSettings("Client.cfg"); 
 			FileStoreFactory storeFactory = new FileStoreFactory(settings); 

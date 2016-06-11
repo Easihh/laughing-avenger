@@ -1,3 +1,7 @@
+Version 0.12:
+
+-Very basic RCP call to server and reply back; to be used as login system.
+
 Version 0.11:
 
 -Basic RabbitMQ setup.

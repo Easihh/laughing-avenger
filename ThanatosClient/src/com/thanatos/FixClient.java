@@ -39,7 +39,7 @@ public class FixClient implements Application{
 
 	@Override
 	public void onLogout(SessionID arg0) {
-		// TODO Auto-generated method stub
+		System.out.println("LOGGED OUT");
 		
 	}
 

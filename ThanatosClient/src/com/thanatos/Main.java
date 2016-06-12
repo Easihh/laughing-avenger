@@ -1,20 +1,12 @@
 package com.thanatos;
 	
 import java.io.IOException;
-import java.net.ConnectException;
 import java.util.Date;
-import java.util.concurrent.TimeoutException;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.rabbitmq.client.AMQP.BasicProperties;
-import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.MessageProperties;
-import com.rabbitmq.client.QueueingConsumer;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -46,11 +38,9 @@ public class Main extends Application {
 	public static Double screenWidth;
 	public static Double screenHeight;
 	private SocketInitiator initiator;
-	private Channel channel;
-	private String requestQueueName = "TEST";
-	private QueueingConsumer consumer;
-	private String replyQueueName;
 	private Connection connection; 
+	private RemoteLogin userLogin;
+	private RemoteOrder order;
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -58,16 +48,11 @@ public class Main extends Application {
 			ConnectionFactory factory=new ConnectionFactory();
 			factory.setRequestedHeartbeat(30);
 			factory.setHost("localhost");
-			connection =factory.newConnection();
-			channel=connection.createChannel();
-			replyQueueName=channel.queueDeclare().getQueue();
-			consumer=new QueueingConsumer(channel);
-			channel.basicConsume(replyQueueName, true,consumer);
-			String result=call("TEST");
-			//channel.queueDeclare("TEST",true,false,false,null);
-			//String message="Hello World!";
-			//channel.basicPublish("", "TEST", MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
-			//System.out.println("[x]Sent '"+message+"'");
+			connection =factory.newConnection();		
+			userLogin=new RemoteLogin(connection);
+			userLogin.call("TEST");
+			order=new RemoteOrder(connection,userLogin.getReplyQueueName());
+			order.call("Some Order Info");
 			FixClient client=new FixClient();
 			SessionSettings settings = new SessionSettings("Client.cfg"); 
 			FileStoreFactory storeFactory = new FileStoreFactory(settings); 
@@ -75,7 +60,6 @@ public class Main extends Application {
 			initiator = new SocketInitiator(client, storeFactory, settings, 
 				    logFactory, new DefaultMessageFactory()); 
 			initiator.start(); 
-			Thread.sleep(3000); 
 			SessionID sessionID = new SessionID("FIX.4.4","CLIENT1","FixServer");
 			Session.lookupSession(sessionID).logon();
 			NewOrderSingle order = new NewOrderSingle();
@@ -106,40 +90,18 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
-	public String call(String message) throws Exception {     
-	    String response = null;
-	    String corrId = java.util.UUID.randomUUID().toString();
-
-	    BasicProperties props = new BasicProperties
-	                                .Builder()
-	                                .correlationId(corrId)
-	                                .replyTo(replyQueueName)
-	                                .build();
-
-	    channel.basicPublish("", requestQueueName, props, message.getBytes());
-
-	    while (true) {
-	        QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-	        if (delivery.getProperties().getCorrelationId().equals(corrId)) {
-	            response = new String(delivery.getBody());
-	            System.out.println("Server Response:"+response);
-	            break;
-	        }
-	    }
-
-	    return response; 
-	}
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
 	@Override
 	public void stop(){
 		initiator.stop();
+		userLogin.close();
 		try {
-			channel.close();
-			connection.close();
-		} 
-		catch (Exception e) {
+				connection.close();
+			} 
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

@@ -32,6 +32,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 
 public class Main extends Application {
+	
 	private AnchorPane root;
 	public static Stage primaryStage;
 	public static ApplicationContext ctx;
@@ -41,6 +42,8 @@ public class Main extends Application {
 	private Connection connection; 
 	private RemoteLogin userLogin;
 	private RemoteOrder order;
+	private ClientQueueConsumer clientConsumer;
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -50,9 +53,12 @@ public class Main extends Application {
 			factory.setHost("localhost");
 			connection =factory.newConnection();		
 			userLogin=new RemoteLogin(connection);
+			clientConsumer=new ClientQueueConsumer(connection,userLogin.getReplyQueueName());
 			userLogin.call("TEST");
+			userLogin.call("TEST2");
 			order=new RemoteOrder(connection,userLogin.getReplyQueueName());
 			order.call("Some Order Info");
+			order.call("Some Order Info2");
 			FixClient client=new FixClient();
 			SessionSettings settings = new SessionSettings("Client.cfg"); 
 			FileStoreFactory storeFactory = new FileStoreFactory(settings); 

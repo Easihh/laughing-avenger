@@ -2,18 +2,11 @@ package com.thanatos;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.Consumer;
-import com.rabbitmq.client.DefaultConsumer;
-import com.rabbitmq.client.Envelope;
-import java.io.IOException;
-
-import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AMQP.BasicProperties;
 
 public class RemoteOrder{
 	
 	private String requestQueueName = "SINGLE_ORDER";
-	private Consumer consumer;
 	private String replyQueueName;
 	private String corrId;
 	private Channel channel;
@@ -25,24 +18,12 @@ public class RemoteOrder{
 				replyQueueName=clientQueue;
 				myConnection=connection;
 				channel=myConnection.createChannel();
-				setupConsumer();
 			} 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void setupConsumer() throws IOException {
-	     consumer = new DefaultConsumer(channel) {
-	        @Override
-	        public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
-	            throws IOException {
-	          String message = new String(body, "UTF-8");
-	          System.out.println(" [x] Order Info '" + message + "'");
-	        }
-	      };
-		channel.basicConsume(replyQueueName, true,consumer);	
-	}	
 	public void call(String message) throws Exception {     
 	    corrId = java.util.UUID.randomUUID().toString();
 

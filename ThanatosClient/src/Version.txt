@@ -1,3 +1,14 @@
+Version 0.14:
+
+-Fixed an issue where MQ messages would only be received once due to inconsistent acknowledgement.
+-There is now only a single consumer on client-side for the random queue created for the client.
+-Separated client created queue Consumer from the Remote/rpc class/logic.
+-Client consumer can now tell between Login acknowledgement msg and order messages that are sent on the same queue.
+
+Version 0.13:
+
+-Greatly Improved the Message Queue Logic/code design.
+
 Version 0.12:
 
 -Very basic RCP call to server and reply back; to be used as login system.

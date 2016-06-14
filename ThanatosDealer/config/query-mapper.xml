@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper">
+	<resultMap type="com.thanatos.model.Quote" id="Quote">
+			  <id property="id" column="Quoteid" />
+			  <result property="symbol" column="Symbol"/>
+			  <result property="lastPx" column="LastPx"/>
+			  <result property="dayHigh" column="DayHigh"/>
+			  <result property="dayLow" column="DayLow"/>
+			  <result property="volume" column="Volume"/>
+			  <result property="change" column="Change"/>
+			  <result property="open" column="[Open]"/>
+			  <result property="prevClose" column="PrevClose"/>
+			  <result property="bid" column="Bid"/>
+			  <result property="ask" column="Ask"/>
+	</resultMap>
+	<resultMap type="com.thanatos.model.Users" id="Users">
+			  <id property="id" column="Userid" />
+			  <result property="username" column="Username"/>
+	</resultMap>
+    <insert id="insertOrder" parameterType="com.thanatos.model.Order" useGeneratedKeys="true" keyProperty="id" keyColumn="Orderid">
+        INSERT INTO [Order](Symbol,Quantity) 
+        values(
+        	#{symbol},
+        	#{qty}
+        ) 
+    </insert>
+    <insert id="insertHistoricalQuote" parameterType="com.thanatos.model.Quote" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO HistoricalQuote(Symbol,LastPx,DayHigh,DayLow,Volume,Change,[Open],PrevClose,Bid,Ask) 
+        values(
+        	#{symbol},
+        	#{lastPx},
+        	#{dayHigh},
+        	#{dayLow},
+        	#{volume},
+        	#{change},
+        	#{open},
+        	#{prevClose},
+        	#{bid},
+        	#{ask}
+        ) 
+    </insert>
+    <update id="updateQuote" parameterType="com.thanatos.model.Quote">
+	    	UPDATE Quote SET 
+	    	Volume=#{volume},
+	    	LastPx=#{lastPx},
+	    	DayHigh=#{dayHigh},
+	    	DayLow=#{dayLow},
+	    	Change=#{change},
+	    	[Open]=#{open},
+	    	PrevClose=#{prevClose},
+	    	Bid=#{bid},
+	    	Ask=#{ask}
+	    		WHERE Symbol=#{symbol}
+    </update>
+    <select id="selectQuotes" resultMap="Quote">
+    		SELECT Symbol,LastPx,DayHigh,DayLow,Volume,Change,[Open],PrevClose,Bid,Ask FROM Quote
+    </select>
+    <select id="getAllUsers" resultMap="Users">
+    		SELECT Username FROM Users   </select>
+</mapper>
+

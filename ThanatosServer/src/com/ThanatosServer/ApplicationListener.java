@@ -1,34 +1,81 @@
 package com.ThanatosServer;
+import java.util.Date;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import quickfix.ConfigError;
+import quickfix.DefaultMessageFactory;
+import quickfix.FileStoreFactory;
+import quickfix.ScreenLogFactory;
+import quickfix.Session;
+import quickfix.SessionID;
+import quickfix.SessionNotFound;
+import quickfix.SessionSettings;
+import quickfix.SocketInitiator;
+import quickfix.field.ClOrdID;
+import quickfix.field.HandlInst;
+import quickfix.field.OrdType;
+import quickfix.field.OrderQty;
+import quickfix.field.Price;
+import quickfix.field.Side;
+import quickfix.field.Symbol;
+import quickfix.field.TransactTime;
+import quickfix.fix44.NewOrderSingle;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 public class ApplicationListener implements ServletContextListener {
 	
-	private RemoteLoginListener loginListener;
-	private OrderListener orderListener;
+	private MqLoginListener loginListener;
+	private MqOrderListener orderListener;
+	private ConnectionFactory factory;
+	private Connection connection;
+	private SocketInitiator initiator;
+	private static final String SENDER="CLIENT1";
+	private static final String TARGET="FixDealer";
+	private static final String FIX_VERSION="FIX.4.4";
 	
 	@Override
-	public void contextDestroyed(ServletContextEvent context) {
-	
-	}
+	public void contextDestroyed(ServletContextEvent context) {}
 
 	@Override
 	public void contextInitialized(ServletContextEvent context) {
-
 		System.out.println("I WAS INITIALIZED");
-		ConnectionFactory factory=new ConnectionFactory();
+		factory=new ConnectionFactory();
 		factory.setHost("localhost");
 		try{
-			Connection connection=factory.newConnection();
-			loginListener=new RemoteLoginListener(connection);
-			orderListener=new OrderListener(connection);
+			setupFixConnectionToDealer();
+			//connection=factory.newConnection();
+			//loginListener=new MqLoginListener(connection);
+			//orderListener=new MqOrderListener(connection);
 			System.out.println("[*] Waiting for messages. To exit press CTRL+C");
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
 		}
+	}
+	
+	private void setupFixConnectionToDealer() throws ConfigError, SessionNotFound{
+		FixClient client=new FixClient();
+		SessionSettings settings = new SessionSettings("Initiator.cfg"); 
+		FileStoreFactory storeFactory = new FileStoreFactory(settings); 
+		ScreenLogFactory logFactory = new ScreenLogFactory(settings); 
+		initiator = new SocketInitiator(client, storeFactory, settings, 
+			    logFactory, new DefaultMessageFactory()); 
+		initiator.start(); 
+		SessionID sessionID = new SessionID(FIX_VERSION,SENDER,TARGET);
+		Session.lookupSession(sessionID).logon();
+		NewOrderSingle order = new NewOrderSingle();
+		order.set(new HandlInst(HandlInst.MANUAL_ORDER));
+		order.set(new ClOrdID("DLF")); 
+		order.set(new Symbol("DLF")); 
+	    order.set(new Side(Side.BUY)); 
+	    order.set(new TransactTime(new Date()));
+	    order.set(new OrdType(OrdType.LIMIT)); 
+		order.set(new OrderQty(45)); 
+		order.set(new Price(25.4d)); 
+		Session.sendToTarget(order, sessionID);
 	}
 
 }

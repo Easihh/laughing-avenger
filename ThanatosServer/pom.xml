@@ -11,6 +11,16 @@
 	  <artifactId>amqp-client</artifactId>
 	  <version>3.6.2</version>
    </dependency>
+     <dependency>
+    <groupId>org.quickfixj</groupId>
+    <artifactId>quickfixj-core</artifactId>
+    <version>1.6.2</version>
+  </dependency>
+   <dependency>
+    <groupId>org.quickfixj</groupId>
+    <artifactId>quickfixj-messages-fix44</artifactId>
+    <version>1.6.2</version>
+   </dependency>
    </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>

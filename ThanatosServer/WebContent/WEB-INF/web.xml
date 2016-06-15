@@ -3,6 +3,6 @@
 <listener>
         <description>application startup and shutdown events</description>
         <display-name>ApplicationListener</display-name>
-        <listener-class>com.ThanatosHelper.Server.ApplicationListener</listener-class>
+        <listener-class>com.ThanatosServer.ApplicationListener</listener-class>
 </listener>
 </web-app>

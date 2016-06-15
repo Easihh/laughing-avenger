@@ -38,7 +38,6 @@ public class Main extends Application {
 	public static ApplicationContext ctx;
 	public static Double screenWidth;
 	public static Double screenHeight;
-	private SocketInitiator initiator;
 	private Connection connection; 
 	private RemoteLogin userLogin;
 	private RemoteOrder order;
@@ -59,25 +58,6 @@ public class Main extends Application {
 			order=new RemoteOrder(connection,userLogin.getReplyQueueName());
 			order.call("Some Order Info");
 			order.call("Some Order Info2");
-			FixClient client=new FixClient();
-			SessionSettings settings = new SessionSettings("Client.cfg"); 
-			FileStoreFactory storeFactory = new FileStoreFactory(settings); 
-			ScreenLogFactory logFactory = new ScreenLogFactory(settings); 
-			initiator = new SocketInitiator(client, storeFactory, settings, 
-				    logFactory, new DefaultMessageFactory()); 
-			initiator.start(); 
-			SessionID sessionID = new SessionID("FIX.4.4","CLIENT1","FixServer");
-			Session.lookupSession(sessionID).logon();
-			NewOrderSingle order = new NewOrderSingle();
-			order.set(new HandlInst(HandlInst.MANUAL_ORDER));
-			order.set(new ClOrdID("DLF")); 
-			order.set(new Symbol("DLF")); 
-		    order.set(new Side(Side.BUY)); 
-		    order.set(new TransactTime(new Date()));
-		    order.set(new OrdType(OrdType.LIMIT)); 
-			order.set(new OrderQty(45)); 
-			order.set(new Price(25.4d)); 
-			Session.sendToTarget(order, sessionID);
 			ctx=new ClassPathXmlApplicationContext("Spring.xml");
             FXMLLoader loader = new FXMLLoader();
             Main.primaryStage=primaryStage;
@@ -102,7 +82,6 @@ public class Main extends Application {
 	}
 	@Override
 	public void stop(){
-		initiator.stop();
 		userLogin.close();
 		try {
 				connection.close();

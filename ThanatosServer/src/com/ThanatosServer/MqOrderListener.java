@@ -1,6 +1,7 @@
 package com.ThanatosServer;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -12,15 +13,15 @@ import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
 import com.rabbitmq.client.AMQP.BasicProperties;
 
-public class OrderListener{
+public class MqOrderListener{
 	
 	private Connection myConnection;
 	private Channel channel;
 	private Consumer consumer;
 	private final static String ORDER_QUEUE_NAME="SINGLE_ORDER";
 	private final static String EXCHANGE="ORDER";
-	
-	public OrderListener(Connection connection) {
+	private String channelTag;
+	public MqOrderListener(Connection connection) {
 		try {
 				myConnection=connection;
 				channel=myConnection.createChannel();
@@ -51,12 +52,16 @@ public class OrderListener{
 				System.out.println("[x] Order Info Sent To Client");
 		      }
 		    };
-		channel.basicConsume(ORDER_QUEUE_NAME, true, consumer);
+		channelTag=channel.basicConsume(ORDER_QUEUE_NAME, true, consumer);
 		channel.addShutdownListener(new ShutdownListener() {		
 			@Override
 			public void shutdownCompleted(ShutdownSignalException e) {
-				System.out.println("ERROR:"+e.getMessage());
+				System.out.println("Order Listener Error:"+e.getMessage());
 			}
 		});
+	}
+	public void close() throws IOException, TimeoutException{
+		channel.basicCancel(channelTag);
+		channel.close();
 	}
 }

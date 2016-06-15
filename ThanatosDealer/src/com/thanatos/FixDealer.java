@@ -10,7 +10,7 @@ import quickfix.RejectLogon;
 import quickfix.SessionID;
 import quickfix.UnsupportedMessageType;
 
-public class FixServer implements Application{
+public class FixDealer implements Application{
 
 	@Override
 	public void fromAdmin(Message arg0, SessionID arg1)

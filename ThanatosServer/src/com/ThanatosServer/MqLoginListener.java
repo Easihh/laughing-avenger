@@ -1,6 +1,7 @@
 package com.ThanatosServer;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
@@ -9,15 +10,16 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.AMQP;
-public class RemoteLoginListener{
+public class MqLoginListener{
 	
 	private Connection myConnection;
 	private Channel channel;
 	private final static String RPC_QUEUE_NAME="TEST";
 	private Consumer consumer;
 	private final static String EXCHANGE="LOGIN";
+	private String channelTag;
 	
-	public RemoteLoginListener(Connection connection) {
+	public MqLoginListener(Connection connection) {
 		myConnection=connection;
 		try {
 				channel=myConnection.createChannel();
@@ -47,6 +49,10 @@ public class RemoteLoginListener{
 	         System.out.println(response);
 	        }
 	      };
-		channel.basicConsume(RPC_QUEUE_NAME, true, consumer);
+	    channelTag=channel.basicConsume(RPC_QUEUE_NAME, true, consumer);
+	}
+	public void close() throws IOException, TimeoutException{
+		channel.basicCancel(channelTag);
+		channel.close();
 	}
 }

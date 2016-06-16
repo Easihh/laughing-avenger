@@ -54,6 +54,7 @@ public class MainController implements Initializable{
 			  new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),
 			  new Order("XYZ",99),new Order("XYZ",99)
 	        );
+	  //orderDao=(OrderDao)Main.ctx.getBean("orderDao");
 	  symbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
 	  qtyCol.setCellValueFactory(new PropertyValueFactory("qty"));
 	  symbolCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
@@ -63,13 +64,11 @@ public class MainController implements Initializable{
 	}
 	public void createNewOrder(){
 		try{
-			orderDao=(OrderDao)Main.ctx.getBean("orderDao");
-			orderDao.insert(new Order("AMZ",999));
 	        FXMLLoader loader = new FXMLLoader();
-	        loader.setLocation(getClass().getResource("/com/thanatos/NewOrderview.fxml"));
-	        BorderPane page = (BorderPane)loader.load();
-	        Stage orderDialog=new Stage();
-	        orderDialog.setTitle("STUFF");
+	        loader.setLocation(getClass().getResource("/com/thanatos/NewOrderView.fxml"));
+	        AnchorPane page = (AnchorPane)loader.load();
+	        Stage orderDialog=new Stage();	        
+	        orderDialog.setTitle("Create Order");
 			Scene scene = new Scene(page);
 			orderDialog.setScene(scene);
 			orderDialog.initModality(Modality.WINDOW_MODAL);

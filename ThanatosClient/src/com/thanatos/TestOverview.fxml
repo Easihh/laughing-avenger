@@ -17,17 +17,16 @@
                     <MenuItem mnemonicParsing="false" text="Close" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
                   <Menu mnemonicParsing="false" text="Trading">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#createNewOrder" text="Create Order" />
-                      <MenuItem mnemonicParsing="false" onAction="#loadData" text="Import Data" />
                     </items>
                   </Menu>
+                <Menu mnemonicParsing="false" text="Option">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Settings" />
+                  </items>
+                </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
                     <MenuItem mnemonicParsing="false" text="About" />

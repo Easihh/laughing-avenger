@@ -1,1 +1,7 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.combo-box-popup > .list-view {
+    -fx-pref-width: 100;
+}
+.combo-box {
+    -fx-pref-width: 100;
+}

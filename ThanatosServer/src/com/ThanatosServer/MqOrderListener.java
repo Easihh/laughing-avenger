@@ -3,6 +3,7 @@ package com.ThanatosServer;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import com.ThanatosServer.Utility.Util;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Consumer;
@@ -12,6 +13,7 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
 import com.rabbitmq.client.AMQP.BasicProperties;
+import com.thanatos.shared.RemoteOrder;
 
 public class MqOrderListener{
 	
@@ -40,16 +42,16 @@ public class MqOrderListener{
 		      @Override
 		      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
 		          throws IOException {
-		        String message = new String(body, "UTF-8");
-		        String response="ORDER RESPONSE";
-		        System.out.println(" [x] Order Info Received From Client '" + message + "'");
-		         BasicProperties props=new BasicProperties.Builder()
+		        RemoteOrder myOrder=(RemoteOrder)Util.convertFromBytes(body);
+				String response="ORDER RESPONSE";
+		    	String message = new String(body, "UTF-8");
+		        System.out.println(" [x] Order Info Received From Client '" + myOrder.toString() + "'");
+		        /*BasicProperties props=new BasicProperties.Builder()
 					.contentType("ORDER")
 	 				.replyTo(properties.getReplyTo())
-	 				.build();
-				channel.basicPublish("",properties.getReplyTo(),props, response.getBytes());				
-				//channel.basicAck(envelope.getDeliveryTag(), false);
-				System.out.println("[x] Order Info Sent To Client");
+	 				.build();*/
+				//channel.basicPublish("",properties.getReplyTo(),props, response.getBytes());				
+				//System.out.println("[x] Order Info Sent To Client");
 		      }
 		    };
 		channelTag=channel.basicConsume(ORDER_QUEUE_NAME, true, consumer);

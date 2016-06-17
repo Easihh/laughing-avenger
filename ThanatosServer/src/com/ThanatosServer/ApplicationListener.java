@@ -45,10 +45,10 @@ public class ApplicationListener implements ServletContextListener {
 		factory=new ConnectionFactory();
 		factory.setHost("localhost");
 		try{
-			setupFixConnectionToDealer();
-			//connection=factory.newConnection();
-			//loginListener=new MqLoginListener(connection);
-			//orderListener=new MqOrderListener(connection);
+			//setupFixConnectionToDealer();
+			connection=factory.newConnection();
+			loginListener=new MqLoginListener(connection);
+			orderListener=new MqOrderListener(connection);
 			System.out.println("[*] Waiting for messages. To exit press CTRL+C");
 		}
 		catch(Exception e){

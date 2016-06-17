@@ -7,6 +7,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.thanatos.shared.RemoteOrder;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -39,8 +41,8 @@ public class Main extends Application {
 	public static Double screenWidth;
 	public static Double screenHeight;
 	private Connection connection; 
-	private RemoteLogin userLogin;
-	private RemoteOrder order;
+	private RemoteLoginProducer userLogin;
+	private RemoteOrderProducer order;
 	private ClientQueueConsumer clientConsumer;
 	
 	@Override
@@ -51,13 +53,13 @@ public class Main extends Application {
 			factory.setRequestedHeartbeat(30);
 			factory.setHost("localhost");
 			connection =factory.newConnection();		
-			userLogin=new RemoteLogin(connection);
+			userLogin=new RemoteLoginProducer(connection);
 			clientConsumer=new ClientQueueConsumer(connection,userLogin.getReplyQueueName());
-			userLogin.call("TEST");
-			userLogin.call("TEST2");
-			order=new RemoteOrder(connection,userLogin.getReplyQueueName());
-			order.call("Some Order Info");
-			order.call("Some Order Info2");
+			//userLogin.call("TEST");
+			//userLogin.call("TEST2");
+			order=new RemoteOrderProducer(connection,userLogin.getReplyQueueName());
+			order.sendOrder(new RemoteOrder());
+			//order.call("Some Order Info2");
 			ctx=new ClassPathXmlApplicationContext("Spring.xml");
             FXMLLoader loader = new FXMLLoader();
             Main.primaryStage=primaryStage;

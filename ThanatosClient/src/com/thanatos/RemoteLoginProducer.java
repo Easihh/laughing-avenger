@@ -4,7 +4,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.AMQP.BasicProperties;
 
-public class RemoteLogin{
+public class RemoteLoginProducer{
 	
 	private String requestQueueName = "TEST";
 	private String replyQueueName;
@@ -14,7 +14,7 @@ public class RemoteLogin{
 	private Connection myConnection;
 	private final static String EXCHANGE="LOGIN";
 	
-	public RemoteLogin(Connection connection) {
+	public RemoteLoginProducer(Connection connection) {
 		try {
 				myConnection=connection;
 				channel=myConnection.createChannel();

@@ -1,35 +1,19 @@
 package com.thanatos;
 	
 import java.io.IOException;
-import java.util.Date;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.thanatos.shared.RemoteOrder;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import quickfix.DefaultMessageFactory;
-import quickfix.FileStoreFactory;
-import quickfix.ScreenLogFactory;
-import quickfix.Session;
-import quickfix.SessionID;
-import quickfix.SessionSettings;
-import quickfix.SocketInitiator;
-import quickfix.field.ClOrdID;
-import quickfix.field.HandlInst;
-import quickfix.field.OrdType;
-import quickfix.field.OrderQty;
-import quickfix.field.Price;
-import quickfix.field.Side;
-import quickfix.field.Symbol;
-import quickfix.field.TransactTime;
-import quickfix.fix44.NewOrderSingle;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 
@@ -44,6 +28,7 @@ public class Main extends Application {
 	private RemoteLoginProducer userLogin;
 	private RemoteOrderProducer order;
 	private ClientQueueConsumer clientConsumer;
+	public static FXMLLoader loader;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -54,6 +39,9 @@ public class Main extends Application {
 			factory.setHost("localhost");
 			connection =factory.newConnection();		
 			userLogin=new RemoteLoginProducer(connection);
+			Registry myReg=LocateRegistry.getRegistry("127.0.0.1",5055);
+			//RmiLoginIntf a=(RmiLoginIntf)myReg.lookup("login");
+			//System.out.println("Login:"+a.login("",""));
 			clientConsumer=new ClientQueueConsumer(connection,userLogin.getReplyQueueName());
 			//userLogin.call("TEST");
 			//userLogin.call("TEST2");
@@ -61,15 +49,15 @@ public class Main extends Application {
 			order.sendOrder(new RemoteOrder());
 			//order.call("Some Order Info2");
 			ctx=new ClassPathXmlApplicationContext("Spring.xml");
-            FXMLLoader loader = new FXMLLoader();
+            Main.loader = new FXMLLoader();
             Main.primaryStage=primaryStage;
 			Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 			screenWidth=primaryScreenBounds.getWidth();
 			screenHeight=primaryScreenBounds.getHeight();
-            loader.setLocation(getClass().getResource("TestOverview.fxml"));
+            loader.setLocation(getClass().getResource("LoginView.fxml"));
             root = (AnchorPane) loader.load();
-			Scene scene = new Scene(root,600,800);
-			primaryStage.setTitle("Thanatos:Client");
+			Scene scene = new Scene(root,500,400);
+			primaryStage.setTitle("Thanatos");
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();

@@ -46,6 +46,8 @@ public class MainController implements Initializable{
     private FilteredList<Order> filteredData;
     @FXML
     private AnchorPane	accountInfo;
+    @FXML
+    private AnchorPane mainPane;
     
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
@@ -65,14 +67,15 @@ public class MainController implements Initializable{
 	public void createNewOrder(){
 		try{
 	        FXMLLoader loader = new FXMLLoader();
-	        loader.setLocation(getClass().getResource("/com/thanatos/NewOrderView.fxml"));
+	        Stage current=(Stage)mainPane.getScene().getWindow();
+	        loader.setLocation(getClass().getResource("/NewOrderView.fxml"));
 	        AnchorPane page = (AnchorPane)loader.load();
 	        Stage orderDialog=new Stage();	        
 	        orderDialog.setTitle("Create Order");
 			Scene scene = new Scene(page);
 			orderDialog.setScene(scene);
 			orderDialog.initModality(Modality.WINDOW_MODAL);
-			orderDialog.initOwner(Main.primaryStage);
+			orderDialog.initOwner(current);
 			orderDialog.show();
 		}
 		catch(Exception e){

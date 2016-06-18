@@ -9,26 +9,17 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.thanatos.shared.RemoteOrder;
+import com.thanatos.shared.RmiLoginIntf;
+
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 
 public class Main extends Application {
 	
-	private AnchorPane root;
-	public static Stage primaryStage;
 	public static ApplicationContext ctx;
-	public static Double screenWidth;
-	public static Double screenHeight;
 	private Connection connection; 
-	private RemoteLoginProducer userLogin;
 	private RemoteOrderProducer order;
-	private ClientQueueConsumer clientConsumer;
-	public static FXMLLoader loader;
+	private RefreshQueueConsumer refreshConsumer;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -38,30 +29,16 @@ public class Main extends Application {
 			factory.setRequestedHeartbeat(30);
 			factory.setHost("localhost");
 			connection =factory.newConnection();		
-			userLogin=new RemoteLoginProducer(connection);
-			Registry myReg=LocateRegistry.getRegistry("127.0.0.1",5055);
+			//Registry myReg=LocateRegistry.getRegistry("127.0.0.1",5055);
 			//RmiLoginIntf a=(RmiLoginIntf)myReg.lookup("login");
 			//System.out.println("Login:"+a.login("",""));
-			clientConsumer=new ClientQueueConsumer(connection,userLogin.getReplyQueueName());
-			//userLogin.call("TEST");
-			//userLogin.call("TEST2");
-			order=new RemoteOrderProducer(connection,userLogin.getReplyQueueName());
+			refreshConsumer=new RefreshQueueConsumer(connection);
+			order=new RemoteOrderProducer(connection);
 			order.sendOrder(new RemoteOrder());
-			//order.call("Some Order Info2");
+			order.sendOrder(new RemoteOrder());
 			ctx=new ClassPathXmlApplicationContext("Spring.xml");
-            Main.loader = new FXMLLoader();
-            Main.primaryStage=primaryStage;
-			Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-			screenWidth=primaryScreenBounds.getWidth();
-			screenHeight=primaryScreenBounds.getHeight();
-            loader.setLocation(getClass().getResource("LoginView.fxml"));
-            root = (AnchorPane) loader.load();
-			Scene scene = new Scene(root,500,400);
-			primaryStage.setTitle("Thanatos");
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setScene(scene);
-			primaryStage.show();
-			//primaryStage.setMaximized(true);
+			LoginManager manager=new LoginManager(primaryStage);
+			manager.showLoginScreen();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -72,7 +49,6 @@ public class Main extends Application {
 	}
 	@Override
 	public void stop(){
-		userLogin.close();
 		try {
 				connection.close();
 			} 

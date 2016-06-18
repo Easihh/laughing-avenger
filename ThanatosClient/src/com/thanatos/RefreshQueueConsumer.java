@@ -11,19 +11,18 @@ import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
 
-public class ClientQueueConsumer {
+public class RefreshQueueConsumer {
 	
 	private Consumer consumer;
-	private String replyQueueName;
+	private final static String QUEUE="REFRESHQ";
 	private Channel channel;
 	private Connection myConnection;
-	private final static String ORDER="ORDER";
+	private final static String REFRESH="REFRESH";
 	
-	public ClientQueueConsumer(Connection connection, String clientQueue){
+	public RefreshQueueConsumer(Connection connection){
 		try {
 				myConnection=connection;
 				channel=myConnection.createChannel();
-				replyQueueName=clientQueue;
 				setupConsumer();
 			} 
 		catch (Exception e) {
@@ -36,13 +35,11 @@ public class ClientQueueConsumer {
 		        @Override
 		        public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
 		            throws IOException {
-		        	if(properties.getContentType().equals(ORDER))
-		        		System.out.println("This is an Order");
-		        	else System.out.println("Login callback");
-		          //String message = new String(body, "UTF-8");
+		          String message = new String(body, "UTF-8");
+		          System.out.println(message);
 		        }
 		      };
-			channel.basicConsume(replyQueueName, true,consumer);
+			channel.basicConsume(QUEUE, true,consumer);
 			channel.addShutdownListener(new ShutdownListener() {			
 				@Override
 				public void shutdownCompleted(ShutdownSignalException e) {	

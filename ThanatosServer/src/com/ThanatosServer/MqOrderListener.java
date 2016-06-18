@@ -3,6 +3,8 @@ package com.ThanatosServer;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import quickfix.SessionID;
+
 import com.ThanatosServer.Utility.Util;
 import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
@@ -14,6 +16,7 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
 import com.thanatos.shared.RemoteOrder;
+import com.thanatos.shared.TranslatorToFix;
 
 public class MqOrderListener{
 	
@@ -23,8 +26,10 @@ public class MqOrderListener{
 	private final static String ORDER_QUEUE_NAME="SINGLE_ORDER";
 	private final static String EXCHANGE="ORDER";
 	private String channelTag;
-	public MqOrderListener(Connection connection) {
+	private SessionID sessionId;
+	public MqOrderListener(Connection connection, SessionID sessionID) {
 		try {
+				sessionId=sessionID;
 				myConnection=connection;
 				channel=myConnection.createChannel();
 				channel.basicQos(1);
@@ -45,14 +50,14 @@ public class MqOrderListener{
 		        RemoteOrder myOrder=(RemoteOrder)Util.convertFromBytes(body);
 		    	String message = new String(body, "UTF-8");
 		        System.out.println(" [x] Order Info Received From Client '" + myOrder.toString() + "'");
-		        //To-do send Order via FIX to Dealer
+		        TranslatorToFix fix=new TranslatorToFix(myOrder,sessionId);
 		      }
 		    };
 		channelTag=channel.basicConsume(ORDER_QUEUE_NAME, true, consumer);
 		channel.addShutdownListener(new ShutdownListener() {		
 			@Override
 			public void shutdownCompleted(ShutdownSignalException e) {
-				System.out.println("Order Listener Error:"+e.getMessage());
+				System.out.println("Order Listener Shutdown:"+e.getMessage());
 			}
 		});
 	}

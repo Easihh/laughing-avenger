@@ -20,6 +20,8 @@ public class RmiLoginImpl extends UnicastRemoteObject implements RmiLoginIntf{
 	public boolean login(String username, String password)
 			throws RemoteException {
 		
+		if(username.equals("") || password.equals(""))
+			return false;
 		return true;
 	}
 	

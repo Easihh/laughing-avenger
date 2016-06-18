@@ -51,9 +51,11 @@ public class ApplicationListener implements ServletContextListener {
 			RmiLoginImpl add=new RmiLoginImpl();
 			reg.rebind("login", add);
 			System.out.println("server is ready");
-			//setupFixConnectionToDealer();
+			setupFixConnectionToDealer();
+			SessionID sessionID = new SessionID(FIX_VERSION,SENDER,TARGET);
+			Session.lookupSession(sessionID).logon();
 			connection=factory.newConnection();
-			orderListener=new MqOrderListener(connection);
+			orderListener=new MqOrderListener(connection,sessionID);
 			System.out.println("[*] Waiting for messages. To exit press CTRL+C");
 		}
 		catch(Exception e){
@@ -69,18 +71,6 @@ public class ApplicationListener implements ServletContextListener {
 		initiator = new SocketInitiator(client, storeFactory, settings, 
 			    logFactory, new DefaultMessageFactory()); 
 		initiator.start(); 
-		SessionID sessionID = new SessionID(FIX_VERSION,SENDER,TARGET);
-		Session.lookupSession(sessionID).logon();
-		NewOrderSingle order = new NewOrderSingle();
-		order.set(new HandlInst(HandlInst.MANUAL_ORDER));
-		order.set(new ClOrdID("DLF")); 
-		order.set(new Symbol("DLF")); 
-	    order.set(new Side(Side.BUY)); 
-	    order.set(new TransactTime(new Date()));
-	    order.set(new OrdType(OrdType.LIMIT)); 
-		order.set(new OrderQty(45)); 
-		order.set(new Price(25.4d)); 
-		Session.sendToTarget(order, sessionID);
 	}
 
 }

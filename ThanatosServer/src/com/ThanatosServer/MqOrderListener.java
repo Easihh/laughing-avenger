@@ -12,7 +12,6 @@ import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
-import com.rabbitmq.client.AMQP.BasicProperties;
 import com.thanatos.shared.RemoteOrder;
 
 public class MqOrderListener{

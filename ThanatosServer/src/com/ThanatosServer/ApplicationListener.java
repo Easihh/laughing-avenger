@@ -1,4 +1,8 @@
 package com.ThanatosServer;
+import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 
 import javax.servlet.ServletContextEvent;
@@ -45,6 +49,11 @@ public class ApplicationListener implements ServletContextListener {
 		factory=new ConnectionFactory();
 		factory.setHost("localhost");
 		try{
+			
+			Registry reg=LocateRegistry.createRegistry(5055);
+			RmiLoginImpl add=new RmiLoginImpl();
+			reg.rebind("login", add);
+			System.out.println("server is ready");
 			//setupFixConnectionToDealer();
 			connection=factory.newConnection();
 			loginListener=new MqLoginListener(connection);

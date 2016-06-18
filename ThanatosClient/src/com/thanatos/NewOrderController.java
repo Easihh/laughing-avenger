@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.thanatos.Dao.OrderDao;
+import com.thanatos.shared.RemoteOrder;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,7 +21,7 @@ public class NewOrderController implements Initializable{
 	private ComboBox<String> orderSide;
 	@FXML
 	private ComboBox<String> orderType;
-	
+	private RemoteOrderProducer producer;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		orderSide.setOnAction((event) ->{
@@ -36,10 +37,18 @@ public class NewOrderController implements Initializable{
 	public void createOrder(){
 		try{
 			Stage current=(Stage)createOrderPane.getScene().getWindow();
+			producer.sendOrder(new RemoteOrder());
 			current.close();
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	public void setOrderProducer(RemoteOrderProducer myProducer){
+		producer=myProducer;
+	}
+	public void test(){
+		System.out.print("WTF");
 	}
 }

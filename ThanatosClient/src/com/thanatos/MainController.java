@@ -6,14 +6,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeoutException;
 
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import com.thanatos.Dao.OrderDao;
 import com.thanatos.Dao.QuoteDao;
 import com.thanatos.model.Order;
-import com.thanatos.model.Quote;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -21,12 +21,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -48,6 +46,8 @@ public class MainController implements Initializable{
     private AnchorPane	accountInfo;
     @FXML
     private AnchorPane mainPane;
+    private RemoteOrderProducer producer;
+    private RefreshQueueConsumer refresh;
     
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
@@ -64,12 +64,15 @@ public class MainController implements Initializable{
 	  pendingOrdersTableView.setItems(data);
 	  pendingOrdersTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 	}
+	
 	public void createNewOrder(){
 		try{
 	        FXMLLoader loader = new FXMLLoader();
 	        Stage current=(Stage)mainPane.getScene().getWindow();
 	        loader.setLocation(getClass().getResource("/NewOrderView.fxml"));
 	        AnchorPane page = (AnchorPane)loader.load();
+	        NewOrderController controller=(NewOrderController)loader.getController();
+	        controller.setOrderProducer(producer);
 	        Stage orderDialog=new Stage();	        
 	        orderDialog.setTitle("Create Order");
 			Scene scene = new Scene(page);
@@ -82,6 +85,7 @@ public class MainController implements Initializable{
 			e.printStackTrace();
 		}
 	}
+	
 	public void loadData(){
 		URL u;
 		InputStream is=null;
@@ -102,6 +106,21 @@ public class MainController implements Initializable{
 		}
 		finally{
 			try{is.close();}catch(IOException io){io.getMessage();}
+		}
+	}
+	
+	public void setupMq(){
+		ConnectionFactory factory=new ConnectionFactory();
+		factory.setRequestedHeartbeat(30);
+		factory.setHost("localhost");
+		Connection connection;
+		try {
+				connection = factory.newConnection();
+				refresh=new RefreshQueueConsumer(connection);
+				producer=new RemoteOrderProducer(connection);
+			} 
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

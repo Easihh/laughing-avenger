@@ -23,9 +23,9 @@
         </rowConstraints>
          <children>
             <Label alignment="CENTER" text="Username" GridPane.halignment="CENTER" />
-            <TextField GridPane.columnIndex="1" />
+            <TextField fx:id="username" GridPane.columnIndex="1" />
             <Label alignment="CENTER" text="Password" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
       <Button layoutX="192.0" layoutY="298.0" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="111.0" text="Login" />

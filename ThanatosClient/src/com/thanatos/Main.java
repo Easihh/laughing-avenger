@@ -18,28 +18,17 @@ public class Main extends Application {
 	
 	public static ApplicationContext ctx;
 	private Connection connection; 
-	private RemoteOrderProducer order;
+	private RemoteOrderProducer orderProducer;
 	private RefreshQueueConsumer refreshConsumer;
 	
 	@Override
 	public void start(Stage primaryStage) {
-		try {
-			
-			ConnectionFactory factory=new ConnectionFactory();
-			factory.setRequestedHeartbeat(30);
-			factory.setHost("localhost");
-			connection =factory.newConnection();		
-			//Registry myReg=LocateRegistry.getRegistry("127.0.0.1",5055);
-			//RmiLoginIntf a=(RmiLoginIntf)myReg.lookup("login");
-			//System.out.println("Login:"+a.login("",""));
-			refreshConsumer=new RefreshQueueConsumer(connection);
-			order=new RemoteOrderProducer(connection);
-			order.sendOrder(new RemoteOrder());
-			order.sendOrder(new RemoteOrder());
-			ctx=new ClassPathXmlApplicationContext("Spring.xml");
-			LoginManager manager=new LoginManager(primaryStage);
-			manager.showLoginScreen();
-		} catch(Exception e) {
+		try {				
+				ctx=new ClassPathXmlApplicationContext("Spring.xml");
+				LoginManager manager=new LoginManager(primaryStage);
+				manager.showLoginScreen();
+			} 
+		catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -49,11 +38,5 @@ public class Main extends Application {
 	}
 	@Override
 	public void stop(){
-		try {
-				connection.close();
-			} 
-		catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }

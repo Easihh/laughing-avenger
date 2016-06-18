@@ -11,7 +11,7 @@ import com.rabbitmq.client.AMQP.BasicProperties;
 
 public class RemoteOrderProducer{
 	
-	private String requestQueueName = "SINGLE_ORDER";
+	private String queueName = "SINGLE_ORDER";
 	private String corrId;
 	private Channel channel;
 	private Connection myConnection;
@@ -35,7 +35,7 @@ public class RemoteOrderProducer{
 	                                .correlationId(corrId)
 	                                .build();
 
-	    channel.basicPublish(EXCHANGE, requestQueueName, props, Util.toByte(remoteOrder));
+	    channel.basicPublish(EXCHANGE, queueName, props, Util.toByte(remoteOrder));
 	    
 	    System.out.println("Order Sent");
 	}

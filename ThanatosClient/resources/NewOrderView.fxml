@@ -30,7 +30,7 @@
             <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Type:" GridPane.rowIndex="2" />
             <Label text="Side" GridPane.rowIndex="3" />
-            <ComboBox fx:id="orderType" prefHeight="25.0" prefWidth="143.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <ComboBox fx:id="orderType" value="MARKET" prefHeight="25.0" prefWidth="143.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <items>
 			        <FXCollections fx:factory="observableArrayList">
 			          <String fx:value="MARKET" />

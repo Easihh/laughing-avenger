@@ -2,6 +2,8 @@ package com.thanatos;
 
 import java.io.IOException;
 
+import com.rabbitmq.client.Connection;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -24,6 +26,7 @@ public class LoginManager {
 		try {
 				scene.setRoot((Parent)loader.load());
 				stage.setScene(scene);
+				stage.setTitle("Thanatos:Login");
 				stage.show();
 			} 
 		catch (IOException e) {

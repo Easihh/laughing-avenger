@@ -1,8 +1,6 @@
 package com.ThanatosServer;
-import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 
 import javax.servlet.ServletContextEvent;
@@ -31,7 +29,6 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 public class ApplicationListener implements ServletContextListener {
 	
-	private MqLoginListener loginListener;
 	private MqOrderListener orderListener;
 	private ConnectionFactory factory;
 	private Connection connection;
@@ -56,7 +53,6 @@ public class ApplicationListener implements ServletContextListener {
 			System.out.println("server is ready");
 			//setupFixConnectionToDealer();
 			connection=factory.newConnection();
-			loginListener=new MqLoginListener(connection);
 			orderListener=new MqOrderListener(connection);
 			System.out.println("[*] Waiting for messages. To exit press CTRL+C");
 		}

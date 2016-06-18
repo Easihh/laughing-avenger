@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 import com.ThanatosServer.Utility.Util;
+import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Consumer;
@@ -42,15 +43,9 @@ public class MqOrderListener{
 		      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
 		          throws IOException {
 		        RemoteOrder myOrder=(RemoteOrder)Util.convertFromBytes(body);
-				String response="ORDER RESPONSE";
 		    	String message = new String(body, "UTF-8");
 		        System.out.println(" [x] Order Info Received From Client '" + myOrder.toString() + "'");
-		        /*BasicProperties props=new BasicProperties.Builder()
-					.contentType("ORDER")
-	 				.replyTo(properties.getReplyTo())
-	 				.build();*/
-				//channel.basicPublish("",properties.getReplyTo(),props, response.getBytes());				
-				//System.out.println("[x] Order Info Sent To Client");
+		        //To-do send Order via FIX to Dealer
 		      }
 		    };
 		channelTag=channel.basicConsume(ORDER_QUEUE_NAME, true, consumer);

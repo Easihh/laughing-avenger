@@ -20,6 +20,11 @@
     <version>1.7.21</version>
   </dependency>
   <dependency>
+	  <groupId>com.rabbitmq</groupId>
+	  <artifactId>amqp-client</artifactId>
+	  <version>3.6.2</version>
+  </dependency>
+  <dependency>
      <groupId>org.slf4j</groupId>
      <artifactId>slf4j-api</artifactId>
      <version>1.7.5</version>

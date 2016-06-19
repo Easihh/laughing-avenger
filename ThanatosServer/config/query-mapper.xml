@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper">
+	<resultMap type="com.ThanatosServer.Model.Users" id="Users">
+			  <id property="id" column="Userid" />
+			  <result property="username" column="Username"/>
+			  <result property="password" column="Password"/>
+	</resultMap>
+	<resultMap type="com.thanatos.shared.RmiQuote" id="RmiQuote">
+			  <id property="id" column="Quoteid" />
+			  <result property="symbol" column="Symbol"/>
+			  <result property="lastPx" column="LastPx"/>
+			  <result property="dayHigh" column="DayHigh"/>
+			  <result property="dayLow" column="DayLow"/>
+			  <result property="volume" column="Volume"/>
+			  <result property="change" column="Change"/>
+			  <result property="open" column="[Open]"/>
+			  <result property="prevClose" column="PrevClose"/>
+			  <result property="bid" column="Bid"/>
+			  <result property="ask" column="Ask"/>
+	</resultMap>
+    <select id="selectUser" resultMap="Users">
+    		SELECT * FROM Users where
+    		USERNAME=#{username} AND
+    		PASSWORD=#{password}
+    </select>
+    <select id="quoteInfo" resultMap="RmiQuote">
+    		SELECT * FROM Quote where
+    		SYMBOL in 
+		 <foreach item="item" index="index" collection="list"
+		      open="(" separator="," close=")">
+		        #{item}
+		  </foreach>
+    </select>
+</mapper>
+

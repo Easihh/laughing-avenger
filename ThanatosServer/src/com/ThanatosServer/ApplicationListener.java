@@ -1,10 +1,12 @@
 package com.ThanatosServer;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Date;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import quickfix.ConfigError;
 import quickfix.DefaultMessageFactory;
@@ -15,15 +17,6 @@ import quickfix.SessionID;
 import quickfix.SessionNotFound;
 import quickfix.SessionSettings;
 import quickfix.SocketInitiator;
-import quickfix.field.ClOrdID;
-import quickfix.field.HandlInst;
-import quickfix.field.OrdType;
-import quickfix.field.OrderQty;
-import quickfix.field.Price;
-import quickfix.field.Side;
-import quickfix.field.Symbol;
-import quickfix.field.TransactTime;
-import quickfix.fix44.NewOrderSingle;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -36,20 +29,22 @@ public class ApplicationListener implements ServletContextListener {
 	private static final String SENDER="CLIENT1";
 	private static final String TARGET="FixDealer";
 	private static final String FIX_VERSION="FIX.4.4";
-	
+	public static ApplicationContext myContext;
 	@Override
 	public void contextDestroyed(ServletContextEvent context) {}
 
 	@Override
 	public void contextInitialized(ServletContextEvent context) {
-		System.out.println("I WAS INITIALIZED");
+		myContext = new ClassPathXmlApplicationContext("ThanatosBean.xml");		 
 		factory=new ConnectionFactory();
 		factory.setHost("localhost");
 		try{
 			
 			Registry reg=LocateRegistry.createRegistry(5055);
-			RmiLoginImpl add=new RmiLoginImpl();
-			reg.rebind("login", add);
+			RmiLoginImpl login=new RmiLoginImpl();
+			RmiQuoteImpl quote=new RmiQuoteImpl();
+			reg.rebind("login", login);
+			reg.rebind("quote", quote);
 			System.out.println("server is ready");
 			setupFixConnectionToDealer();
 			SessionID sessionID = new SessionID(FIX_VERSION,SENDER,TARGET);

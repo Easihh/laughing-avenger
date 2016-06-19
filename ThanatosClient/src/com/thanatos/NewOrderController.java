@@ -48,7 +48,4 @@ public class NewOrderController implements Initializable{
 	public void setOrderProducer(RemoteOrderProducer myProducer){
 		producer=myProducer;
 	}
-	public void test(){
-		System.out.print("WTF");
-	}
 }

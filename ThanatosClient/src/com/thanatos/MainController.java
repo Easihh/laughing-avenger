@@ -1,14 +1,7 @@
 package com.thanatos;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeoutException;
-
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.thanatos.Dao.OrderDao;
@@ -48,7 +41,8 @@ public class MainController implements Initializable{
     private AnchorPane mainPane;
     private RemoteOrderProducer producer;
     private RefreshQueueConsumer refresh;
-    
+	private Connection connection;
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -85,35 +79,11 @@ public class MainController implements Initializable{
 			e.printStackTrace();
 		}
 	}
-	
-	public void loadData(){
-		URL u;
-		InputStream is=null;
-		BufferedReader dis;
-		String s="";
-		try{
-			u=new URL("http://download.finance.yahoo.com/d/quotes.csv?s=GOOG&f=sl1d1t1c1ohgv&e=.csv");
-			is=u.openStream();
-			dis=new BufferedReader(new InputStreamReader(is));
-			while((s=dis.readLine())!=null)
-				System.out.println(s);
-		}
-		catch(MalformedURLException me){
-			System.out.println(me.getMessage());
-		}
-		catch(IOException io){
-			System.out.println(io.getMessage());
-		}
-		finally{
-			try{is.close();}catch(IOException io){io.getMessage();}
-		}
-	}
-	
+		
 	public void setupMq(){
 		ConnectionFactory factory=new ConnectionFactory();
 		factory.setRequestedHeartbeat(30);
 		factory.setHost("localhost");
-		Connection connection;
 		try {
 				connection = factory.newConnection();
 				refresh=new RefreshQueueConsumer(connection);
@@ -123,4 +93,5 @@ public class MainController implements Initializable{
 			e.printStackTrace();
 		}
 	}
+	
 }

@@ -1,25 +1,15 @@
 package com.thanatos;
 	
-import java.io.IOException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.thanatos.shared.RemoteOrder;
-import com.thanatos.shared.RmiLoginIntf;
-
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 	
 	public static ApplicationContext ctx;
-	private Connection connection; 
-	private RemoteOrderProducer orderProducer;
-	private RefreshQueueConsumer refreshConsumer;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -38,5 +28,7 @@ public class Main extends Application {
 	}
 	@Override
 	public void stop(){
+		Platform.exit();
+		System.exit(0);
 	}
 }

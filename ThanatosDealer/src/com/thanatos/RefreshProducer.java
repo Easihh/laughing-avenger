@@ -23,7 +23,7 @@ public class RefreshProducer{
 	
 	public void sendRefresh() throws IOException {
 		String message="REFRESH";
-	    channel.basicPublish(EXCHANGE, queueName, null, message.getBytes());
+	    channel.basicPublish(EXCHANGE, "", null, message.getBytes());
 	    
 	    System.out.println("Refresh Sent to All Clients");
 	}

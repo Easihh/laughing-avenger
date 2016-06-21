@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.ThanatosServer.Dao.QuoteDao;
 import com.ThanatosServer.Dao.UserDao;
+import com.ThanatosServer.Utility.AppUtils;
 import com.thanatos.shared.RmiLoginIntf;
 import com.thanatos.shared.RmiQuote;
 import com.thanatos.shared.RmiQuoteIntf;
@@ -17,7 +18,7 @@ public class RmiQuoteImpl extends UnicastRemoteObject implements RmiQuoteIntf{
 	private QuoteDao quoteDao;
 
 	public RmiQuoteImpl() throws RemoteException {
-		quoteDao=(QuoteDao)ApplicationListener.myContext.getBean("quoteDao");
+		quoteDao=(QuoteDao)AppUtils.getAppContext().getBean("quoteDao");
 	}
 
 	@Override

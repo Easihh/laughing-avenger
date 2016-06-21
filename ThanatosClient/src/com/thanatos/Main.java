@@ -14,10 +14,10 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {				
-				ctx=new ClassPathXmlApplicationContext("Spring.xml");
-				LoginManager manager=new LoginManager(primaryStage);
-				manager.showLoginScreen();
-			} 
+			ctx=new ClassPathXmlApplicationContext("Spring.xml");
+			LoginManager manager=new LoginManager(primaryStage);
+			manager.showLoginScreen();
+		} 
 		catch(Exception e) {
 			e.printStackTrace();
 		}

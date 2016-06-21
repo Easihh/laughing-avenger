@@ -1,5 +1,10 @@
 package com.thanatos.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.thanatos.shared.RmiQuote;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -21,6 +26,19 @@ public class Quote {
 	private Double open;
 	
 	public Quote(){}//MyBatis Constructor
+	
+	public Quote(RmiQuote rmi){
+		symbol=rmi.getSymbol();
+		lastPx=rmi.getLastPx();
+		change=rmi.getChange();
+		open=rmi.getOpen();
+		dayHigh=rmi.getDayHigh();
+		dayLow=rmi.getDayLow();
+		volume=rmi.getVolume();
+		prevClose=rmi.getPrevClose();
+		bid=rmi.getBid();
+		ask=rmi.getAsk();	
+	}
 	
 	public Quote(String[] dataArr) {
 		symbol=dataArr[0].replaceAll("^\"|\"$","");
@@ -77,5 +95,14 @@ public class Quote {
 	
 	public DoubleProperty prevCloseProperty(){
 		return new SimpleDoubleProperty(prevClose);
+	}
+
+	public static List<Quote> rmiOrderToOrder(List<RmiQuote> rmiQuotes) {
+		List<Quote> retVal=new ArrayList<Quote>();
+		for(RmiQuote rmi:rmiQuotes){
+			Quote myQuote=new Quote(rmi);
+			retVal.add(myQuote);
+		}
+		return retVal;
 	}
 }

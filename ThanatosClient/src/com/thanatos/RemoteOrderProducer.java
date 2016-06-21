@@ -19,9 +19,9 @@ public class RemoteOrderProducer{
 	
 	public RemoteOrderProducer(Connection connection) {
 		try {
-				myConnection=connection;
-				channel=myConnection.createChannel();
-			} 
+			myConnection=connection;
+			channel=myConnection.createChannel();
+		} 
 		catch (Exception e) {
 			e.printStackTrace();
 		}

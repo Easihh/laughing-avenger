@@ -1,8 +1,6 @@
 package com.thanatos;
 
 import java.io.IOException;
-import java.util.logging.Logger;
-
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -13,7 +11,6 @@ import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.TitledPane;
 
 public class RefreshQueueConsumer {
@@ -25,12 +22,12 @@ public class RefreshQueueConsumer {
 	
 	public RefreshQueueConsumer(Connection connection){
 		try {
-				myConnection=connection;
-				channel=myConnection.createChannel();
-				QUEUE=channel.queueDeclare().getQueue();
-				channel.queueBind(QUEUE, "REFRESH", "#");
-				setupConsumer();
-			} 
+			myConnection=connection;
+			channel=myConnection.createChannel();
+			QUEUE=channel.queueDeclare().getQueue();
+			channel.queueBind(QUEUE, "REFRESH", "#");
+			setupConsumer();
+		} 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -43,7 +40,6 @@ public class RefreshQueueConsumer {
 		            throws IOException {
 		          String message = new String(body, "UTF-8");
 		          refreshMonitor();
-		          System.out.println(message);
 		        }
 		      };
 			channel.basicConsume(QUEUE, true,consumer);
@@ -61,7 +57,8 @@ public class RefreshQueueConsumer {
 			TitledPane pane=loader.load();
 	        QuoteController controller=(QuoteController)loader.getController();
 	        controller.refreshMonitor();
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

@@ -24,11 +24,11 @@ public class LoginManager {
 		        getClass().getResource("/LoginView.fxml")
 		);
 		try {
-				scene.setRoot((Parent)loader.load());
-				stage.setScene(scene);
-				stage.setTitle("Thanatos:Login");
-				stage.show();
-			} 
+			scene.setRoot((Parent)loader.load());
+			stage.setScene(scene);
+			stage.setTitle("Thanatos:Login");
+			stage.show();
+		} 
 		catch (IOException e) {
 			e.printStackTrace();
 		}

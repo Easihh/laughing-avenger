@@ -14,6 +14,7 @@ public class Users {
 	private String username;
 
     public Users(){}
+    
 	public Users(String fName, String lName, String email) {
 	
 	    this.firstName = new SimpleStringProperty(fName);

@@ -5,3 +5,16 @@
 .combo-box {
     -fx-pref-width: 100;
 }
+.table-column{
+	-fx-background-color: black ;
+	-fx-text-fill: white ;
+	-fx-alignment: CENTER;
+}
+.table-column .label{
+	-fx-text-fill: orange ;
+}
+.titled-pane{
+	-fx-background-fills: black;
+	-fx-text-fill: white ;
+	-fx-color: black;
+}

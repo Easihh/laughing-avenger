@@ -43,8 +43,7 @@ public class LoginController implements Initializable{
 			RmiLoginIntf login=(RmiLoginIntf)myReg.lookup("login");
 			if(login.login(username.getText(), password.getText())){
 				FXMLLoader loader = new FXMLLoader(
-				        getClass().getResource("/MainView.fxml")
-				);
+				        getClass().getResource("/MainView.fxml"));
 				Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 				screenWidth=primaryScreenBounds.getWidth();
 				screenHeight=primaryScreenBounds.getHeight();

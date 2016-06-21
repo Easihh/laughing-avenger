@@ -52,29 +52,26 @@ public class QuoteController implements Initializable{
     private FilteredList<Order> filteredData;
     @FXML
     private AnchorPane	accountInfo;
+    private Registry myReg;
+    private RmiQuoteIntf rmi;
     
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		quoteDao=(QuoteDao)Main.ctx.getBean("quoteDao");
 		List<RmiQuote> rmiQuotes;
+		List<Quote> quoteList=new ArrayList<Quote>();
+		quotes=FXCollections.observableArrayList();
 		try{
-			Registry myReg=LocateRegistry.getRegistry("127.0.0.1",5055);
-			RmiQuoteIntf rmi=(RmiQuoteIntf)myReg.lookup("quote");
+			myReg=LocateRegistry.getRegistry("127.0.0.1",5055);
+			rmi=(RmiQuoteIntf)myReg.lookup("quote");
 			List<String> myQuotes=new ArrayList<>();
 			myQuotes.add("GOOG");
 			rmiQuotes=rmi.getQuotesInfo(myQuotes);
-			System.out.println("aRGG");
+			quoteList=Quote.rmiOrderToOrder(rmiQuotes);
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
 		}
-	  List<Quote> quoteList=quoteDao.getWatchedQuotes();
-	  data = FXCollections.observableArrayList(
-			  new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),new Order("XYZ",99),
-			  new Order("XYZ",99),new Order("XYZ",99)
-	        );
-	  quotes=FXCollections.observableArrayList();
 	  quotes.addAll(quoteList);
 	  quoteTableSymbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
 	  quoteTableVolumeCol.setCellValueFactory(new PropertyValueFactory("volume"));
@@ -90,5 +87,16 @@ public class QuoteController implements Initializable{
 
 	public void refreshMonitor() {
 		System.out.println("Refresh Quote Table");
+		try{
+			List<String> myQuotes=new ArrayList<>();
+			myQuotes.add("GOOG");
+			List<RmiQuote> rmiQuotes=rmi.getQuotesInfo(myQuotes);
+			List<Quote> quoteList=Quote.rmiOrderToOrder(rmiQuotes);
+			quotes.clear();
+			quotes.addAll(quoteList);
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
 	}
 }

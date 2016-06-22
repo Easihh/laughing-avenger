@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<TitledPane fx:controller="com.thanatos.PendingController" animated="false" collapsible="false" prefHeight="200.0" prefWidth="1265.0" text="Pending Orders" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <TableView fx:id="pendingOrdersTableView" prefHeight="200.0" prefWidth="200.0">
+        <columns>
+          <TableColumn fx:id="symbolCol" prefWidth="75.0" text="Symbol" />
+          <TableColumn fx:id="qtyCol" prefWidth="75.0" text="Quantity" />
+        </columns>
+      </TableView>
+   </content>
+</TitledPane>
+

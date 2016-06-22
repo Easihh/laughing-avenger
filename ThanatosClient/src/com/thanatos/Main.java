@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 	
-	public static ApplicationContext ctx;
+	private  ApplicationContext ctx;
 	
 	@Override
 	public void start(Stage primaryStage) {

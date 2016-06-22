@@ -53,10 +53,18 @@ public class RefreshQueueConsumer {
 
 	private void refreshMonitor() {
 		try {
-			FXMLLoader loader=new FXMLLoader(getClass().getResource("/quotePanel.fxml"));
-			TitledPane pane=loader.load();
-	        QuoteController controller=(QuoteController)loader.getController();
-	        controller.refreshMonitor();
+			FXMLLoader qloader=new FXMLLoader(getClass().getResource("/QuotePanel.fxml"));
+			TitledPane qpane=qloader.load();
+			FXMLLoader oloader=new FXMLLoader(getClass().getResource("/OpenPanel.fxml"));
+			TitledPane opane=oloader.load();
+			FXMLLoader ploader=new FXMLLoader(getClass().getResource("/PendingPanel.fxml"));
+			TitledPane ppane=ploader.load();
+	        OpenOrderController ocontroller=(OpenOrderController)oloader.getController();
+	        PendingController pcontroller=(PendingController)ploader.getController();
+	        QuoteController qcontroller=(QuoteController)qloader.getController();
+	        ocontroller.refreshMonitor();
+	        pcontroller.refreshMonitor();
+	        qcontroller.refreshMonitor();
 		} 
 		catch (IOException e) {
 			e.printStackTrace();

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<TitledPane fx:controller="com.thanatos.OpenOrderController" animated="false" collapsible="false" text="Open Trades" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml/1">
+      <content>
+         <TableView fx:id="openTradeTableView" prefHeight="200.0" prefWidth="200.0">
+           <columns>
+             <TableColumn prefWidth="75.0" text="Ticket ID" />
+             <TableColumn prefWidth="75.0" text="Symbol" />
+               <TableColumn prefWidth="75.0" text="B/S" />
+               <TableColumn prefWidth="75.0" text="Amount" />
+               <TableColumn prefWidth="75.0" text="Type" />
+               <TableColumn prefWidth="75.0" text="Price" />
+               <TableColumn prefWidth="75.0" text="Current" />
+               <TableColumn prefWidth="75.0" text="P/L" />
+           </columns>
+         </TableView>
+      </content>
+ </TitledPane>
+

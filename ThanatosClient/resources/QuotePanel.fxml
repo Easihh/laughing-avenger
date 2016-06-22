@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.chart.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
-<TitledPane fx:controller="com.thanatos.QuoteController" fx:id="activeQuotePane" animated="false" collapsible="false" prefHeight="200.0" prefWidth="1265.0" text="Active Quotes" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+
+<TitledPane animated="false" collapsible="false" prefHeight="200.0" prefWidth="1265.0" text="Active Quotes" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thanatos.QuoteController">
    <content>
-      <TableView fx:id="quoteTableView" prefHeight="200.0" prefWidth="200.0">
+      <TableView fx:id="quoteTableView" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true">
          <columns>
             <TableColumn fx:id="quoteTableSymbolCol" prefWidth="75.0" text="Symbol" />
             <TableColumn fx:id="quoteTableLastPxCol" prefWidth="75.0" text="LastPx" />
@@ -18,7 +20,9 @@
             <TableColumn fx:id="quoteTableChangeCol" prefWidth="75.0" text="Change" />
             <TableColumn fx:id="quoteTableVolumeCol" prefWidth="75.0" text="Volume" />
          </columns>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
       </TableView>
    </content>
 </TitledPane>
-

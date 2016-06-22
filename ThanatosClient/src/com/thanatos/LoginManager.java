@@ -2,8 +2,6 @@ package com.thanatos;
 
 import java.io.IOException;
 
-import com.rabbitmq.client.Connection;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

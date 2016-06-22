@@ -6,15 +6,30 @@
     -fx-pref-width: 100;
 }
 .table-column{
-	-fx-background-color: black ;
-	-fx-text-fill: white ;
+	-fx-background-color: #191919;
 	-fx-alignment: CENTER;
+	-fx-border-color: transparent black transparent transparent;
+	-fx-border-radius: 1;
 }
 .table-column .label{
 	-fx-text-fill: orange ;
 }
-.titled-pane{
-	-fx-background-fills: black;
+.table-view .table-cell:empty{
+	-fx-background-color: black;
+}
+.table-view .table-cell{
 	-fx-text-fill: white ;
+	-fx-border-color: black;
+	-fx-border-radius: 1;
+}
+.titled-pane{
+	-fx-text-fill: white ;
+	-fx-color: black;
+}
+#accountInfo,#openTradeTableView,#pendingOrdersTableView{
+	-fx-background-color: black;
+}
+.titled-pane:hover{
+	-fx-background-color: black;
 	-fx-color: black;
 }

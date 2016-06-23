@@ -2,34 +2,35 @@
 .combo-box-popup > .list-view {
     -fx-pref-width: 100;
 }
+
 .combo-box {
     -fx-pref-width: 100;
 }
+
 .table-column{
 	-fx-background-color: #191919;
 	-fx-alignment: CENTER;
 	-fx-border-color: transparent black transparent transparent;
-	-fx-border-radius: 1;
 }
+
 .table-column .label{
 	-fx-text-fill: orange ;
 }
+
 .table-view .table-cell:empty{
 	-fx-background-color: black;
 }
+
 .table-view .table-cell{
 	-fx-text-fill: white ;
 	-fx-border-color: black;
-	-fx-border-radius: 1;
+
 }
-.titled-pane{
+#openTradeTableView,#pendingOrdersTableView,#accountTableView{
+	-fx-background-color: black;
+}
+
+#openLbl{
+	-fx-background-color: black;
 	-fx-text-fill: white ;
-	-fx-color: black;
-}
-#accountInfo,#openTradeTableView,#pendingOrdersTableView{
-	-fx-background-color: black;
-}
-.titled-pane:hover{
-	-fx-background-color: black;
-	-fx-color: black;
 }

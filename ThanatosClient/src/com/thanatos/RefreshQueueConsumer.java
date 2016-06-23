@@ -12,6 +12,7 @@ import com.rabbitmq.client.ShutdownSignalException;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.HBox;
 
 public class RefreshQueueConsumer {
 	
@@ -54,11 +55,11 @@ public class RefreshQueueConsumer {
 	private void refreshMonitor() {
 		try {
 			FXMLLoader qloader=new FXMLLoader(getClass().getResource("/QuotePanel.fxml"));
-			TitledPane qpane=qloader.load();
+			HBox qbox=qloader.load();
 			FXMLLoader oloader=new FXMLLoader(getClass().getResource("/OpenPanel.fxml"));
-			TitledPane opane=oloader.load();
+			HBox obox=oloader.load();
 			FXMLLoader ploader=new FXMLLoader(getClass().getResource("/PendingPanel.fxml"));
-			TitledPane ppane=ploader.load();
+			HBox pbox=ploader.load();
 	        OpenOrderController ocontroller=(OpenOrderController)oloader.getController();
 	        PendingController pcontroller=(PendingController)ploader.getController();
 	        QuoteController qcontroller=(QuoteController)qloader.getController();

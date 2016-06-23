@@ -8,8 +8,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TitledPane animated="false" collapsible="false" prefHeight="206.0" prefWidth="1280.0" text="Account Information " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thanatos.AccountInfoController">
-     <content>
-    <AnchorPane fx:id="accountInfo" minHeight="0.0" minWidth="0.0" prefHeight="50.0" prefWidth="200.0" />
-     </content>
-</TitledPane>
+<HBox prefHeight="50.0" prefWidth="225.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thanatos.AccountInfoController">
+   <children>
+      <TableView fx:id="accountTableView" prefHeight="50.0" prefWidth="225.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="Account" />
+          <TableColumn prefWidth="75.0" text="Balance" />
+            <TableColumn prefWidth="75.0" text="P/L" />
+        </columns>
+      </TableView>
+   </children>
+</HBox>

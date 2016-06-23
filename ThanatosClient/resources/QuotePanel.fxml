@@ -7,22 +7,34 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TitledPane animated="false" collapsible="false" prefHeight="200.0" prefWidth="1265.0" text="Active Quotes" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thanatos.QuoteController">
-   <content>
-      <TableView fx:id="quoteTableView" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true">
-         <columns>
-            <TableColumn fx:id="quoteTableSymbolCol" prefWidth="75.0" text="Symbol" />
-            <TableColumn fx:id="quoteTableLastPxCol" prefWidth="75.0" text="LastPx" />
-            <TableColumn fx:id="quoteTableBidCol" prefWidth="75.0" text="Bid" />
-            <TableColumn fx:id="quoteTableAskCol" prefWidth="75.0" text="Ask" />
-            <TableColumn fx:id="quoteTableDayLowCol" prefWidth="75.0" text="DayLow" />
-            <TableColumn fx:id="quoteTableDayHighCol" prefWidth="75.0" text="DayHigh" />
-            <TableColumn fx:id="quoteTableChangeCol" prefWidth="75.0" text="Change" />
-            <TableColumn fx:id="quoteTableVolumeCol" prefWidth="75.0" text="Volume" />
-         </columns>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </TableView>
-   </content>
-</TitledPane>
+<HBox fx:controller="com.thanatos.QuoteController" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+    <AnchorPane  minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="400.0" HBox.hgrow="ALWAYS">
+         <children>
+            <TableView fx:id="quoteTableView" tableMenuButtonVisible="true" prefHeight="200.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <columns>
+			    <TableColumn fx:id="quoteTableSymbolCol" prefWidth="75.0" text="Symbol" />
+			    <TableColumn fx:id="quoteTableLastPxCol" prefWidth="75.0" text="LastPx" />
+			    <TableColumn fx:id="quoteTableBidCol" prefWidth="75.0" text="Bid" />
+			    <TableColumn fx:id="quoteTableAskCol" prefWidth="75.0" text="Ask" />
+			    <TableColumn fx:id="quoteTableDayLowCol" prefWidth="75.0" text="DayLow" />
+			    <TableColumn fx:id="quoteTableDayHighCol" prefWidth="75.0" text="DayHigh" />
+			    <TableColumn fx:id="quoteTableChangeCol" prefWidth="75.0" text="Change" />
+			    <TableColumn fx:id="quoteTableVolumeCol" prefWidth="75.0" text="Volume" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+         </children>
+      </AnchorPane>
+      <LineChart minWidth="0.0" title="Tick Chart" verticalGridLinesVisible="false" HBox.hgrow="ALWAYS">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </LineChart>
+   </children>
+</HBox>

@@ -43,8 +43,8 @@ public class PendingController implements Initializable{
 	  //pOrders.add(new Order("AMZ",9999));
 	  symbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
 	  qtyCol.setCellValueFactory(new PropertyValueFactory("qty"));
-	  symbolCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
-	  qtyCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
+	  //symbolCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
+	  //qtyCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
 	  //pendingOrdersTableView.setItems(pOrders);
 	  pendingOrdersTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 	}

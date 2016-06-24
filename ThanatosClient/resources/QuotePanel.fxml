@@ -30,10 +30,10 @@
       </AnchorPane>
       <LineChart minWidth="0.0" title="Tick Chart" verticalGridLinesVisible="false" HBox.hgrow="ALWAYS">
         <xAxis>
-          <CategoryAxis side="BOTTOM" />
+          <CategoryAxis side="TOP" />
         </xAxis>
         <yAxis>
-          <NumberAxis side="LEFT" />
+          <NumberAxis side="RIGHT" />
         </yAxis>
       </LineChart>
    </children>

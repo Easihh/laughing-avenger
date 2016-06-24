@@ -39,6 +39,7 @@ public class PendingController implements Initializable{
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+	ControllerManager.setPendingController(this);
 	  pOrders=FXCollections.observableArrayList();
 	  //pOrders.add(new Order("AMZ",9999));
 	  symbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));

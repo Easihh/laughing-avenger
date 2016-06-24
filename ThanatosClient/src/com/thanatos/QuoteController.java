@@ -7,16 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.thanatos.Dao.OrderDao;
-import com.thanatos.Dao.QuoteDao;
-import com.thanatos.model.Order;
 import com.thanatos.model.Quote;
 import com.thanatos.shared.RmiQuote;
 import com.thanatos.shared.RmiQuoteIntf;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
@@ -26,8 +22,6 @@ import javafx.scene.layout.AnchorPane;
 
 public class QuoteController implements Initializable{
 	
-	private OrderDao orderDao;
-	private QuoteDao quoteDao;
 	@FXML
 	public TableView<Quote> quoteTableView;
     @FXML
@@ -45,11 +39,8 @@ public class QuoteController implements Initializable{
     @FXML
     public TableColumn<?, ?> quoteTableDayHighCol;
     @FXML
-    public TableColumn<?, ?> quoteTableChangeCol;
-    
-    private ObservableList<Order> data;
-    private ObservableList<Quote> quotes;
-    private FilteredList<Order> filteredData;
+    public TableColumn<?, ?> quoteTableChangeCol;   
+    private static ObservableList<Quote> quotes;
     @FXML
     private AnchorPane	accountInfo;
     private Registry myReg;
@@ -58,6 +49,7 @@ public class QuoteController implements Initializable{
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		ControllerManager.setQuoteController(this);
 		List<RmiQuote> rmiQuotes;
 		List<Quote> quoteList=new ArrayList<Quote>();
 		quotes=FXCollections.observableArrayList();
@@ -88,11 +80,15 @@ public class QuoteController implements Initializable{
 	public void refreshMonitor() {
 		System.out.println("Refresh Quote Table");
 		try{
+			quotes.clear();
 			List<String> myQuotes=new ArrayList<>();
 			myQuotes.add("GOOG");
 			List<RmiQuote> rmiQuotes=rmi.getQuotesInfo(myQuotes);
+			if(rmiQuotes.size()==0)
+				System.out.println("Failed to get Quotes Infos");
 			List<Quote> quoteList=Quote.rmiOrderToOrder(rmiQuotes);
-			quotes.clear();
+			if(quoteList.size()==0)
+				System.out.println("Monitor will be Empty");
 			quotes.addAll(quoteList);
 		}
 		catch(Exception e){

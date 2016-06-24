@@ -10,6 +10,7 @@ import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
@@ -20,7 +21,7 @@ public class RefreshQueueConsumer {
 	private static String QUEUE;
 	private Channel channel;
 	private Connection myConnection;
-	
+	private ControllerManager controlUtil;
 	public RefreshQueueConsumer(Connection connection){
 		try {
 			myConnection=connection;
@@ -53,22 +54,14 @@ public class RefreshQueueConsumer {
 	}
 
 	private void refreshMonitor() {
-		try {
-			FXMLLoader qloader=new FXMLLoader(getClass().getResource("/QuotePanel.fxml"));
-			HBox qbox=qloader.load();
-			FXMLLoader oloader=new FXMLLoader(getClass().getResource("/OpenPanel.fxml"));
-			HBox obox=oloader.load();
-			FXMLLoader ploader=new FXMLLoader(getClass().getResource("/PendingPanel.fxml"));
-			HBox pbox=ploader.load();
-	        OpenOrderController ocontroller=(OpenOrderController)oloader.getController();
-	        PendingController pcontroller=(PendingController)ploader.getController();
-	        QuoteController qcontroller=(QuoteController)qloader.getController();
-	        ocontroller.refreshMonitor();
-	        pcontroller.refreshMonitor();
-	        qcontroller.refreshMonitor();
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
-		}
+		Platform.runLater(new Runnable(){
+			@Override
+			public void run() {
+				ControllerManager.getQuoteController().refreshMonitor();
+				ControllerManager.getPendingController().refreshMonitor();
+				ControllerManager.getOpenOrderController().refreshMonitor();
+			}
+			
+		});
 	}
 }

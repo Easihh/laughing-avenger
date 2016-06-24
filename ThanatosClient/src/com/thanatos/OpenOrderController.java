@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.thanatos.model.Order;
+
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,6 +23,7 @@ public class OpenOrderController implements Initializable{
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		ControllerManager.setOpenOrderController(this);
 		openTradeTableView.setPlaceholder(new Label(""));
 	}
 

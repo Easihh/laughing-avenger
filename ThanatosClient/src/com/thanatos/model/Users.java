@@ -1,40 +1,41 @@
 package com.thanatos.model;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Users {
-
-    private StringProperty firstName;
-
-    private StringProperty lastName;
-
-    private StringProperty email;
     
-	private String username;
-
+	private StringProperty username;
+	private DoubleProperty balance;
+	private DoubleProperty profitLoss;
+	
     public Users(){}
     
-	public Users(String fName, String lName, String email) {
+	public Users(String uname, Double bal,Double pLoss) {
 	
-	    this.firstName = new SimpleStringProperty(fName);
-	
-	    this.lastName = new SimpleStringProperty(lName);
-	
-	    this.email = new SimpleStringProperty(email);
+	    this.username = new SimpleStringProperty(uname);
+	    balance=new SimpleDoubleProperty(bal);
+	    profitLoss=new SimpleDoubleProperty(pLoss);
 	
 	}    
 
-    public StringProperty firstNameProperty() { return firstName; }
+    public StringProperty usernameProperty() { return username; }
 
-    public StringProperty lastNameProperty() { return lastName; }
-
-    public String getUsername() { return username; }
+    public void setUsername(String username) {this.username.set(username);}
     
-    public StringProperty emailProperty() { return email; }
-    
-	public void setUsername(String username) {
-		this.username = username;
-	}
+	public String getUsername() {return usernameProperty().get();}
+	
+    public DoubleProperty balanceProperty() { return balance; }
 
+    public void setUsername(Double bal) {this.balance.set(bal);}
+    
+	public Double getBalance() {return balanceProperty().get();}
+	
+    public DoubleProperty profitLossProperty() { return profitLoss; }
+
+    public void setProfitLoss(Double pLoss) {this.profitLoss.set(pLoss);}
+    
+	public Double getProfitLoss() {return profitLossProperty().get();}
 }

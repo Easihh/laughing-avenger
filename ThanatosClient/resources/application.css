@@ -26,11 +26,13 @@
 	-fx-border-color: black;
 
 }
-#openTradeTableView,#pendingOrdersTableView,#accountTableView{
+.table-view{
 	-fx-background-color: black;
 }
-
-#openLbl{
+.table-view:focused{
+	-fx-border-color: #00bfff;
+}
+#openLbl,#pendingLbl{
 	-fx-background-color: black;
 	-fx-text-fill: white ;
 }

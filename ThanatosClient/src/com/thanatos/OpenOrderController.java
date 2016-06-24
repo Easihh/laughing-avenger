@@ -7,6 +7,7 @@ import com.thanatos.model.Order;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 
@@ -21,6 +22,7 @@ public class OpenOrderController implements Initializable{
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		openTradeTableView.setPlaceholder(new Label(""));
 	}
 
 	public void refreshMonitor() {

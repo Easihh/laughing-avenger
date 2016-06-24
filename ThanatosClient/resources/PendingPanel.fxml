@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.chart.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
-<HBox fx:controller="com.thanatos.PendingController" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml/1">
+
+<HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.thanatos.PendingController">
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label text="Pending Orders" />
+           <AnchorPane prefHeight="20.0" prefWidth="200.0" VBox.vgrow="NEVER">
+               <children>
+                  <Label fx:id="pendingLbl" text="Pending Orders" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
             <TableView fx:id="pendingOrdersTableView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <columns>
 				   <TableColumn fx:id="symbolCol" prefWidth="75.0" text="Symbol" />
@@ -20,4 +26,3 @@
       </VBox>
    </children>
 </HBox>
-

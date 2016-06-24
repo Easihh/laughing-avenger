@@ -73,25 +73,6 @@ public class QuoteController implements Initializable{
 			System.out.println(e.getMessage());
 		}
 	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
-	  quotes.addAll(quoteList);
 	  quoteTableSymbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
 	  quoteTableVolumeCol.setCellValueFactory(new PropertyValueFactory("volume"));
 	  quoteTableLastPxCol.setCellValueFactory(new PropertyValueFactory("lastPx"));

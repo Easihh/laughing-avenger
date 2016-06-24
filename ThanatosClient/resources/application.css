@@ -36,3 +36,19 @@
 	-fx-background-color: black;
 	-fx-text-fill: white ;
 }
+.chart-plot-background {
+    -fx-background-color: #191919;
+}
+.chart-vertical-grid-lines {
+    -fx-stroke: #3278fa;
+}
+.chart-horizontal-grid-lines {
+    -fx-stroke: #3278fa;
+}
+.chart{
+	-fx-background-color: #191919;
+}
+.chart-title {
+  -fx-text-fill: white;
+  -fx-font-size: 1.6em;
+}

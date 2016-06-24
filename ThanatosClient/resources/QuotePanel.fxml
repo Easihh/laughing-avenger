@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<HBox fx:controller="com.thanatos.QuoteController" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml/1">
+<HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.thanatos.QuoteController">
    <children>
-    <AnchorPane  minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="400.0" HBox.hgrow="ALWAYS">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="400.0" HBox.hgrow="ALWAYS">
          <children>
-            <TableView fx:id="quoteTableView" tableMenuButtonVisible="true" prefHeight="200.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TableView fx:id="quoteTableView" prefHeight="200.0" prefWidth="400.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
 			    <TableColumn fx:id="quoteTableSymbolCol" prefWidth="75.0" text="Symbol" />
 			    <TableColumn fx:id="quoteTableLastPxCol" prefWidth="75.0" text="LastPx" />
@@ -28,13 +28,6 @@
             </TableView>
          </children>
       </AnchorPane>
-      <LineChart minWidth="0.0" title="Tick Chart" verticalGridLinesVisible="false" HBox.hgrow="ALWAYS">
-        <xAxis>
-          <CategoryAxis side="TOP" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis side="RIGHT" />
-        </yAxis>
-      </LineChart>
+      <fx:include source="QuoteChart.fxml"/>
    </children>
 </HBox>

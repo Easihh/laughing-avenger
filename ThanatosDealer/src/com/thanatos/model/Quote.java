@@ -1,5 +1,8 @@
 package com.thanatos.model;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -19,11 +22,14 @@ public class Quote {
 	private Double change;
 	private Double prevClose;
 	private Double open;
-	
+	private Date timeDate;
 	public Quote(){}//MyBatis Constructor
 	
 	public Quote(String[] dataArr) {
-		symbol=dataArr[0].replaceAll("^\"|\"$","");
+		for(int i=0;i<dataArr.length;i++)
+			dataArr[i]=dataArr[i].replaceAll("^\"|\"$","");
+		symbol=dataArr[0];
+		timeDate=getDateAsSqlDateTime(dataArr[2],dataArr[3]);
 		lastPx=Double.valueOf(dataArr[1]);
 		change=Double.valueOf(dataArr[4]);
 		open=Double.valueOf(dataArr[5]);
@@ -35,6 +41,27 @@ public class Quote {
 		ask=Double.valueOf(dataArr[11]);
 	}
 	
+	private Date getDateAsSqlDateTime(String dateStr, String timeStr) {			
+		boolean isAM=true;
+		String[] hoursSplit=timeStr.split(":");
+		int dayHours=Integer.parseInt(hoursSplit[0]);
+		if(hoursSplit[1].contains("pm"))
+			isAM=false;
+		int minute=Integer.parseInt(hoursSplit[1].split("[a-z]")[0]);
+		int hourOfDay=(isAM) ? dayHours:dayHours+12; 
+		String[] dateSplit=dateStr.split("/");
+		Calendar cal=Calendar.getInstance();
+		cal.set(Calendar.MONTH, Integer.parseInt(dateSplit[0])-1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateSplit[1]));
+		cal.set(Calendar.YEAR, Integer.parseInt(dateSplit[2]));
+		cal.set(Calendar.HOUR_OF_DAY,hourOfDay);
+		cal.set(Calendar.MINUTE,minute);
+		cal.set(Calendar.SECOND,0);
+		cal.set(Calendar.MILLISECOND,0);
+		Date date = new Date(cal.getTimeInMillis());
+		return date;
+	}
+
 	public int getId() {
 		return id;
 	}

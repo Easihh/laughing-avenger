@@ -15,6 +15,7 @@
 			  <result property="prevClose" column="PrevClose"/>
 			  <result property="bid" column="Bid"/>
 			  <result property="ask" column="Ask"/>
+			  <result property="timeDate" column="TimeDate"/>
 	</resultMap>
 	<resultMap type="com.thanatos.model.Users" id="Users">
 			  <id property="id" column="Userid" />
@@ -28,7 +29,7 @@
         ) 
     </insert>
     <insert id="insertHistoricalQuote" parameterType="com.thanatos.model.Quote" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO HistoricalQuote(Symbol,LastPx,DayHigh,DayLow,Volume,Change,[Open],PrevClose,Bid,Ask) 
+        INSERT INTO HistoricalQuote(Symbol,LastPx,DayHigh,DayLow,Volume,Change,[Open],PrevClose,Bid,Ask,TimeDate) 
         values(
         	#{symbol},
         	#{lastPx},
@@ -39,7 +40,8 @@
         	#{open},
         	#{prevClose},
         	#{bid},
-        	#{ask}
+        	#{ask},
+        	#{timeDate}
         ) 
     </insert>
     <update id="updateQuote" parameterType="com.thanatos.model.Quote">

@@ -48,6 +48,9 @@
 .chart{
 	-fx-background-color: #191919;
 }
+.thick-chart .chart-series-line {    
+	-fx-stroke-width: 1px;
+}
 .chart-title {
   -fx-text-fill: white;
   -fx-font-size: 1.6em;

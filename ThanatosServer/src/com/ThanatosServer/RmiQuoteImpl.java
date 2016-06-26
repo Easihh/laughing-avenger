@@ -19,12 +19,18 @@ public class RmiQuoteImpl extends UnicastRemoteObject implements RmiQuoteIntf{
 
 	public RmiQuoteImpl() throws RemoteException {
 		quoteDao=(QuoteDao)AppUtils.getAppContext().getBean("quoteDao");
+		quoteDao.getLast24HoursQuoteInfo("GOOG");
 	}
 
 	@Override
 	public List<RmiQuote> getQuotesInfo(List<String> quotes)
 			throws RemoteException {
 		return quoteDao.getQuotesInfo(quotes);
+	}
+
+	@Override
+	public List<RmiQuote> getLast24HoursQuoteInfo(String quote) {
+		return quoteDao.getLast24HoursQuoteInfo(quote);
 	}
 	
 }

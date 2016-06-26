@@ -7,5 +7,7 @@ import java.util.List;
 public interface RmiQuoteIntf extends Remote{
 	
 	public List<RmiQuote> getQuotesInfo(List<String> quotes)throws RemoteException;
+
+	public List<RmiQuote> getLast24HoursQuoteInfo(String string)throws RemoteException;;
 	
 }

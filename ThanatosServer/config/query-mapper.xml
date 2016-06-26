@@ -26,6 +26,12 @@
     		USERNAME=#{username} AND
     		PASSWORD=#{password}
     </select>
+      <select id="last24HoursQuote" resultMap="RmiQuote" parameterType="string">
+  		SELECT TOP 391 * FROM HistoricalQuote      
+			where     
+			SYMBOL =#{quote}
+			Order by Quoteid desc
+    </select>
     <select id="quoteInfo" resultMap="RmiQuote">
     		SELECT * FROM Quote where
     		SYMBOL in 

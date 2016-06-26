@@ -23,4 +23,16 @@ public class QuoteDaoImpl  implements QuoteDao{
 		return retVal;
 	}
 
+	@Override
+	public List<RmiQuote> getLast24HoursQuoteInfo(String quote) {
+		List<RmiQuote> retVal=null;
+		try(SqlSession session=MyBatisUtil.getSqlSessionFactory().openSession(true)){
+			retVal=session.selectList("last24HoursQuote",quote);
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+		return retVal;
+	}
+
 }

@@ -14,7 +14,7 @@
           <NumberAxis autoRanging="false" lowerBound="9.0" minorTickVisible="false" side="BOTTOM" tickUnit="1.0" upperBound="17.0" fx:id="xQuoteChartAxis" />
         </xAxis>
         <yAxis>
-          <NumberAxis minorTickVisible="false" side="RIGHT" />
+          <NumberAxis fx:id="yQuoteChartAxis" autoRanging="false" minorTickVisible="false" side="RIGHT" />
         </yAxis>
       </LineChart>
    </children>

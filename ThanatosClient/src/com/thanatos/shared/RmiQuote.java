@@ -2,7 +2,7 @@ package com.thanatos.shared;
 
 import java.io.Serializable;
 
-public class RmiQuote implements Serializable{
+public class RmiQuote implements Serializable,Comparable<RmiQuote>{
 
 	private static final long serialVersionUID = -4922285857615635483L;
 	private int id;
@@ -105,6 +105,11 @@ public class RmiQuote implements Serializable{
 
 	public void setOpen(Double open) {
 		this.open = open;
+	}
+
+	@Override
+	public int compareTo(RmiQuote o) {
+		return this.getId()>id ? 1:-1;
 	}
 		
 }

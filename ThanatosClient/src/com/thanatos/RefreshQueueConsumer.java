@@ -11,9 +11,6 @@ import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
 
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TitledPane;
-import javafx.scene.layout.HBox;
 
 public class RefreshQueueConsumer {
 	
@@ -21,7 +18,6 @@ public class RefreshQueueConsumer {
 	private static String QUEUE;
 	private Channel channel;
 	private Connection myConnection;
-	private ControllerManager controlUtil;
 	public RefreshQueueConsumer(Connection connection){
 		try {
 			myConnection=connection;
@@ -40,7 +36,7 @@ public class RefreshQueueConsumer {
 		        @Override
 		        public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
 		            throws IOException {
-		          String message = new String(body, "UTF-8");
+		          new String(body, "UTF-8");
 		          refreshMonitor();
 		        }
 		      };

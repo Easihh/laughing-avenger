@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.thanatos.Dao.OrderDao;
-import com.thanatos.Dao.QuoteDao;
 import com.thanatos.model.Order;
 import com.thanatos.model.Quote;
 import com.thanatos.shared.RmiQuote;

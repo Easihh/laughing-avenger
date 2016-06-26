@@ -3,7 +3,6 @@ package com.thanatos;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.thanatos.Dao.OrderDao;
 import com.thanatos.shared.RemoteOrder;
 
 import javafx.fxml.FXML;
@@ -14,7 +13,6 @@ import javafx.stage.Stage;
 
 public class NewOrderController implements Initializable{
 	
-	private OrderDao orderDao;
 	@FXML
 	private AnchorPane createOrderPane;
 	@FXML

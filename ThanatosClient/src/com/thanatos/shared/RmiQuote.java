@@ -1,6 +1,7 @@
 package com.thanatos.shared;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class RmiQuote implements Serializable,Comparable<RmiQuote>{
 
@@ -16,6 +17,7 @@ public class RmiQuote implements Serializable,Comparable<RmiQuote>{
 	private Double change;
 	private Double prevClose;
 	private Double open;
+	private Date timeDate;
 	
 	public RmiQuote(){}
 	
@@ -105,6 +107,14 @@ public class RmiQuote implements Serializable,Comparable<RmiQuote>{
 
 	public void setOpen(Double open) {
 		this.open = open;
+	}
+	
+	public Date getTimeDate() {
+		return timeDate;
+	}
+
+	public void setTimeDate(Date timeDate) {
+		this.timeDate = timeDate;
 	}
 
 	@Override

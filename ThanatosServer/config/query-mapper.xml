@@ -20,6 +20,7 @@
 			  <result property="prevClose" column="PrevClose"/>
 			  <result property="bid" column="Bid"/>
 			  <result property="ask" column="Ask"/>
+			  <result property="timeDate" column="TimeDate"/>
 	</resultMap>
     <select id="selectUser" resultMap="Users">
     		SELECT * FROM Users where

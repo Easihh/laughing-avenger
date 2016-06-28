@@ -45,7 +45,7 @@ public class Quote {
 		boolean isAM=true;
 		String[] hoursSplit=timeStr.split(":");
 		int dayHours=Integer.parseInt(hoursSplit[0]);
-		if(hoursSplit[1].contains("pm"))
+		if(hoursSplit[1].contains("pm") && dayHours!=12)
 			isAM=false;
 		int minute=Integer.parseInt(hoursSplit[1].split("[a-z]")[0]);
 		int hourOfDay=(isAM) ? dayHours:dayHours+12; 

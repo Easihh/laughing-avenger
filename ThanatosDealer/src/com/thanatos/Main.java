@@ -41,7 +41,7 @@ public class Main{
 			connection =factory.newConnection();	
 			refresh=new RefreshProducer(connection);
 			setupTestJobs(refresh);
-			//setupJobs(refresh);
+			setupJobs(refresh);
 			ctx=new ClassPathXmlApplicationContext("Spring.xml");
 			SessionSettings settings=new SessionSettings("Acceptor.cfg");
 			FixDealer server=new FixDealer();

@@ -56,6 +56,7 @@ public class RefreshQueueConsumer {
 				ControllerManager.getQuoteController().refreshMonitor();
 				ControllerManager.getPendingController().refreshMonitor();
 				ControllerManager.getOpenOrderController().refreshMonitor();
+				ControllerManager.getQuoteChartController().refreshMonitor();
 			}
 			
 		});

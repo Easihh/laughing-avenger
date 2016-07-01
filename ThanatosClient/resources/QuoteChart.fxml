@@ -11,7 +11,7 @@
    <children>
       <LineChart fx:id="qChart" alternativeColumnFillVisible="true" createSymbols="false" legendVisible="false" title="Tick Chart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <xAxis>
-          <NumberAxis autoRanging="false" lowerBound="9.0" minorTickVisible="false" side="BOTTOM" tickUnit="1.0" upperBound="17.0" fx:id="xQuoteChartAxis" />
+          <NumberAxis autoRanging="false"  minorTickVisible="false" side="BOTTOM"  fx:id="xQuoteChartAxis" />
         </xAxis>
         <yAxis>
           <NumberAxis fx:id="yQuoteChartAxis" autoRanging="false" minorTickVisible="false" side="RIGHT" />

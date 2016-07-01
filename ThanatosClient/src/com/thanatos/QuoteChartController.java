@@ -22,7 +22,7 @@ import javafx.scene.chart.XYChart;
 public class QuoteChartController implements Initializable{
     
 	@FXML
-	private LineChart<Double, Double> qChart;
+	private LineChart<Long, Double> qChart;
 	@FXML
 	private NumberAxis xQuoteChartAxis;
 	@FXML
@@ -32,9 +32,10 @@ public class QuoteChartController implements Initializable{
     private MinMax minMax;
     private final String targetIp="127.0.0.1";
     private final int targetPort=5055;
-    private XYChart.Series<Double,Double> series;
-    private final int numberOfYaxisCategory=5;
+    private XYChart.Series<Long,Double> series;
+    private final int nbrCategoryBetweenLowerUpper=3;
     private List<RmiQuote> myQuotes;
+    private final static long TWOHOURS_MILLISECONDS=7200000;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		ControllerManager.setQuoteChartController(this);
@@ -50,9 +51,11 @@ public class QuoteChartController implements Initializable{
 			 });
 			xQuoteChartAxis.setTickLabelFormatter(new NumberAxis.DefaultFormatter(xQuoteChartAxis){
 				 @Override public String toString(Number object) {
-					 String removeDecimal=Integer.toString(object.intValue());
-					 String amOrPm=(object.intValue()>=12 && object.intValue()<24) ? "PM":"AM";
-					 return String.format("%1$s:00"+amOrPm, removeDecimal); }
+					 Long dateLong=object.longValue();
+					 Calendar cal=Calendar.getInstance();
+					 cal.setTimeInMillis(dateLong);
+					 String amOrPm=(cal.get(Calendar.HOUR_OF_DAY)>=12 && cal.get(Calendar.HOUR_OF_DAY)<24) ? "PM":"AM";
+					 return String.format("%1$s:00"+amOrPm, cal.get(Calendar.HOUR_OF_DAY)); }
 			 });
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -71,41 +74,48 @@ public class QuoteChartController implements Initializable{
 		}
 	}
 
-	private void buildChartAxis(Calendar earliestPoint) {
-		double hours=earliestPoint.get(Calendar.HOUR_OF_DAY);
-		double minute=earliestPoint.get(Calendar.MINUTE)/100.0;
-		double transformIntoTick=0;
-		final double ratioToPoint=0.6;//100points between two decimal in chart but only 60mins in an hour
-		series=new XYChart.Series<Double,Double>();
-		for(RmiQuote rmi:myQuotes){
-			if(minute>0)
-				transformIntoTick=((minute/ratioToPoint))-minute;			
-			series.getData().add(new XYChart.Data<Double,Double>((hours+minute+transformIntoTick), rmi.getLastPx()));
-			System.out.println("Point at:"+(hours+minute+transformIntoTick)+" data:"+rmi.getLastPx());	
-			minute+=0.01;		
-			if(minute >=0.60){
-				minute=0;
-				hours++;
-				transformIntoTick=0;
-			}
+	private void addChartSeries() {
+		series=new XYChart.Series<Long,Double>();
+		for(RmiQuote rmi:myQuotes){	
+			series.getData().add(new XYChart.Data<Long,Double>(rmi.getTimeDate().getTime(), rmi.getLastPx()));
 		}
 		qChart.getData().add(series);
 	}
 	private void setupChart() throws RemoteException{
-		xQuoteChartAxis.setTickUnit(1);
+		xQuoteChartAxis.setTickUnit(TWOHOURS_MILLISECONDS);
 		myQuotes=rmi.getLast24HoursQuoteInfo("GOOG");
 		Collections.sort(myQuotes);
+		setupXAxis();
+		minMax=new MinMax(myQuotes);
+		double lowerBound=(Double.valueOf(minMax.getMin())).intValue();
+		double highestBound=minMax.getMax();
+		double spread=highestBound-lowerBound;
+		int step=getNextAxisYStepSize(spread);
+		int yTickUnit=step/nbrCategoryBetweenLowerUpper;	
+		highestBound=(Double.valueOf(minMax.getMax())).intValue()+yTickUnit;
+		yQuoteChartAxis.setLowerBound(lowerBound);
+		yQuoteChartAxis.setUpperBound(highestBound);
+		yQuoteChartAxis.setTickUnit(yTickUnit);
+		addChartSeries();
+	}
+	private void setupXAxis(){
 		Calendar lowest=Calendar.getInstance();
 		lowest.setTime(myQuotes.get(0).getTimeDate());
-		xQuoteChartAxis.setLowerBound(lowest.get(Calendar.HOUR_OF_DAY));	
+		lowest.add(Calendar.MINUTE, -lowest.get(Calendar.MINUTE));
+		xQuoteChartAxis.setLowerBound(lowest.getTimeInMillis());	
 		Calendar highest=Calendar.getInstance();		
 		highest.setTime(myQuotes.get(myQuotes.size()-1).getTimeDate());
-		xQuoteChartAxis.setUpperBound(highest.get(Calendar.HOUR_OF_DAY));
-		//setup Y Axis
-		minMax=new MinMax(myQuotes);
-		yQuoteChartAxis.setLowerBound(minMax.getMin());
-		yQuoteChartAxis.setUpperBound(minMax.getMax());
-		yQuoteChartAxis.setTickUnit((minMax.getMax()-minMax.getMin())/numberOfYaxisCategory);
-		buildChartAxis(lowest);
+		if(highest.get(Calendar.MINUTE)!=0)
+			highest.add(Calendar.MINUTE, 60-highest.get(Calendar.MINUTE));
+		xQuoteChartAxis.setUpperBound(highest.getTimeInMillis());
+	}
+	private int getNextAxisYStepSize(double spread){
+		int retVal=0;
+		if(spread>=1){
+			retVal=Double.valueOf(spread).intValue();
+			if(retVal%nbrCategoryBetweenLowerUpper!=0)
+				retVal+=nbrCategoryBetweenLowerUpper-(retVal%nbrCategoryBetweenLowerUpper);
+		}
+		return retVal;
 	}
 }

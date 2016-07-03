@@ -8,6 +8,12 @@
 			  <result property="username" column="Username"/>
 			  <result property="password" column="Password"/>
 	</resultMap>
+	<resultMap type="com.thanatos.shared.RmiOrder" id="RmiOrder">
+		  <id property="id" column="Orderid" />
+		  <result property="symbol" column="Symbol"/>
+		  <result property="quantity" column="Quantity"/>
+		  <result property="orderStatus" column="OrderStatus"/>
+	</resultMap>
 	<resultMap type="com.thanatos.shared.RmiQuote" id="RmiQuote">
 			  <id property="id" column="Quoteid" />
 			  <result property="symbol" column="Symbol"/>
@@ -22,18 +28,21 @@
 			  <result property="ask" column="Ask"/>
 			  <result property="timeDate" column="TimeDate"/>
 	</resultMap>
+	
     <select id="selectUser" resultMap="Users">
     		SELECT * FROM Users where
     		USERNAME=#{username} AND
     		PASSWORD=#{password}
     </select>
-      <select id="latestQuote" resultMap="RmiQuote" parameterType="string">
-        Select * from HistoricalQuote
-  			where  CONVERT(VARCHAR(10),TimeDate,110) =(
-				Select TOP(1) CONVERT(VARCHAR(10),TimeDate,110) as latestDate from HistoricalQuote order by Quoteid desc)
-		and SYMBOL=#{quote}
-		order by QuoteId asc
+    
+     <select id="latestQuote" resultMap="RmiQuote" parameterType="string">
+       Select * from HistoricalQuote
+ 			where  CONVERT(VARCHAR(10),TimeDate,110) =(
+			Select TOP(1) CONVERT(VARCHAR(10),TimeDate,110) as latestDate from HistoricalQuote order by Quoteid desc)
+			and SYMBOL=#{quote}
+			order by QuoteId asc
     </select>
+    
     <select id="quoteInfo" resultMap="RmiQuote">
     		SELECT * FROM Quote where
     		SYMBOL in 
@@ -42,5 +51,9 @@
 		        #{item}
 		  </foreach>
     </select>
+     <select id="pendingOrder" resultMap="RmiOrder" parameterType="int">
+ 		SELECT * FROM [Order] where
+ 		OrderStatus =#{value}
+	 </select>
 </mapper>
 

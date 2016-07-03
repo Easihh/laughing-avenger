@@ -5,7 +5,6 @@ import java.rmi.registry.Registry;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -19,7 +18,6 @@ import quickfix.SessionNotFound;
 import quickfix.SessionSettings;
 import quickfix.SocketInitiator;
 
-import com.ThanatosServer.Utility.AppUtils;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 public class ApplicationListener implements ServletContextListener {
@@ -31,8 +29,9 @@ public class ApplicationListener implements ServletContextListener {
 	private static final String SENDER="CLIENT1";
 	private static final String TARGET="FixDealer";
 	private static final String FIX_VERSION="FIX.4.4";
-	private  ApplicationContext myContext;
-	
+	private ApplicationContext myContext;
+	private int targetPort=5055;
+	private String host="localhost";
 	@Override
 	public void contextDestroyed(ServletContextEvent context) {}
 
@@ -40,14 +39,16 @@ public class ApplicationListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent context) {
 		myContext = new ClassPathXmlApplicationContext("ThanatosBean.xml");		
 		factory=new ConnectionFactory();
-		factory.setHost("localhost");
+		factory.setHost(host);
 		try{
 			
-			Registry reg=LocateRegistry.createRegistry(5055);
+			Registry reg=LocateRegistry.createRegistry(targetPort);
 			RmiLoginImpl login=new RmiLoginImpl();
 			RmiQuoteImpl quote=new RmiQuoteImpl();
+			RmiOrderImpl order=new RmiOrderImpl();
 			reg.rebind("login", login);
 			reg.rebind("quote", quote);
+			reg.rebind("order", order);
 			System.out.println("server is ready");
 			setupFixConnectionToDealer();
 			SessionID sessionID = new SessionID(FIX_VERSION,SENDER,TARGET);

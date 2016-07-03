@@ -40,7 +40,7 @@ public class Main{
 			factory.setHost("localhost");
 			connection =factory.newConnection();	
 			refresh=new RefreshProducer(connection);
-			setupTestJobs(refresh);
+			//setupTestJobs(refresh);
 			setupJobs(refresh);
 			ctx=new ClassPathXmlApplicationContext("Spring.xml");
 			SessionSettings settings=new SessionSettings("Acceptor.cfg");

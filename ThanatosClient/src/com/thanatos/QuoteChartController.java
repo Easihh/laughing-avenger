@@ -34,6 +34,7 @@ public class QuoteChartController implements Initializable{
     private final int targetPort=5055;
     private XYChart.Series<Long,Double> series;
     private final int nbrCategoryBetweenLowerUpper=3;
+    private final int nbrYAxisCategory=5;
     private List<RmiQuote> myQuotes;
     private final static long TWOHOURS_MILLISECONDS=7200000;
 	@Override
@@ -91,7 +92,7 @@ public class QuoteChartController implements Initializable{
 		double spread=highestBound-lowerBound;
 		int step=getNextAxisYStepSize(spread);
 		int yTickUnit=step/nbrCategoryBetweenLowerUpper;	
-		highestBound=(Double.valueOf(minMax.getMax())).intValue()+yTickUnit;
+		highestBound=(Double.valueOf(minMax.getMin())).intValue()+(yTickUnit*(nbrYAxisCategory-1));
 		yQuoteChartAxis.setLowerBound(lowerBound);
 		yQuoteChartAxis.setUpperBound(highestBound);
 		yQuoteChartAxis.setTickUnit(yTickUnit);

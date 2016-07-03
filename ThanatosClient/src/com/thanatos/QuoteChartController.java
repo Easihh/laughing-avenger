@@ -83,8 +83,7 @@ public class QuoteChartController implements Initializable{
 	}
 	private void setupChart() throws RemoteException{
 		xQuoteChartAxis.setTickUnit(TWOHOURS_MILLISECONDS);
-		myQuotes=rmi.getLast24HoursQuoteInfo("GOOG");
-		Collections.sort(myQuotes);
+		myQuotes=rmi.getLatestQuoteInfo("GOOG");
 		setupXAxis();
 		minMax=new MinMax(myQuotes);
 		double lowerBound=(Double.valueOf(minMax.getMin())).intValue();
@@ -111,7 +110,7 @@ public class QuoteChartController implements Initializable{
 	}
 	private int getNextAxisYStepSize(double spread){
 		int retVal=0;
-		if(spread>=1){
+		if(spread>=1){//If less than 1$ per major price tick category we need different logic ie stock with low price.
 			retVal=Double.valueOf(spread).intValue();
 			if(retVal%nbrCategoryBetweenLowerUpper!=0)
 				retVal+=nbrCategoryBetweenLowerUpper-(retVal%nbrCategoryBetweenLowerUpper);

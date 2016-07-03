@@ -17,6 +17,38 @@ public class RemoteOrder implements Serializable{
 		orderType=OrderType.MARKET;
 	}
 	
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public String getSymbol() {
+		return symbol;
+	}
+
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
+
+	public OrderSide getOrderSide() {
+		return orderSide;
+	}
+
+	public void setOrderSide(OrderSide orderSide) {
+		this.orderSide = orderSide;
+	}
+
+	public OrderType getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(OrderType orderType) {
+		this.orderType = orderType;
+	}
+	
 	@Override
 	public String toString(){
 		String retVal="quantity:"+quantity+" symbol:"+symbol+

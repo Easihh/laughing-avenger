@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import com.thanatos.model.Order;
 import com.thanatos.model.Quote;
+import com.thanatos.shared.RmiOrderIntf;
 import com.thanatos.shared.RmiQuote;
 import com.thanatos.shared.RmiQuoteIntf;
 
@@ -33,19 +34,26 @@ public class PendingController implements Initializable{
     private ObservableList<Order> pOrders;
     @FXML
     private AnchorPane	accountInfo;
+    private RmiOrderIntf rmi;
+    private final String targetIp="127.0.0.1";
+    private final int targetPort=5055;
+    private Registry myReg;
     
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-	ControllerManager.setPendingController(this);
-	  pOrders=FXCollections.observableArrayList();
-	  //pOrders.add(new Order("AMZ",9999));
-	  symbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
-	  qtyCol.setCellValueFactory(new PropertyValueFactory("qty"));
-	  //symbolCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
-	  //qtyCol.prefWidthProperty().bind(pendingOrdersTableView.widthProperty().multiply(0.25));
-	  //pendingOrdersTableView.setItems(pOrders);
-	  pendingOrdersTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		ControllerManager.setPendingController(this);
+		try{
+			myReg=LocateRegistry.getRegistry(targetIp,targetPort);
+			rmi=(RmiOrderIntf)myReg.lookup("order");
+		    pOrders=FXCollections.observableArrayList();
+		    symbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
+		    qtyCol.setCellValueFactory(new PropertyValueFactory("qty"));
+		    pendingOrdersTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		  }
+		catch(Exception e ){
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public void refreshMonitor() {

@@ -6,7 +6,7 @@ old project Adventure of lolo Java and C# version: https://www.youtube.com/watch
 
 project Zelda C++: https://youtu.be/MHDh7Sj7n4o
 
-Current Project: Strategic Trade Order System    
+Current Project: Trade Order System    
 Project Tools:JavaFX,RabbitMQ,QuickfixJ,MyBatis,MSSQL,Quartz Scheduler,RMI 
 Project expected flow: https://github.com/Easihh/laughing-avenger/blob/master/ThanatosClient/ThanatosDesign.png
 

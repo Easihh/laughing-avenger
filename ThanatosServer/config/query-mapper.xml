@@ -27,11 +27,12 @@
     		USERNAME=#{username} AND
     		PASSWORD=#{password}
     </select>
-      <select id="last24HoursQuote" resultMap="RmiQuote" parameterType="string">
-  		SELECT TOP 391 * FROM HistoricalQuote      
-			where     
-			SYMBOL =#{quote}
-			Order by Quoteid desc
+      <select id="latestQuote" resultMap="RmiQuote" parameterType="string">
+        Select * from HistoricalQuote
+  			where  CONVERT(VARCHAR(10),TimeDate,110) =(
+				Select TOP(1) CONVERT(VARCHAR(10),TimeDate,110) as latestDate from HistoricalQuote order by Quoteid desc)
+		and SYMBOL=#{quote}
+		order by QuoteId asc
     </select>
     <select id="quoteInfo" resultMap="RmiQuote">
     		SELECT * FROM Quote where

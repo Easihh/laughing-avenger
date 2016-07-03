@@ -9,6 +9,6 @@ public interface QuoteDao {
 	
 	public List<RmiQuote> getQuotesInfo(List<String> quotes);
 
-	public List<RmiQuote> getLast24HoursQuoteInfo(String quote);
+	public List<RmiQuote> getLatestQuoteInfo(String quote);
 	
 }

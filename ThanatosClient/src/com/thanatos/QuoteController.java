@@ -59,7 +59,7 @@ public class QuoteController implements Initializable{
 			List<String> myQuotes=new ArrayList<>();
 			myQuotes.add("GOOG");
 			rmiQuotes=rmi.getQuotesInfo(myQuotes);
-			quoteList=Quote.rmiOrderToOrder(rmiQuotes);
+			quoteList=Quote.rmiQuoteToQuote(rmiQuotes);
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
@@ -86,7 +86,7 @@ public class QuoteController implements Initializable{
 			List<RmiQuote> rmiQuotes=rmi.getQuotesInfo(myQuotes);
 			if(rmiQuotes.size()==0)
 				System.out.println("Failed to get Quotes Infos");
-			List<Quote> quoteList=Quote.rmiOrderToOrder(rmiQuotes);
+			List<Quote> quoteList=Quote.rmiQuoteToQuote(rmiQuotes);
 			if(quoteList.size()==0)
 				System.out.println("Monitor will be Empty");
 			quotes.addAll(quoteList);

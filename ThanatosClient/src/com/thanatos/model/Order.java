@@ -1,5 +1,11 @@
 package com.thanatos.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.thanatos.shared.RmiOrder;
+import com.thanatos.shared.RmiQuote;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -19,6 +25,11 @@ public class Order {
 		qty=new SimpleIntegerProperty(quantity);
 	}
 	
+	public Order(RmiOrder rmi) {
+		symbol=new SimpleStringProperty(rmi.getSymbol());
+		qty=new SimpleIntegerProperty(rmi.getQuantity());
+	}
+
 	public StringProperty symbolProperty(){
 		return symbol;
 	}
@@ -41,5 +52,16 @@ public class Order {
 	
 	public void setQty(int quantity) {
 		qty.set(quantity);
+	}
+	
+	
+	
+	public static List<Order> rmiOrdertoOrder(List<RmiOrder> rmiOrders){
+		List<Order> retVal=new ArrayList<Order>();
+		for(RmiOrder rmi:rmiOrders){
+			Order myOrder=new Order(rmi);
+			retVal.add(myOrder);
+		}
+		return retVal;
 	}
 }

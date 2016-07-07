@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import com.thanatos.model.Order;
 import com.thanatos.model.Quote;
+import com.thanatos.shared.RmiOrder;
 import com.thanatos.shared.RmiOrderIntf;
 import com.thanatos.shared.RmiQuote;
 import com.thanatos.shared.RmiQuoteIntf;
@@ -43,13 +44,16 @@ public class PendingController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		ControllerManager.setPendingController(this);
+		pOrders=FXCollections.observableArrayList();
 		try{
 			myReg=LocateRegistry.getRegistry(targetIp,targetPort);
 			rmi=(RmiOrderIntf)myReg.lookup("order");
-		    pOrders=FXCollections.observableArrayList();
+			List<RmiOrder> rmiOrders=rmi.getPendingOrders();
+			pOrders.addAll(Order.rmiOrdertoOrder(rmiOrders));
 		    symbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
 		    qtyCol.setCellValueFactory(new PropertyValueFactory("qty"));
 		    pendingOrdersTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		    pendingOrdersTableView.setItems(pOrders);
 		  }
 		catch(Exception e ){
 			System.out.println(e.getMessage());

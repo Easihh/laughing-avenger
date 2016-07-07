@@ -97,7 +97,7 @@ public class Quote {
 		return new SimpleDoubleProperty(prevClose);
 	}
 
-	public static List<Quote> rmiOrderToOrder(List<RmiQuote> rmiQuotes) {
+	public static List<Quote> rmiQuoteToQuote(List<RmiQuote> rmiQuotes) {
 		List<Quote> retVal=new ArrayList<Quote>();
 		for(RmiQuote rmi:rmiQuotes){
 			Quote myQuote=new Quote(rmi);

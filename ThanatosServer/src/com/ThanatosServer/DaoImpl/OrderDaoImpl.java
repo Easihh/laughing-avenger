@@ -6,10 +6,8 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.ThanatosServer.OrderStatus;
 import com.ThanatosServer.Dao.OrderDao;
-import com.ThanatosServer.Dao.QuoteDao;
 import com.ThanatosServer.Utility.MyBatisUtil;
 import com.thanatos.shared.RmiOrder;
-import com.thanatos.shared.RmiQuote;
 
 
 public class OrderDaoImpl  implements OrderDao{
@@ -18,7 +16,7 @@ public class OrderDaoImpl  implements OrderDao{
 	public List<RmiOrder> getPendingOrders() {
 		List<RmiOrder> retVal=null;
 		try(SqlSession session=MyBatisUtil.getSqlSessionFactory().openSession(true)){
-			retVal=session.selectList("pendingOrder",OrderStatus.PENDING.getValue());
+			retVal=session.selectList("pendingOrder",OrderStatus.PENDING.toString());
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());

@@ -8,11 +8,12 @@
 			  <result property="username" column="Username"/>
 			  <result property="password" column="Password"/>
 	</resultMap>
-	<resultMap type="com.thanatos.shared.RmiOrder" id="RmiOrder">
+		<resultMap type="com.thanatos.shared.RmiOrder" id="RmiOrder">
 		  <id property="id" column="Orderid" />
 		  <result property="symbol" column="Symbol"/>
 		  <result property="quantity" column="Quantity"/>
 		  <result property="orderStatus" column="OrderStatus"/>
+		  <result property="ticketID" column="TicketID"/>
 	</resultMap>
 	<resultMap type="com.thanatos.shared.RmiQuote" id="RmiQuote">
 			  <id property="id" column="Quoteid" />
@@ -51,7 +52,7 @@
 		        #{item}
 		  </foreach>
     </select>
-     <select id="pendingOrder" resultMap="RmiOrder" parameterType="int">
+     <select id="pendingOrder" resultMap="RmiOrder" parameterType="string">
  		SELECT * FROM [Order] where
  		OrderStatus =#{value}
 	 </select>

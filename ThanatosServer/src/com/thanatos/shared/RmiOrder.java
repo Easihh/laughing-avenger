@@ -9,8 +9,8 @@ public class RmiOrder implements Serializable{
 	private int id;
 	private String symbol;
 	private int quantity;
-
-	private int orderStatus;
+	private int ticketID;
+	private String  orderStatus;
 	
 	public RmiOrder(){}
 	
@@ -20,6 +20,14 @@ public class RmiOrder implements Serializable{
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public int getTicketID() {
+		return ticketID;
+	}
+
+	public void setTicketID(int ticketID) {
+		this.ticketID = ticketID;
 	}
 
 	public String getSymbol() {
@@ -38,11 +46,11 @@ public class RmiOrder implements Serializable{
 		this.quantity = quantity;
 	}
 	
-	public int getOrderStatus() {
+	public String getOrderStatus() {
 		return orderStatus;
 	}
 
-	public void setOrderStatus(int orderStatus) {
+	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
 	}
 			

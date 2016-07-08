@@ -19,7 +19,7 @@ public class RmiOrderImpl extends UnicastRemoteObject implements RmiOrderIntf{
 	}
 
 	@Override
-	public List<RmiOrder> getPendingOrders(List<String> quotes)
+	public List<RmiOrder> getPendingOrders()
 			throws RemoteException {
 		return orderDao.getPendingOrders();
 	}

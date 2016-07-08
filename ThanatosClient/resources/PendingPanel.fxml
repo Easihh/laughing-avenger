@@ -19,7 +19,13 @@
             <TableView fx:id="pendingOrdersTableView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <columns>
 				   <TableColumn fx:id="symbolCol" prefWidth="75.0" text="Symbol" />
+				   <TableColumn fx:id="ticketCol" prefWidth="75.0" text="Ticket ID" />
 				   <TableColumn fx:id="qtyCol" prefWidth="75.0" text="Quantity" />
+				   <TableColumn prefWidth="75.0" text="B/S" />
+				   <TableColumn prefWidth="75.0" text="Order Type" />
+				   <TableColumn prefWidth="75.0" text="Stop" />
+				    <TableColumn prefWidth="75.0" text="Limit" />
+				   <TableColumn fx:id="ordStatusCol" prefWidth="75.0" text="Status" />			   
                </columns>
             </TableView>
          </children>

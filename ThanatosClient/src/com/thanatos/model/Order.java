@@ -15,19 +15,17 @@ public class Order {
 	private int id;
 	private StringProperty symbol;
 	private IntegerProperty qty;
-	
+	private StringProperty orderStatus;
+	private IntegerProperty ticketID;
 	public int getId() {
 		return id;
 	}
-	
-	public Order(String symbol,int quantity){
-		this.symbol=new SimpleStringProperty(symbol);
-		qty=new SimpleIntegerProperty(quantity);
-	}
-	
+		
 	public Order(RmiOrder rmi) {
 		symbol=new SimpleStringProperty(rmi.getSymbol());
 		qty=new SimpleIntegerProperty(rmi.getQuantity());
+		orderStatus=new SimpleStringProperty(rmi.getOrderStatus());
+		ticketID=new SimpleIntegerProperty(rmi.getTicketID());
 	}
 
 	public StringProperty symbolProperty(){
@@ -42,6 +40,18 @@ public class Order {
 		this.symbol.set(symbol);
 	}
 	
+	public StringProperty orderStatusProperty(){
+		return orderStatus;
+	}
+	
+	public String getOrderStatus() {
+		return orderStatusProperty().get();
+	}
+	
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus.set(orderStatus);
+	}
+	
 	public IntegerProperty qtyProperty() {
 		return qty;
 	}
@@ -52,6 +62,18 @@ public class Order {
 	
 	public void setQty(int quantity) {
 		qty.set(quantity);
+	}
+	
+	public IntegerProperty ticketIDProperty() {
+		return ticketID;
+	}
+	
+	public int getTicketID() {
+		return qtyProperty().get();
+	}
+	
+	public void setTicketID(int ticketID) {
+		this.ticketID.set(ticketID);
 	}
 	
 	

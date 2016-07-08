@@ -32,6 +32,10 @@ public class PendingController implements Initializable{
     public TableColumn<?, ?> symbolCol;
     @FXML
     public TableColumn<?, ?> qtyCol;
+    @FXML
+    public TableColumn<?, ?> ordStatusCol;
+    @FXML
+    public TableColumn<?, ?>  ticketCol;
     private ObservableList<Order> pOrders;
     @FXML
     private AnchorPane	accountInfo;
@@ -52,6 +56,8 @@ public class PendingController implements Initializable{
 			pOrders.addAll(Order.rmiOrdertoOrder(rmiOrders));
 		    symbolCol.setCellValueFactory(new PropertyValueFactory("symbol"));
 		    qtyCol.setCellValueFactory(new PropertyValueFactory("qty"));
+		    ordStatusCol.setCellValueFactory(new PropertyValueFactory("orderStatus"));
+		    ticketCol.setCellValueFactory(new PropertyValueFactory("ticketID"));
 		    pendingOrdersTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		    pendingOrdersTableView.setItems(pOrders);
 		  }

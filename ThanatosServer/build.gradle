@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'application'
+
+group = 'ThanatosServer'
+version = '0.0.1-SNAPSHOT'
+
+description = """ThanatosServer"""
+
+war.baseName = 'ThanatosServer'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+repositories {
+        
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+sourceSets {
+	        main {
+	            java {
+	                srcDir 'src'
+	            }
+	            resources{
+	            	srcDir 'config'
+	            }
+	        }
+	    }
+	    
+dependencies {
+	compile fileTree(dir: 'libs', include: '*.jar')
+    compile group: 'com.rabbitmq', name: 'amqp-client', version:'3.6.2'
+    compile group: 'org.mybatis', name: 'mybatis', version:'3.4.0'
+    compile group: 'org.quickfixj', name: 'quickfixj-core', version:'1.6.2'
+    compile group: 'org.quickfixj', name: 'quickfixj-messages-fix44', version:'1.6.2'
+    compile group: 'org.springframework', name: 'spring-context', version:'4.2.2.RELEASE'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+}
+
+task explodedWar(type: Copy) {
+    into "$buildDir/exploded"
+    with war
+}
+
+war.dependsOn explodedWar
+
+war {
+}

@@ -9,7 +9,7 @@
             <dataSource type="POOLED">
                 <property name="driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
                 <property name="url"
-                    value="jdbc:sqlserver://74.58.85.141:1433;databaseName=Thanatos;"/>
+                    value="jdbc:sqlserver://184.161.178.153:1433;databaseName=Thanatos;"/>
                 <property name="username" value="sa" />
                 <property name="password" value="Polimkar1" />
             </dataSource>

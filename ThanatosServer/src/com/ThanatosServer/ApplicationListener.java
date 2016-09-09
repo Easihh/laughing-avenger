@@ -1,9 +1,11 @@
 package com.ThanatosServer;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -20,6 +22,8 @@ import quickfix.SocketInitiator;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+
+@WebListener
 public class ApplicationListener implements ServletContextListener {
 	
 	private MqOrderListener orderListener;
@@ -32,8 +36,11 @@ public class ApplicationListener implements ServletContextListener {
 	private ApplicationContext myContext;
 	private int targetPort=5055;
 	private String host="localhost";
+	
 	@Override
-	public void contextDestroyed(ServletContextEvent context) {}
+	public void contextDestroyed(ServletContextEvent context) {
+		System.out.println("server context has been destroyed");
+	}
 
 	@Override
 	public void contextInitialized(ServletContextEvent context) {

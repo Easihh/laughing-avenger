@@ -28,6 +28,6 @@
             </TableView>
          </children>
       </AnchorPane>
-      <fx:include source="QuoteChart.fxml"/>
+      <fx:include source="QuoteChart.fxml" fx:id="quoteChartPane"/>
    </children>
 </HBox>

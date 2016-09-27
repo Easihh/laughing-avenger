@@ -49,14 +49,13 @@ public class LoginController implements Initializable{
 				screenHeight=primaryScreenBounds.getHeight();
 				Stage current=(Stage)rootPane.getScene().getWindow();
 				current.setTitle("Thanatos");
-				Scene scene = new Scene((Parent)loader.load(),600,800);
+				Scene scene = new Scene((Parent)loader.load());
 				current.setScene(scene);
 				scene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
 				MainController controller=(MainController)loader.getController();
 				controller.setupMq();
 			}
 			else showErrorMessage("Wrong Username/Password");
-			//current.setMaximized(true);
 			
 		}
 		catch (Exception e) {

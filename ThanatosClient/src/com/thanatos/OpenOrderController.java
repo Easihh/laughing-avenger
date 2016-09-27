@@ -23,7 +23,6 @@ public class OpenOrderController implements Initializable{
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		ControllerManager.setOpenOrderController(this);
 		openTradeTableView.setPlaceholder(new Label(""));
 	}
 

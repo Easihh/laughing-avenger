@@ -23,11 +23,21 @@ public class MainController implements Initializable{
     @FXML
     private AnchorPane mainPane;
     private RemoteOrderProducer producer;
-    private RefreshQueueConsumer refresh;
+	private RefreshQueueConsumer refresh;
 	private Connection connection;
+	private static MainController mainController=null;
+	@FXML
+	private OpenOrderController openPanelController;
+	@FXML
+	private PendingController pendingPanelController;
+	@FXML
+	private QuoteController quotePanelController;
+	@FXML
+	private AccountInfoController accountPanelController;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		mainController=this;
 	}
 	
 	public void createNewOrder(){
@@ -63,6 +73,26 @@ public class MainController implements Initializable{
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static MainController getInstance(){
+		return mainController;
+	}
+	
+	public OpenOrderController getOpenPanelController() {
+		return openPanelController;
+	}
+	
+	public PendingController getPendingPanelController() {
+		return pendingPanelController;
+	}
+
+	public QuoteController getQuotePanelController() {
+		return quotePanelController;
+	}
+
+	public AccountInfoController getAccountPanelController() {
+		return accountPanelController;
 	}
 	
 }

@@ -5,9 +5,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import org.springframework.stereotype.Controller;
 
 import com.thanatos.shared.RmiQuote;
 import com.thanatos.shared.RmiQuoteIntf;
@@ -18,7 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-
+@Controller
 public class QuoteChartController implements Initializable{
     
 	@FXML
@@ -39,7 +39,6 @@ public class QuoteChartController implements Initializable{
     private final static long TWOHOURS_MILLISECONDS=7200000;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		ControllerManager.setQuoteChartController(this);
 		try {
 			myReg=LocateRegistry.getRegistry(targetIp,targetPort);
 			rmi=(RmiQuoteIntf)myReg.lookup("quote");

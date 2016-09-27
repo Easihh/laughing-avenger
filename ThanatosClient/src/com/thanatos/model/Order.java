@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.thanatos.shared.RmiOrder;
-import com.thanatos.shared.RmiQuote;
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

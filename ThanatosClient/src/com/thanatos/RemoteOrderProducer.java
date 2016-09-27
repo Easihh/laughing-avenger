@@ -3,7 +3,7 @@ package com.thanatos;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.thanatos.shared.RemoteOrder;
-import com.thanatos.utility.Util;
+import com.thanatos.utility.FileUtil;
 
 import java.io.IOException;
 
@@ -35,7 +35,7 @@ public class RemoteOrderProducer{
 	                                .correlationId(corrId)
 	                                .build();
 
-	    channel.basicPublish(EXCHANGE, queueName, props, Util.toByte(remoteOrder));
+	    channel.basicPublish(EXCHANGE, queueName, props, FileUtil.toByte(remoteOrder));
 	    
 	    System.out.println("Order Sent");
 	}

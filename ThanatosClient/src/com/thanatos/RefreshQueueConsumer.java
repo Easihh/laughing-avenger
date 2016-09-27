@@ -53,10 +53,10 @@ public class RefreshQueueConsumer {
 		Platform.runLater(new Runnable(){
 			@Override
 			public void run() {
-				ControllerManager.getQuoteController().refreshMonitor();
-				ControllerManager.getPendingController().refreshMonitor();
-				ControllerManager.getOpenOrderController().refreshMonitor();
-				ControllerManager.getQuoteChartController().refreshMonitor();
+				MainController.getInstance().getQuotePanelController().refreshMonitor();
+				MainController.getInstance().getPendingPanelController().refreshMonitor();
+				MainController.getInstance().getOpenPanelController().refreshMonitor();
+				MainController.getInstance().getQuotePanelController().getQuoteChartPaneController().refreshMonitor();
 			}
 			
 		});

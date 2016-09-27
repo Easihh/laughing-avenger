@@ -8,7 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
-public class Util {
+public class FileUtil {
 	
 	public static byte[] toByte(Object object) throws IOException{
 		try(ByteArrayOutputStream bos=new ByteArrayOutputStream();

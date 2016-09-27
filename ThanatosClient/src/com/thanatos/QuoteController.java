@@ -43,13 +43,14 @@ public class QuoteController implements Initializable{
     private static ObservableList<Quote> quotes;
     @FXML
     private AnchorPane	accountInfo;
-    private Registry myReg;
+    @FXML
+    private QuoteChartController quoteChartPaneController;
+	private Registry myReg;
     private RmiQuoteIntf rmi;
     
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		ControllerManager.setQuoteController(this);
 		List<RmiQuote> rmiQuotes;
 		List<Quote> quoteList=new ArrayList<Quote>();
 		quotes=FXCollections.observableArrayList();
@@ -94,5 +95,9 @@ public class QuoteController implements Initializable{
 		catch(Exception e){
 			System.out.println(e.getMessage());
 		}
+	}
+	
+    public QuoteChartController getQuoteChartPaneController() {
+		return quoteChartPaneController;
 	}
 }

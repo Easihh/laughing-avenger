@@ -36,10 +36,10 @@
                 </Menu>
               </menus>
             </MenuBar>
-            	<fx:include source="AccountPanel.fxml"/>
-				<fx:include source="QuotePanel.fxml"/>
-				<fx:include source="PendingPanel.fxml"/>
-				<fx:include source="OpenPanel.fxml"/>
+            	<fx:include source="AccountPanel.fxml" fx:id="accountPanel"/>
+				<fx:include source="QuotePanel.fxml" fx:id="quotePanel"/>
+				<fx:include source="PendingPanel.fxml" fx:id="pendingPanel"/>
+				<fx:include source="OpenPanel.fxml" fx:id="openPanel"/>
          </children>
       </VBox>
    </children>

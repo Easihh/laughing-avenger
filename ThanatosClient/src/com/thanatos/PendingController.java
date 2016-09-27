@@ -3,20 +3,14 @@ package com.thanatos;
 import java.net.URL;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import com.thanatos.model.Order;
-import com.thanatos.model.Quote;
 import com.thanatos.shared.RmiOrder;
 import com.thanatos.shared.RmiOrderIntf;
-import com.thanatos.shared.RmiQuote;
-import com.thanatos.shared.RmiQuoteIntf;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
@@ -47,7 +41,6 @@ public class PendingController implements Initializable{
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		ControllerManager.setPendingController(this);
 		pOrders=FXCollections.observableArrayList();
 		try{
 			myReg=LocateRegistry.getRegistry(targetIp,targetPort);

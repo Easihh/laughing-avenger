@@ -1,11 +1,11 @@
-package com.thanatos.daoImpl;
+package com.thanatos.server.dao.impl;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import com.ThanatosServer.Utility.AppUtils;
-import com.thanatos.dao.UserDao;
-import com.thanatos.rmi.intf.impl.RmiLoginIntf;
+import com.thanatos.common.intf.RmiLoginIntf;
+import com.thanatos.server.dao.UserDao;
+import com.thanatos.server.utility.AppUtils;
 
 public class RmiLoginImpl extends UnicastRemoteObject implements RmiLoginIntf{
 

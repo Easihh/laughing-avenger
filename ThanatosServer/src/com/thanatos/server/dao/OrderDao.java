@@ -1,8 +1,8 @@
-package com.thanatos.dao;
+package com.thanatos.server.dao;
 
 import java.util.List;
 
-import com.thanatos.rmi.intf.RmiOrder;
+import com.thanatos.common.model.RmiOrder;
 
 
 

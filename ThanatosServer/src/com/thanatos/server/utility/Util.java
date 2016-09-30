@@ -1,4 +1,4 @@
-package com.ThanatosServer.Utility;
+package com.thanatos.server.utility;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -1,13 +1,13 @@
-package com.thanatos.daoImpl;
+package com.thanatos.server.dao.impl;
 
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
-import com.ThanatosServer.Utility.MyBatisUtil;
-import com.thanatos.dao.OrderDao;
-import com.thanatos.main.OrderStatus;
-import com.thanatos.rmi.intf.RmiOrder;
+import com.thanatos.common.model.RmiOrder;
+import com.thanatos.server.dao.OrderDao;
+import com.thanatos.server.main.OrderStatus;
+import com.thanatos.server.utility.MyBatisUtil;
 
 
 public class OrderDaoImpl  implements OrderDao{

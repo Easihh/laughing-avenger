@@ -1,4 +1,4 @@
-package com.thanatos.main;
+package com.thanatos.server.main;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import javax.servlet.ServletContextEvent;
@@ -20,9 +20,9 @@ import quickfix.SocketInitiator;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import com.thanatos.daoImpl.RmiLoginImpl;
-import com.thanatos.daoImpl.RmiOrderImpl;
-import com.thanatos.daoImpl.RmiQuoteImpl;
+import com.thanatos.server.dao.impl.RmiLoginImpl;
+import com.thanatos.server.dao.impl.RmiOrderImpl;
+import com.thanatos.server.dao.impl.RmiQuoteImpl;
 
 @SuppressWarnings("unused")
 @WebListener

@@ -1,8 +1,8 @@
-package com.ThanatosServer.Utility;
+package com.thanatos.server.utility;
 
 import java.util.Date;
 
-import com.thanatos.rmi.model.RemoteOrder;
+import com.thanatos.common.model.RemoteOrder;
 
 import quickfix.Session;
 import quickfix.SessionID;

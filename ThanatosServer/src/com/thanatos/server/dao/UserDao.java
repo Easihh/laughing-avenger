@@ -1,4 +1,4 @@
-package com.thanatos.dao;
+package com.thanatos.server.dao;
 
 
 public interface UserDao {

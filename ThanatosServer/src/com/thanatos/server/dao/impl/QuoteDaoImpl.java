@@ -1,12 +1,12 @@
-package com.thanatos.daoImpl;
+package com.thanatos.server.dao.impl;
 
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
-import com.ThanatosServer.Utility.MyBatisUtil;
-import com.thanatos.dao.QuoteDao;
-import com.thanatos.rmi.intf.RmiQuote;
+import com.thanatos.common.model.RmiQuote;
+import com.thanatos.server.dao.QuoteDao;
+import com.thanatos.server.utility.MyBatisUtil;
 
 
 public class QuoteDaoImpl  implements QuoteDao{

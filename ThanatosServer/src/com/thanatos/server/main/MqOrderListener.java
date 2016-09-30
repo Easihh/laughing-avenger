@@ -1,12 +1,10 @@
-package com.thanatos.main;
+package com.thanatos.server.main;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 import quickfix.SessionID;
 
-import com.ThanatosServer.Utility.TranslatorToFix;
-import com.ThanatosServer.Utility.Util;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Consumer;
@@ -15,7 +13,9 @@ import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
-import com.thanatos.rmi.model.RemoteOrder;
+import com.thanatos.common.model.RemoteOrder;
+import com.thanatos.server.utility.TranslatorToFix;
+import com.thanatos.server.utility.Util;
 
 public class MqOrderListener{
 	

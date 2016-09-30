@@ -1,4 +1,4 @@
-package com.thanatos.main;
+package com.thanatos.server.main;
 
 import quickfix.Application;
 import quickfix.DoNotSend;

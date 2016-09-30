@@ -1,10 +1,10 @@
-package com.thanatos.daoImpl;
+package com.thanatos.server.dao.impl;
 
 import org.apache.ibatis.session.SqlSession;
 
-import com.ThanatosServer.Utility.MyBatisUtil;
-import com.thanatos.dao.UserDao;
 import com.thanatos.model.Users;
+import com.thanatos.server.dao.UserDao;
+import com.thanatos.server.utility.MyBatisUtil;
 
 
 public class UserDaoImpl  implements UserDao{

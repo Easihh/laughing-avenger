@@ -1,13 +1,13 @@
-package com.thanatos.daoImpl;
+package com.thanatos.server.dao.impl;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-import com.ThanatosServer.Utility.AppUtils;
-import com.thanatos.dao.OrderDao;
-import com.thanatos.rmi.intf.RmiOrder;
-import com.thanatos.rmi.intf.impl.RmiOrderIntf;
+import com.thanatos.common.intf.RmiOrderIntf;
+import com.thanatos.common.model.RmiOrder;
+import com.thanatos.server.dao.OrderDao;
+import com.thanatos.server.utility.AppUtils;
 
 public class RmiOrderImpl extends UnicastRemoteObject implements RmiOrderIntf{
 

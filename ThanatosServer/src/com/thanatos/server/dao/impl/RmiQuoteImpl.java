@@ -1,13 +1,13 @@
-package com.thanatos.daoImpl;
+package com.thanatos.server.dao.impl;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-import com.ThanatosServer.Utility.AppUtils;
-import com.thanatos.dao.QuoteDao;
-import com.thanatos.rmi.intf.RmiQuote;
-import com.thanatos.rmi.intf.impl.RmiQuoteIntf;
+import com.thanatos.common.intf.RmiQuoteIntf;
+import com.thanatos.common.model.RmiQuote;
+import com.thanatos.server.dao.QuoteDao;
+import com.thanatos.server.utility.AppUtils;
 
 public class RmiQuoteImpl extends UnicastRemoteObject implements RmiQuoteIntf{
 

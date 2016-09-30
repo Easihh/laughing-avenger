@@ -1,9 +1,8 @@
-package com.thanatos.dao;
+package com.thanatos.server.dao;
 
 import java.util.List;
 
-import com.thanatos.rmi.intf.RmiQuote;
-
+import com.thanatos.common.model.RmiQuote;
 
 
 public interface QuoteDao {

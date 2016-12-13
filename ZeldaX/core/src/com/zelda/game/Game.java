@@ -45,13 +45,6 @@ public class Game extends ApplicationAdapter {
     private OtherPlayer otherPlayer;
     private Hero player;
     private Logger LOG=LoggerFactory.getLogger(Game.class);
-    private Texture walkSheet;
-    private TextureRegion[] walkFrames;
-    private TextureRegion currentFrame;
-    private Animation walkAnimation;
-    float stateTime; 
-    private final static int FRAME_COLS=2;
-    private final static int FRAME_ROWS=1;
     
 	@Override
 	public void create () {
@@ -61,27 +54,11 @@ public class Game extends ApplicationAdapter {
         entityMap=new HashMap<String, ClientGameObject>();
         //nonStaticEntityMap=new HashMap<String, GameObject>();
         loadGameResources();
-        testAnimation();
 	    lastUpdate=System.currentTimeMillis();
-		//batch = new SpriteBatch();
+		batch = new SpriteBatch();
 		
 	}
 	
-	private void testAnimation(){
-	    walkSheet = new Texture(Gdx.files.internal("Link_Movement.png")); // #9
-        TextureRegion[][] tmp = TextureRegion.split(walkSheet, 32, 32);              // #10
-        walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-        int index = 0;
-        for (int i = 0; i < FRAME_ROWS; i++) {
-            for (int j = 0; j < FRAME_COLS; j++) {
-                walkFrames[index++] = tmp[i][j];
-            }
-        }
-        walkAnimation = new Animation(0.5f, walkFrames); 
-        stateTime = 0f;
-        batch=new SpriteBatch();
-	}
-
     private void loadGameResources() {
         try {
             /** Prod Setup*/
@@ -118,14 +95,6 @@ public class Game extends ApplicationAdapter {
 	    }
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stateTime += Gdx.graphics.getDeltaTime();           // #15
-        currentFrame = walkAnimation.getKeyFrame(stateTime, true);  // #16
-        batch.begin();
-        batch.draw(currentFrame, 250, 250);             // #17
-        batch.end();
-		/*batch.begin();
-		batch.draw(img, 20, 20);
-		batch.end();*/
 		while(!fromServerMessageQueue.isEmpty()){
 		    Message message=fromServerMessageQueue.remove();
 		    if(message instanceof HeroIdentiferMessage){
@@ -157,12 +126,14 @@ public class Game extends ApplicationAdapter {
 		        System.out.println("Entity:"+remObj.getFullIdentifier()+" was removed from game.");
 		    }
 		}
-	    shapeRenderer.begin(ShapeType.Line);
+	    //shapeRenderer.begin(ShapeType.Line);
+        batch.begin();
 		for(ClientGameObject obj:entityMap.values()){
 		        obj.update(entityMap.values());
-		        obj.draw(shapeRenderer);
+		        obj.draw(shapeRenderer,batch);
 		}
-		shapeRenderer.end();
+		//shapeRenderer.end();
+		batch.end();
 	}
 	
 	@Override

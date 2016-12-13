@@ -38,31 +38,31 @@ public class ServerMessageProcessor {
                 int x = player.getxPosition();
                 int y = player.getyPosition();
                 for (GameObject obj : gameEntityMap.values()) {
-                    if (obj != player) {
+                    if (obj != player && !(obj instanceof Player)) {
                         switch (actual.getDirection()) {
                         case LEFT:
-                            if (player.intersect(player.getMask(), obj.getMask(), new Point(-1, 0))) {
+                            if (player.intersect(player.getMask(), obj.getMask(), new Point(-2, 0))) {
                                 LOG.debug("Leftward Collision Detected With:" + obj.getFullIdentifier());
                             } else
-                                x -= 1;
+                                x -= 2;
                             break;
                         case RIGHT:
-                            if (player.intersect(player.getMask(), obj.getMask(), new Point(1, 0))) {
+                            if (player.intersect(player.getMask(), obj.getMask(), new Point(2, 0))) {
                                 LOG.debug("Rightward Collision Detected With:" + obj.getFullIdentifier());
                             } else
-                                x += 1;
+                                x += 2;
                             break;
                         case UP:
-                            if (player.intersect(player.getMask(), obj.getMask(), new Point(0, 1))) {
+                            if (player.intersect(player.getMask(), obj.getMask(), new Point(0, 2))) {
                                 LOG.debug("Upward Collision Detected With:" + obj.getFullIdentifier());
                             } else
-                                y += 1;
+                                y += 2;
                             break;
                         case DOWN:
-                            if (player.intersect(player.getMask(), obj.getMask(), new Point(0, -1))) {
+                            if (player.intersect(player.getMask(), obj.getMask(), new Point(0, -2))) {
                                 LOG.debug("Downward Collision Detected With:" + obj.getFullIdentifier());
                             } else
-                                y -= 1;
+                                y -= 2;
                             break;
                         }
                         player.setPosition(x, y);

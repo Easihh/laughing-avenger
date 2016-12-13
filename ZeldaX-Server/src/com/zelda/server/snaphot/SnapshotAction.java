@@ -54,6 +54,9 @@ public class SnapshotAction {
                     if (!buffer.hasRemaining()) {
                         key.interestOps(SelectionKey.OP_READ);
                     }
+                    if(buffer.hasRemaining()){
+                        LOG.error("Buffer was only partially written to client for player update.");
+                    }
                 }
                 catch (IOException e) {
                     LOG.warn("Error while writing snapshot to Player buffer:" + e.getMessage());// Player

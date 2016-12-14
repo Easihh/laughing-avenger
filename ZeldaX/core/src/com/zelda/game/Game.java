@@ -17,13 +17,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import static com.badlogic.gdx.graphics.g2d.Gdx2DPixmap.GDX2D_FORMAT_RGB565;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.zelda.common.Constants;
 import com.zelda.common.network.HeroIdentiferMessage;
 import com.zelda.common.network.Message;
@@ -60,29 +57,16 @@ public class Game extends ApplicationAdapter {
 	}
 	
     private void loadGameResources() {
-        try {
-            /** Prod Setup*/
-            /*String path = Game.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-            int lastIndex=path.lastIndexOf('/');
-            path=path.substring(0, lastIndex)+"/resource.jar";
-            System.out.println("Path:"+path);*/
-            
-            String path="C:/Users/Enrico/Desktop/ZeldaGame/resource.jar";        
-            ZipFile zipFile=new ZipFile(path);
-            ZipEntry ze=zipFile.getEntry("badlogic.jpg");
-            InputStream is=zipFile.getInputStream(ze);
-            Gdx2DPixmap gdx2Dpix=new Gdx2DPixmap(is,GDX2D_FORMAT_RGB565);
-            Pixmap pixMap=new Pixmap(gdx2Dpix);
-            img=new Texture(pixMap);
-            is.close();
-            zipFile.close();
-        }
-        catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-        /*catch (URISyntaxException e) {
-            System.out.println(e.getMessage());
-        }*/
+        /** Prod Setup*/
+        /*String path = Game.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+        int lastIndex=path.lastIndexOf('/');
+        path=path.substring(0, lastIndex)+"/resource.jar";
+        System.out.println("Path:"+path);*/
+        
+        /*InputStream is=Game.class.getResourceAsStream("/Tree.png");          
+        Gdx2DPixmap gdx2Dpix=new Gdx2DPixmap(is,GDX2D_FORMAT_RGB565);
+        Pixmap pixMap=new Pixmap(gdx2Dpix);
+        img=new Texture(pixMap);*/
     }
 
     @Override
@@ -95,6 +79,7 @@ public class Game extends ApplicationAdapter {
 	    }
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
 		while(!fromServerMessageQueue.isEmpty()){
 		    Message message=fromServerMessageQueue.remove();
 		    if(message instanceof HeroIdentiferMessage){
@@ -139,6 +124,6 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		//batch.dispose();
-		img.dispose();
+		//img.dispose();
 	}
 }

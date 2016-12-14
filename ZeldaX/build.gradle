@@ -54,6 +54,7 @@ project(":core") {
 
 
     dependencies {
+    	compile group: 'com.zeldax', name: 'ZeldaXResources', version: '0.0.1-SNAPSHOT'
     	compile group: 'com.zeldax', name: 'ZeldaXCommon', version: '0.0.1-SNAPSHOT'
     	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
     	compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.21'

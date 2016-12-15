@@ -2,19 +2,26 @@ package com.zelda.network;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
+import java.util.Queue;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.zelda.common.network.Message;
 
 public class NetworkController {
-    
+
     private final static int PORT = 1111;
     private final static String HOST = "localhost";
     private ServerReader serverReader;
     private ServerWriter serverWriter;
-   
+    
+    private Logger LOG = LoggerFactory.getLogger(NetworkController.class);
 
-    public NetworkController() {
+    public NetworkController(Queue<Message> fromServerMessageQueue) {
         SocketChannel channel = startConnection();
         if (channel != null) {
-            serverReader = new ServerReader(channel);
+            serverReader = new ServerReader(channel,fromServerMessageQueue);
             serverWriter = new ServerWriter(channel);
             Thread sr = new Thread(serverReader);
             Thread sw = new Thread(serverWriter);
@@ -22,9 +29,9 @@ public class NetworkController {
             sw.start();
         }
     }
-    
+
     private SocketChannel startConnection() {
-        System.out.println("Connecting to " + HOST + " on port " + PORT + "...");
+        LOG.info("Connecting to " + HOST + " on port " + PORT + "...");
         SocketChannel channel = null;
         try {
             InetSocketAddress serverAddr = new InetSocketAddress(HOST, PORT);
@@ -32,10 +39,10 @@ public class NetworkController {
             while (channel.isConnectionPending()) {
                 channel.finishConnect();
             }
-            System.out.println("Connection success.");
+            LOG.info("Connection success.");
         }
         catch (Exception e) {
-            System.out.println("Connection to Server failed." + e);
+            LOG.error("Connection to Server failed." + e);
         }
         return channel;
     }

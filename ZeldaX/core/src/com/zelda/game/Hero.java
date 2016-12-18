@@ -4,10 +4,12 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,13 +24,8 @@ public class Hero extends ClientGameObject {
     private static final int SPEED = 2;
     private Queue<PositionUpdater> updaterQueue;
 
-    private Texture walkSheet;
-    private TextureRegion[] walkFrames;
-    private TextureRegion currentFrame;
-    private Animation walkAnimation;
-    private float stateTime;
-    private final static int FRAME_COLS = 2;
-    private final static int FRAME_ROWS = 1;
+    private MovementAnimation walkAnimation;
+    private int direction;
 
     public Hero(int x, int y) {
         updaterQueue = new LinkedList<PositionUpdater>();
@@ -37,19 +34,16 @@ public class Hero extends ClientGameObject {
         height = HEIGHT;
         width = WIDTH;
         mask = (new Rectangle(xPosition, yPosition, width, height));
+        setupMovementAnimation();
+    }
 
-        walkSheet = new Texture(Gdx.files.internal("Link_Movement.png"));
-        TextureRegion[][] tmp = TextureRegion.split(walkSheet, 32, 32);
-        walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-        int index = 0;
-        for (int i = 0; i < FRAME_ROWS; i++) {
-            for (int j = 0; j < FRAME_COLS; j++) {
-                walkFrames[index++] = tmp[i][j];
-            }
-        }
-        walkAnimation = new Animation(0.25f, walkFrames);
-        stateTime = 0f;
-        currentFrame = walkAnimation.getKeyFrame(stateTime, true);
+    private void setupMovementAnimation() {
+        List<FileHandle> files = new LinkedList<FileHandle>();
+        files.add(Gdx.files.internal("Link_Movement_Up.png"));
+        files.add(Gdx.files.internal("Link_Movement_Down.png"));
+        files.add(Gdx.files.internal("Link_Movement_Left.png"));
+        files.add(Gdx.files.internal("Link_Movement_Right.png"));
+        walkAnimation = new MovementAnimation(files, WIDTH, HEIGHT);
     }
 
     @Override
@@ -61,6 +55,7 @@ public class Hero extends ClientGameObject {
         // TODO Some code here to check if Player is too far from server coord
 
         if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+            direction = Constants.Direction.RIGHT;
             movementKeyPressed = true;
             offset = new Point(SPEED, 0);
             if (!isColliding(collection, offset)) {
@@ -69,6 +64,7 @@ public class Hero extends ClientGameObject {
             }
         }
         if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+            direction = Constants.Direction.LEFT;
             movementKeyPressed = true;
             offset = new Point(-SPEED, 0);
             if (!isColliding(collection, offset)) {
@@ -77,19 +73,22 @@ public class Hero extends ClientGameObject {
             }
         }
         if (Gdx.input.isKeyPressed(Keys.UP)) {
+            direction = Constants.Direction.UP;
             movementKeyPressed = true;
             yPosition += SPEED;
             ServerWriter.sendMessage("0001U");
         }
         if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+            direction = Constants.Direction.DOWN;
             movementKeyPressed = true;
             yPosition -= SPEED;
             ServerWriter.sendMessage("0001D");
         }
 
         if (movementKeyPressed) {
-            stateTime += Gdx.graphics.getDeltaTime();
-            currentFrame = walkAnimation.getKeyFrame(stateTime, true);
+            walkAnimation.addStateTime(direction, Gdx.graphics.getDeltaTime());
+            // walkAnimation.getCurcurrentFrame =
+            // walkAnimation.getKeyFrame(stateTime, true);
         }
         updateMask();
     }
@@ -115,7 +114,7 @@ public class Hero extends ClientGameObject {
 
     @Override
     public void draw(SpriteBatch sprBatch) {
-        sprBatch.draw(currentFrame, xPosition, yPosition);
+        sprBatch.draw(walkAnimation.getCurrentFrame(direction), xPosition, yPosition);
     }
 
     @Override

@@ -10,10 +10,7 @@ import java.util.Queue;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.zelda.common.Constants;
 import com.zelda.network.ServerWriter;
 
@@ -75,20 +72,24 @@ public class Hero extends ClientGameObject {
         if (Gdx.input.isKeyPressed(Keys.UP)) {
             direction = Constants.Direction.UP;
             movementKeyPressed = true;
-            yPosition += SPEED;
-            ServerWriter.sendMessage("0001U");
+            offset = new Point(0, SPEED);
+            if (!isColliding(collection, offset)) {
+                yPosition += SPEED;
+                ServerWriter.sendMessage("0001U");
+            }
         }
         if (Gdx.input.isKeyPressed(Keys.DOWN)) {
             direction = Constants.Direction.DOWN;
             movementKeyPressed = true;
-            yPosition -= SPEED;
-            ServerWriter.sendMessage("0001D");
+            offset = new Point(0, -SPEED);
+            if (!isColliding(collection, offset)) {
+                yPosition -= SPEED;
+                ServerWriter.sendMessage("0001D");
+            }
         }
 
         if (movementKeyPressed) {
             walkAnimation.addStateTime(direction, Gdx.graphics.getDeltaTime());
-            // walkAnimation.getCurcurrentFrame =
-            // walkAnimation.getKeyFrame(stateTime, true);
         }
         updateMask();
     }

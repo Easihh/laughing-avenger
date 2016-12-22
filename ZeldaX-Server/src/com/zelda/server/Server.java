@@ -104,7 +104,7 @@ public class Server implements Runnable {
         String EntityKey = gameData.getActiveConnection().get(myKey).getHero().getFullIdentifier();
         Player playerHero = (Player) gameData.getGameEntityMap().get(EntityKey);
         playerHero.setObjState(Constants.ObjectState.INACTIVE);
-        gameSnaphot.getsAction().sendUpdateToPlayers(true);
+        gameSnaphot.getsAction().sendUpdateToAllPlayers();
         gameSnaphot.getsAction().removeInactiveObj();
         gameData.getActiveConnection().remove(myKey);
         try {
@@ -123,18 +123,19 @@ public class Server implements Runnable {
             SelectionKey clientKey = zeldaXClient.register(selector, SelectionKey.OP_WRITE);
             clientConnection = new ClientConnection();
             gameData.getActiveConnection().put(clientKey, clientConnection);
-            String entityKey = clientConnection.getHero().getTypeIdenfitier()
-                            + clientConnection.getHero().getIdIdentifier();
-            gameData.getGameEntityMap().put(entityKey, clientConnection.getHero());
-            Message message = new HeroIdentiferMessage(clientConnection.getHero().getTypeIdenfitier(),
-                            clientConnection.getHero().getIdIdentifier());
+            
+            Player playerHero=clientConnection.getHero();
+            String entityKey = playerHero.getTypeIdenfitier() + playerHero.getIdIdentifier();
+            gameData.getGameEntityMap().put(entityKey, playerHero);
+            
+            Message message = new HeroIdentiferMessage(playerHero.getTypeIdenfitier(), playerHero.getIdIdentifier());
             ByteBuffer buffer = ByteBuffer.wrap(message.getBytes());
             zeldaXClient.write(buffer);
             LOG.debug("Sending:" + clientConnection.getHero().getTypeIdenfitier()
                             + clientConnection.getHero().getIdIdentifier());
 
             // force send current world state here.
-            gameSnaphot.getsAction().sendUpdateToPlayers(true);
+            gameSnaphot.getsAction().sendSnapshotToCurrentPlayer(clientKey);
 
             clientKey.interestOps(SelectionKey.OP_READ);
             LOG.info("Connection Accepted: " + zeldaXClient.getLocalAddress() + "\n");

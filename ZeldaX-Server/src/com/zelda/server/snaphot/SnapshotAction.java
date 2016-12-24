@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.zelda.common.Constants;
 import com.zelda.server.ClientConnection;
+import com.zelda.server.GameData;
 import com.zelda.server.entity.ServerGameObject;
 
 public class SnapshotAction {
@@ -24,10 +25,10 @@ public class SnapshotAction {
     private final Logger LOG = LoggerFactory.getLogger(SnapshotAction.class);
     private List<SelectionKey> keyList;
 
-    public SnapshotAction(ConcurrentHashMap<SelectionKey, ClientConnection> activeConnection,
-                    ConcurrentHashMap<String, ServerGameObject> entityMap) {
-        connections = activeConnection;
-        gameEntityMap = entityMap;
+    public SnapshotAction() {
+        GameData gData=GameData.getInstance();
+        connections = gData.getActiveConnection();
+        gameEntityMap = gData.getGameEntityMap();
         keyList = new LinkedList<SelectionKey>(connections.keySet());
     }
 

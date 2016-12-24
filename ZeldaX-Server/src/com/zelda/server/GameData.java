@@ -11,16 +11,25 @@ import com.zelda.server.message.ServerMessage;
 
 public class GameData {
 
-    private volatile ConcurrentHashMap<String, ServerGameObject> gameEntityMap;
-    private volatile Queue<ServerMessage> gameSimulationMessageQueue;
-    private ConcurrentHashMap<SelectionKey, ClientConnection> activeConnection;
+    private static volatile ConcurrentHashMap<String, ServerGameObject> gameEntityMap;
+    private static volatile Queue<ServerMessage> gameSimulationMessageQueue;
+    private static volatile ConcurrentHashMap<SelectionKey, ClientConnection> activeConnection;
+    
+    private static GameData gData = null;
 
-    public GameData() {
+    private GameData() {
         gameEntityMap = new ConcurrentHashMap<String, ServerGameObject>();
         ServerTile aTile = new ServerTile(100, 100);
         gameEntityMap.put(aTile.getFullIdentifier(), aTile);
         gameSimulationMessageQueue = new ConcurrentLinkedQueue<ServerMessage>();
         activeConnection = new ConcurrentHashMap<SelectionKey, ClientConnection>();
+    }
+    
+    public static GameData getInstance() {
+        if (gData == null) {
+            gData = new GameData();
+        }
+        return gData;
     }
 
     public ConcurrentHashMap<String, ServerGameObject> getGameEntityMap() {

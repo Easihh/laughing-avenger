@@ -12,6 +12,7 @@ import static com.zelda.common.Constants.Movement.DOWN;
 import static com.zelda.common.Constants.Movement.RIGHT;
 import static com.zelda.common.Constants.Movement.UP;
 import com.zelda.common.GameObject;
+import com.zelda.server.GameData;
 import com.zelda.server.entity.Player;
 import com.zelda.server.entity.ServerGameObject;
 import com.zelda.server.message.ServerMessage;
@@ -23,10 +24,10 @@ public class ServerMessageProcessor {
     private ConcurrentHashMap<String, ServerGameObject> gameEntityMap;
     private final Logger LOG = LoggerFactory.getLogger(ServerMessageProcessor.class);
 
-    public ServerMessageProcessor(Queue<ServerMessage> messageQueue,
-                    ConcurrentHashMap<String, ServerGameObject> entityMap) {
-        msgQueue = messageQueue;
-        gameEntityMap = entityMap;
+    public ServerMessageProcessor() {
+        GameData gData=GameData.getInstance();
+        msgQueue=gData.getGameSimulationMessageQueue();
+        gameEntityMap=gData.getGameEntityMap();
     }
 
     public void process() {

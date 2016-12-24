@@ -14,9 +14,9 @@ public class GameSnapshot implements Runnable {
     private SnapshotAction sAction;
     private ServerMessageProcessor sProcessor;
 
-    public GameSnapshot(GameData gameData) {
-        sAction = new SnapshotAction(gameData.getActiveConnection(), gameData.getGameEntityMap());
-        sProcessor = new ServerMessageProcessor(gameData.getGameSimulationMessageQueue(), gameData.getGameEntityMap());
+    public GameSnapshot() {
+        sAction = new SnapshotAction();
+        sProcessor = new ServerMessageProcessor();
     }
 
     @Override

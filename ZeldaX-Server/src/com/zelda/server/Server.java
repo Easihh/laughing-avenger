@@ -41,9 +41,9 @@ public class Server implements Runnable {
     private GameSnapshot gameSnaphot;
 
     public Server() {
-        gameData = new GameData();
+        gameData = GameData.getInstance();
         cProcessor = new ClientMessageProcessor();
-        gameSnaphot = new GameSnapshot(gameData);
+        gameSnaphot = new GameSnapshot();
         Thread snaphot = new Thread(gameSnaphot);
         snaphot.start();
     }

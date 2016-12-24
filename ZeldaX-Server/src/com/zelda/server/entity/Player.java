@@ -17,8 +17,8 @@ public class Player extends ServerGameObject {
     public Player() {
         xPosition = 0;
         yPosition = 0;
-        prevSentXPosition = xPosition;
-        prevSentYPosition = yPosition;
+        prevSentXPosition = Integer.MIN_VALUE;
+        prevSentYPosition = Integer.MIN_VALUE;
         heroId++;
         idIdentifier = heroId;
         width = WIDTH;

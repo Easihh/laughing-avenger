@@ -1,6 +1,5 @@
 package com.zelda.server.snaphot;
 
-import com.zelda.server.GameData;
 import com.zelda.server.message.processor.ServerMessageProcessor;
 
 public class GameSnapshot implements Runnable {

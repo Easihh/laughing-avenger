@@ -19,8 +19,8 @@ public class GameData {
 
     private GameData() {
         gameEntityMap = new ConcurrentHashMap<String, ServerGameObject>();
-        ServerTile aTile = new ServerTile(100, 100);
-        gameEntityMap.put(aTile.getFullIdentifier(), aTile);
+        //ServerTile aTile = new ServerTile(100, 100);
+        //gameEntityMap.put(aTile.getFullIdentifier(), aTile);
         gameSimulationMessageQueue = new ConcurrentLinkedQueue<ServerMessage>();
         activeConnection = new ConcurrentHashMap<SelectionKey, ClientConnection>();
     }

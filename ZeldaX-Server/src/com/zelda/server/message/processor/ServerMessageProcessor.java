@@ -25,9 +25,9 @@ public class ServerMessageProcessor {
     private final Logger LOG = LoggerFactory.getLogger(ServerMessageProcessor.class);
 
     public ServerMessageProcessor() {
-        GameData gData=GameData.getInstance();
-        msgQueue=gData.getGameSimulationMessageQueue();
-        gameEntityMap=gData.getGameEntityMap();
+        GameData gData = GameData.getInstance();
+        msgQueue = gData.getGameSimulationMessageQueue();
+        gameEntityMap = gData.getGameEntityMap();
     }
 
     public void process() {
@@ -38,40 +38,51 @@ public class ServerMessageProcessor {
                 Player player = (Player) gameEntityMap.get(actual.getIdentifier());
                 int x = player.getxPosition();
                 int y = player.getyPosition();
+                boolean collisionFound = false;
+                Point moveAhead = null;
                 for (GameObject obj : gameEntityMap.values()) {
-                    if (obj != player && !(obj instanceof Player)) {
-                        switch (actual.getDirection()) {
-                        case LEFT:
-                            if (player.intersect(player.getMask(), obj.getMask(), new Point(-2, 0))) {
-                                LOG.debug("Leftward Collision Detected With:" + obj.getFullIdentifier());
-                            } else
-                                x -= 2;
-                            break;
-                        case RIGHT:
-                            if (player.intersect(player.getMask(), obj.getMask(), new Point(2, 0))) {
-                                LOG.debug("Rightward Collision Detected With:" + obj.getFullIdentifier());
-                            } else
-                                x += 2;
-                            break;
-                        case UP:
-                            if (player.intersect(player.getMask(), obj.getMask(), new Point(0, 2))) {
-                                LOG.debug("Upward Collision Detected With:" + obj.getFullIdentifier());
-                            } else
-                                y += 2;
-                            break;
-                        case DOWN:
-                            if (player.intersect(player.getMask(), obj.getMask(), new Point(0, -2))) {
-                                LOG.debug("Downward Collision Detected With:" + obj.getFullIdentifier());
-                            } else
-                                y -= 2;
-                            break;
-                        }
-                        player.setPosition(x, y);
-                        LOG.debug("Position Message Processed.");
+                    switch (actual.getDirection()) {
+                    case LEFT:
+                        moveAhead = new Point(-2, 0);
+                        collisionFound = willCollide(player, obj, moveAhead, LEFT);
+                        break;
+                    case RIGHT:
+                        moveAhead = new Point(2, 0);
+                        collisionFound = willCollide(player, obj, moveAhead, RIGHT);
+                        break;
+                    case UP:
+                        moveAhead = new Point(0, 2);
+                        collisionFound = willCollide(player, obj, moveAhead, UP);
+                        break;
+                    case DOWN:
+                        moveAhead = new Point(0, -2);
+                        collisionFound = willCollide(player, obj, moveAhead, DOWN);
+                        break;
+                    }
+                    if (collisionFound) {
                         break;
                     }
                 }
+                if (!collisionFound) {
+                    x += moveAhead.x;
+                    y += moveAhead.y;
+                    player.setPosition(x, y);
+                    LOG.debug("Position Message Processed.");
+                }
             }
         }
+    }
+
+    private boolean willCollide(Player player, GameObject obj, Point point, String direction) {
+        if (player.intersect(player.getMask(), obj.getMask(), point) && !isPlayerCollison(player, obj)) {
+            LOG.debug("" + direction + "ward Collision Detected With:" + obj.getFullIdentifier());
+            return true;
+        }
+        return false;
+    }
+
+    /** Allow collision with yourself and other hero. **/
+    private boolean isPlayerCollison(Player player, GameObject obj) {
+        return obj == player || (obj instanceof Player);
     }
 }

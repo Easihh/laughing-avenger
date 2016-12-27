@@ -17,8 +17,8 @@ public class ServerTile extends ServerGameObject {
         idIdentifier = tileId;
         xPosition = x;
         yPosition = y;
-        prevSentXPosition = xPosition;
-        prevSentYPosition = yPosition;
+        prevSentXPosition = Integer.MIN_VALUE;
+        prevSentYPosition = Integer.MIN_VALUE;
         width = WIDTH;
         height = HEIGHT;
         mask = new Rectangle(xPosition, yPosition, width, height);

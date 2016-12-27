@@ -89,6 +89,7 @@ public class Hero extends ClientGameObject {
         }
 
         if (movementKeyPressed) {
+            walkAnimation.resetStateTime(direction);
             walkAnimation.addStateTime(direction, Gdx.graphics.getDeltaTime());
         }
         updateMask();

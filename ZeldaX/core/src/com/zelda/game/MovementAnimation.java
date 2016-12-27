@@ -51,4 +51,13 @@ public class MovementAnimation {
     public TextureRegion getCurrentFrame(int direction) {
         return walkAnimation[direction].getKeyFrame(stateTime[direction], true);
     }
+    
+    /**Reset StateTime of Animation for every index except index param**/
+    public void resetStateTime(int index) {
+        for (int i = 0; i < stateTime.length; i++) {
+            if (i != index) {
+                stateTime[i] = 0f;
+            }
+        }
+    }
 }

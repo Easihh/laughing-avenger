@@ -87,7 +87,7 @@ public class Game extends ApplicationAdapter {
                         entityMap.put(pMessage.getFullIdentifier(), tile);
                     }
                 } else {
-                    objMap.loadPosition(new PositionUpdater(pMessage.getX(), pMessage.getY()));
+                    objMap.loadPosition(new PositionUpdater(pMessage.getX(), pMessage.getY(),pMessage.getDirection()));
                 }
             }
             if (message instanceof ObjectRemovalMessage) {

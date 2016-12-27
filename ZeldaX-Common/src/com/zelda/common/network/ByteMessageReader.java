@@ -7,15 +7,14 @@ import java.util.List;
 import com.zelda.common.Constants;
 
 public class ByteMessageReader {
+    
     private static int currentType = -1;
-    private static int typeLength = -1;
     private static byte[] typeArr = new byte[Constants.MessageType.LENGTH];
     private static int typeArrIndex = 0;
     
     public List<Message> decodeMessage(ByteBuffer messageBuffer) {
         ArrayList<Message> messageList = new ArrayList<Message>();
         messageBuffer.flip();
-        
         /**
          * Traverse buffer while keeping in mind it is possible we have partial
          * message or partial byte of actual values so we keep track of values
@@ -44,8 +43,6 @@ public class ByteMessageReader {
                     return messageList;
                 }
             }
-            if (typeLength != -1)
-                continue;
             Message currentValue = this.getValueByMessageType(messageBuffer);
             messageList.add(currentValue);
             System.out.println("Message was:" + currentValue.toString());

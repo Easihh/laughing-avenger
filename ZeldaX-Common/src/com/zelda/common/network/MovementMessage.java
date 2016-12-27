@@ -13,28 +13,28 @@ public class MovementMessage implements Message {
         for (int i = 0; i < valuePart.length; ++i) {
             valuePart[i] = messageBuffer.get();
         }
-        this.direction = new String(valuePart);
+        direction = new String(valuePart);
     }
 
     public String getDirection() {
-        return this.direction;
+        return direction;
     }
 
     public int addToPlayerX(int movementSpeed) {
-        if ("L".equals(this.direction)) {
+        if ("L".equals(direction)) {
             return -movementSpeed;
         }
-        if ("R".equals(this.direction)) {
+        if ("R".equals(direction)) {
             return movementSpeed;
         }
         return 0;
     }
 
     public int addToPlayerY(int movementSpeed) {
-        if ("D".equals(this.direction)) {
+        if ("D".equals(direction)) {
             return -movementSpeed;
         }
-        if ("U".equals(this.direction)) {
+        if ("U".equals(direction)) {
             return movementSpeed;
         }
         return 0;
@@ -42,14 +42,14 @@ public class MovementMessage implements Message {
 
     public byte[] getBytes() {
         ByteBuffer buffer = ByteBuffer.allocate(getTotalLength());
-        buffer.putInt(this.getType());
-        buffer.put(this.direction.getBytes());
+        buffer.putInt(getType());
+        buffer.put(direction.getBytes());
         buffer.flip();
         return buffer.array();
     }
 
     public String toString() {
-        return "Type:" + this.getType() + " Value:" + this.direction;
+        return "Type:" + getType() + " Value:" + direction;
     }
 
     public int getTotalLength() {

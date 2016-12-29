@@ -4,9 +4,9 @@ public class PositionUpdater {
 
     private int serverX;
     private int serverY;
-    private String direction;
+    private int direction;
 
-    public PositionUpdater(int x, int y,String dir) {
+    public PositionUpdater(int x, int y,int dir) {
         serverX = x;
         serverY = y;
         direction = dir;
@@ -18,5 +18,9 @@ public class PositionUpdater {
 
     public int getserverY() {
         return serverY;
+    }
+    
+    public int getDirection() {
+        return direction;
     }
 }

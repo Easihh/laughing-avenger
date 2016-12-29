@@ -20,10 +20,11 @@ public class OtherPlayer extends ClientGameObject {
     private int direction;
     private int speed = 2;
 
-    public OtherPlayer(int x, int y) {
+    public OtherPlayer(int x, int y,int dir) {
         updaterQueue = new LinkedList<PositionUpdater>();
         xPosition = x;
         yPosition = y;
+        direction = dir;
         mask = new Rectangle(xPosition, yPosition, width, height);
         setupMovementAnimation();
     }
@@ -41,27 +42,29 @@ public class OtherPlayer extends ClientGameObject {
     }
 
     private void movement() {
-        PositionUpdater current = updaterQueue.peek();
+        PositionUpdater updater = updaterQueue.peek();
         int oldDirection = direction;
-        if (current == null) {
+        if (updater == null) {
             return;
         }
 
-        if (current.getserverX() == xPosition && current.getserverY() == yPosition) {
+        if (updater.getserverX() == xPosition && updater.getserverY() == yPosition) {
             updaterQueue.poll();// we are already at server position; discard
                                 // update message.
             return;
         }
-        if (xPosition != current.getserverX()) {
-            int xDifference = xPosition - current.getserverX();
-            direction = getNewXMovementDirection(xDifference);
+        if (xPosition != updater.getserverX()) {
+            int xDifference = xPosition - updater.getserverX();
+            updateXMovement(xDifference);
+            direction=updater.getDirection();
             checkWalkAnimationStateTime(oldDirection);
             return;
         }
 
-        if (yPosition != current.getserverY()) {
-            int yDifference = yPosition - current.getserverY();
-            direction = getNewYMovementDirection(yDifference);
+        if (yPosition != updater.getserverY()) {
+            int yDifference = yPosition - updater.getserverY();
+            direction=updater.getDirection();
+            updateYMovement(yDifference);
             checkWalkAnimationStateTime(oldDirection);
             return;
         }
@@ -74,21 +77,16 @@ public class OtherPlayer extends ClientGameObject {
         walkAnimation.addStateTime(direction, Gdx.graphics.getDeltaTime());
     }
     
-    private int getNewXMovementDirection(int xDifference) {
-        int direction = -1;
+    private void updateXMovement(int xDifference) {
         if (xDifference > 0) {
             xPosition -= Math.min(xDifference, speed);
-            direction = Constants.Direction.LEFT;
 
         } else {
             xPosition += Math.min(speed, Math.abs(xDifference));
-            direction = Constants.Direction.RIGHT;
         }
-        return direction;
     }
     
-    private int getNewYMovementDirection(int yDifference) {
-        int direction = -1;
+    private void updateYMovement(int yDifference) {
         if (yDifference > 0) {
             yPosition -= Math.min(yDifference, speed);
             direction = Constants.Direction.DOWN;
@@ -97,7 +95,6 @@ public class OtherPlayer extends ClientGameObject {
             yPosition += Math.min(speed, Math.abs(yDifference));
             direction = Constants.Direction.UP;
         }
-        return direction;
     }
     
     public void loadPosition(PositionUpdater positionUpdater) {

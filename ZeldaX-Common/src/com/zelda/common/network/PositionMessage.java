@@ -18,35 +18,16 @@ public class PositionMessage implements Message {
     public PositionMessage(ByteBuffer messageBuffer) {
         
         byte[] objTypeArr = new byte[Constants.MessageLength.OBJ_STR_TYPE_LENGTH];
-        byte[] identifierArr = new byte[Constants.MessageLength.OBJ_INT_IDENTIFIER_LENGTH];
-        byte[] xPositionArr = new byte[Constants.MessageLength.POSITION_X];
-        byte[] yPositionArr = new byte[Constants.MessageLength.POSITION_Y];
         byte[] directionArr = new byte[1];
-        
-        for (int i = 0; i < objTypeArr.length; i++) {
-            objTypeArr[i] = messageBuffer.get();
-        }
+
+        messageBuffer.get(objTypeArr, 0, Constants.MessageLength.OBJ_STR_TYPE_LENGTH);
         objType = new String(objTypeArr);
-        for (int i = 0; i < identifierArr.length; i++) {
-            identifierArr[i] = messageBuffer.get();
-        }
-        ByteBuffer buffer = ByteBuffer.wrap(identifierArr);
-        id = buffer.getInt();
-        for (int i = 0; i < xPositionArr.length; ++i) {
-            xPositionArr[i] = messageBuffer.get();
-        }
-        buffer = ByteBuffer.wrap(xPositionArr);
-        x = buffer.getInt();
-        
-        for (int i = 0; i < yPositionArr.length; ++i) {
-            yPositionArr[i] = messageBuffer.get();
-        }
-        buffer = ByteBuffer.wrap(yPositionArr);
-        y = buffer.getInt();
-        
-        for (int i = 0; i < directionArr.length; ++i) {
-            directionArr[i] = messageBuffer.get();
-        }       
+
+        id = messageBuffer.getInt();
+        x = messageBuffer.getInt();
+        y = messageBuffer.getInt();
+
+        messageBuffer.get(directionArr, 0, 1);
         direction = new String(directionArr);
     }
 

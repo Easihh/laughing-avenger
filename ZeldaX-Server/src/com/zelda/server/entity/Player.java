@@ -64,4 +64,12 @@ public class Player extends ServerGameObject {
     public String getTypeIdenfitier() {
         return HERO;
     }
+    
+    public String getDirection() {
+        return direction;
+    }
+    
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 }

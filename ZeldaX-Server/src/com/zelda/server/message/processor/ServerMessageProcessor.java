@@ -39,9 +39,10 @@ public class ServerMessageProcessor {
                 int x = player.getxPosition();
                 int y = player.getyPosition();
                 boolean collisionFound = false;
+                String intentDirection = actual.getDirection();
                 Point moveAhead = null;
                 for (GameObject obj : gameEntityMap.values()) {
-                    switch (actual.getDirection()) {
+                    switch (intentDirection) {
                     case LEFT:
                         moveAhead = new Point(-2, 0);
                         collisionFound = willCollide(player, obj, moveAhead, LEFT);
@@ -67,6 +68,7 @@ public class ServerMessageProcessor {
                     x += moveAhead.x;
                     y += moveAhead.y;
                     player.setPosition(x, y);
+                    player.setDirection(intentDirection);
                     LOG.debug("Position Message Processed.");
                 }
             }
@@ -81,7 +83,7 @@ public class ServerMessageProcessor {
         return false;
     }
 
-    /** Allow collision with yourself and other hero. **/
+    /**Do not Allow collision with yourself and other hero. **/
     private boolean isPlayerCollison(Player player, GameObject obj) {
         return obj == player || (obj instanceof Player);
     }

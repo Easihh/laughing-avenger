@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.zelda.common.Constants;
+import static com.zelda.common.Constants.ObjectState.INACTIVE;
+import static com.zelda.common.Constants.ObjectState.ACTIVE;
 import com.zelda.server.ClientConnection;
 import com.zelda.server.GameData;
 import com.zelda.server.entity.ServerGameObject;
@@ -62,8 +64,8 @@ public class SnapshotAction {
                     }
                 }
                 catch (IOException e) {
-                    LOG.warn("Error while writing snapshot to Player buffer:" + e.getMessage());// Player
-                                                                                                // disconnected
+                    /**Player Disconnected **/
+                    LOG.warn("Error while writing snapshot to Player buffer:" + e.getMessage());                                                                                               
                 }
             }
         }
@@ -97,10 +99,11 @@ public class SnapshotAction {
         byte[] byteArr = null;
         for (String key : gameEntityMap.keySet()) {
             ServerGameObject tmp = gameEntityMap.get(key);
-            if (objectHasNotChangedSinceLastUpdate(tmp)) {
+            String objState = tmp.getObjState();
+            if (objectHasNotChangedSinceLastUpdate(tmp) && ACTIVE.equals(objState)) {
                 continue;
             }
-            if (Constants.ObjectState.INACTIVE.equals(tmp.getObjState())) {
+            if (INACTIVE.equals(objState)) {
                 toBeRemoved.add(key);
             }
             byte[] tempArr = tmp.convertToBytes();

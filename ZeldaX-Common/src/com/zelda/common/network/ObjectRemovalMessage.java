@@ -2,6 +2,7 @@ package com.zelda.common.network;
 
 import com.zelda.common.Constants;
 import com.zelda.common.network.Message;
+import static com.zelda.common.Constants.MessageLength.OBJ_STR_TYPE_LENGTH;
 import java.nio.ByteBuffer;
 
 public class ObjectRemovalMessage implements Message {
@@ -13,19 +14,11 @@ public class ObjectRemovalMessage implements Message {
      * identifier(Int)(4Bytes)
      **/
     public ObjectRemovalMessage(ByteBuffer messageBuffer) {
-        byte[] objTypeArr = new byte[Constants.MessageLength.OBJ_STR_TYPE_LENGTH];
-        byte[] identifierArr = new byte[Constants.MessageLength.OBJ_INT_IDENTIFIER_LENGTH];
+        byte[] objTypeArr = new byte[OBJ_STR_TYPE_LENGTH];
         
-        for (int i = 0; i < objTypeArr.length; ++i) {
-            objTypeArr[i] = messageBuffer.get();
-        }
-        this.objType = new String(objTypeArr);
-        
-        for (int i = 0; i < identifierArr.length; ++i) {
-            identifierArr[i] = messageBuffer.get();
-        }
-        ByteBuffer buffer = ByteBuffer.wrap(identifierArr);
-        this.id = buffer.getInt();
+        messageBuffer.get(objTypeArr,0,OBJ_STR_TYPE_LENGTH);
+        objType = new String(objTypeArr);
+        id = messageBuffer.getInt();
     }
 
     public byte[] getBytes() {

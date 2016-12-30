@@ -21,6 +21,13 @@ public class Constants {
         public static final int LENGTH = 4;
         public static final int HERO_ID = 9999;
     }
+    
+    public static class Command {
+        public static final String MOV_LEFT = "0001L";
+        public static final String MOV_RIGHT = "0001R";
+        public static final String MOV_UP = "0001U";
+        public static final String MOV_DOWN = "0001D";
+    }
 
     public static class Direction {
         public static final int UP = 0;

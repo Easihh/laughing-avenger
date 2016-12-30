@@ -3,6 +3,7 @@ package com.zelda.common.network;
 import com.zelda.common.Constants;
 import com.zelda.common.network.Message;
 import java.nio.ByteBuffer;
+import static com.zelda.common.Constants.MessageLength.OBJ_STR_TYPE_LENGTH;;
 
 public class PositionMessage implements Message {
     private int x;
@@ -17,10 +18,10 @@ public class PositionMessage implements Message {
      **/
     public PositionMessage(ByteBuffer messageBuffer) {
         
-        byte[] objTypeArr = new byte[Constants.MessageLength.OBJ_STR_TYPE_LENGTH];
+        byte[] objTypeArr = new byte[OBJ_STR_TYPE_LENGTH];
         byte[] directionArr = new byte[1];
 
-        messageBuffer.get(objTypeArr, 0, Constants.MessageLength.OBJ_STR_TYPE_LENGTH);
+        messageBuffer.get(objTypeArr, 0, OBJ_STR_TYPE_LENGTH);
         objType = new String(objTypeArr);
 
         id = messageBuffer.getInt();
@@ -44,7 +45,8 @@ public class PositionMessage implements Message {
     }
 
     public byte[] getBytes() {
-        ByteBuffer buffer = ByteBuffer.allocate(getTotalLength());
+        int length = getTotalLength();
+        ByteBuffer buffer = ByteBuffer.allocate(length);
         buffer.putInt(getType());
         buffer.put(objType.getBytes());
         buffer.putInt(id);

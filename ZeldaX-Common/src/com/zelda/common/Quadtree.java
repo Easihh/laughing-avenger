@@ -1,5 +1,6 @@
 package com.zelda.common;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -114,6 +115,54 @@ public class Quadtree<E extends GameObject>{
         }
         returnList = new LinkedList<E>(quadSet);
         return returnList;
+    }
+    
+    public boolean isColliding(java.awt.geom.Rectangle2D mask){
+        if (hasChildren()) {
+            if (findCollision(topLeft,mask) || findCollision(topRight,mask) || findCollision(botLeft,mask)
+                            || findCollision(botRight,mask)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean findCollision(Quadtree<E> quadrant, java.awt.geom.Rectangle2D mask) {
+        boolean collisionFound = false;
+        if (quadrant.hasChildren()) {
+            int halfHeight = (int) bounds.getHeight() / 2;
+            int halfWidth = (int) bounds.getWidth() / 2;
+            int x = (int) bounds.getMinX();
+            int y = (int) bounds.getMinY();
+            Rectangle2D TopLeftBounds = new Rectangle2D(x, y, halfWidth, halfHeight);
+            Rectangle2D TopRightBounds = new Rectangle2D(x + halfWidth, y, halfWidth, halfHeight);
+            Rectangle2D BottomRightBounds = new Rectangle2D(x + halfWidth, y + halfHeight, halfWidth, halfHeight);
+            Rectangle2D BottomLeftBounds = new Rectangle2D(x, y + halfHeight, halfWidth, halfHeight);
+            if (TopLeftBounds.contains(mask.getX(),mask.getY())) {
+                if (findCollision(quadrant.topLeft, mask))
+                    return true;
+            }
+            if (TopRightBounds.contains(mask.getX(),mask.getY())) {
+                if (findCollision(quadrant.topRight, mask))
+                    return true;
+            }
+            if (BottomLeftBounds.contains(mask.getX(),mask.getY())) {
+                if (findCollision(quadrant.botLeft, mask))
+                    return true;
+            }
+            if (BottomRightBounds.contains(mask.getX(),mask.getY())) {
+                if (findCollision(quadrant.botRight, mask))
+                    return true;
+            }
+        }
+        //now at leaf level check List of Node
+        for(E element:quadrant.elements){
+            if(element.intersect(element.getMask(), mask, new Point(0,0))){
+                collisionFound=true;
+                break;
+            }
+        }
+        return collisionFound;
     }
 }
     

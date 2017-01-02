@@ -52,11 +52,11 @@ public class ServerMessageProcessor {
                         collisionFound = willCollide(player, obj, moveAhead, RIGHT);
                         break;
                     case UP:
-                        moveAhead = new Point(0, 2);
+                        moveAhead = new Point(0, -2);
                         collisionFound = willCollide(player, obj, moveAhead, UP);
                         break;
                     case DOWN:
-                        moveAhead = new Point(0, -2);
+                        moveAhead = new Point(0, 2);
                         collisionFound = willCollide(player, obj, moveAhead, DOWN);
                         break;
                     }

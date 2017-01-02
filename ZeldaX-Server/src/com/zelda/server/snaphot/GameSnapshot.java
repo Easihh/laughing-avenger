@@ -25,7 +25,6 @@ public class GameSnapshot implements Runnable {
             long lastUpdate = System.nanoTime();
             sProcessor.process();
             sAction.sendUpdateToAllPlayers();
-            sAction.removeInactiveObj();
             if (lastUpdate - System.nanoTime() < TIME_BETWEEN_RENDER) {
                 long timeToNextUpdate = TIME_BETWEEN_RENDER - (lastUpdate - System.nanoTime());
                 try {

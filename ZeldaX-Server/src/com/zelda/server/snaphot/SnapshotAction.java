@@ -12,9 +12,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zelda.common.Constants;
 import static com.zelda.common.Constants.ObjectState.INACTIVE;
-import static com.zelda.common.Constants.ObjectState.ACTIVE;
 import com.zelda.server.ClientConnection;
 import com.zelda.server.GameData;
 import com.zelda.server.entity.ServerGameObject;
@@ -39,6 +37,7 @@ public class SnapshotAction {
         keyList.clear();
         keyList.addAll(connections.keySet());
         sendMessageToPlayer(keyList, snapshop);
+        removeInactiveObj();      
     }
 
     private synchronized void sendMessageToPlayer(List<SelectionKey> keyList, byte[] snapshopt) {
@@ -73,7 +72,7 @@ public class SnapshotAction {
 
     /**
      * Force Send current GameSnapshot to current player. Mostly used on event
-     * such as new player connection.
+     * such as new player connection/zone change.
      **/
     public synchronized void sendSnapshotToCurrentPlayer(SelectionKey playerKey) {
         List<SelectionKey> currentPlayerKey = new LinkedList<SelectionKey>();
@@ -100,15 +99,14 @@ public class SnapshotAction {
         for (String key : gameEntityMap.keySet()) {
             ServerGameObject tmp = gameEntityMap.get(key);
             String objState = tmp.getObjState();
-            if (objectHasNotChangedSinceLastUpdate(tmp) && ACTIVE.equals(objState)) {
-                continue;
-            }
             if (INACTIVE.equals(objState)) {
                 toBeRemoved.add(key);
             }
-            byte[] tempArr = tmp.convertToBytes();
-            byteArr = ArrayUtils.addAll(byteArr, tempArr);
-            tmp.updateLastSentPosition();
+            if (!objectHasNotChangedSinceLastUpdate(tmp) || INACTIVE.equals(objState)) {
+                byte[] tempArr = tmp.convertToBytes();
+                byteArr = ArrayUtils.addAll(byteArr, tempArr);
+                tmp.updateLastSentPosition();
+            }
         }
         return byteArr;
     }
@@ -117,7 +115,7 @@ public class SnapshotAction {
         return tmp.getxPosition() == tmp.getPrevSentXPosition() && tmp.getyPosition() == tmp.getPrevSentYPosition();
     }
 
-    public synchronized void removeInactiveObj() {
+    private void removeInactiveObj() {
         for (String key : toBeRemoved) {
             LOG.debug("Removing Entity:" + key + " from the game.");
             gameEntityMap.remove(key);

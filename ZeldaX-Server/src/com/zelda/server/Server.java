@@ -105,7 +105,6 @@ public class Server implements Runnable {
         Player playerHero = (Player) gameData.getGameEntityMap().get(EntityKey);
         playerHero.setObjState(Constants.ObjectState.INACTIVE);
         gameSnaphot.getsAction().sendUpdateToAllPlayers();
-        gameSnaphot.getsAction().removeInactiveObj();
         gameData.getActiveConnection().remove(myKey);
         try {
             client.close();

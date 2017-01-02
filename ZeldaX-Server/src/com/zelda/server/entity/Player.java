@@ -18,8 +18,8 @@ public class Player extends ServerGameObject {
     private String direction = "";
 
     public Player() {
-        xPosition = 0;
-        yPosition = 0;
+        xPosition = 128;
+        yPosition = 160;
         prevSentXPosition = Integer.MIN_VALUE;
         prevSentYPosition = Integer.MIN_VALUE;
         direction = Constants.Movement.UP;

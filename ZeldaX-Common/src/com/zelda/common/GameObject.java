@@ -11,8 +11,9 @@ public abstract class GameObject {
     protected int width;
     protected Rectangle2D mask;
     protected int idIdentifier;
-
-    public boolean intersect(Rectangle2D obj1Mask, Rectangle2D obj2Mask, Point offset) {
+    
+    /** Rectangle order matters, first rect is the check/move obj and the 2nd rectangle is the object you check against **/
+    public static boolean intersect(Rectangle2D obj1Mask, Rectangle2D obj2Mask, Point offset) {
         double rectAx = obj1Mask.getX();
         double rectAxSize = obj1Mask.getWidth();
         double rectAy = obj1Mask.getY();
@@ -23,7 +24,7 @@ public abstract class GameObject {
         double rectBySize = obj2Mask.getHeight();
         return rectAx + (double) offset.x < rectBx + rectBxSize && rectAx + rectAxSize + (double) offset.x > rectBx
                         && rectAy + (double) offset.y < rectBy + rectBySize
-                        && rectAy + rectAySize + (double) offset.y > rectBy;
+                        && rectAy + rectAySize + (double) offset.y > rectBy;                                                              
     }
 
     public void setPosition(int x, int y) {

@@ -13,6 +13,11 @@ public class Constants {
         messageTypeLengthMap.put(MessageType.POSITION, MessageLength.POSITION_LENGTH);
         messageTypeLengthMap.put(MessageType.OBJ_REMOVAL, MessageLength.OBJ_REMOVAL_LENGTH);
     }
+    
+    public static class Size {
+        public static int MAX_TILE_HEIGHT = 32;
+        public static int MAX_TILE_WIDTH = 32;
+    }
 
     public static class MessageType {
         public static final int MOVEMENT = 1;

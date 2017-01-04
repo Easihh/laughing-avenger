@@ -32,27 +32,29 @@ public class Quadtree<E extends GameObject> {
     }
 
     public boolean insert(E e) {
-        if (!bounds.contains(e.getMask().getX(), e.getMask().getY())) {
-            return false;
-        }
         if (hasChildren()) {
-            searchAndInsert(e);
+            if (!searchAndInsert(e)) {
+                elements.add(e);
+            }
         } else {
             elements.add(e);
+            List<E> addBackToParent = new LinkedList<>();
             if (elements.size() > maxElemPerQuad) {
                 subDivide();
                 Iterator<E> itr = elements.iterator();
                 while (itr.hasNext()) {
                     E current = itr.next();
-                    searchAndInsert(current);
+                    if (!searchAndInsert(current))
+                        addBackToParent.add(current);
                     itr.remove();
                 }
             }
+            elements.addAll(addBackToParent);
         }
         return true;
     }
 
-    private void searchAndInsert(E e) {
+    private boolean searchAndInsert(E e) {
         int halfHeight = (int) bounds.getHeight() / 2;
         int halfWidth = (int) bounds.getWidth() / 2;
         int x = (int) bounds.getMinX();
@@ -62,14 +64,24 @@ public class Quadtree<E extends GameObject> {
         Rectangle2D BottomRightBounds = new Rectangle2D(x + halfWidth, y + halfHeight, halfWidth, halfHeight);
         Rectangle2D BottomLeftBounds = new Rectangle2D(x, y + halfHeight, halfWidth, halfHeight);
 
-        recursiveInsert(TopLeftBounds, e, topLeft, "Top Left");
-        recursiveInsert(TopRightBounds, e, topRight, "Top Right");
-        recursiveInsert(BottomLeftBounds, e, botLeft, "Bottom Left");
-        recursiveInsert(BottomRightBounds, e, botRight, "Bottom Right");
+        boolean successTopLeft = recursiveInsert(TopLeftBounds, e, topLeft, "Top Left");
+        boolean successTopRight = recursiveInsert(TopRightBounds, e, topRight, "Top Right");
+        boolean successBottomLeft = recursiveInsert(BottomLeftBounds, e, botLeft, "Bottom Left");
+        boolean successBottomRight = recursiveInsert(BottomRightBounds, e, botRight, "Bottom Right");
+
+        boolean success = successTopLeft || successTopRight || successBottomLeft || successBottomRight;
+
+        return success;
     }
 
     private boolean recursiveInsert(Rectangle2D bound, E element, Quadtree<E> qTree, String text) {
-        if (bound.contains(element.getMask().getX(), element.getMask().getY())) {
+        // Inflate bounds since contains method of rectangle doesnt match for
+        // point exactly on the boundary
+        
+        Rectangle2D boundsInflated = new Rectangle2D(bounds.getMinX() - 0.01, bounds.getMinY() - 0.01,
+                        bounds.getWidth() + 0.02, bounds.getHeight() + 0.02);
+        if (boundsInflated.contains(element.getMask().getX(), element.getMask().getY(), element.getMask().getWidth(),
+                        element.getMask().getHeight())) {
             return qTree.insert(element);
         }
         return false;
@@ -163,15 +175,23 @@ public class Quadtree<E extends GameObject> {
                 if (findCollision(quadrant.botRight, mask, offset))
                     return true;
             }
+            //Node may have been inserted at the Quadrant level instead of leaf level because it could not fit the child.
+            if (checkNodeAtCurrentLevel(quadrant,mask,offset)) {
+                return true;
+            }
         } else {
             // now at leaf level check List of Node
-            for (E element : quadrant.elements) {
-                if (GameObject.intersect(mask, element.getMask(), offset)) {
-                    collisionFound = true;
-                    break;
-                }
-            }
+            collisionFound=checkNodeAtCurrentLevel(quadrant,mask,offset);
         }
         return collisionFound;
+    }
+
+    private boolean checkNodeAtCurrentLevel(Quadtree<E> quadrant, java.awt.geom.Rectangle2D mask, Point offset) {
+        for (E element : quadrant.elements) {
+            if (GameObject.intersect(mask, element.getMask(), offset)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.zelda.common.Constants;
+import com.zelda.common.Quadtree;
 
 public class OtherPlayer extends ClientGameObject {
 
@@ -37,7 +38,7 @@ public class OtherPlayer extends ClientGameObject {
         walkAnimation = new MovementAnimation(files, WIDTH, HEIGHT);
     }
 
-    public void update(Collection<ClientGameObject> collection) {
+    public void update(Collection<ClientGameObject> activeCollection,Quadtree<ClientGameObject> quadTree) {
         movement();
     }
 
@@ -85,15 +86,15 @@ public class OtherPlayer extends ClientGameObject {
             xPosition += Math.min(speed, Math.abs(xDifference));
         }
     }
-    
+    /**yDifference is difference between current yPosition and serverY position **/
     private void updateYMovement(int yDifference) {
         if (yDifference > 0) {
             yPosition -= Math.min(yDifference, speed);
-            direction = Constants.Direction.DOWN;
+            direction = Constants.Direction.UP;
 
         } else {
             yPosition += Math.min(speed, Math.abs(yDifference));
-            direction = Constants.Direction.UP;
+            direction = Constants.Direction.DOWN;
         }
     }
     

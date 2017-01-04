@@ -37,7 +37,9 @@ public class MovementAnimation {
         int index = 0;
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < cols; j++) {
-                walkFrames[index++] = tmp[i][j];
+                TextureRegion tr=tmp[i][j];
+                tr.flip(false, true);
+                walkFrames[index++] = tr;
             }
         }
         walkAnimation[fileIndex] = new Animation(0.25f, walkFrames);

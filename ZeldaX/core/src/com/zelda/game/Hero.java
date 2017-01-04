@@ -11,7 +11,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.zelda.common.Constants;
+import static com.zelda.common.Constants.ObjectType.HERO;
+
+import com.zelda.common.Quadtree;
+import com.zelda.common.Constants.Command;
+import com.zelda.common.Constants.Direction;
+import com.zelda.common.GameObject;
 import com.zelda.network.ServerWriter;
 
 public class Hero extends ClientGameObject {
@@ -44,7 +49,7 @@ public class Hero extends ClientGameObject {
     }
 
     @Override
-    public void update(Collection<ClientGameObject> collection) {
+    public void update(Collection<ClientGameObject> ActiveCollection,Quadtree<ClientGameObject> quadTree) {
         boolean movementKeyPressed = false;
         Point offset;
         // discard server position update for now
@@ -52,39 +57,39 @@ public class Hero extends ClientGameObject {
         // TODO Some code here to check if Player is too far from server coord
 
         if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-            direction = Constants.Direction.RIGHT;
+            direction = Direction.RIGHT;
             movementKeyPressed = true;
             offset = new Point(SPEED, 0);
-            if (!isColliding(collection, offset)) {
+            if (!isColliding(quadTree, offset)) {
                 xPosition += SPEED;
-                ServerWriter.sendMessage("0001R");
+                ServerWriter.sendMessage(Command.MOV_RIGHT);
             }
         }
-        if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-            direction = Constants.Direction.LEFT;
+        else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+            direction = Direction.LEFT;
             movementKeyPressed = true;
             offset = new Point(-SPEED, 0);
-            if (!isColliding(collection, offset)) {
+            if (!isColliding(quadTree, offset)) {
                 xPosition -= SPEED;
-                ServerWriter.sendMessage("0001L");
+                ServerWriter.sendMessage(Command.MOV_LEFT);
             }
         }
-        if (Gdx.input.isKeyPressed(Keys.UP)) {
-            direction = Constants.Direction.UP;
-            movementKeyPressed = true;
-            offset = new Point(0, SPEED);
-            if (!isColliding(collection, offset)) {
-                yPosition += SPEED;
-                ServerWriter.sendMessage("0001U");
-            }
-        }
-        if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-            direction = Constants.Direction.DOWN;
+        else if (Gdx.input.isKeyPressed(Keys.UP)) {
+            direction = Direction.UP;
             movementKeyPressed = true;
             offset = new Point(0, -SPEED);
-            if (!isColliding(collection, offset)) {
+            if (!isColliding(quadTree, offset)) {
                 yPosition -= SPEED;
-                ServerWriter.sendMessage("0001D");
+                ServerWriter.sendMessage(Command.MOV_UP);
+            }
+        }
+        else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+            direction = Direction.DOWN;
+            movementKeyPressed = true;
+            offset = new Point(0, SPEED);
+            if (!isColliding(quadTree, offset)) {
+                yPosition += SPEED;
+                ServerWriter.sendMessage(Command.MOV_DOWN);
             }
         }
 
@@ -95,12 +100,9 @@ public class Hero extends ClientGameObject {
         updateMask();
     }
 
-    private boolean isColliding(Collection<ClientGameObject> collection, Point offset) {
-        for (ClientGameObject obj : collection) {
-            if (intersect(mask, obj.getMask(), offset) && !mask.equals(obj.getMask())
-                            && !(obj instanceof OtherPlayer)) {
-                return true;
-            }
+    private boolean isColliding(Quadtree<ClientGameObject> quadTree, Point offset) {
+        if (quadTree.isColliding(mask, offset)) {
+            return true;
         }
         return false;
     }
@@ -121,6 +123,6 @@ public class Hero extends ClientGameObject {
 
     @Override
     public String getTypeIdenfitier() {
-        return Constants.ObjectType.HERO;
+        return HERO;
     }
 }

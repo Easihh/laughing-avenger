@@ -11,8 +11,11 @@ import static com.zelda.common.Constants.Movement.LEFT;
 import static com.zelda.common.Constants.Movement.DOWN;
 import static com.zelda.common.Constants.Movement.RIGHT;
 import static com.zelda.common.Constants.Movement.UP;
+
 import com.zelda.common.GameObject;
+import com.zelda.common.Quadtree;
 import com.zelda.server.GameData;
+import com.zelda.server.ZoneLoader;
 import com.zelda.server.entity.Player;
 import com.zelda.server.entity.ServerGameObject;
 import com.zelda.server.message.ServerMessage;
@@ -22,12 +25,14 @@ public class ServerMessageProcessor {
 
     private Queue<ServerMessage> msgQueue;
     private ConcurrentHashMap<String, ServerGameObject> gameEntityMap;
+    private Quadtree<GameObject> gameStaticEntityQuadTree;
     private final Logger LOG = LoggerFactory.getLogger(ServerMessageProcessor.class);
 
     public ServerMessageProcessor() {
         GameData gData = GameData.getInstance();
         msgQueue = gData.getGameSimulationMessageQueue();
         gameEntityMap = gData.getGameEntityMap();
+        gameStaticEntityQuadTree = ZoneLoader.getInstance().getZoneByName("Zone1").getStaticObjQtree();
     }
 
     public void process() {
@@ -41,28 +46,26 @@ public class ServerMessageProcessor {
                 boolean collisionFound = false;
                 String intentDirection = actual.getDirection();
                 Point moveAhead = null;
-                for (GameObject obj : gameEntityMap.values()) {
-                    switch (intentDirection) {
-                    case LEFT:
-                        moveAhead = new Point(-2, 0);
-                        collisionFound = willCollide(player, obj, moveAhead, LEFT);
-                        break;
-                    case RIGHT:
-                        moveAhead = new Point(2, 0);
-                        collisionFound = willCollide(player, obj, moveAhead, RIGHT);
-                        break;
-                    case UP:
-                        moveAhead = new Point(0, -2);
-                        collisionFound = willCollide(player, obj, moveAhead, UP);
-                        break;
-                    case DOWN:
-                        moveAhead = new Point(0, 2);
-                        collisionFound = willCollide(player, obj, moveAhead, DOWN);
-                        break;
-                    }
-                    if (collisionFound) {
-                        break;
-                    }
+                switch (intentDirection) {
+                case LEFT:
+                    moveAhead = new Point(-2, 0);
+                    collisionFound = gameStaticEntityQuadTree.isColliding(player.getMask(), moveAhead);
+                    break;
+                case RIGHT:
+                    moveAhead = new Point(2, 0);
+                    collisionFound = gameStaticEntityQuadTree.isColliding(player.getMask(), moveAhead);
+                    break;
+                case UP:
+                    moveAhead = new Point(0, -2);
+                    collisionFound = gameStaticEntityQuadTree.isColliding(player.getMask(), moveAhead);
+                    break;
+                case DOWN:
+                    moveAhead = new Point(0, 2);
+                    collisionFound = gameStaticEntityQuadTree.isColliding(player.getMask(), moveAhead);
+                    break;
+                }
+                if (collisionFound) {
+                    LOG.debug("" + intentDirection + "ward Collision Detected With:" + player.getFullIdentifier());
                 }
                 if (!collisionFound) {
                     x += moveAhead.x;
@@ -73,18 +76,5 @@ public class ServerMessageProcessor {
                 }
             }
         }
-    }
-
-    private boolean willCollide(Player player, GameObject obj, Point point, String direction) {
-        if (player.intersect(player.getMask(), obj.getMask(), point) && !isPlayerCollison(player, obj)) {
-            LOG.debug("" + direction + "ward Collision Detected With:" + obj.getFullIdentifier());
-            return true;
-        }
-        return false;
-    }
-
-    /**Do not Allow collision with yourself and other hero. **/
-    private boolean isPlayerCollison(Player player, GameObject obj) {
-        return obj == player || (obj instanceof Player);
     }
 }

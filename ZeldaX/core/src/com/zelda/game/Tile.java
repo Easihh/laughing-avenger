@@ -1,16 +1,14 @@
 package com.zelda.game;
 
 import java.awt.Rectangle;
-import java.util.Collection;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.zelda.common.Constants;
-import com.zelda.common.Quadtree;
+import com.zelda.common.GameObject;
 
-public class Tile extends ClientGameObject {
+public class Tile extends GameObject {
 
     private Texture texture;
     private final static int WIDTH = 32;
@@ -28,17 +26,6 @@ public class Tile extends ClientGameObject {
         spr.flip(false, true);
     }
 
-    @Override
-    public void loadPosition(PositionUpdater positionUpdater) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void update(Collection<ClientGameObject> ActiveCollection,Quadtree<ClientGameObject> quadTree) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
     public void draw(SpriteBatch sprBatch) {
         sprBatch.draw(spr, xPosition, yPosition);
     }

@@ -38,7 +38,7 @@ public class OtherPlayer extends ClientGameObject {
         walkAnimation = new MovementAnimation(files, WIDTH, HEIGHT);
     }
 
-    public void update(Collection<ClientGameObject> activeCollection,Quadtree<ClientGameObject> quadTree) {
+    public void update(Collection<ClientGameObject> activeCollection,Quadtree<Tile> quadTree) {
         movement();
     }
 

@@ -16,7 +16,6 @@ import static com.zelda.common.Constants.ObjectType.HERO;
 import com.zelda.common.Quadtree;
 import com.zelda.common.Constants.Command;
 import com.zelda.common.Constants.Direction;
-import com.zelda.common.GameObject;
 import com.zelda.network.ServerWriter;
 
 public class Hero extends ClientGameObject {
@@ -49,7 +48,7 @@ public class Hero extends ClientGameObject {
     }
 
     @Override
-    public void update(Collection<ClientGameObject> ActiveCollection,Quadtree<ClientGameObject> quadTree) {
+    public void update(Collection<ClientGameObject> ActiveCollection,Quadtree<Tile> quadTree) {
         boolean movementKeyPressed = false;
         Point offset;
         // discard server position update for now
@@ -100,7 +99,7 @@ public class Hero extends ClientGameObject {
         updateMask();
     }
 
-    private boolean isColliding(Quadtree<ClientGameObject> quadTree, Point offset) {
+    private boolean isColliding(Quadtree<Tile> quadTree, Point offset) {
         if (quadTree.isColliding(mask, offset)) {
             return true;
         }

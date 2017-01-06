@@ -1,7 +1,5 @@
 package com.zelda.game;
 
-import java.awt.Rectangle;
-import java.awt.Shape;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,15 +17,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.zelda.common.Constants;
-import com.zelda.common.GameObject;
 import com.zelda.common.Quadtree;
 import com.zelda.common.network.HeroIdentiferMessage;
 import com.zelda.common.network.Message;
 import com.zelda.common.network.ObjectRemovalMessage;
 import com.zelda.common.network.PositionMessage;
 import com.zelda.network.NetworkController;
-
-import javafx.geometry.Rectangle2D;
 
 
 public class Game extends ApplicationAdapter {
@@ -40,8 +35,8 @@ public class Game extends ApplicationAdapter {
 
     private static volatile Queue<Message> fromServerMessageQueue;
     private Map<String, ClientGameObject> entityMap;
-    private Quadtree<ClientGameObject> entityQTree;
-    private List<ClientGameObject> staticTileList;
+    private Quadtree<Tile> staticEntityQTree;
+    private List<Tile> staticTileList;
     private OrthographicCamera camera;
 
     private String heroIdentifier;
@@ -54,7 +49,7 @@ public class Game extends ApplicationAdapter {
     @SuppressWarnings("unchecked")
     @Override
     public void create() {
-        entityQTree=new Quadtree<ClientGameObject>(0, 0, 512, 512, 1);
+        staticEntityQTree=new Quadtree<Tile>(0, 0, 512, 512, 1);
         loadGameResources();
         fromServerMessageQueue = new LinkedList<Message>();
         camera=new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -64,7 +59,7 @@ public class Game extends ApplicationAdapter {
         lastUpdate = System.currentTimeMillis();
         batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
-        staticTileList=(List<ClientGameObject>) entityQTree.QuadToList();
+        staticTileList=(List<Tile>) staticEntityQTree.QuadToList();
         System.out.println("Qtree Size:"+staticTileList.size());
     }
 
@@ -85,7 +80,7 @@ public class Game extends ApplicationAdapter {
                 case 0:
                     Tile tile = new Tile(zoneStartX, zoneStartY);
                     System.out.println("X:"+zoneStartX+" Y:"+zoneStartY);
-                    entityQTree.insert(tile);
+                    staticEntityQTree.insert(tile);
                     insertCount++;
                     break;
                 default:
@@ -142,10 +137,6 @@ public class Game extends ApplicationAdapter {
                         otherPlayer = new OtherPlayer(pMessage.getX(), pMessage.getY(),direction);
                         entityMap.put(pMessage.getFullIdentifier(), otherPlayer);
                     }
-                    if (pMessage.getObjType().equals(Constants.ObjectType.TILE)) {
-                        Tile tile = new Tile(pMessage.getX(), pMessage.getY());
-                        entityMap.put(pMessage.getFullIdentifier(), tile);
-                    }
                 } else {
                     objMap.loadPosition(new PositionUpdater(pMessage.getX(), pMessage.getY(),direction));
                 }
@@ -157,11 +148,11 @@ public class Game extends ApplicationAdapter {
             }
         }
         batch.begin();
-        for(ClientGameObject obj:staticTileList){
+        for(Tile obj:staticTileList){
             obj.draw(batch);
         }
         for (ClientGameObject obj : entityMap.values()) {
-            obj.update(entityMap.values(),entityQTree);
+            obj.update(entityMap.values(),staticEntityQTree);
             obj.draw(batch);
         }
         batch.end();

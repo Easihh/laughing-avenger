@@ -49,7 +49,8 @@ public class OtherPlayer extends ClientGameObject {
             return;
         }
 
-        if (updater.getserverX() == xPosition && updater.getserverY() == yPosition) {
+        if (updater.getserverX() == xPosition && updater.getserverY() == yPosition
+                        && updater.getDirection() == direction) {
             updaterQueue.poll();// we are already at server position; discard
                                 // update message.
             return;
@@ -68,6 +69,11 @@ public class OtherPlayer extends ClientGameObject {
             updateYMovement(yDifference);
             checkWalkAnimationStateTime(oldDirection);
             return;
+        }
+        if(updater.getserverX() == xPosition && updater.getserverY() == yPosition
+                        && updater.getDirection() != direction){
+            direction=updater.getDirection();
+            checkWalkAnimationStateTime(oldDirection);
         }
     }
     

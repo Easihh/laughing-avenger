@@ -27,6 +27,7 @@ public class Hero extends ClientGameObject {
 
     private MovementAnimation walkAnimation;
     private int direction;
+    private int prevDirection;
 
     public Hero(int x, int y) {
         updaterQueue = new LinkedList<PositionUpdater>();
@@ -56,37 +57,41 @@ public class Hero extends ClientGameObject {
         // TODO Some code here to check if Player is too far from server coord
 
         if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+            prevDirection = direction;
             direction = Direction.RIGHT;
             movementKeyPressed = true;
             offset = new Point(SPEED, 0);
-            if (!isColliding(quadTree, offset)) {
-                xPosition += SPEED;
+            if (!isColliding(quadTree, offset) || prevDirection != direction) {
+                xPosition += SPEED;       
                 ServerWriter.sendMessage(Command.MOV_RIGHT);
             }
         }
         else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+            prevDirection = direction;
             direction = Direction.LEFT;
             movementKeyPressed = true;
             offset = new Point(-SPEED, 0);
-            if (!isColliding(quadTree, offset)) {
+            if (!isColliding(quadTree, offset) || prevDirection != direction) {
                 xPosition -= SPEED;
                 ServerWriter.sendMessage(Command.MOV_LEFT);
             }
         }
         else if (Gdx.input.isKeyPressed(Keys.UP)) {
+            prevDirection = direction;
             direction = Direction.UP;
             movementKeyPressed = true;
             offset = new Point(0, -SPEED);
-            if (!isColliding(quadTree, offset)) {
+            if (!isColliding(quadTree, offset) || prevDirection != direction) {
                 yPosition -= SPEED;
                 ServerWriter.sendMessage(Command.MOV_UP);
             }
         }
         else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+            prevDirection = direction;
             direction = Direction.DOWN;
             movementKeyPressed = true;
             offset = new Point(0, SPEED);
-            if (!isColliding(quadTree, offset)) {
+            if (!isColliding(quadTree, offset) || prevDirection != direction) {
                 yPosition += SPEED;
                 ServerWriter.sendMessage(Command.MOV_DOWN);
             }

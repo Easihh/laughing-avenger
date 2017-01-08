@@ -31,7 +31,7 @@ public class ServerWriter extends AbstractServer implements Runnable {
                 msg = messageQueue.take();
                 byte[] message = messageToBytes();
                 ByteBuffer buffer = ByteBuffer.wrap(message);
-                LOG.trace("Message is:" + msg);
+                LOG.debug("Message is:" + msg);
                 while (buffer.hasRemaining()) {
                     channel.write(buffer); // will block if buffer full;
                 }

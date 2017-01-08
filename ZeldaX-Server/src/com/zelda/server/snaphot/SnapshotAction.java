@@ -105,14 +105,15 @@ public class SnapshotAction {
             if (!objectHasNotChangedSinceLastUpdate(tmp) || INACTIVE.equals(objState)) {
                 byte[] tempArr = tmp.convertToBytes();
                 byteArr = ArrayUtils.addAll(byteArr, tempArr);
-                tmp.updateLastSentPosition();
+                tmp.updateLastSent();
             }
         }
         return byteArr;
     }
 
     private boolean objectHasNotChangedSinceLastUpdate(ServerGameObject tmp) {
-        return tmp.getxPosition() == tmp.getPrevSentXPosition() && tmp.getyPosition() == tmp.getPrevSentYPosition();
+        return tmp.getxPosition() == tmp.getPrevSentXPosition() && tmp.getyPosition() == tmp.getPrevSentYPosition()
+                        && tmp.getPrevSentDirection().equals(tmp.getDirection());
     }
 
     private void removeInactiveObj() {

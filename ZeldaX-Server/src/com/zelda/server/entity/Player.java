@@ -15,7 +15,6 @@ public class Player extends ServerGameObject {
     private static int heroId = 0;
     private static int WIDTH = 32;
     private static int HEIGHT = 32;
-    private String direction = "";
 
     public Player() {
         xPosition = 128;

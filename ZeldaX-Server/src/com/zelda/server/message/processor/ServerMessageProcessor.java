@@ -39,12 +39,12 @@ public class ServerMessageProcessor {
         while (!msgQueue.isEmpty()) {
             ServerMessage current = msgQueue.poll();
             if (current.getType() == 1) {
-                ServerPositionMessage actual = (ServerPositionMessage) current;
-                Player player = (Player) gameEntityMap.get(actual.getIdentifier());
+                ServerPositionMessage msg = (ServerPositionMessage) current;
+                Player player = (Player) gameEntityMap.get(msg.getIdentifier());
                 int x = player.getxPosition();
                 int y = player.getyPosition();
                 boolean collisionFound = false;
-                String intentDirection = actual.getDirection();
+                String intentDirection = msg.getDirection();
                 Point moveAhead = null;
                 switch (intentDirection) {
                 case LEFT:
@@ -67,11 +67,11 @@ public class ServerMessageProcessor {
                 if (collisionFound) {
                     LOG.debug("" + intentDirection + "ward Collision Detected With:" + player.getFullIdentifier());
                 }
+                player.setDirection(intentDirection);
                 if (!collisionFound) {
                     x += moveAhead.x;
                     y += moveAhead.y;
                     player.setPosition(x, y);
-                    player.setDirection(intentDirection);
                     LOG.debug("Position Message Processed.");
                 }
             }

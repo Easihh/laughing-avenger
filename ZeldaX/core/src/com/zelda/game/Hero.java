@@ -10,6 +10,8 @@ import java.util.Queue;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import static com.zelda.common.Constants.ObjectType.HERO;
 
@@ -25,9 +27,12 @@ public class Hero extends ClientGameObject {
     private static final int SPEED = 2;
     private Queue<PositionUpdater> updaterQueue;
 
-    private MovementAnimation walkAnimation;
+    private SimpleAnimation walkAnimation;
+    private SimpleAnimation attackAnimation;
+    private boolean isAttacking = false;
     private int direction;
     private int prevDirection;
+    private BitmapFont font = new BitmapFont(true);
 
     public Hero(int x, int y) {
         updaterQueue = new LinkedList<PositionUpdater>();
@@ -35,73 +40,116 @@ public class Hero extends ClientGameObject {
         yPosition = y;
         height = HEIGHT;
         width = WIDTH;
-        mask = (new Rectangle(xPosition, yPosition, width, height));
-        setupMovementAnimation();
+        mask = new Rectangle(xPosition, yPosition, width, height);
+        setupAnimation();
     }
 
-    private void setupMovementAnimation() {
-        List<FileHandle> files = new LinkedList<FileHandle>();
-        files.add(Gdx.files.internal("Link_Movement_Up.png"));
-        files.add(Gdx.files.internal("Link_Movement_Down.png"));
-        files.add(Gdx.files.internal("Link_Movement_Left.png"));
-        files.add(Gdx.files.internal("Link_Movement_Right.png"));
-        walkAnimation = new MovementAnimation(files, WIDTH, HEIGHT);
+    private void setupAnimation() {
+        List<FileHandle> mfiles = new LinkedList<FileHandle>();
+        mfiles.add(Gdx.files.internal("Link_Movement_Up.png"));
+        mfiles.add(Gdx.files.internal("Link_Movement_Down.png"));
+        mfiles.add(Gdx.files.internal("Link_Movement_Left.png"));
+        mfiles.add(Gdx.files.internal("Link_Movement_Right.png"));
+        walkAnimation = new SimpleAnimation(mfiles, WIDTH, HEIGHT, 0.25f);
+        
+        List<FileHandle> afiles=new LinkedList<FileHandle>();
+        afiles.add(Gdx.files.internal("Link_AttackUp.png"));
+        afiles.add(Gdx.files.internal("Link_AttackDown.png"));
+        afiles.add(Gdx.files.internal("Link_AttackLeft.png"));
+        afiles.add(Gdx.files.internal("Link_AttackRight.png"));
+        attackAnimation = new SimpleAnimation(afiles, WIDTH, HEIGHT, 0.50f);
     }
 
     @Override
-    public void update(Collection<ClientGameObject> ActiveCollection,Quadtree<Tile> quadTree) {
+    public void update(Collection<ClientGameObject> ActiveCollection, Quadtree<Tile> quadTree) {
         boolean movementKeyPressed = false;
-        Point offset;
         // discard server position update for now
         updaterQueue.clear();
         // TODO Some code here to check if Player is too far from server coord
 
+        updateAnimation();
+        movementKeyPressed = checkMovementInput();
+        if (!isAttacking && movementKeyPressed) {
+            checkMovement(quadTree);
+            if (hasChangedDirection()) {
+                walkAnimation.resetStateTime(direction);
+            }
+            walkAnimation.addStateTime(direction, Gdx.graphics.getDeltaTime());
+        }
+
+        if (Gdx.input.isKeyPressed(Keys.SPACE) && !isAttacking) {
+            isAttacking = true;
+            walkAnimation.resetStateTime();
+        }
+        updateMask();
+    }
+    
+    private boolean checkMovementInput() {
+        return Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.LEFT)
+                        || Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.DOWN);
+    }
+
+    private void checkMovement(Quadtree<Tile> quadTree) {
+        Point offset;
+        prevDirection = direction;
         if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-            prevDirection = direction;
             direction = Direction.RIGHT;
-            movementKeyPressed = true;
             offset = new Point(SPEED, 0);
-            if (!isColliding(quadTree, offset) || prevDirection != direction) {
+            if (!isColliding(quadTree, offset) && !hasChangedDirection()) {
                 xPosition += SPEED;       
+                ServerWriter.sendMessage(Command.MOV_RIGHT);
+            }
+            else if (hasChangedDirection()) {
                 ServerWriter.sendMessage(Command.MOV_RIGHT);
             }
         }
         else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-            prevDirection = direction;
             direction = Direction.LEFT;
-            movementKeyPressed = true;
             offset = new Point(-SPEED, 0);
-            if (!isColliding(quadTree, offset) || prevDirection != direction) {
+            if (!isColliding(quadTree, offset) && !hasChangedDirection()) {
                 xPosition -= SPEED;
+                ServerWriter.sendMessage(Command.MOV_LEFT);
+            }
+            else if (hasChangedDirection()) {
                 ServerWriter.sendMessage(Command.MOV_LEFT);
             }
         }
         else if (Gdx.input.isKeyPressed(Keys.UP)) {
-            prevDirection = direction;
             direction = Direction.UP;
-            movementKeyPressed = true;
             offset = new Point(0, -SPEED);
-            if (!isColliding(quadTree, offset) || prevDirection != direction) {
+            if (!isColliding(quadTree, offset) && !hasChangedDirection()) {
                 yPosition -= SPEED;
+                ServerWriter.sendMessage(Command.MOV_UP);
+            }
+            else if (hasChangedDirection()) {
                 ServerWriter.sendMessage(Command.MOV_UP);
             }
         }
         else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-            prevDirection = direction;
             direction = Direction.DOWN;
-            movementKeyPressed = true;
             offset = new Point(0, SPEED);
-            if (!isColliding(quadTree, offset) || prevDirection != direction) {
+            if (!isColliding(quadTree, offset) && !hasChangedDirection()) {
                 yPosition += SPEED;
                 ServerWriter.sendMessage(Command.MOV_DOWN);
             }
+            else if (hasChangedDirection()) {
+                ServerWriter.sendMessage(Command.MOV_DOWN);
+            }
         }
+    }
 
-        if (movementKeyPressed) {
-            walkAnimation.resetStateTime(direction);
-            walkAnimation.addStateTime(direction, Gdx.graphics.getDeltaTime());
+    private void updateAnimation() {
+        if (isAttacking) {
+            attackAnimation.addStateTime(direction, Gdx.graphics.getDeltaTime());
+            if (attackAnimation.getStateTime(direction) >= attackAnimation.getAnimationDuraction(direction)) {
+                attackAnimation.resetStateTime();
+                isAttacking = false;
+            }
         }
-        updateMask();
+    }
+
+    private boolean hasChangedDirection() {
+        return prevDirection != direction;
     }
 
     private boolean isColliding(Quadtree<Tile> quadTree, Point offset) {
@@ -122,7 +170,12 @@ public class Hero extends ClientGameObject {
 
     @Override
     public void draw(SpriteBatch sprBatch) {
-        sprBatch.draw(walkAnimation.getCurrentFrame(direction), xPosition, yPosition);
+        if (!isAttacking) {
+            sprBatch.draw(walkAnimation.getCurrentFrame(direction), xPosition, yPosition);
+            font.draw(sprBatch, "X:" + xPosition + " Y:" + yPosition, 50, 50);
+        } else {
+            sprBatch.draw(attackAnimation.getCurrentFrame(direction), xPosition, yPosition);
+        }
     }
 
     @Override

@@ -15,7 +15,7 @@ public class SimpleAnimation {
     private int cols;
     private float[] stateTime;
 
-    public SimpleAnimation(List<FileHandle> file, int width, int height) {
+    public SimpleAnimation(List<FileHandle> file, int width, int height, float frameDuration) {
         animation = new Animation[file.size()];// 4 directions
         WIDTH = width;
         HEIGHT = height;
@@ -23,12 +23,12 @@ public class SimpleAnimation {
         int fileIndex = 0;
         while (fileIndex < file.size()) {
             FileHandle fileHandle = file.get(fileIndex);
-            loadAnimation(fileHandle, fileIndex);
+            loadAnimation(fileHandle, fileIndex,frameDuration);
             fileIndex++;
         }
     }
 
-    private void loadAnimation(FileHandle file, int fileIndex) {
+    private void loadAnimation(FileHandle file, int fileIndex, float frameDuration) {
         int ROWS = 1;// Animation always on 1 rows for movement.
         Texture walkSheet = new Texture(file);
         cols = walkSheet.getWidth() / WIDTH;
@@ -42,12 +42,20 @@ public class SimpleAnimation {
                 walkFrames[index++] = tr;
             }
         }
-        animation[fileIndex] = new Animation(0.25f, walkFrames);
+        animation[fileIndex] = new Animation(frameDuration, walkFrames);
         stateTime[fileIndex] = 0f;
+    }
+    
+    public float getAnimationDuraction(int index) {
+        return animation[index].getAnimationDuration();
     }
 
     public void addStateTime(int index, float amount) {
         stateTime[index] += amount;
+    }
+    
+    public float getStateTime(int index) {
+        return stateTime[index];
     }
 
     public TextureRegion getCurrentFrame(int direction) {
@@ -60,6 +68,12 @@ public class SimpleAnimation {
             if (i != index) {
                 stateTime[i] = 0f;
             }
+        }
+    }
+
+    public void resetStateTime() {
+        for (int i = 0; i < stateTime.length; i++) {
+            stateTime[i] = 0f;
         }
     }
 }

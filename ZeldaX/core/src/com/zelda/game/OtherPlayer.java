@@ -17,7 +17,7 @@ public class OtherPlayer extends ClientGameObject {
     private Queue<PositionUpdater> updaterQueue;
     private static final int WIDTH = 32;
     private static final int HEIGHT = 32;
-    private MovementAnimation walkAnimation;
+    private SimpleAnimation walkAnimation;
     private int direction;
     private int speed = 2;
 
@@ -35,7 +35,7 @@ public class OtherPlayer extends ClientGameObject {
         files.add(Gdx.files.internal("Link_Movement_Down.png"));
         files.add(Gdx.files.internal("Link_Movement_Left.png"));
         files.add(Gdx.files.internal("Link_Movement_Right.png"));
-        walkAnimation = new MovementAnimation(files, WIDTH, HEIGHT);
+        walkAnimation = new SimpleAnimation(files, WIDTH, HEIGHT, 0.25f);
     }
 
     public void update(Collection<ClientGameObject> activeCollection,Quadtree<Tile> quadTree) {

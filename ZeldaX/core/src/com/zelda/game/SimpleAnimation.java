@@ -7,16 +7,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class MovementAnimation {
+public class SimpleAnimation {
 
-    private Animation[] walkAnimation;// index are Up->Down->Left->Right
+    private Animation[] animation;// index are Up->Down->Left->Right
     private final int WIDTH;
     private final int HEIGHT;
     private int cols;
     private float[] stateTime;
 
-    public MovementAnimation(List<FileHandle> file, int width, int height) {
-        walkAnimation = new Animation[4];// 4 directions
+    public SimpleAnimation(List<FileHandle> file, int width, int height) {
+        animation = new Animation[file.size()];// 4 directions
         WIDTH = width;
         HEIGHT = height;
         stateTime = new float[file.size()];
@@ -42,7 +42,7 @@ public class MovementAnimation {
                 walkFrames[index++] = tr;
             }
         }
-        walkAnimation[fileIndex] = new Animation(0.25f, walkFrames);
+        animation[fileIndex] = new Animation(0.25f, walkFrames);
         stateTime[fileIndex] = 0f;
     }
 
@@ -51,7 +51,7 @@ public class MovementAnimation {
     }
 
     public TextureRegion getCurrentFrame(int direction) {
-        return walkAnimation[direction].getKeyFrame(stateTime[direction], true);
+        return animation[direction].getKeyFrame(stateTime[direction], true);
     }
     
     /**Reset StateTime of Animation for every index except index param**/

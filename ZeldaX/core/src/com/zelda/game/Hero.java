@@ -10,7 +10,6 @@ import java.util.Queue;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import static com.zelda.common.Constants.ObjectType.HERO;
@@ -66,7 +65,7 @@ public class Hero extends ClientGameObject {
         boolean movementKeyPressed = false;
         // discard server position update for now
         updaterQueue.clear();
-        // TODO Some code here to check if Player is too far from server coord
+        // TODO Maybe Some code here to check if Player is too far from server coord
         if (hSword != null) {
             hSword.update(ActiveCollection, quadTree);
             if (hSword.getCurrentDuration() >= hSword.getMaxDuration()) {
@@ -164,10 +163,6 @@ public class Hero extends ClientGameObject {
             return true;
         }
         return false;
-    }
-
-    private void updateMask() {
-        mask.setRect(xPosition, yPosition, width, height);
     }
 
     @Override

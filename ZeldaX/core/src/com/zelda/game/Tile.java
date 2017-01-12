@@ -1,6 +1,8 @@
 package com.zelda.game;
 
 import java.awt.Rectangle;
+import java.util.Map;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -14,6 +16,7 @@ public class Tile extends GameObject {
     private final static int WIDTH = 32;
     private final static int HEIGHT = 32;
     private Sprite spr;
+    private static final Map<String, Texture> textureMap = GameResources.getInstance().getTextureMap();
 
     public Tile(int x, int y) {
         xPosition = x;
@@ -21,7 +24,7 @@ public class Tile extends GameObject {
         width = WIDTH;
         height = HEIGHT;
         mask = new Rectangle(xPosition, yPosition, width, height);
-        texture = new Texture(Gdx.files.internal("Tree.png"));
+        texture = textureMap.get("Tree");
         spr=new Sprite(texture);
         spr.flip(false, true);
     }

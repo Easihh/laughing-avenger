@@ -2,25 +2,30 @@ package com.zelda.game;
 
 import java.awt.Rectangle;
 import java.util.Collection;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.zelda.common.Constants;
+import com.zelda.common.GameObject;
 import com.zelda.common.Quadtree;
 import static com.zelda.common.Constants.Direction.UP;
 import static com.zelda.common.Constants.Direction.DOWN;
 import static com.zelda.common.Constants.Direction.LEFT;
 import static com.zelda.common.Constants.Direction.RIGHT;
+import static com.zelda.common.Constants.Size.MAX_TILE_HEIGHT;
+import static com.zelda.common.Constants.Size.MAX_TILE_WIDTH;
+import static com.zelda.common.Constants.ObjectType.NORMAL_SWORD;
 
-public class HeroSword extends ClientGameObject{
+public class HeroSword extends GameObject{
     
     private Sprite spr;
     private Texture texture;
     private int direction;
     private final float maxDuration = 0.50f;
     private float currentDuration;
+    private static final Map<String, Texture> textureMap = GameResources.getInstance().getTextureMap();
     
     public HeroSword(int heroX,int heroY,int dir) {
         direction = dir;
@@ -34,26 +39,26 @@ public class HeroSword extends ClientGameObject{
         switch (direction) {
         case UP:
             width = 10;
-            height = 16;
+            height = (MAX_TILE_HEIGHT / 2);
             xPosition = heroX + (width / 2);
             yPosition = heroY - height - (height / 2);
             break;
         case DOWN:
             width = 10;
-            height = 16;
+            height = (MAX_TILE_HEIGHT / 2);
             xPosition = heroX + width;
             yPosition = heroY + height + (width / 2);
             break;
         case LEFT:
-            width = 16;
+            width = (MAX_TILE_WIDTH / 2);
             height = 10;
             xPosition = heroX - width - (width / 4);
             yPosition = heroY + height;
             break;
         case RIGHT:
-            width = 16;
+            width = (MAX_TILE_WIDTH / 2);
             height = 10;
-            xPosition = heroX + Constants.Size.MAX_TILE_WIDTH - (width / 2);
+            xPosition = heroX + MAX_TILE_WIDTH - (width / 2);
             yPosition = heroY + height;
             break;
         }
@@ -62,48 +67,35 @@ public class HeroSword extends ClientGameObject{
     private void loadSprite() {
         switch (direction) {
         case UP:
-            texture = new Texture(Gdx.files.internal("WoodSword_Up.png"));
+            texture = textureMap.get("WoodSword_Up");
             break;
         case DOWN:
-            texture = new Texture(Gdx.files.internal("WoodSword_Down.png"));
+            texture = textureMap.get("WoodSword_Down");
             break;
         case LEFT:
-            texture = new Texture(Gdx.files.internal("WoodSword_Left.png"));
+            texture = textureMap.get("WoodSword_Left");
             break;
         case RIGHT:
-            texture = new Texture(Gdx.files.internal("WoodSword_Right.png"));
+            texture = textureMap.get("WoodSword_Right");
             break;
         }
         spr = new Sprite(texture);
         spr.flip(false, true);
     }
 
-    @Override
-    public void loadPosition(PositionUpdater positionUpdater) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
     public void draw(SpriteBatch sprBatch) {
         sprBatch.draw(spr, xPosition, yPosition);
     }
 
-    @Override
     public void update(Collection<ClientGameObject> activeObjs, Quadtree<Tile> quadTree) {
-        updateMask();
         currentDuration += Gdx.graphics.getDeltaTime();
     }
 
     @Override
     public String getTypeIdenfitier() {
-        return "SW";
+        return NORMAL_SWORD;
     }
-    
-    private void updateMask() {
-        mask.setRect(xPosition, yPosition, width, height);
-    }
-    
+        
     public float getMaxDuration() {
         return maxDuration;
     }

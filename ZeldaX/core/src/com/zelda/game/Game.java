@@ -46,11 +46,12 @@ public class Game extends ApplicationAdapter {
     private final static int ONE_MINUTE_MILLIS = 1000;
     private Logger LOG = LoggerFactory.getLogger(Game.class);
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "unused" })
     @Override
     public void create() {
         staticEntityQTree=new Quadtree<Tile>(0, 0, 512, 512, 1);
         loadGameResources();
+        GameResources gameRes = GameResources.getInstance();//load up all texture at start.
         fromServerMessageQueue = new LinkedList<Message>();
         camera=new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.setToOrtho(true);
@@ -60,7 +61,6 @@ public class Game extends ApplicationAdapter {
         batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
         staticTileList=(List<Tile>) staticEntityQTree.QuadToList();
-        System.out.println("Qtree Size:"+staticTileList.size());
     }
 
     private void loadGameResources() {
@@ -68,7 +68,6 @@ public class Game extends ApplicationAdapter {
         Scanner scan = new Scanner(is);
         int zoneStartX=0;
         int zoneStartY=0;
-        int insertCount=0;
         while (scan.hasNextLine()) {
             String lineValue = scan.nextLine();
             String[] arr = lineValue.split(",", 0);
@@ -81,7 +80,6 @@ public class Game extends ApplicationAdapter {
                     Tile tile = new Tile(zoneStartX, zoneStartY);
                     System.out.println("X:"+zoneStartX+" Y:"+zoneStartY);
                     staticEntityQTree.insert(tile);
-                    insertCount++;
                     break;
                 default:
                     LOG.error("Invalid identifier:" + identifier);
@@ -91,13 +89,7 @@ public class Game extends ApplicationAdapter {
             zoneStartY += Constants.Size.MAX_TILE_HEIGHT;
             zoneStartX = 0;
         }
-        System.out.println("Inserted:"+insertCount);
         scan.close();
-        /*
-         * InputStream is=Game.class.getResourceAsStream("/Tree.png");
-         * Gdx2DPixmap gdx2Dpix=new Gdx2DPixmap(is,GDX2D_FORMAT_RGB565); Pixmap
-         * pixMap=new Pixmap(gdx2Dpix); img=new Texture(pixMap);
-         */
     }
 
     @Override
@@ -118,15 +110,6 @@ public class Game extends ApplicationAdapter {
                 player = new Hero(128, 160);
                 entityMap.put(heroIdentifier, player);
                 LOG.debug("Hero Identifier was set to:" + heroIdentifier);
-                //System.out.println(entityQTree.insert(player));
-                //System.out.println(entityQTree.insert(player));
-                //Hero testPlayer=new Hero(512,0);
-                //entityQTree.insert(testPlayer);
-                //entityQTree.insert(testPlayer);
-                
-                
-                //java.awt.geom.Rectangle2D testMask=new Rectangle(524,0,32,32);
-                //System.out.println("IsColliding:"+entityQTree.isColliding(testMask));
             }
             if (message instanceof PositionMessage) {
                 PositionMessage pMessage = (PositionMessage) message;

@@ -33,6 +33,7 @@ public class Hero extends ClientGameObject {
     private int direction;
     private int prevDirection;
     private BitmapFont font = new BitmapFont(true);
+    private HeroSword hSword;
 
     public Hero(int x, int y) {
         updaterQueue = new LinkedList<PositionUpdater>();
@@ -66,7 +67,12 @@ public class Hero extends ClientGameObject {
         // discard server position update for now
         updaterQueue.clear();
         // TODO Some code here to check if Player is too far from server coord
-
+        if (hSword != null) {
+            hSword.update(ActiveCollection, quadTree);
+            if (hSword.getCurrentDuration() >= hSword.getMaxDuration()) {
+                hSword = null;
+            }
+        }
         updateAnimation();
         movementKeyPressed = checkMovementInput();
         if (!isAttacking && movementKeyPressed) {
@@ -80,6 +86,7 @@ public class Hero extends ClientGameObject {
         if (Gdx.input.isKeyPressed(Keys.SPACE) && !isAttacking) {
             isAttacking = true;
             walkAnimation.resetStateTime();
+            hSword = new HeroSword(xPosition, yPosition, direction);
         }
         updateMask();
     }
@@ -170,6 +177,9 @@ public class Hero extends ClientGameObject {
 
     @Override
     public void draw(SpriteBatch sprBatch) {
+        if (hSword != null) {
+            hSword.draw(sprBatch);
+        }
         if (!isAttacking) {
             sprBatch.draw(walkAnimation.getCurrentFrame(direction), xPosition, yPosition);
             font.draw(sprBatch, "X:" + xPosition + " Y:" + yPosition, 50, 50);

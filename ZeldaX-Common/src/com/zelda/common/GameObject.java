@@ -33,7 +33,7 @@ public abstract class GameObject {
         this.updateMask();
     }
 
-    private void updateMask() {
+    protected void updateMask() {
         this.mask.setRect(this.xPosition, this.yPosition, this.width, this.height);
     }
 

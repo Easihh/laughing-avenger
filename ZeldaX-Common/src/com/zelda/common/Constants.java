@@ -55,6 +55,7 @@ public class Constants {
     public static class ObjectType {
         public static final String HERO = "HE";
         public static final String TILE = "TI";
+        public static final String NORMAL_SWORD = "SW";
     }
 
     public static class ObjectState {

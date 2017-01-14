@@ -48,7 +48,7 @@ public class ServerWriter extends AbstractServer implements Runnable {
 
     private byte[] messageToBytes() {
         int messageType = Integer.valueOf(msg.substring(0, 4));
-        int messageLength = 1;
+        int messageLength = msg.length() - Constants.MessageType.LENGTH;
 
         String value = msg.substring(4, msg.length());
         ByteBuffer buffer = ByteBuffer.allocate(Constants.MessageType.LENGTH + messageLength);

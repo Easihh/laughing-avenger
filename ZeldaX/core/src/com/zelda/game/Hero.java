@@ -13,6 +13,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import static com.zelda.common.Constants.ObjectType.HERO;
+import static com.zelda.common.Constants.Command.MAIN_SWD_ATTACK;
 
 import com.zelda.common.Quadtree;
 import com.zelda.common.Constants.Command;
@@ -66,6 +67,7 @@ public class Hero extends ClientGameObject {
         // discard server position update for now
         updaterQueue.clear();
         // TODO Maybe Some code here to check if Player is too far from server coord
+        
         if (hSword != null) {
             hSword.update(ActiveCollection, quadTree);
             if (hSword.getCurrentDuration() >= hSword.getMaxDuration()) {
@@ -74,7 +76,7 @@ public class Hero extends ClientGameObject {
         }
         updateAnimation();
         movementKeyPressed = checkMovementInput();
-        if (!isAttacking && movementKeyPressed) {
+        if (!isAttacking && movementKeyPressed && !Gdx.input.isKeyPressed(Keys.SPACE)) {
             checkMovement(quadTree);
             if (hasChangedDirection()) {
                 walkAnimation.resetStateTime(direction);
@@ -86,6 +88,7 @@ public class Hero extends ClientGameObject {
             isAttacking = true;
             walkAnimation.resetStateTime();
             hSword = new HeroSword(xPosition, yPosition, direction);
+            ServerWriter.sendMessage(MAIN_SWD_ATTACK);
         }
         updateMask();
     }
@@ -174,12 +177,11 @@ public class Hero extends ClientGameObject {
     public void draw(SpriteBatch sprBatch) {
         if (hSword != null) {
             hSword.draw(sprBatch);
+            sprBatch.draw(attackAnimation.getCurrentFrame(direction), xPosition, yPosition);
         }
         if (!isAttacking) {
             sprBatch.draw(walkAnimation.getCurrentFrame(direction), xPosition, yPosition);
             font.draw(sprBatch, "X:" + xPosition + " Y:" + yPosition, 50, 50);
-        } else {
-            sprBatch.draw(attackAnimation.getCurrentFrame(direction), xPosition, yPosition);
         }
     }
 

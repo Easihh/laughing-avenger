@@ -18,8 +18,11 @@ public class OtherPlayer extends ClientGameObject {
     private static final int WIDTH = 32;
     private static final int HEIGHT = 32;
     private SimpleAnimation walkAnimation;
+    private SimpleAnimation attackAnimation;
+    private HeroSword hSword;
     private int direction;
     private int speed = 2;
+    private int state;
 
     public OtherPlayer(int x, int y,int dir) {
         updaterQueue = new LinkedList<PositionUpdater>();
@@ -27,6 +30,7 @@ public class OtherPlayer extends ClientGameObject {
         yPosition = y;
         direction = dir;
         mask = new Rectangle(xPosition, yPosition, width, height);
+        state = Constants.ObjectState.NORMAL;
         setupMovementAnimation();
     }
     private void setupMovementAnimation() {
@@ -36,12 +40,34 @@ public class OtherPlayer extends ClientGameObject {
         files.add(Gdx.files.internal("Link_Movement_Left.png"));
         files.add(Gdx.files.internal("Link_Movement_Right.png"));
         walkAnimation = new SimpleAnimation(files, WIDTH, HEIGHT, 0.25f);
+        
+        List<FileHandle> afiles=new LinkedList<FileHandle>();
+        afiles.add(Gdx.files.internal("Link_AttackUp.png"));
+        afiles.add(Gdx.files.internal("Link_AttackDown.png"));
+        afiles.add(Gdx.files.internal("Link_AttackLeft.png"));
+        afiles.add(Gdx.files.internal("Link_AttackRight.png"));
+        attackAnimation = new SimpleAnimation(afiles, WIDTH, HEIGHT, 0.50f);
     }
 
     public void update(Collection<ClientGameObject> activeCollection,Quadtree<Tile> quadTree) {
+        updateState();
         movement();
     }
 
+    private void updateState() {
+        PositionUpdater updater = updaterQueue.peek();
+        if (updater == null) {
+            return;
+        }
+        
+        int oldState = state;
+        if (oldState != updater.getState()) {
+            state = updater.getState();
+            if(oldState==Constants.ObjectState.ATTACKING){
+                hSword = null;
+            }
+        }
+    }
     private void movement() {
         PositionUpdater updater = updaterQueue.peek();
         int oldDirection = direction;
@@ -50,7 +76,10 @@ public class OtherPlayer extends ClientGameObject {
         }
 
         if (updater.getserverX() == xPosition && updater.getserverY() == yPosition
-                        && updater.getDirection() == direction) {
+                        && updater.getDirection() == direction && updater.getState() == state) {
+            if (state == Constants.ObjectState.ATTACKING) {
+                hSword = new HeroSword(xPosition, yPosition, direction);
+            }
             updaterQueue.poll();// we are already at server position; discard
                                 // update message.
             return;
@@ -70,9 +99,9 @@ public class OtherPlayer extends ClientGameObject {
             checkWalkAnimationStateTime(oldDirection);
             return;
         }
-        if(updater.getserverX() == xPosition && updater.getserverY() == yPosition
-                        && updater.getDirection() != direction){
-            direction=updater.getDirection();
+        if (updater.getserverX() == xPosition && updater.getserverY() == yPosition
+                        && updater.getDirection() != direction) {
+            direction = updater.getDirection();
             checkWalkAnimationStateTime(oldDirection);
         }
     }
@@ -110,7 +139,11 @@ public class OtherPlayer extends ClientGameObject {
 
     @Override
     public void draw(SpriteBatch sprBatch) {
-        sprBatch.draw(walkAnimation.getCurrentFrame(direction), xPosition, yPosition);
+        if (hSword != null) {
+            hSword.draw(sprBatch);
+            sprBatch.draw(attackAnimation.getCurrentFrame(direction), xPosition, yPosition);
+        }
+        else sprBatch.draw(walkAnimation.getCurrentFrame(direction), xPosition, yPosition);
     }
 
     @Override

@@ -114,14 +114,14 @@ public class Game extends ApplicationAdapter {
             if (message instanceof PositionMessage) {
                 PositionMessage pMessage = (PositionMessage) message;
                 ClientGameObject objMap = entityMap.get(pMessage.getFullIdentifier());
-                int direction=GameUtility.directiontToInt(pMessage.getDirection());
+                int direction = GameUtility.directiontToInt(pMessage.getDirection());
                 if (objMap == null) {// object is a new entity
                     if (pMessage.getObjType().equals(Constants.ObjectType.HERO)) {
                         otherPlayer = new OtherPlayer(pMessage.getX(), pMessage.getY(),direction);
                         entityMap.put(pMessage.getFullIdentifier(), otherPlayer);
                     }
                 } else {
-                    objMap.loadPosition(new PositionUpdater(pMessage.getX(), pMessage.getY(),direction));
+                    objMap.loadPosition(new PositionUpdater(pMessage));
                 }
             }
             if (message instanceof ObjectRemovalMessage) {

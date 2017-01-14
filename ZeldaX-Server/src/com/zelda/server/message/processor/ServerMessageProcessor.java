@@ -12,12 +12,14 @@ import static com.zelda.common.Constants.Movement.DOWN;
 import static com.zelda.common.Constants.Movement.RIGHT;
 import static com.zelda.common.Constants.Movement.UP;
 
+import com.zelda.common.Constants;
 import com.zelda.common.GameObject;
 import com.zelda.common.Quadtree;
 import com.zelda.server.GameData;
 import com.zelda.server.ZoneLoader;
 import com.zelda.server.entity.Player;
 import com.zelda.server.entity.ServerGameObject;
+import com.zelda.server.message.ServerHeroAttackMessage;
 import com.zelda.server.message.ServerMessage;
 import com.zelda.server.message.ServerPositionMessage;
 
@@ -38,43 +40,58 @@ public class ServerMessageProcessor {
     public void process() {
         while (!msgQueue.isEmpty()) {
             ServerMessage current = msgQueue.poll();
-            if (current.getType() == 1) {
-                ServerPositionMessage msg = (ServerPositionMessage) current;
-                Player player = (Player) gameEntityMap.get(msg.getIdentifier());
-                int x = player.getxPosition();
-                int y = player.getyPosition();
-                boolean collisionFound = false;
-                String intentDirection = msg.getDirection();
-                Point moveAhead = null;
-                switch (intentDirection) {
-                case LEFT:
-                    moveAhead = new Point(-2, 0);
-                    collisionFound = gameStaticEntityQuadTree.isColliding(player.getMask(), moveAhead);
-                    break;
-                case RIGHT:
-                    moveAhead = new Point(2, 0);
-                    collisionFound = gameStaticEntityQuadTree.isColliding(player.getMask(), moveAhead);
-                    break;
-                case UP:
-                    moveAhead = new Point(0, -2);
-                    collisionFound = gameStaticEntityQuadTree.isColliding(player.getMask(), moveAhead);
-                    break;
-                case DOWN:
-                    moveAhead = new Point(0, 2);
-                    collisionFound = gameStaticEntityQuadTree.isColliding(player.getMask(), moveAhead);
-                    break;
-                }
-                if (collisionFound) {
-                    LOG.debug("" + intentDirection + "ward Collision Detected With:" + player.getFullIdentifier());
-                }
-                player.setDirection(intentDirection);
-                if (!collisionFound) {
-                    x += moveAhead.x;
-                    y += moveAhead.y;
-                    player.setPosition(x, y);
-                    LOG.debug("Position Message Processed.");
-                }
+            switch (current.getType()) {
+            case Constants.ServerMessageType.MOVEMENT:
+                processPositionMessage(current);
+                break;
+            case Constants.ServerMessageType.HERO_ATTACK:
+                processHeroAttackMessage(current);
+                break;
             }
+        }
+    }
+
+    private void processHeroAttackMessage(ServerMessage current) {
+        ServerHeroAttackMessage msg = (ServerHeroAttackMessage) current;
+        Player player = (Player) gameEntityMap.get(msg.getHeroIdentifier());
+        player.triggerPlayerAttack();
+    }
+
+    private void processPositionMessage(ServerMessage current) {
+        ServerPositionMessage msg = (ServerPositionMessage) current;
+        Player player = (Player) gameEntityMap.get(msg.getIdentifier());
+        int x = player.getxPosition();
+        int y = player.getyPosition();
+        boolean collisionFound = false;
+        String intentDirection = msg.getDirection();
+        Point moveAhead = null;
+        switch (intentDirection) {
+        case LEFT:
+            moveAhead = new Point(-2, 0);
+            collisionFound = gameStaticEntityQuadTree.isColliding(player.getMask(), moveAhead);
+            break;
+        case RIGHT:
+            moveAhead = new Point(2, 0);
+            collisionFound = gameStaticEntityQuadTree.isColliding(player.getMask(), moveAhead);
+            break;
+        case UP:
+            moveAhead = new Point(0, -2);
+            collisionFound = gameStaticEntityQuadTree.isColliding(player.getMask(), moveAhead);
+            break;
+        case DOWN:
+            moveAhead = new Point(0, 2);
+            collisionFound = gameStaticEntityQuadTree.isColliding(player.getMask(), moveAhead);
+            break;
+        }
+        if (collisionFound) {
+            LOG.debug("" + intentDirection + "ward Collision Detected With:" + player.getFullIdentifier());
+        }
+        player.setDirection(intentDirection);
+        if (!collisionFound && player.getObjState() != Constants.ObjectState.ATTACKING) {
+            x += moveAhead.x;
+            y += moveAhead.y;
+            player.setPosition(x, y);
+            LOG.debug("Position Message Processed.");
         }
     }
 }

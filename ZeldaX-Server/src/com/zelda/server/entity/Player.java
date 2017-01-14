@@ -5,17 +5,22 @@ import java.nio.ByteBuffer;
 
 import com.zelda.common.Constants;
 
-import static com.zelda.common.Constants.ObjectState.ACTIVE;
+import static com.zelda.common.Constants.ObjectState.NORMAL;
+import static com.zelda.common.Constants.ObjectState.INACTIVE;
+import static com.zelda.common.Constants.ObjectState.ATTACKING;
 import static com.zelda.common.Constants.ObjectType.HERO;
 import static com.zelda.common.Constants.MessageType.OBJ_REMOVAL;
 import static com.zelda.common.Constants.MessageType.POSITION;
+import static com.zelda.common.Constants.SERVER_LOOP_DELAY;
 
 public class Player extends ServerGameObject {
 
     private static int heroId = 0;
     private static int WIDTH = 32;
     private static int HEIGHT = 32;
-
+    private final int MAX_SWORD_ATTACK_ANIMATION_DURATION = 600; //actually 500(same as client) but add 100 due to server loop.
+    private int CURRENT_SWORD_ATTACK_ANIMATION_DURATION = 0;
+    
     public Player() {
         xPosition = 128;
         yPosition = 160;
@@ -26,16 +31,16 @@ public class Player extends ServerGameObject {
         idIdentifier = heroId;
         width = WIDTH;
         height = HEIGHT;
-        objState = ACTIVE;
+        objState = NORMAL;
         mask = new Rectangle(xPosition, yPosition, width, height);
     }
 
     @Override
     public byte[] convertToBytes() {
-        if (ACTIVE.equals(objState)) {
-            return convertToBytesActive();
+        if (INACTIVE == objState) {
+            return convertToBytesInactive();
         }
-        return convertToBytesInactive();
+        return convertToBytesActive();
     }
 
     private byte[] convertToBytesInactive() {
@@ -55,6 +60,7 @@ public class Player extends ServerGameObject {
         buffer.putInt(xPosition);
         buffer.putInt(yPosition);
         buffer.put(direction.getBytes());
+        buffer.putInt(objState);
         buffer.flip();
         return buffer.array();
     }
@@ -70,5 +76,20 @@ public class Player extends ServerGameObject {
     
     public void setDirection(String direction) {
         this.direction = direction;
+    }
+
+    public void triggerPlayerAttack() {
+        objState = ATTACKING;
+    }
+
+    @Override
+    public void update() {
+        if (objState == ATTACKING) {
+            CURRENT_SWORD_ATTACK_ANIMATION_DURATION += SERVER_LOOP_DELAY;
+            if (CURRENT_SWORD_ATTACK_ANIMATION_DURATION >= MAX_SWORD_ATTACK_ANIMATION_DURATION) {
+                CURRENT_SWORD_ATTACK_ANIMATION_DURATION = 0;
+                objState = NORMAL;
+            }
+        }
     }
 }

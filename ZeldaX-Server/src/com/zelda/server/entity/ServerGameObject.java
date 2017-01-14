@@ -7,12 +7,15 @@ public abstract class ServerGameObject extends GameObject {
     protected int prevSentXPosition;
     protected int prevSentYPosition;
     protected String prevSentDirection;
+    protected int prevSentState;
 
     protected String direction = "";
 
-    protected String objState;
+    protected int objState;
 
     public abstract byte[] convertToBytes();
+    
+    public abstract void update();
     
     public String getPrevSentDirection() {
         return prevSentDirection;
@@ -34,13 +37,18 @@ public abstract class ServerGameObject extends GameObject {
         prevSentXPosition = xPosition;
         prevSentYPosition = yPosition;
         prevSentDirection = direction;
+        prevSentState = objState;
     }
 
-    public String getObjState() {
+    public int getObjState() {
         return objState;
     }
 
-    public void setObjState(String objState) {
+    public void setObjState(int objState) {
         this.objState = objState;
+    }
+    
+    public int getPrevSentState() {
+        return prevSentState;
     }
 }

@@ -98,11 +98,11 @@ public class SnapshotAction {
         byte[] byteArr = null;
         for (String key : gameEntityMap.keySet()) {
             ServerGameObject tmp = gameEntityMap.get(key);
-            String objState = tmp.getObjState();
-            if (INACTIVE.equals(objState)) {
+            int objState = tmp.getObjState();
+            if (INACTIVE == objState) {
                 toBeRemoved.add(key);
             }
-            if (!objectHasNotChangedSinceLastUpdate(tmp) || INACTIVE.equals(objState)) {
+            if (!objectHasNotChangedSinceLastUpdate(tmp) || INACTIVE == objState) {
                 byte[] tempArr = tmp.convertToBytes();
                 byteArr = ArrayUtils.addAll(byteArr, tempArr);
                 tmp.updateLastSent();
@@ -112,8 +112,19 @@ public class SnapshotAction {
     }
 
     private boolean objectHasNotChangedSinceLastUpdate(ServerGameObject tmp) {
-        return tmp.getxPosition() == tmp.getPrevSentXPosition() && tmp.getyPosition() == tmp.getPrevSentYPosition()
-                        && tmp.getPrevSentDirection().equals(tmp.getDirection());
+        return objectPositionHasNotChanged(tmp) && objectDirectionHasNotChanged(tmp) && objectStateHasNotChanged(tmp);
+    }
+
+    private boolean objectStateHasNotChanged(ServerGameObject tmp) {
+        return tmp.getPrevSentState()==tmp.getObjState();
+    }
+
+    private boolean objectDirectionHasNotChanged(ServerGameObject tmp) {
+        return tmp.getPrevSentDirection().equals(tmp.getDirection());
+    }
+
+    private boolean objectPositionHasNotChanged(ServerGameObject tmp) {
+        return tmp.getxPosition() == tmp.getPrevSentXPosition() && tmp.getyPosition() == tmp.getPrevSentYPosition();
     }
 
     private void removeInactiveObj() {

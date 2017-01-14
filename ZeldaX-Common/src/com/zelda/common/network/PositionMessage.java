@@ -11,10 +11,11 @@ public class PositionMessage implements Message {
     private String objType;
     private int id;
     private String direction;
+    private int objState;
     
     /**
      * Message format: MessageType(Int)(4Bytes)->objType(String)(2Bytes) ->
-     * identifier(Int)(4Bytes) ->xPos(Int)(4Bytes)->yPos(Int)(4Bytes)-> direction(String)(1Bytes)
+     * identifier(Int)(4Bytes) ->xPos(Int)(4Bytes)->yPos(Int)(4Bytes)-> direction(String)(1Bytes)-> State(Int)(4Bytes)
      **/
     public PositionMessage(ByteBuffer messageBuffer) {
         
@@ -30,6 +31,8 @@ public class PositionMessage implements Message {
 
         messageBuffer.get(directionArr, 0, 1);
         direction = new String(directionArr);
+        
+        objState=messageBuffer.getInt();
     }
 
     public int getX() {
@@ -66,8 +69,8 @@ public class PositionMessage implements Message {
     }
 
     public String toString() {
-        return "Type:" + getType() + " ObjectType:" + objType + " Identifier:" + id + " xPosition:"
-                        + x + " yPosition:" + y +" direction:"+direction;
+        return "Type:" + getType() + " ObjectType:" + objType + " Identifier:" + id + " xPosition:" + x + " yPosition:"
+                        + y + " direction:" + direction + " state:" + objState;
     }
 
     public int getTotalLength() {
@@ -76,5 +79,9 @@ public class PositionMessage implements Message {
 
     public int getType() {
         return Constants.MessageType.POSITION;
+    }
+    
+    public int getObjState() {
+        return objState;
     }
 }

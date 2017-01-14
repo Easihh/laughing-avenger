@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zelda.common.Constants;
+import static com.zelda.common.Constants.MessageType;
 
 public class ByteMessageReader {
     
     private static int currentType = -1;
     private static byte[] typeArr = new byte[Constants.MessageType.LENGTH];
     private static int typeArrIndex = 0;
-    
+
     public List<Message> decodeMessage(ByteBuffer messageBuffer) {
         ArrayList<Message> messageList = new ArrayList<Message>();
         messageBuffer.flip();
@@ -59,19 +60,23 @@ public class ByteMessageReader {
     private Message getValueByMessageType(ByteBuffer messageBuffer) {
         Message msg = null;
         switch (currentType) {
-        case Constants.MessageType.MOVEMENT: {
+        case MessageType.MOVEMENT: {
             msg = new MovementMessage(messageBuffer);
             break;
         }
-        case Constants.MessageType.POSITION: {
+        case MessageType.POSITION: {
             msg = new PositionMessage(messageBuffer);
             break;
         }
-        case Constants.MessageType.OBJ_REMOVAL: {
+        case MessageType.OBJ_REMOVAL: {
             msg = new ObjectRemovalMessage(messageBuffer);
             break;
         }
-        case Constants.MessageType.HERO_ID: {
+        case MessageType.HERO_MAIN_ATTACK: {
+            msg = new HeroAttackMessage();
+            break;
+        }
+        case MessageType.HERO_ID: {
             msg = new HeroIdentiferMessage(messageBuffer);
         }
         }

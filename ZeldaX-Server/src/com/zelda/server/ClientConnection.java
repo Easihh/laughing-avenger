@@ -1,8 +1,11 @@
 package com.zelda.server;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.zelda.common.network.ByteMessageReader;
+import com.zelda.common.network.Message;
 import com.zelda.server.entity.Player;
 
 public class ClientConnection {
@@ -10,10 +13,12 @@ public class ClientConnection {
     private Long unixTimestamp;
     private Player hero;
     private ByteMessageReader reader;
+    private Map<Integer,Message> lastMessageByType;
 
     public ClientConnection() {
         hero = new Player();
-        reader = new ByteMessageReader();
+        lastMessageByType = new HashMap<Integer, Message>();
+        reader = new ByteMessageReader();        
         unixTimestamp = Calendar.getInstance().getTime().getTime();
     }
 
@@ -39,5 +44,9 @@ public class ClientConnection {
 
     public Long getUnixTimestamp() {
         return unixTimestamp;
+    }
+    
+    public Map<Integer, Message> getLastMessageByType() {
+        return lastMessageByType;
     }
 }

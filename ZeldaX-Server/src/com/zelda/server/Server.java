@@ -26,7 +26,7 @@ import static com.zelda.common.Constants.BUFFER_READ_LENGTH;;
 
 public class Server implements Runnable {
 
-    private final static String HOST = "localhost";
+    private final static String HOST = "184.161.178.153";
     private final static int PORT = 1111;
     private static Selector selector;
     private ServerSocketChannel serverSocket;

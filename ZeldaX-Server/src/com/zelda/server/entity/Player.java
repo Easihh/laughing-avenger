@@ -4,12 +4,12 @@ import java.awt.Rectangle;
 import java.nio.ByteBuffer;
 
 import com.zelda.common.Constants;
+import com.zelda.common.network.ObjectRemovalMessage;
 
 import static com.zelda.common.Constants.ObjectState.NORMAL;
 import static com.zelda.common.Constants.ObjectState.INACTIVE;
 import static com.zelda.common.Constants.ObjectState.ATTACKING;
 import static com.zelda.common.Constants.ObjectType.HERO;
-import static com.zelda.common.Constants.MessageType.OBJ_REMOVAL;
 import static com.zelda.common.Constants.MessageType.POSITION;
 import static com.zelda.common.Constants.SERVER_LOOP_DELAY;
 
@@ -38,18 +38,9 @@ public class Player extends ServerGameObject {
     @Override
     public byte[] convertToBytes() {
         if (INACTIVE == objState) {
-            return convertToBytesInactive();
+            return new ObjectRemovalMessage(HERO, idIdentifier).getBytes();
         }
         return convertToBytesActive();
-    }
-
-    private byte[] convertToBytesInactive() {
-        ByteBuffer buffer = ByteBuffer.allocate(10);
-        buffer.putInt(OBJ_REMOVAL);
-        buffer.put(HERO.getBytes());
-        buffer.putInt(idIdentifier);
-        buffer.flip();
-        return buffer.array();
     }
 
     private byte[] convertToBytesActive() {

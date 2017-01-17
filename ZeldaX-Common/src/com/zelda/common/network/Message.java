@@ -1,10 +1,16 @@
 package com.zelda.common.network;
 
-public interface Message {
+public abstract class Message {
     
-    public byte[] getBytes();
+    protected Long timeCreated;
+    
+    public Long getTimeCreated() {
+        return timeCreated;
+    }
 
-    public int getTotalLength();
+    public abstract byte[] getBytes();
 
-    public int getType();
+    public abstract int getTotalLength();
+
+    public abstract int getType();
 }

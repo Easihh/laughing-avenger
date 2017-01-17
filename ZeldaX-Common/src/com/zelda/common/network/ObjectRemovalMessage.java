@@ -5,9 +5,14 @@ import com.zelda.common.network.Message;
 import static com.zelda.common.Constants.MessageLength.OBJ_STR_TYPE_LENGTH;
 import java.nio.ByteBuffer;
 
-public class ObjectRemovalMessage implements Message {
+public class ObjectRemovalMessage extends Message {
     private String objType;
     private int id;
+    
+    public ObjectRemovalMessage(String type, int identifer) {
+        objType = type;
+        id = identifer;
+    }
     
     /**
      * Message format: MessageType(Int)(4Bytes)->objType(String)(2Bytes) ->

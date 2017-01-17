@@ -3,12 +3,19 @@ package com.zelda.common.network;
 import com.zelda.common.Constants;
 import com.zelda.common.network.Message;
 import java.nio.ByteBuffer;
+import java.util.Calendar;
 
-public class MovementMessage implements Message {
+public class MovementMessage extends Message {
     private String direction = "";
+    
+    
+    public MovementMessage(String dir){
+        direction = dir;
+    }
     
     /**Message format: MessageType(Int)(4Bytes)->Direction(String)(1Bytes)**/
     public MovementMessage(ByteBuffer messageBuffer) {
+        timeCreated = Calendar.getInstance().getTime().getTime();
         byte[] valuePart = new byte[Constants.MessageLength.MOVEMENT_DIRECTION];
         for (int i = 0; i < valuePart.length; ++i) {
             valuePart[i] = messageBuffer.get();

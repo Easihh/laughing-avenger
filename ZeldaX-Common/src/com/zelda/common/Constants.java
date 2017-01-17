@@ -7,7 +7,8 @@ public class Constants {
     public static final int BUFFER_READ_LENGTH = 256;
     public static final int LONG_BYTE_LENGTH = 8;
     public static final int SERVER_LOOP_DELAY = 100;
-
+    public static final int CLIENT_MOVEMENT_DELAY_TO_SERVER = 100;
+    
     static {// Type->Total Message Length
         messageTypeLengthMap.put(MessageType.MOVEMENT, MessageLength.MOVEMENT_LENGTH);
         messageTypeLengthMap.put(MessageType.HERO_ID, MessageLength.HERO_IDEN_LENGTH);
@@ -83,8 +84,7 @@ public class Constants {
                         + MessageLength.OBJ_INT_IDENTIFIER_LENGTH;
         public static final int OBJ_REMOVAL_LENGTH = MessageType.LENGTH + MessageLength.OBJ_STR_TYPE_LENGTH
                         + MessageLength.OBJ_INT_IDENTIFIER_LENGTH;
-        public static final int HERO_MAIN_ATTACK_LENGTH = MessageType.LENGTH + MessageLength.OBJ_STR_TYPE_LENGTH
-                        + MessageLength.OBJ_INT_IDENTIFIER_LENGTH;
+        public static final int HERO_MAIN_ATTACK_LENGTH = MessageType.LENGTH;
     }
 
 }

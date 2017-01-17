@@ -5,7 +5,7 @@ import com.zelda.common.network.Message;
 import java.nio.ByteBuffer;
 import static com.zelda.common.Constants.MessageLength.OBJ_STR_TYPE_LENGTH;;
 
-public class PositionMessage implements Message {
+public class PositionMessage extends Message {
     private int x;
     private int y;
     private String objType;

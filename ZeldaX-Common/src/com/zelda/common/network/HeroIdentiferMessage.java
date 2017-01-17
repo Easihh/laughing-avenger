@@ -4,7 +4,7 @@ import com.zelda.common.Constants;
 import com.zelda.common.network.Message;
 import java.nio.ByteBuffer;
 
-public class HeroIdentiferMessage implements Message {
+public class HeroIdentiferMessage extends Message {
     private int idValue;
     private String objectType;
 

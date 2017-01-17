@@ -12,7 +12,7 @@ import com.zelda.common.network.Message;
 public class NetworkController {
 
     private final static int PORT = 1111;
-    private final static String HOST = "localhost";
+    private final static String HOST = "184.161.178.153";
     private ServerReader serverReader;
     private ServerWriter serverWriter;
     

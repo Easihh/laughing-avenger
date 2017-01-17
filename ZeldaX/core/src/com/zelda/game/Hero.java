@@ -3,9 +3,13 @@ package com.zelda.game;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -16,8 +20,13 @@ import static com.zelda.common.Constants.ObjectType.HERO;
 import static com.zelda.common.Constants.Command.MAIN_SWD_ATTACK;
 
 import com.zelda.common.Quadtree;
+import com.zelda.common.network.HeroAttackMessage;
+import com.zelda.common.network.Message;
+import com.zelda.common.network.MovementMessage;
+import com.zelda.common.Constants;
 import com.zelda.common.Constants.Command;
 import com.zelda.common.Constants.Direction;
+import com.zelda.common.Constants.Movement;
 import com.zelda.network.ServerWriter;
 
 public class Hero extends ClientGameObject {
@@ -34,6 +43,10 @@ public class Hero extends ClientGameObject {
     private int prevDirection;
     private BitmapFont font = new BitmapFont(true);
     private HeroSword hSword;
+    private float currentMovementDelayTime;
+    private final float MAX_MOVEMENT_DELAY_TO_SERVER = 0.10f;
+    private List<Message> movementCommandList;
+    private static Logger LOG = LoggerFactory.getLogger(Hero.class);
 
     public Hero(int x, int y) {
         updaterQueue = new LinkedList<PositionUpdater>();
@@ -43,6 +56,8 @@ public class Hero extends ClientGameObject {
         width = WIDTH;
         mask = new Rectangle(xPosition, yPosition, width, height);
         setupAnimation();
+        currentMovementDelayTime = 0.0f;
+        movementCommandList = new LinkedList<Message>();
     }
 
     private void setupAnimation() {
@@ -63,6 +78,7 @@ public class Hero extends ClientGameObject {
 
     @Override
     public void update(Collection<ClientGameObject> ActiveCollection, Quadtree<Tile> quadTree) {
+        currentMovementDelayTime += Gdx.graphics.getDeltaTime();
         boolean movementKeyPressed = false;
         // discard server position update for now
         updaterQueue.clear();
@@ -88,11 +104,23 @@ public class Hero extends ClientGameObject {
             isAttacking = true;
             walkAnimation.resetStateTime();
             hSword = new HeroSword(xPosition, yPosition, direction);
-            ServerWriter.sendMessage(MAIN_SWD_ATTACK);
+            ServerWriter.sendMessage(new HeroAttackMessage());
         }
         updateMask();
+        checkBulkMovementCommand();
     }
     
+    private void checkBulkMovementCommand() {
+        if (currentMovementDelayTime >= MAX_MOVEMENT_DELAY_TO_SERVER) {
+            if (!movementCommandList.isEmpty()) {
+                LOG.info("Sending To Server:");
+                ServerWriter.sendBulkMessage(movementCommandList);
+                currentMovementDelayTime = 0.0f;
+                movementCommandList.clear();
+            }
+        }
+    }
+
     private boolean checkMovementInput() {
         return Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.LEFT)
                         || Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.DOWN);
@@ -105,11 +133,11 @@ public class Hero extends ClientGameObject {
             direction = Direction.RIGHT;
             offset = new Point(SPEED, 0);
             if (!isColliding(quadTree, offset) && !hasChangedDirection()) {
-                xPosition += SPEED;       
-                ServerWriter.sendMessage(Command.MOV_RIGHT);
+                xPosition += SPEED;  
+                movementCommandList.add(new MovementMessage(Movement.RIGHT));
             }
             else if (hasChangedDirection()) {
-                ServerWriter.sendMessage(Command.MOV_RIGHT);
+                movementCommandList.add(new MovementMessage(Movement.RIGHT));
             }
         }
         else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
@@ -117,10 +145,10 @@ public class Hero extends ClientGameObject {
             offset = new Point(-SPEED, 0);
             if (!isColliding(quadTree, offset) && !hasChangedDirection()) {
                 xPosition -= SPEED;
-                ServerWriter.sendMessage(Command.MOV_LEFT);
+                movementCommandList.add(new MovementMessage(Movement.LEFT));
             }
             else if (hasChangedDirection()) {
-                ServerWriter.sendMessage(Command.MOV_LEFT);
+                movementCommandList.add(new MovementMessage(Movement.LEFT));
             }
         }
         else if (Gdx.input.isKeyPressed(Keys.UP)) {
@@ -128,10 +156,10 @@ public class Hero extends ClientGameObject {
             offset = new Point(0, -SPEED);
             if (!isColliding(quadTree, offset) && !hasChangedDirection()) {
                 yPosition -= SPEED;
-                ServerWriter.sendMessage(Command.MOV_UP);
+                movementCommandList.add(new MovementMessage(Movement.UP));
             }
             else if (hasChangedDirection()) {
-                ServerWriter.sendMessage(Command.MOV_UP);
+                movementCommandList.add(new MovementMessage(Movement.UP));
             }
         }
         else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
@@ -139,10 +167,10 @@ public class Hero extends ClientGameObject {
             offset = new Point(0, SPEED);
             if (!isColliding(quadTree, offset) && !hasChangedDirection()) {
                 yPosition += SPEED;
-                ServerWriter.sendMessage(Command.MOV_DOWN);
+                movementCommandList.add(new MovementMessage(Movement.DOWN));
             }
             else if (hasChangedDirection()) {
-                ServerWriter.sendMessage(Command.MOV_DOWN);
+                movementCommandList.add(new MovementMessage(Movement.DOWN));
             }
         }
     }

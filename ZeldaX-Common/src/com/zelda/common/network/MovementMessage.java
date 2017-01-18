@@ -10,6 +10,7 @@ public class MovementMessage extends Message {
     
     
     public MovementMessage(String dir){
+        timeCreated = Calendar.getInstance().getTime().getTime();
         direction = dir;
     }
     

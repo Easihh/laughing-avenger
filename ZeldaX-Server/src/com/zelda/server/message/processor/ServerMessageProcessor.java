@@ -91,7 +91,7 @@ public class ServerMessageProcessor {
             x += moveAhead.x;
             y += moveAhead.y;
             player.setPosition(x, y);
-            LOG.debug("Position Message Processed.");
+            //LOG.debug("Position Message Processed.");
         }
     }
 }

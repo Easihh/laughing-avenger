@@ -3,7 +3,6 @@ package com.zelda.game;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -14,19 +13,17 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import static com.zelda.common.Constants.ObjectType.HERO;
-import static com.zelda.common.Constants.Command.MAIN_SWD_ATTACK;
-
 import com.zelda.common.Quadtree;
 import com.zelda.common.network.HeroAttackMessage;
 import com.zelda.common.network.Message;
 import com.zelda.common.network.MovementMessage;
-import com.zelda.common.Constants;
-import com.zelda.common.Constants.Command;
 import com.zelda.common.Constants.Direction;
 import com.zelda.common.Constants.Movement;
+import com.zelda.common.GameObject;
 import com.zelda.network.ServerWriter;
 
 public class Hero extends ClientGameObject {
@@ -47,11 +44,13 @@ public class Hero extends ClientGameObject {
     private final float MAX_MOVEMENT_DELAY_TO_SERVER = 0.10f;
     private List<Message> movementCommandList;
     private static Logger LOG = LoggerFactory.getLogger(Hero.class);
+    private OrthographicCamera cam;
 
-    public Hero(int x, int y) {
+    public Hero(OrthographicCamera camera) {
+        cam = camera;
         updaterQueue = new LinkedList<PositionUpdater>();
-        xPosition = x;
-        yPosition = y;
+        xPosition = Integer.MIN_VALUE;
+        yPosition = Integer.MIN_VALUE;
         height = HEIGHT;
         width = WIDTH;
         mask = new Rectangle(xPosition, yPosition, width, height);
@@ -77,12 +76,18 @@ public class Hero extends ClientGameObject {
     }
 
     @Override
-    public void update(Collection<ClientGameObject> ActiveCollection, Quadtree<Tile> quadTree) {
-        currentMovementDelayTime += Gdx.graphics.getDeltaTime();
-        boolean movementKeyPressed = false;
+    public void update(Collection<ClientGameObject> ActiveCollection, Quadtree<GameObject> quadTree) {
         // discard server position update for now
+        if(xPosition==Integer.MIN_VALUE && yPosition==Integer.MIN_VALUE){
+            xPosition = updaterQueue.peek().getserverX();
+            yPosition = updaterQueue.peek().getserverY();
+        }
         updaterQueue.clear();
         // TODO Maybe Some code here to check if Player is too far from server coord
+        
+        currentMovementDelayTime += Gdx.graphics.getDeltaTime();
+        boolean movementKeyPressed = false;
+
         
         if (hSword != null) {
             hSword.update(ActiveCollection, quadTree);
@@ -126,7 +131,7 @@ public class Hero extends ClientGameObject {
                         || Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.DOWN);
     }
 
-    private void checkMovement(Quadtree<Tile> quadTree) {
+    private void checkMovement(Quadtree<GameObject> quadTree) {
         Point offset;
         prevDirection = direction;
         if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
@@ -134,6 +139,7 @@ public class Hero extends ClientGameObject {
             offset = new Point(SPEED, 0);
             if (!isColliding(quadTree, offset) && !hasChangedDirection()) {
                 xPosition += SPEED;  
+                cameraUpdate(direction);
                 movementCommandList.add(new MovementMessage(Movement.RIGHT));
             }
             else if (hasChangedDirection()) {
@@ -145,6 +151,7 @@ public class Hero extends ClientGameObject {
             offset = new Point(-SPEED, 0);
             if (!isColliding(quadTree, offset) && !hasChangedDirection()) {
                 xPosition -= SPEED;
+                cameraUpdate(direction);
                 movementCommandList.add(new MovementMessage(Movement.LEFT));
             }
             else if (hasChangedDirection()) {
@@ -156,6 +163,7 @@ public class Hero extends ClientGameObject {
             offset = new Point(0, -SPEED);
             if (!isColliding(quadTree, offset) && !hasChangedDirection()) {
                 yPosition -= SPEED;
+                cameraUpdate(direction);
                 movementCommandList.add(new MovementMessage(Movement.UP));
             }
             else if (hasChangedDirection()) {
@@ -167,12 +175,31 @@ public class Hero extends ClientGameObject {
             offset = new Point(0, SPEED);
             if (!isColliding(quadTree, offset) && !hasChangedDirection()) {
                 yPosition += SPEED;
+                cameraUpdate(direction);
                 movementCommandList.add(new MovementMessage(Movement.DOWN));
             }
             else if (hasChangedDirection()) {
                 movementCommandList.add(new MovementMessage(Movement.DOWN));
             }
         }
+    }
+
+    private void cameraUpdate(int direction) {
+        switch (direction) {
+        case Direction.DOWN:
+            cam.translate(0f, SPEED);
+            break;
+        case Direction.UP:
+            cam.translate(0f, -SPEED);
+            break;
+        case Direction.LEFT:
+            cam.translate(-SPEED, 0f);
+            break;
+        case Direction.RIGHT:
+            cam.translate(SPEED, 0f);
+            break;
+        }
+        cam.update();
     }
 
     private void updateAnimation() {
@@ -189,7 +216,7 @@ public class Hero extends ClientGameObject {
         return prevDirection != direction;
     }
 
-    private boolean isColliding(Quadtree<Tile> quadTree, Point offset) {
+    private boolean isColliding(Quadtree<GameObject> quadTree, Point offset) {
         if (quadTree.isColliding(mask, offset)) {
             return true;
         }
@@ -203,13 +230,14 @@ public class Hero extends ClientGameObject {
 
     @Override
     public void draw(SpriteBatch sprBatch) {
+        sprBatch.setProjectionMatrix(cam.combined);
+        font.draw(sprBatch, "X:" + xPosition + " Y:" + yPosition, xPosition+50, yPosition+50);
         if (hSword != null) {
             hSword.draw(sprBatch);
             sprBatch.draw(attackAnimation.getCurrentFrame(direction), xPosition, yPosition);
         }
         if (!isAttacking) {
             sprBatch.draw(walkAnimation.getCurrentFrame(direction), xPosition, yPosition);
-            font.draw(sprBatch, "X:" + xPosition + " Y:" + yPosition, 50, 50);
         }
     }
 

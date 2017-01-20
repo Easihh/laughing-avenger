@@ -12,6 +12,6 @@ public abstract class ClientGameObject extends GameObject {
 
     abstract void draw(SpriteBatch sprBatch);
 
-    abstract void update(Collection<ClientGameObject> activeObjs,Quadtree<Tile> quadTree);
+    abstract void update(Collection<ClientGameObject> activeObjs,Quadtree<GameObject> staticEntityQTree);
 
 }

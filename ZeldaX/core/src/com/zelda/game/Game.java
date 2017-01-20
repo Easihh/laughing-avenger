@@ -1,13 +1,10 @@
 package com.zelda.game;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Scanner;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,12 +14,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.zelda.common.Constants;
+import com.zelda.common.GameObject;
 import com.zelda.common.Quadtree;
 import com.zelda.common.network.HeroIdentiferMessage;
 import com.zelda.common.network.Message;
 import com.zelda.common.network.ObjectRemovalMessage;
 import com.zelda.common.network.PositionMessage;
 import com.zelda.network.NetworkController;
+
 
 
 public class Game extends ApplicationAdapter {
@@ -35,61 +34,50 @@ public class Game extends ApplicationAdapter {
 
     private static volatile Queue<Message> fromServerMessageQueue;
     private Map<String, ClientGameObject> entityMap;
-    private Quadtree<Tile> staticEntityQTree;
-    private List<Tile> staticTileList;
+    private Quadtree<GameObject> staticEntityQTree;
+    private Quadtree<GameObject> nextZoneStaticEntityQTree;
+    private List<RenderTile> staticTileList;
+    private List<RenderTile> nextZoneStaticTileList;
     private OrthographicCamera camera;
-
+    private ZoneLoader zLoader;
+    private Zone currentZone;
+    private Zone nextZone;
     private String heroIdentifier;
     private OtherPlayer otherPlayer;
     private Hero player;
-
+    private static float SCREEN_WIDTH;
+    private static float SCREEN_HEIGHT;
     private final static int ONE_MINUTE_MILLIS = 1000;
+    
     private Logger LOG = LoggerFactory.getLogger(Game.class);
 
     @SuppressWarnings({ "unchecked", "unused" })
     @Override
     public void create() {
-        staticEntityQTree=new Quadtree<Tile>(0, 0, 512, 512, 1);
-        loadGameResources();
-        GameResources gameRes = GameResources.getInstance();//load up all texture at start.
+        SCREEN_WIDTH = Gdx.graphics.getWidth();
+        SCREEN_HEIGHT = Gdx.graphics.getHeight();
+        GameResources gameRes = GameResources.getInstance();//pre-load all texture once at start.
+        loadMap();
+        staticEntityQTree = currentZone.getStaticObjQtree();
         fromServerMessageQueue = new LinkedList<Message>();
-        camera=new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.setToOrtho(true);
         networkController = new NetworkController(fromServerMessageQueue);
         entityMap = new HashMap<String, ClientGameObject>();
         lastUpdate = System.currentTimeMillis();
         batch = new SpriteBatch();
+        camera = new OrthographicCamera(SCREEN_WIDTH, SCREEN_HEIGHT);
+        camera.position.set(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0);
+        camera.setToOrtho(true);
         batch.setProjectionMatrix(camera.combined);
-        staticTileList=(List<Tile>) staticEntityQTree.QuadToList();
+        staticTileList = (List<RenderTile>) staticEntityQTree.QuadToList();
     }
 
-    private void loadGameResources() {
-        InputStream is=Game.class.getResourceAsStream("/Zone1.csv");
-        Scanner scan = new Scanner(is);
-        int zoneStartX=0;
-        int zoneStartY=0;
-        while (scan.hasNextLine()) {
-            String lineValue = scan.nextLine();
-            String[] arr = lineValue.split(",", 0);
-            for (int i = 0; i < arr.length; i++) {
-                int identifier = Integer.parseInt(arr[i]);
-                switch (identifier) {
-                case -1:
-                    break;
-                case 0:
-                    Tile tile = new Tile(zoneStartX, zoneStartY);
-                    System.out.println("X:"+zoneStartX+" Y:"+zoneStartY);
-                    staticEntityQTree.insert(tile);
-                    break;
-                default:
-                    LOG.error("Invalid identifier:" + identifier);
-                }
-            zoneStartX += Constants.Size.MAX_TILE_WIDTH;
-            }
-            zoneStartY += Constants.Size.MAX_TILE_HEIGHT;
-            zoneStartX = 0;
-        }
-        scan.close();
+    @SuppressWarnings("unchecked")
+    private void loadMap() {
+        zLoader = ZoneLoader.getInstance();
+        currentZone = zLoader.getZoneByName("Zone1");
+        nextZone = zLoader.getZoneByName("Zone2");
+        nextZoneStaticEntityQTree = nextZone.getStaticObjQtree();
+        nextZoneStaticTileList = (List<RenderTile>) nextZoneStaticEntityQTree.QuadToList();
     }
 
     @Override
@@ -102,12 +90,11 @@ public class Game extends ApplicationAdapter {
         }
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         while (!fromServerMessageQueue.isEmpty()) {
             Message message = fromServerMessageQueue.remove();
             if (message instanceof HeroIdentiferMessage) {
                 heroIdentifier = ((HeroIdentiferMessage) message).fullIdentifier();
-                player = new Hero(128, 160);
+                player = new Hero(camera);
                 entityMap.put(heroIdentifier, player);
                 LOG.debug("Hero Identifier was set to:" + heroIdentifier);
             }
@@ -131,13 +118,20 @@ public class Game extends ApplicationAdapter {
             }
         }
         batch.begin();
-        for(Tile obj:staticTileList){
-            obj.draw(batch);
-        }
+        
         for (ClientGameObject obj : entityMap.values()) {
             obj.update(entityMap.values(),staticEntityQTree);
             obj.draw(batch);
         }
+        for(RenderTile obj:staticTileList){
+            obj.draw(batch);
+        }
+        
+        //render next closest Zone
+        for (RenderTile obj : nextZoneStaticTileList) {
+            obj.draw(batch);
+        }
+        
         batch.end();
     }
 

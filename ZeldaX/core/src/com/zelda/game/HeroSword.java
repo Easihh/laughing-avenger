@@ -87,7 +87,7 @@ public class HeroSword extends GameObject{
         sprBatch.draw(spr, xPosition, yPosition);
     }
 
-    public void update(Collection<ClientGameObject> activeObjs, Quadtree<Tile> quadTree) {
+    public void update(Collection<ClientGameObject> activeObjs, Quadtree<GameObject> quadTree) {
         currentDuration += Gdx.graphics.getDeltaTime();
     }
 

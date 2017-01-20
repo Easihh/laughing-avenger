@@ -10,6 +10,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.zelda.common.Constants;
+import com.zelda.common.GameObject;
 import com.zelda.common.Quadtree;
 
 public class OtherPlayer extends ClientGameObject {
@@ -48,8 +49,9 @@ public class OtherPlayer extends ClientGameObject {
         afiles.add(Gdx.files.internal("Link_AttackRight.png"));
         attackAnimation = new SimpleAnimation(afiles, WIDTH, HEIGHT, 0.50f);
     }
-
-    public void update(Collection<ClientGameObject> activeCollection,Quadtree<Tile> quadTree) {
+    
+    @Override
+    public void update(Collection<ClientGameObject> activeCollection,Quadtree<GameObject> quadTree) {
         updateState();
         movement();
     }

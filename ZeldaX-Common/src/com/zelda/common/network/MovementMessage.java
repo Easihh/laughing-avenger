@@ -28,26 +28,6 @@ public class MovementMessage extends Message {
         return direction;
     }
 
-    public int addToPlayerX(int movementSpeed) {
-        if ("L".equals(direction)) {
-            return -movementSpeed;
-        }
-        if ("R".equals(direction)) {
-            return movementSpeed;
-        }
-        return 0;
-    }
-
-    public int addToPlayerY(int movementSpeed) {
-        if ("D".equals(direction)) {
-            return -movementSpeed;
-        }
-        if ("U".equals(direction)) {
-            return movementSpeed;
-        }
-        return 0;
-    }
-
     public byte[] getBytes() {
         ByteBuffer buffer = ByteBuffer.allocate(getTotalLength());
         buffer.putInt(getType());

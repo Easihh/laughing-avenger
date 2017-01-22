@@ -30,6 +30,15 @@ public class Quadtree<E extends GameObject> {
         maxElemPerQuad = elemPerQuad;
         elements = new ArrayList<E>(maxElemPerQuad);
     }
+    
+    public void clear(){
+        elements.clear();
+        topLeft = null;
+        topRight = null;
+        botLeft = null;
+        botRight = null;
+        bounds = null;
+    }
 
     public boolean insert(E e) {
         if (hasChildren()) {
@@ -137,12 +146,7 @@ public class Quadtree<E extends GameObject> {
     }
 
     public boolean isColliding(java.awt.geom.Rectangle2D mask, Point offset) {
-        if (hasChildren()) {
-            if (findCollision(this, mask, offset)) {
-                return true;
-            }
-        }
-        return false;
+        return findCollision(this, mask, offset);
     }
 
     private boolean findCollision(Quadtree<E> quadrant, java.awt.geom.Rectangle2D mask, Point offset) {
@@ -175,13 +179,14 @@ public class Quadtree<E extends GameObject> {
                 if (findCollision(quadrant.botRight, mask, offset))
                     return true;
             }
-            //Node may have been inserted at the Quadrant level instead of leaf level because it could not fit the child.
-            if (checkNodeAtCurrentLevel(quadrant,mask,offset)) {
+            // Node may have been inserted at the Quadrant level instead of leaf
+            // level because it could not fit the child.
+            if (checkNodeAtCurrentLevel(quadrant, mask, offset)) {
                 return true;
             }
         } else {
             // now at leaf level check List of Node
-            collisionFound=checkNodeAtCurrentLevel(quadrant,mask,offset);
+            collisionFound = checkNodeAtCurrentLevel(quadrant, mask, offset);
         }
         return collisionFound;
     }

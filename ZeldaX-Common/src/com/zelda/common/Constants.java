@@ -20,6 +20,8 @@ public class Constants {
     public static class Size {
         public static int MAX_TILE_HEIGHT = 32;
         public static int MAX_TILE_WIDTH = 32;
+        public static int WORLD_SCALE_X = 10;
+        public static int WORLD_SCALE_Y = 10;
     }
 
     public static class MessageType {

@@ -3,6 +3,8 @@ package com.zelda.game;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.zelda.common.Constants.Size;
+
 
 public class ZoneLoader {
     
@@ -19,7 +21,7 @@ public class ZoneLoader {
         zoneMapByName.put(zoneName, zone);
 
         zoneName = "Zone2";
-        zone = new Zone(zoneName, 544, 0);
+        zone = new Zone(zoneName, 512 * Size.WORLD_SCALE_X, 0);
         zoneMapByName.put(zoneName, zone);
     }
 

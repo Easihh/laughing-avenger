@@ -1,7 +1,7 @@
 package com.zelda.game;
 
 import com.zelda.common.network.PositionMessage;
-
+import com.zelda.common.Constants.Size;
 public class PositionUpdater {
 
     private int serverX;
@@ -9,16 +9,10 @@ public class PositionUpdater {
     private int direction;
     private int state;
 
-    public PositionUpdater(int x, int y,int dir) {
-        serverX = x;
-        serverY = y;
-        direction = dir;
-    }
-
     public PositionUpdater(PositionMessage pMessage) {
         int dir = GameUtility.directiontToInt(pMessage.getDirection());
-        serverX = pMessage.getX();
-        serverY = pMessage.getY();
+        serverX = pMessage.getX() * Size.WORLD_SCALE_X;;
+        serverY = pMessage.getY() * Size.WORLD_SCALE_Y;
         direction = dir;
         state = pMessage.getObjState();
     }

@@ -2,7 +2,8 @@ package com.zelda.game;
 
 import static com.zelda.common.Constants.Size.MAX_TILE_HEIGHT;
 import static com.zelda.common.Constants.Size.MAX_TILE_WIDTH;
-
+import static com.zelda.common.Constants.Size.WORLD_SCALE_X;
+import static com.zelda.common.Constants.Size.WORLD_SCALE_Y;
 import java.io.InputStream;
 import java.util.Scanner;
 
@@ -15,13 +16,19 @@ import com.zelda.common.Quadtree;
 public class Zone {
 
     protected String zoneName;
+    private final static String CSV = ".csv";
+    private final static String PATH = "/";
     protected final int ZONE_MAX_HEIGHT = 512;
     protected final int ZONE_MAX_WIDTH = 512;
     protected int ZONE_START_X = 0;// World Coord
     protected int ZONE_START_Y = 0;// World Coord
     private  Quadtree<GameObject> staticObjQtree;
     private final Logger LOG = LoggerFactory.getLogger(Zone.class);
-
+    
+    public Zone(String zName) {
+        zoneName = zName;
+    }
+    
     public Zone(String zName,int startX,int startY) {
         ZONE_START_X = startX;
         ZONE_START_Y = startY;
@@ -31,7 +38,7 @@ public class Zone {
     }
 
     public void readZoneFromFile(){
-        InputStream is = ZoneLoader.class.getResourceAsStream("/" + zoneName + ".csv");
+        InputStream is = ZoneLoader.class.getResourceAsStream(PATH + zoneName + CSV);
         Scanner scan = new Scanner(is);
         int zoneStartX = ZONE_START_X;
         int zoneStartY = ZONE_START_Y;
@@ -53,9 +60,9 @@ public class Zone {
                 default:
                     LOG.error("Invalid identifier:" + identifier);
                 }
-                zoneStartX += MAX_TILE_WIDTH;
+                zoneStartX += MAX_TILE_WIDTH * WORLD_SCALE_X;
             }
-            zoneStartY += MAX_TILE_HEIGHT;
+            zoneStartY += MAX_TILE_HEIGHT * WORLD_SCALE_Y;
             zoneStartX = ZONE_START_X;
         }
         System.out.println("Inserted:" + insertCount);

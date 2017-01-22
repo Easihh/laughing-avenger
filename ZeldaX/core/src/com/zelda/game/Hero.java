@@ -14,7 +14,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import static com.zelda.common.Constants.ObjectType.HERO;
 import com.zelda.common.Quadtree;
@@ -25,12 +25,13 @@ import com.zelda.common.Constants.Direction;
 import com.zelda.common.Constants.Movement;
 import com.zelda.common.GameObject;
 import com.zelda.network.ServerWriter;
+import com.zelda.common.Constants.Size;
 
 public class Hero extends ClientGameObject {
 
-    private static final int WIDTH = 32;
-    private static final int HEIGHT = 32;
-    private static final int SPEED = 2;
+    private static final int WIDTH = Size.MAX_TILE_WIDTH * Size.WORLD_SCALE_X;
+    private static final int HEIGHT = Size.MAX_TILE_HEIGHT * Size.WORLD_SCALE_Y;
+    private static final int SPEED = 20;
     private Queue<PositionUpdater> updaterQueue;
 
     private SimpleAnimation walkAnimation;
@@ -38,16 +39,17 @@ public class Hero extends ClientGameObject {
     private boolean isAttacking = false;
     private int direction;
     private int prevDirection;
-    private BitmapFont font = new BitmapFont(true);
     private HeroSword hSword;
     private float currentMovementDelayTime;
     private final float MAX_MOVEMENT_DELAY_TO_SERVER = 0.10f;
     private List<Message> movementCommandList;
     private static Logger LOG = LoggerFactory.getLogger(Hero.class);
     private OrthographicCamera cam;
+    private OrthographicCamera uiCamera;
 
-    public Hero(OrthographicCamera camera) {
+    public Hero(OrthographicCamera camera, OrthographicCamera uiCam) {
         cam = camera;
+        uiCamera = uiCam;
         updaterQueue = new LinkedList<PositionUpdater>();
         xPosition = Integer.MIN_VALUE;
         yPosition = Integer.MIN_VALUE;
@@ -65,20 +67,20 @@ public class Hero extends ClientGameObject {
         mfiles.add(Gdx.files.internal("Link_Movement_Down.png"));
         mfiles.add(Gdx.files.internal("Link_Movement_Left.png"));
         mfiles.add(Gdx.files.internal("Link_Movement_Right.png"));
-        walkAnimation = new SimpleAnimation(mfiles, WIDTH, HEIGHT, 0.25f);
+        walkAnimation = new SimpleAnimation(mfiles, Size.MAX_TILE_WIDTH, Size.MAX_TILE_HEIGHT, 0.25f);
         
         List<FileHandle> afiles=new LinkedList<FileHandle>();
         afiles.add(Gdx.files.internal("Link_AttackUp.png"));
         afiles.add(Gdx.files.internal("Link_AttackDown.png"));
         afiles.add(Gdx.files.internal("Link_AttackLeft.png"));
         afiles.add(Gdx.files.internal("Link_AttackRight.png"));
-        attackAnimation = new SimpleAnimation(afiles, WIDTH, HEIGHT, 0.50f);
+        attackAnimation = new SimpleAnimation(afiles, Size.MAX_TILE_WIDTH, Size.MAX_TILE_HEIGHT, 0.50f);
     }
 
     @Override
     public void update(Collection<ClientGameObject> ActiveCollection, Quadtree<GameObject> quadTree) {
         // discard server position update for now
-        if(xPosition==Integer.MIN_VALUE && yPosition==Integer.MIN_VALUE){
+        if (xPosition == Integer.MIN_VALUE && yPosition == Integer.MIN_VALUE) {
             xPosition = updaterQueue.peek().getserverX();
             yPosition = updaterQueue.peek().getserverY();
         }
@@ -188,18 +190,21 @@ public class Hero extends ClientGameObject {
         switch (direction) {
         case Direction.DOWN:
             cam.translate(0f, SPEED);
+            uiCamera.translate(0f, SPEED/10);
             break;
         case Direction.UP:
             cam.translate(0f, -SPEED);
+            uiCamera.translate(0f, -SPEED/10);
             break;
         case Direction.LEFT:
             cam.translate(-SPEED, 0f);
+            uiCamera.translate(-SPEED/10, 0f);
             break;
         case Direction.RIGHT:
             cam.translate(SPEED, 0f);
+            uiCamera.translate(SPEED/10, 0f);
             break;
-        }
-        cam.update();
+        }        
     }
 
     private void updateAnimation() {
@@ -231,14 +236,17 @@ public class Hero extends ClientGameObject {
     @Override
     public void draw(SpriteBatch sprBatch) {
         sprBatch.setProjectionMatrix(cam.combined);
-        font.draw(sprBatch, "X:" + xPosition + " Y:" + yPosition, xPosition+50, yPosition+50);
+        Sprite spr = null;
+        //font.draw(sprBatch, "X:" + xPosition + " Y:" + yPosition, xPosition, yPosition+160);
         if (hSword != null) {
             hSword.draw(sprBatch);
-            sprBatch.draw(attackAnimation.getCurrentFrame(direction), xPosition, yPosition);
+            spr = attackAnimation.getCurrentFrame(direction);
         }
         if (!isAttacking) {
-            sprBatch.draw(walkAnimation.getCurrentFrame(direction), xPosition, yPosition);
+            spr = walkAnimation.getCurrentFrame(direction);
         }
+        spr.setPosition(xPosition, yPosition);
+        spr.draw(sprBatch);       
     }
 
     @Override

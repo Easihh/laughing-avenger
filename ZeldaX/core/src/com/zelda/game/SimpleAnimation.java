@@ -5,7 +5,9 @@ import java.util.List;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.zelda.common.Constants.Size;
 
 public class SimpleAnimation {
 
@@ -58,8 +60,11 @@ public class SimpleAnimation {
         return stateTime[index];
     }
 
-    public TextureRegion getCurrentFrame(int direction) {
-        return animation[direction].getKeyFrame(stateTime[direction], true);
+    public Sprite getCurrentFrame(int direction) {
+        TextureRegion text = animation[direction].getKeyFrame(stateTime[direction], true);
+        Sprite spr = new Sprite(text);
+        spr.setSize(Size.MAX_TILE_WIDTH * Size.WORLD_SCALE_X, Size.MAX_TILE_HEIGHT * Size.WORLD_SCALE_Y);
+        return spr;
     }
     
     /**Reset StateTime of Animation for every index except index param**/

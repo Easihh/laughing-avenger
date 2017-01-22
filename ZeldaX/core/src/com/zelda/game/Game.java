@@ -12,7 +12,9 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.zelda.common.Constants;
 import com.zelda.common.GameObject;
 import com.zelda.common.Quadtree;
@@ -39,6 +41,7 @@ public class Game extends ApplicationAdapter {
     private List<RenderTile> staticTileList;
     private List<RenderTile> nextZoneStaticTileList;
     private OrthographicCamera camera;
+    private OrthographicCamera uiCamera;
     private ZoneLoader zLoader;
     private Zone currentZone;
     private Zone nextZone;
@@ -48,12 +51,15 @@ public class Game extends ApplicationAdapter {
     private static float SCREEN_WIDTH;
     private static float SCREEN_HEIGHT;
     private final static int ONE_MINUTE_MILLIS = 1000;
-    
+    private ExtendViewport  viewPort;
+    private ExtendViewport  uiViewPort;
+    private BitmapFont font;
     private Logger LOG = LoggerFactory.getLogger(Game.class);
 
     @SuppressWarnings({ "unchecked", "unused" })
     @Override
     public void create() {
+        font = new BitmapFont(true);  
         SCREEN_WIDTH = Gdx.graphics.getWidth();
         SCREEN_HEIGHT = Gdx.graphics.getHeight();
         GameResources gameRes = GameResources.getInstance();//pre-load all texture once at start.
@@ -64,9 +70,13 @@ public class Game extends ApplicationAdapter {
         entityMap = new HashMap<String, ClientGameObject>();
         lastUpdate = System.currentTimeMillis();
         batch = new SpriteBatch();
-        camera = new OrthographicCamera(SCREEN_WIDTH, SCREEN_HEIGHT);
-        camera.position.set(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0);
+        camera = new OrthographicCamera();
+        uiCamera = new OrthographicCamera();
         camera.setToOrtho(true);
+        uiCamera.setToOrtho(true);
+        viewPort = new ExtendViewport(10 * SCREEN_WIDTH, 10 * SCREEN_HEIGHT, camera);
+        uiViewPort = new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT, uiCamera);
+        camera.position.set(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0);
         batch.setProjectionMatrix(camera.combined);
         staticTileList = (List<RenderTile>) staticEntityQTree.QuadToList();
     }
@@ -78,6 +88,12 @@ public class Game extends ApplicationAdapter {
         nextZone = zLoader.getZoneByName("Zone2");
         nextZoneStaticEntityQTree = nextZone.getStaticObjQtree();
         nextZoneStaticTileList = (List<RenderTile>) nextZoneStaticEntityQTree.QuadToList();
+    }
+    
+    @Override
+    public void resize(int width, int height) {
+        viewPort.update(width, height, true);
+        uiViewPort.update(width, height, true);
     }
 
     @Override
@@ -94,7 +110,7 @@ public class Game extends ApplicationAdapter {
             Message message = fromServerMessageQueue.remove();
             if (message instanceof HeroIdentiferMessage) {
                 heroIdentifier = ((HeroIdentiferMessage) message).fullIdentifier();
-                player = new Hero(camera);
+                player = new Hero(camera, uiCamera);
                 entityMap.put(heroIdentifier, player);
                 LOG.debug("Hero Identifier was set to:" + heroIdentifier);
             }
@@ -117,8 +133,10 @@ public class Game extends ApplicationAdapter {
                 LOG.debug("Entity:" + remObj.getFullIdentifier() + " was removed from game.");
             }
         }
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         
+                     
         for (ClientGameObject obj : entityMap.values()) {
             obj.update(entityMap.values(),staticEntityQTree);
             obj.draw(batch);
@@ -131,8 +149,15 @@ public class Game extends ApplicationAdapter {
         for (RenderTile obj : nextZoneStaticTileList) {
             obj.draw(batch);
         }
-        
         batch.end();
+        batch.setProjectionMatrix(uiCamera.combined);
+        batch.begin();
+        font.draw(batch, "X:" + player.getxPosition() + " Y:" + player.getyPosition(), (player.getxPosition()/10) -16, (player.getyPosition()/10) -16);
+        batch.end();
+        
+
+        camera.update();
+        uiCamera.update();
     }
 
     @Override
